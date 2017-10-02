@@ -92,6 +92,7 @@ app.get('/auth/:environment', function(req, res)  {
         }
     });
 
+    console.log(config);
 
     var authorizationUri = config.baseUrl + "/oauth2/authorize";
     authorizationUri += "?redirect_uri=" + encodeURIComponent(config.callback);
