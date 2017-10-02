@@ -1,0 +1,252 @@
+
+/* classes for the tree view icons...*/
+
+.inset {
+    margin-left: 12px;
+}
+
+.iconSpacing {
+    /*  left and right spacing for icons in a horizontalbar */
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.icon-ext {
+    background-image: url('/icons/icon_reference.png');
+}
+
+.popoverHint {
+    border-bottom: 1px dotted #000;
+    text-decoration: none;
+}
+
+.myScroll {
+    height: 100px;
+    overflow-y: scroll;
+}
+
+
+.scoreResult {
+    border : 1px solid #eeeeee;
+    padding : 5px;
+    margin: 5px;
+    /*margin-left : 10px;*/
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color:#F6F6F6;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.scoreText {
+    margin: 5px;
+    padding : 5px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.chatItem {
+    border : 1px solid #eeeeee;
+    padding : 5px;
+    margin: 3px;
+    /*margin-left : 10px;*/
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color:#F8F8F8;
+}
+
+
+
+.listItemSelected {
+    background-color: lightsteelblue;
+}
+
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+.marginBelow {
+    margin-bottom: 8px;
+}
+
+
+.hidden {
+    display: none;
+}
+
+
+
+/*  classes for chat */
+.selected {
+    font-weight: bold;
+}
+
+
+.ng-table {
+    border: 1px solid #000;
+}
+
+.popover{
+    max-width: 350px; /* Max Width of the popover (depending on the container!) */
+    width: 350px;
+}
+
+.textRow {
+    border-bottom: 1px solid gainsboro;
+    margin: 4px;
+}
+
+.addExtRow {
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    background-color:  gainsboro;
+    margin: 4px;
+    padding: 8px;
+}
+
+.propertySelected {
+    font-weight: bold;
+}
+
+.elementExtension {
+    color:blueviolet;
+}
+
+.clickable {
+    color: rgb(79, 155, 214);
+    cursor: pointer;
+}
+
+.tabMargin {
+    margin: 8px
+}
+
+.title {
+    color: #00A000;
+}
+
+
+.clickableParentNode {
+    color: orange;
+    cursor: pointer;
+}
+
+.clickableExtension {
+    color: darkgoldenrod;
+    cursor: pointer;
+}
+
+.clickableResourceReference {
+    color: green;
+    cursor: pointer;
+}
+
+.elementRequired{
+    color:red;
+}
+
+.elementFixed{
+    color:darkmagenta;
+}
+
+.elementRemoved {
+    text-decoration: line-through;
+}
+
+.elementOptional{
+    color:black;
+}
+
+.backboneElement {
+    font-weight: bold;
+}
+
+.clickableFixed{
+    color:red;
+}
+
+.strikeout {
+    text-decoration: line-through;
+}
+
+/* http://stackoverflow.com/questions/18153234/center-a-column-using-twitter-bootstrap-3*/
+
+.header  {
+    font-weight: bold;
+}
+.famHxDetail {
+    margin-left: 10px;
+}
+
+.indent {
+    margin-left: 10px;
+}
+
+.profileListDisplay {
+    background-color: #bbffbb;
+}
+
+.extensionDisplay {
+    background-color:  #ffffcc;
+}
+
+
+.required {
+    background-color:  mistyrose;
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
+.showcursor {
+
+    cursor: pointer;
+}
+
+.banner {
+
+    border: 1px solid #b8b9b5;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    text-align: center;
+    padding: 2px;
+    margin-bottom: 5px;
+    background-color: #F6F6F6;
+    font-weight: bold;
+}
+	
+.rounded-box {
+    border: 1px solid gainsboro;
+    padding : 3px;
+    margin: 4px;
+    -webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+        
+.rounded-box-filled {
+    border : 1px solid #eeeeee;
+    padding : 5px;
+    margin: 0px;
+  	/*margin-left : 10px;*/
+    -webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background-color:#F6F6F6;
+}
+
+.rounded-box-element {
+    border : 1px solid #eeeeee;
+    padding : 5px;
+    margin: 1px;
+    /*margin-left : 10px;*/
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color:#d6e9c6;
+}

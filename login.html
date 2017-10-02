@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+    <script>
+        angular.module("sampleApp",['ui.bootstrap']).config(function($locationProvider) {
+
+            // enable html5Mode for pushstate ('#'-less URLs)
+            $locationProvider.html5Mode(true);
+            $locationProvider.hashPrefix('!');
+        });
+       // angular.module("sampleApp").constant("moment", moment);
+
+    </script>
+    <script src="js/loginCtl.js"></script>
+
+
+
+</head>
+<body style="padding: 8px" >
+
+
+
+<div ng-app="sampleApp" ng-controller="loginCtrl" class="container-fluid">
+
+    <div class="banner">Demonstration of using OrionHealth API's for Analytics</div>
+
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <div class="rounded-box">
+                <p>This application is an example of how to access data from the Orion Health APIs, and to write data
+                back. It calculates the Framingham risk score for patients in a providers list, and optionally
+                writes the score back as a risk Observation.</p>
+                <p>There are a number of steps demonstrated</p>
+                <ol>
+                    <li>First, you need to log in to the system. You need to have a Portal login to do this, and
+                    have access to clincial data. (Technically, this is done using OAuth2). When you click the 'Login'
+                    button below, a login form will be displayed</li>
+                    <li>Once you have logged in, the application will retrieve the details of the user, including the
+                    worklists that have been defined for that user.</li>
+                    <li>Next, you can select a list to examine. This will display the patients in the list, and will
+                    also calculate the Framingham score for all the patients in the list - based on the data in the system
+                    and accessed via the FHIR APIs. For your convenience, the first list is automatically retrieved and displayed.</li>
+                    <li>Finally, you can instruct the application to save the risk score back to the system.</li>
+                </ol>
+            </div>
+
+        </div>
+        <div class="col-sm-3 col-md-3">
+<!-- https://www.framinghamheartstudy.org/risk-functions/index.php -->
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <a class="btn btn-warning pull-right" ng-href="/auth/{{input.environment.key}}">Login</a>
+        </div>
+    </div>
+
+    <!--
+    <div class="row">
+        <div class="col-md-2">
+            Environment
+        </div>
+        <div class="col-md-4">
+            <select class="form-control" ng-model="input.environment"
+                    ng-options = "env.display for env in environments"></select>
+        </div>
+    </div>
+    -->
+
+
+
+</div>
+
+</body>
+</html>

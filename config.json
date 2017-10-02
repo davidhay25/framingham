@@ -1,0 +1,50 @@
+{
+  "configs" : [
+    {
+      "key":"sandpit",
+      "display":"OrionHealth Sandpit from Localhost",
+      "clientId":"MKCc2K0oH801KotKrh7ooVk2tvJavJAj",
+      "secret":"skqfIkZNEf1uZADe",
+      "callback":"http://localhost:3000/callback",
+      "baseUrl":"https://orionhealth-sandbox-bellatrix.apigee.net",
+      "tokenEndPoint":"/oauth2/token",
+      "apiEndPoint":"https://orionhealth-sandbox-bellatrix.apigee.net"
+    },
+    {
+      "key":"moh",
+      "display":"Ministry Of Health from Localhost",
+      "clientId":"C5Ay3GjNHXh5UL4uKqBZCGFgIAeAd9fi",
+      "secret":"N8ma3zIa7erpARG6",
+      "callback":"http://localhost:3000/callback",
+      "baseUrl":"https://auth.moh.orionhealth.io",
+      "tokenEndPoint":"/oauth2/token",
+      "apiEndPoint":"https://api.moh.orionhealth.io"
+
+    },
+
+
+    {
+      "key":"sandpitprod",
+      "display":"OrionHealth Sandpit from Production",
+      "clientId":"OXZWg1Y13K352KUPSs0RkaxZthJtCKqQ",
+      "secret":"evRb5sb3u5qEw2Hy",
+      "callback":"http://clinfhir.com:3000/callback",
+      "baseUrl":"https://orionhealth-sandbox-bellatrix.apigee.net",
+      "tokenEndPoint":"/oauth2/token",
+      "apiEndPoint":"https://orionhealth-sandbox-bellatrix.apigee.net"
+    },
+    {
+      "key":"mohprod",
+      "display":"Ministry Of Health in Production",
+      "clientId":"fyUfM7z7PCV6vzVG44yCZBmd3FGccvDS",
+      "secret":"DC94O0bBfYukeKCf",
+      "callback":"http://clinfhir.com:3000/callback",
+      "baseUrl":"https://auth.moh.orionhealth.io",
+      "tokenEndPoint":"/oauth2/token",
+      "apiEndPoint":"https://api.moh.orionhealth.io"
+
+    }
+  ]
+}
+
+

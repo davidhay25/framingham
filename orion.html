@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <base href="/" />
+    <meta charset="UTF-8">
+    <script src="js/libs/jquery-1.9.0.min.js"></script>
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/vis.min.css"/>
+
+    <script src="js/libs/moment.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+    <link rel="stylesheet" type="text/css" href="css/jsTreeStyle.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jsTreeThemes/proton/style.css"/>
+
+    <script src="js/libs/angular-sanitize.js"></script>
+
+    <script>
+        angular.module("sampleApp",['ui.bootstrap']).config(function($locationProvider) {
+
+            // enable html5Mode for pushstate ('#'-less URLs)  -- ,'ngStorage'
+            $locationProvider.html5Mode(true);
+            $locationProvider.hashPrefix('!');
+        });
+        angular.module("sampleApp").constant("moment", moment);
+
+    </script>
+
+
+    <script src="js/orionCtl.js"></script>
+    <script src="js/modalDialogSvc.js"></script>
+
+
+    <script src="js/filters.js"></script>
+
+    <script src="js/libs/vis.min.js"></script>
+
+    <!--
+     <script src="js/resourceCreatorSvc.js"></script>
+    <script src="js/rbServices.js"></script>
+
+    <script src="js/profileCreatorSvc.js"></script>
+    <script src="js/resourceSvc.js"></script>
+    <script src="js/builderSvc.js"></script>
+     <script src="js/services.js"></script>
+     <script src="js/appConfigSvc.js"></script>
+    <script src="js/libs/ngStorage.min.js"></script>
+    <script src="js/libs/jstree.min.js"></script>
+    -->
+
+    <style>
+        #resourceGraph {
+            width: 100%;
+            height: 600px;
+            border: 1px solid lightgray;
+        }
+
+        .risk-low {
+            background-color: #00A000;
+            color: white;
+         }
+        .risk-med {
+            background-color: orange;
+            color: white;
+        }
+        .risk-high {
+            background-color: red;
+            color: white;
+        }
+
+</style>
+        <title>Query Amadeus</title>
+
+</head>
+
+
+<body style="padding-top: 80px">
+
+<div ng-app="sampleApp" ng-controller="orionCtrl" class="container-fluid">
+
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+        <div class="container-fluid">
+            <div class="col-md-3 col-sm-3">
+                <span class="navbar-brand" href="#">
+                    Framingham Risk scores
+                </span>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div ng-show="currentUser" class="navbar-text pull-right">
+                    <strong>User:</strong>   {{currentUser.primaryActor.fullName}} ({{userIdentifier}})
+                </div>
+            </div>
+
+
+
+
+
+            <div class="col-md-1 col-sm-1">
+
+                <form class="navbar-form navbar-left">
+                    <img ng-show="waiting" src="css/ajax_loader_blue_32.gif"/>
+                </form>
+
+            </div>
+
+            <div class="col-md-1 col-sm-1">
+                <div class="navbar-text">
+                    <span ng-click="getLog()" style="cursor: pointer" >Log</span>
+                    <span ng-click="clearLog()" style="cursor: pointer">Clear</span>
+                </div>
+            </div>
+
+
+            <div class="col-md-3 col-sm-3">
+                <form class="navbar-form navbar-right" role="search">
+                    <div class="form-group">
+                        <select class="form-control" ng-model="input.listEntry" ng-change="getListContent(input.listEntry)"
+                                ng-options="entry.resource.title for entry in listBundle.entry"></select>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div ng-hide="listContentsBundle" >
+        <div ng-show="listBundle" class="alert alert-warning" role="alert">
+            <p>To view patient details, select the List (to the upper right) and the patients in that List will be displayed.
+            </p>
+        </div>
+    </div>
+
+    <div ng-show="log">
+        <table class="table table-bordered">
+            <tr ng-repeat = 'item in log'>
+                <td>{{item.date | date : 'mediumTime'}}</td>
+                <td>{{item.url}}</td>
+                <td>{{item.note}}</td>
+                <td>{{item.elap}}</td>
+            </tr>
+        </table>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-2 col-sm-2">
+            <h5 ng-show="listContentsBundle">List contents</h5>
+            <ul class="list-group">
+                <li ng-repeat = "entry in listContentsBundle.entry" ng-class="{'list-group-item':true,active:entry.resource.id == selectedPatient.id}"
+                    style = 'cursor:pointer'
+                    ng-click="selectPatient(entry.resource)">
+                    {{entry.resource.name[0].text}}
+                    <span class="pull-right badge risk-low">{{content.riskCalc.risk}}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10 col-sm-10">
+
+            <div class="banner" ng-show="selectedPatient">
+                {{selectedPatient.name[0].text}} {{selectedPatient.gender}} {{selectedPatient.birthDate}}
+                <span class="pull-right" ng-show="waiting"><em>Loading data, please wait...</em></span>
+            </div>
+
+            <div ng-show="missingData">
+                <h3>Unable to calculate the Framingham risk for the following reasons:</h3>
+                <ul class="list-unstyled">
+                    <li ng-repeat="m in missingData">{{m}}</li>
+                </ul>
+            </div>
+
+            <div class="row" ng-show="rawData">
+                <div class="col-md-6 col-sm-6">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-2">
+                            <strong>Current risk:</strong>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div ng-class="riskClass" style="text-align: center">{{risk}}% of CVD event in 10 years</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2 col-sm-2">
+                            <strong>Raw Data:</strong>
+                        </div>
+                        <div class="col-md-10 col-sm-10">
+
+                            <table ng-show="rawData" class="table table-bordered">
+                                <tr><th>Test</th><th>Result</th><th>Points</th><th>When done</th><th>Age</th></tr>
+                                <tr ng-repeat="(key,value) in rawData">
+                                    <td>{{value.display}}</td>
+                                    <td>{{value.value.value}} {{value.value.unit}}</td>
+                                    <td>{{value.points}}</td>
+                                    <td>{{value.date | date : 'yyyy-MM-dd'}}</td>
+                                    <td><span  ng-show="value.date">{{moment(value.date).diff(moment(),'days') * -1}} days</span></td>
+                                </tr>
+                                <tr ng-show="totalPoints > 0">
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{totalPoints}}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                            </table>
+
+                            <!--
+
+                            <table ng-show="rawData" class="table table-bordered">
+                                <tr><th>Test</th><th>Result</th><th>Points</th><th>When done</th><th>Age</th></tr>
+                                <tr ng-repeat="item in reference">
+                                    <td>{{item.name}}</td>
+                                    <td>{{rawData[item.key].value.value}} {{rawData[item.key].value.unit}}</td>
+                                    <td>{{item.points}}</td>
+                                    <td>{{rawData[item.key].date | date : 'yyyy-MM-dd'}}</td>
+                                    <td><span  ng-show="rawData[item.key].date">{{moment(rawData[item.key].date).diff(moment(),'days') * -1}} days</span></td>
+                                </tr>
+
+                            </table>
+
+                            -->
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="col-md-6 col-sm-6">
+                    <uib-tabset>
+                        <uib-tab heading="History of Assessments">
+                            <table class="table table-bordered">
+                                <tr><th>Date</th><th>Risk</th></tr>
+                                <tr ng-repeat="entry in assess">
+                                    <td>{{entry.resource.effectiveDateTime | date : 'yyyy-MM-dd'}}</td>
+                                    <td>{{entry.resource.valueQuantity.value}}%</td>
+                                </tr>
+                            </table>
+                        </uib-tab>
+                        <uib-tab heading="Assessment Observation">
+                            <pre ng-show="riskObservation">{{riskObservation | json}}</pre>
+                        </uib-tab>
+                    </uib-tabset>
+
+
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-sm-offset-2 col-md-offset-2 ">
+                    <button ng-show="riskObservation"  class="btn btn-success pull-left" ng-click="saveRiskObs()">Save Risk Assessment</button>
+                    <button ng-show="risk || missingData" class="btn btn-danger pull-right" ng-click="writeSample()">Generate Sample data</button>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+<!--
+
+
+   From the original prototype
+
+   <div class="row">
+       <div class="col-md-6 col-sm-6">
+
+           <uib-tabset>
+
+
+               <uib-tab heading="Table of meds" ng-show="hashAllResources['MedicationDispense']">
+                   <br/>
+
+
+                   <table class="table table-bordered">
+                       <tr><th>Date dispensed</th><th>Medication</th><th>Dose</th><th>Route</th><th>Quantity</th></tr>
+                       <tr ng-repeat="disp in hashAllResources['MedicationDispense']">
+                           <td>{{disp.display.dispensed | date:'yyyy-MM-dd'}}</td>
+                           <td valign="top">
+                               <span ng-click="selectItem(disp)" class="clickable">{{disp.display.medication.display}}</span>
+                           </td>
+                           <td>{{disp.display.dose.text}}</td>
+                           <td>{{disp.display.dose.route.coding[0].display}}</td>
+                           <td>{{disp.display.quantity.value}} {{disp.quantity.code}}</td>
+
+                       </tr>
+                   </table>
+
+
+               </uib-tab>
+
+
+
+               <uib-tab heading="Json">
+                   <pre>{{bundle | json}}</pre>
+               </uib-tab>
+
+               <uib-tab heading="Encounters" ng-show="hashAllResources['Encounter']">
+
+                   <table class="table table-bordered">
+                       <tr><th>Start</th><th>End</th><th>Class</th><th>Reason</th></tr>
+                       <tr ng-repeat="enc in hashAllResources['Encounter']">
+                           <td><span ng-click="selectItem(enc)" class="clickable">
+                               {{enc.display.period.start | date:'medium'}}</span>
+                           </td>
+                           <td>{{enc.display.period.end | date:'medium'}}</td>
+                           <td>{{enc.display.class}}</td>
+                           <td>{{enc.display.reason}}</td>
+
+                       </tr>
+                   </table>
+
+
+                   <br/>
+               </uib-tab>
+       </uib-tabset>
+
+       </div>
+
+       <div class="col-md-6 col-sm-6" ng-show="selectedResource">
+           <div class="banner">{{selectedInternal.medication.display}}</div>
+           <uib-tabset>
+               <br/>
+               <uib-tab heading="Tree">
+                   <div id="builderResourceTree"></div>
+               </uib-tab>
+               <uib-tab heading="Graph" select="redrawChart()">
+                   <div id="resourceGraph"></div>
+               </uib-tab>
+
+
+               <uib-tab heading="Json">
+                   <pre>{{selectedResource | json}}</pre>
+               </uib-tab>
+               <uib-tab heading="Internal">
+                   <pre>{{selectedInternal| json}}</pre>
+               </uib-tab>
+           </uib-tabset>
+
+       </div>
+   </div>
+
+
+-->
+
+
+
+
+
+
+</body>
+</html>
