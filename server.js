@@ -67,7 +67,7 @@ app.use('/', express.static(__dirname,{index:'/login.html'}));
 
 //get known configurations - key & display only...
 
-app.get('/config', function(req, res)  {
+app.get('/configDEP', function(req, res)  {
     var ar = []
     localConfig.configs.forEach(function (config) {
         ar.push({key:config.key,display:config.display});
@@ -76,7 +76,7 @@ app.get('/config', function(req, res)  {
 });
 
 //when authenticating...
-app.get('/auth/:environment', function(req, res)  {
+app.get('/auth', function(req, res)  {
 
     globalStart = new Date().getTime();
 

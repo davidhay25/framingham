@@ -4,7 +4,7 @@ angular.module("sampleApp")
         function ($scope,$http) {
 
             $scope.input = {};
-
+/*
             $http.get('/config').then(
                 function (data) {
 
@@ -12,8 +12,9 @@ angular.module("sampleApp")
                     $scope.input.environment = $scope.environments[0]
                 }
             );
+            */
 
-            $scope.authenticate = function() {
+            $scope.authenticateDEP = function() {
                 var url = $http.get('/orion/authUri').then(
                     function(url) {
                        // console.log(url)
