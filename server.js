@@ -25,7 +25,6 @@ var framingham = require(__dirname + "/framingham.js");
 var writeData = require(__dirname + "/writeData.js");
 
 
-//https://developer.orionhealth.io/apis/worklists_8.2/
 
 //capture any uncaught exception to avoid a crash...
 process.on('uncaughtException', function(err) {
@@ -44,6 +43,13 @@ app.use(session({
     cookie: { secure: false }
 }))
 
+//environment where this server is running. default to the snapp server (as I can easily feed in the dev environment via the IDE)
+var environment = process.env.environment;
+if (!environment) {
+    environment = 'snapp';
+}
+
+//deault port
 var port = process.env.port;
 if (! port) {
     port=3000;
@@ -73,7 +79,8 @@ app.get('/config', function(req, res)  {
 app.get('/auth/:environment', function(req, res)  {
 
     globalStart = new Date().getTime();
-    var environment =  req.params['environment'];
+
+    // now getting this form teh command line... var environment =  req.params['environment'];
     if (showLog) {console.log('env=', environment)};
     var config;
 
