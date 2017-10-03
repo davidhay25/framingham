@@ -219,10 +219,13 @@ var framingham = function(vo) {
         vo.sys.points = 0;
         if (sys < 120 && dia < 80) {
             points -= 3;
+            vo.sys.points = -3;
         } else  if (sys <= 159 && dia >=90 && dia <= 100) {
             points +=2
+            vo.sys.points = 2;
         } else if (sys >= 159 || dia > 99){
             points += 3
+            vo.sys.points = 3;
         }
 
         if (diabetes.toLowerCase() == 'yes') {

@@ -313,7 +313,7 @@ function getRiskOnePatient(patientIdentifier,endPoint,token,cb) {
 
         //doesn't seem to be saving the value when smoker is false. todo - look into this...
         if (! voData.smoker || ! voData.smoker.value) {
-            voData.smoker = {value:{value:'No'},type:'code',display:'Is smoker',type:'code'};
+            voData.smoker = {value:{value:'yes'},type:'code',display:'Is smoker',type:'code'};
         }
 
 

@@ -149,9 +149,8 @@ angular.module("sampleApp")
                 $scope.waiting = true;
                 $http.get('/orion/getRisk?identifier='+ fIdentifier+"&saveRisk="+false).then(
                     function (data) {
-                        console.log(data.data)
-                        //item.riskCalc = data.data;
-                        //console.log(item)
+                        //console.log(data.data)
+
 
 
 
@@ -286,7 +285,16 @@ angular.module("sampleApp")
                                 if (data.data && data.data.err) {
                                     alert('Error creating sample:\n'+angular.toJson(data.data.err))
                                 } else {
+
+
+                                    //add to the list of assessments
+                                    var newEntry = {resource:{}};
+                                    newEntry.resource.effectiveDateTime = new Date().getTime();
+                                    newEntry.resource.valueQuantity = {value:$scope.risk};
+                                    $scope.assess.push(newEntry)
                                     alert('Risk observation has been saved.')
+
+
                                 }
                             }).finally(function(){
                                 $scope.waiting = false;
