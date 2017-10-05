@@ -7,6 +7,7 @@
 var showLog = true;     //a flag to activate / deactivate the console.log
 var log = [];           //performance logs
 var globalStart;        //for when there are timings that cross functions...
+var async = require('async');
 
 var addLog = function(start,url,note){
     var elap = new Date().getTime() - start;
@@ -77,7 +78,6 @@ app.get('/configDEP', function(req, res)  {
 
 //when authenticating...
 app.get('/auth', function(req, res)  {
-
     globalStart = new Date().getTime();
 
     // now getting this form teh command line... var environment =  req.params['environment'];
@@ -105,6 +105,18 @@ app.get('/auth', function(req, res)  {
     res.redirect(authorizationUri);
 
 });
+
+
+/* stripped auth code for doc
+app.get('/auth', function(req, res)  {
+    var authorizationUri = config.baseUrl + "/oauth2/authorize";
+    authorizationUri += "?redirect_uri=" + encodeURIComponent(config.callback);
+    authorizationUri += "&response_type=code";
+    authorizationUri += "&client_id="+config.clientId;
+    res.redirect(authorizationUri);
+});
+*/
+
 
 //after authentication
 app.get('/callback', function(req, res) {
@@ -148,6 +160,36 @@ app.get('/callback', function(req, res) {
 
     })
 });
+
+
+//after authentication
+app.get('/callbackCLEAN', function(req, res) {
+    var code = req.query.code;  //a code set by the Auth Server
+       if (! code) {
+        res.redirect('error.html')
+        return;
+    }
+    var config = req.session["config"];     //retrieve the configuration from the session...
+    var options = {
+        method: 'POST',
+        uri: config.baseUrl + config.tokenEndPoint,
+        body: 'code=' + code + "&grant_type=authorization_code&redirect_uri=" +
+          config.callback + "&client_id=" + config.clientId + "&client_secret=" + config.secret,
+        headers: {'content-type': 'application/x-www-form-urlencoded'}
+    };
+
+    //the request function issues the HTTP call using the parameters in the options object
+    request(options, function (error, response, body) {
+        if (response && response.statusCode == 200) {
+            req.session['accessToken'] = JSON.parse(body)['access_token']
+            res.redirect('orion.html')
+        } else {
+            res.redirect('error.html')
+        }
+    })
+});
+
+
 
 // ---------- end authentication routines...
 
@@ -195,7 +237,11 @@ function getRiskOnePatient(patientIdentifier,endPoint,token,cb) {
         headers: {'accept':'application/json','authorization': 'Bearer ' + token}
     };
     var start = new Date().getTime();
+    //use the synchronous HTTP client to make the call. Only suitable in a demo app!
     var response = syncRequest('GET', url, options);
+
+
+
     addLog(start,url);
 
 
@@ -250,11 +296,12 @@ function getRiskOnePatient(patientIdentifier,endPoint,token,cb) {
 
 
 
-    /* temp - add back later...
+
     //next get all the conditions. todo: likely need a date filter
-    var url = remoteFhirServer + "Condition?patient.identifier="+patientIdentifier+"&_count=100";
+    var url =  endPoint + "/fhir/1.0/Condition?patient.identifier="+patientIdentifier+"&_count=100";
     var response = syncRequest('GET', url, options);
 
+    console.log(response.body.toString());
     voData.diab = {code : framingham.diabetesLOINCCode(), value: {value: false},type:'bool',display:'Has Diabetes'};        //true if the patient has diabetes...
     try {
         var conditionBundle = JSON.parse(response.body.toString());
@@ -278,7 +325,7 @@ function getRiskOnePatient(patientIdentifier,endPoint,token,cb) {
         cb({err:'Unable to retrieve Conditions'})
         return;
     }
-    */
+
 
     //finally get all the observations. todo: likely need a date filter
     var url = endPoint + "/fhir/1.0/Observation?subject.identifier="+patientIdentifier;
@@ -290,7 +337,6 @@ function getRiskOnePatient(patientIdentifier,endPoint,token,cb) {
 
     if (response.statusCode == 200) {
         //this will be a bundle
-
 
         //get the most recent for all the configured Observations
        framingham.observationList().forEach(function (item) {
@@ -563,6 +609,81 @@ app.get('/orion/getListContents',function(req,res) {
 
 
 });
+
+
+
+app.get('/orion/getAllData',function(req,res) {
+    var identifier = req.query['identifier'];
+    var access_token = req.session['accessToken'];  //set at login
+    var config = req.session["config"];     //retrieve the configuration from the session...
+    getAllData(identifier,access_token,config,function(err,results){
+        res.json(results)
+    })
+});
+
+
+//app.get('/orion/getAllData',function(req,res) {
+   // var identifier = req.query['identifier'];
+   // var access_token = req.session['accessToken'];  //set at login
+ //   var config = req.session["config"];     //retrieve the configuration from the session...
+function getAllData(identifier,access_token,config,callback) {
+    var ObservationUrl = config.apiEndPoint +"/fhir/1.0/Observation?subject.identifier="+identifier;
+    var PatientUrl = config.apiEndPoint + "/fhir/1.0/Patient?identifier="+identifier;
+    var ConditionUrl =  config.apiEndPoint + "/fhir/1.0/Condition?patient.identifier="+identifier;
+
+    var start = new Date().getTime();
+    async.parallel([
+        function(cb) {
+            singleCall(ObservationUrl,access_token,function(err,result){
+                cb(null,{type:'Observation',result:result});
+            })
+        },
+        function(cb) {
+            singleCall(PatientUrl,access_token,function(err,result){
+                cb(null,{type:'Patient',result:result});
+
+            })
+        },
+        function(cb) {
+            singleCall(ConditionUrl,access_token,function(err,result){
+                cb(null,{type:'Condition',result:result});
+            })
+        }
+    ],function(err,results){
+        addLog(start,null,'get all data');
+        callback(err,results)
+        //res.json(results)
+    });
+
+
+
+    function singleCall(url,token,cb) {
+        var options = {
+            method: 'GET',
+            uri : url,
+            headers: {'accept':'application/json','authorization': 'Bearer ' + token}
+        };
+
+//console.log(options)
+        request(options, function (error, response, body) {
+            if (response && response.statusCode == 200) {
+                try {
+                    var raw = JSON.parse(body)
+                    console.log(raw)
+                    cb(null,raw)
+                } catch (ex) {
+                    cb(ex)
+                }
+
+            } else {
+                cb('err')
+            }
+        })
+
+
+    }
+
+}
 
 
 //create a set of demo data for the patient with the given identifier

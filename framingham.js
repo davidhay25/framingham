@@ -268,7 +268,7 @@ var framingham = function(vo) {
 
 function makeSummaryObservation(data,risk){
     var obs = {resourceType:'Observation',status:'final'};
-    obs.code = {coding:[{system:'http://loinc.org',code:'65853-4'}],text:'Framingham risk score'}
+    obs.code = {coding:[{system:'http://loinc.org',code:'65853-4'}],text:'General CVD 10Y risk (Framingham)'}
     //obs.subject = {reference:vo.patientRef}
     obs.effectiveDateTime =  moment().format();
     obs.valueQuantity = {value:risk,unit:"%"};

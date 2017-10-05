@@ -51,6 +51,18 @@ angular.module("sampleApp")
             };
 
 
+
+            $http.get('/orion/getAllData?identifier=ORION|AAAA-0200-7').then(
+                function (data) {
+                   console.log(data.data)
+
+                },function(err) {
+                    alert('Error getting current user')
+                }
+            );
+
+            //return;
+
             //get the details for the currently logged in user (remember we have authenticated when this page loads)
             $scope.waiting = true;
             $http.get('/orion/currentUser').then(
