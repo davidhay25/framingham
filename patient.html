@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <base href="/" />
+    <meta charset="UTF-8">
+    <script src="js/libs/jquery-1.9.0.min.js"></script>
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/vis.min.css"/>
+
+    <script src="js/libs/moment.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+    <link rel="stylesheet" type="text/css" href="css/jsTreeStyle.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jsTreeThemes/proton/style.css"/>
+
+    <script src="js/libs/angular-sanitize.js"></script>
+
+    <script>
+        angular.module("sampleApp",['ui.bootstrap']).config(function($locationProvider) {
+
+            // enable html5Mode for pushstate ('#'-less URLs)  -- ,'ngStorage'
+            $locationProvider.html5Mode(true);
+            $locationProvider.hashPrefix('!');
+        });
+        angular.module("sampleApp").constant("moment", moment);
+
+    </script>
+
+
+    <script src="js/patientCtl.js"></script>
+    <script src="js/modalDialogSvc.js"></script>
+
+
+    <script src="js/filters.js"></script>
+
+    <script src="js/libs/vis.min.js"></script>
+
+
+
+        <title>Personal Finances</title>
+
+</head>
+
+
+<body style="padding-top: 80px">
+
+<div ng-app="sampleApp" ng-controller="patientCtrl" class="container-fluid">
+
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+        <div class="container-fluid">
+            <div class="col-md-3 col-sm-3">
+                <span class="navbar-brand" href="#">
+                    Patient app
+                </span>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div ng-show="currentUser" class="navbar-text pull-right">
+                    <strong>User:</strong>   {{currentUser.primaryActor.fullName}} ({{userIdentifier}})
+                </div>
+            </div>
+
+
+            <div class="col-md-1 col-sm-1">
+
+                <form class="navbar-form navbar-left">
+                    <img ng-show="waiting" src="css/ajax_loader_blue_32.gif"/>
+                </form>
+
+            </div>
+
+            <div class="col-md-1 col-sm-1">
+                <div class="navbar-text">
+
+                </div>
+            </div>
+
+
+            <div class="col-md-3 col-sm-3">
+
+            </div>
+        </div>
+    </nav>
+
+   <div class="banner">
+       Personal Finance Manager
+   </div>
+
+    <h3>Monthly Income</h3>
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+            <strong>Salary</strong>
+        </div>
+        <div class="col-sm-2 col-md-2">
+            <input type="number" min=0 class="form-control" ng-model="input.salary" ng-blur="update(input.salary)"/>
+        </div>
+    </div>
+    <h3>Monthly Expenditure</h3>
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+            <strong>Rent</strong>
+        </div>
+        <div class="col-sm-2 col-md-2">
+            <input  type="number" min='0' class="form-control" ng-model="input.rent"  ng-blur="update(input.rent)"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+            <strong>Communications</strong>
+        </div>
+        <div class="col-sm-2 col-md-2">
+            <input  type="number" min='0' class="form-control" ng-model="input.comms" ng-blur="update(input.comms)"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+            <strong>Tobacco</strong>
+        </div>
+        <div class="col-sm-2 col-md-2">
+            <input  type="number" min='0' class="form-control" ng-model="input.tobacco" ng-blur="update(input.tobacco)"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+            <strong>Alcohol</strong>
+        </div>
+        <div class="col-sm-2 col-md-2">
+            <input  type="number" min='0' class="form-control" ng-model="input.alcohol" ng-blur="update(input.alcohol)"/>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+            <strong>Alcohol</strong>
+        </div>
+        <div class="col-sm-2 col-md-2">
+            <input  type="number" min='0' class="form-control" readonly="readonly" ng-model="balance"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-5 col-md-5">
+            <div ng-show = "level==1" class = "alert alert-success">Your finances are in good shape!</div>
+
+            <div ng-show = "level==2"  class = "alert alert-info">You're getting a bit low on funds there... </div>
+
+            <div ng-show = "level==3"  class = "alert alert-warning">Time to tighten the belt</div>
+
+            <div ng-show = "level==4"  class = "alert alert-danger">You're bankrupt!</div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+            <strong></strong>
+        </div>
+        <div class="col-sm-2 col-md-2">
+            <button class="btn btn-primary" ng-click="save()">Save</button>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+</body>
+</html>

@@ -6,6 +6,7 @@ var moment = require('moment');
 /*
 * When the script is run, the patient id, age of results and target server must be set
 * The results are sent to target server synchronously (not all servers handle multiple calls well or batches)...
+* THIS IS ONLY USED WHEN RUN AS A SCRIPT - NOT THE DEMO DATA FROM THE UI
 * */
 var framingham = require(__dirname + "/framingham.js");
 
@@ -48,6 +49,7 @@ conditions.forEach(function (vo) {
 
 //send all the Observations
 observations.forEach(function (vo) {
+  //  console.log(observations)
     vo.patientRef = patientRef;
     vo.date = moment().subtract(age,'days').format();
     var obs = createObservation(vo)
@@ -75,11 +77,13 @@ function createObservation(vo) {
     obs.code = {coding:[{system:vo.system,code:vo.code}],text:vo.name}
     obs.subject = {reference:vo.patientRef}
     obs.effectiveDateTime = vo.date;
-    if (vo.type == 'bool') {
-        obs.valueBoolean = false;
+    if (vo.type == 'string') {
+        obs.valueString = 'no';
+        /* This is only for smoker ATM - want it false so the we can update it...
         if (Math.random() > .5) {
             obs.valueBoolean = true;
         }
+        */
     } else {
         var value = Math.round(vo.min + (vo.max-vo.min)* Math.random());
         obs.valueQuantity = {value:value,unit:vo.unit}

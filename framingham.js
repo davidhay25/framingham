@@ -7,24 +7,32 @@ exports.getRisk = function(vo) {
 }
 
 //the set of observation codes used for framingham...
+//Note that we are using a LOINC code for smoking, and storing as a string.
+//https://s.details.loinc.org/LOINC/72166-2.html?sections=Comprehensive
+//https://danielvreeman.com/proper-use-of-loinc-question-codes-with-assessment-instrument-methods/
 exports.observationList = function() {
     var observations = []
     observations.push({key:'ldl',name:'LDL',code:'18262-6', unit:'mg/dl',system:'http://loinc.org',min:90,max:180})
     observations.push({key:'hdl',name:'HDL',code:'2085-9', unit:'mg/dl',system:'http://loinc.org',min:30,max:90})
     observations.push({key:'sys',name:'Systolic BP',code:'8480-6', unit:'mm/Hg',system:'http://loinc.org',min:100,max:170})
     observations.push({key:'dias',name:'Diastolic BP',code:'8462-4', unit:'mm/Hg',system:'http://loinc.org',min:60,max:100})
-    observations.push({key:'smoker',name:'Smoker',code:'72166-2',system:'http://loinc.org',type:'bool'})
+    observations.push({key:'smoker',name:'Smoker',code:'72166-2',system:'http://loinc.org',type:'string'});
+
+    //observations.push({key:'smoker',name:'Smoker',code:'365982000',system:'http://snomed.info/sct',type:'cc'})
+    //smoking notes: https://chat.fhir.org/#narrow/stream/uk/topic/SNOMED.20Observation
+
     return observations;
 };
 
 exports.conditionList = function(){
     var conditions = []
-    conditions.push({key:'diab',name:'Diabetes', code:"46635009",system:"http://snomed.info/sct",verif:"confirmed",id:'diabetes-fram',type:'bool'})
+    conditions.push({key:'diabetes',name:'Diabetes', code:"46635009",system:"http://snomed.info/sct",verif:"confirmed",id:'diabetes-fram',type:'bool'})
     return conditions;
 };
 
 exports.diabetesSNOMEDCode = function() {
-    return "46635009"
+    return "44054006"
+    //return "46635009"
 };  // used to find in Conditions list
 
 exports.diabetesLOINCCode = function () {
@@ -63,7 +71,7 @@ var framingham = function(vo) {
 
     //we'll assume that in the absense of a value, the answer is no...
     var diabetes = vo.diabetes.value.value; //condition diabetes codes - 46635009 / 44054006
-    var smoker = vo.smoker.value.value;  //72166-2
+    var smoker = vo.smoker.value.value;  //72166-2  a numbber from LOINC  4 = non smoker(https://s.details.loinc.org/LOINC/72166-2.html?sections=Comprehensive)
     //chol = 14647-2
 
     var male_map = [3,4,4,6,7,9,11,14,18,22,27,33,40,47];
@@ -151,10 +159,10 @@ var framingham = function(vo) {
 
         if (diabetes.toLowerCase() == 'yes') {
             points += 2
-            vo.diab.points = 2;
+            vo.diabetes.points = 2;
         }
 
-        if (smoker.toLowerCase() == 'yes') {
+        if (smoker.toLowerCase() !== '4') {
             points += 2
             vo.smoker.points = 2;
         }
@@ -230,10 +238,10 @@ var framingham = function(vo) {
 
         if (diabetes.toLowerCase() == 'yes') {
             points += 4
-            vo.diab.points = 4;
+            vo.diabetes.points = 4;
         }
 
-        if (smoker.toLowerCase() == 'yes') {
+        if (smoker.toLowerCase() !== '4') {
             points += 2
             vo.smoker.points = 2;
         }
@@ -269,13 +277,13 @@ var framingham = function(vo) {
 function makeSummaryObservation(data,risk){
     var obs = {resourceType:'Observation',status:'final'};
     obs.code = {coding:[{system:'http://loinc.org',code:'65853-4'}],text:'General CVD 10Y risk (Framingham)'}
-    //obs.subject = {reference:vo.patientRef}
+
     obs.effectiveDateTime =  moment().format();
     obs.valueQuantity = {value:risk,unit:"%"};
     obs.component = [];
     _.forIn(data,function(v,k){
         //console.log(v,k)
-        var item = {code : {Coding:[{system:'http://loinc.org',code:v.code}],text:v.display}};
+        var item = {code : {Coding:[{system:'http://loinc.org',code:v.code,display:v.display}],text:v.display}};
 
         if (v.type) {
             switch (v.type) {
@@ -285,9 +293,8 @@ function makeSummaryObservation(data,risk){
                 case 'bool' :
                     item.valueBoolean = v.value.value;
             }
-
         } else {
-            console.log(v)
+
             if (v && v.value && v.value.value) {
                 item.valueQuantity = {value:v.value.value,unit:v.value.unit};
             }
@@ -295,7 +302,6 @@ function makeSummaryObservation(data,risk){
         }
 
 
-        // if has diabetes, then a loinc code  66152-0 with a value of yes
         if (item.valueQuantity || item.valueBoolean || item.valueCode) {
             obs.component.push(item)
         }

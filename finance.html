@@ -29,7 +29,7 @@
 
 <div ng-app="sampleApp" ng-controller="loginCtrl" class="container-fluid">
 
-    <div class="banner">Demonstration of using OrionHealth API's for Analytics</div>
+    <div class="banner">Personal finances</div>
 
     <div class="row">
         <div class="col-sm-3 col-md-3">
@@ -37,9 +37,8 @@
         </div>
         <div class="col-sm-6 col-md-6">
             <div class="rounded-box">
-                <p>This application is an example of how to access data from the Orion Health APIs, and to write data
-                back. It calculates the Framingham risk score for patients in a providers list, and optionally
-                writes the score back as a risk Observation.</p>
+                <p>Pretends to be a personal finance app to show how data collected from different sources can be
+                used for health.</p>
                 <p>There are a number of steps demonstrated</p>
                 <ol>
                     <li>First, you need to log in to the system. You need to have a Portal login to do this, and
@@ -66,8 +65,7 @@
 
         </div>
         <div class="col-sm-6 col-md-6">
-            <div><a class="btn btn-warning pull-right" ng-href="/auth?page=orion.html">Login as Clinician</a></div>
-            <div><a class="btn btn-success pull-left" ng-href="/auth?page=patient.html">Login as Patient</a></div>
+            <a class="btn btn-warning pull-right" ng-href="/auth">Login</a>
         </div>
     </div>
 

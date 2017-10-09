@@ -22,11 +22,11 @@ exports.saveResource = function(resource,endPoint,token,cb) {
         console.log(response.body.toString())
         cb({err:response.body.toString()})
     } else {
-        cb()
+        cb({ok:response.body.toString()})
     }
     console.log('-----------------')
 
-    cb()
+   // cb()
 
 
 };
@@ -56,8 +56,9 @@ exports.makeObservations = function(patientIdentifier,endPoint,token,cb) {
 
         observations.forEach(function (vo) {
             vo.patientRef = "Patient/"+patient.id;
-            vo.date = moment().subtract(age,'days').format();
+            vo.date = moment().format();
             var obs = createObservation(vo)
+            console.log(vo);
             console.log(obs)
 
             var url = endPoint + "/fhir/1.0/Observation" ;
@@ -136,13 +137,8 @@ function createObservation(vo) {
     obs.code = {coding:[{system:vo.system,code:vo.code}],text:vo.name}
     obs.subject = {reference:vo.patientRef}
     obs.effectiveDateTime = vo.date;
-    if (vo.type == 'bool') {
-        obs.valueBoolean = true;
-        /*
-        obs.valueBoolean = false;
-        if (Math.random() > .5) {
-            obs.valueBoolean = true;
-        }*/
+    if (vo.name == 'Smoker') {      //this is only for smoker right now. valueBoolean seems to not be saved...
+        obs.valueString = '4';  //https://s.details.loinc.org/LOINC/72166-2.html?sections=Comprehensive
     } else {
         var value = Math.round(vo.min + (vo.max-vo.min)* Math.random());
         obs.valueQuantity = {value:value,unit:vo.unit}

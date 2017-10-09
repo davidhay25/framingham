@@ -4,7 +4,7 @@
 
 // rsync -a * root@clinfhir.com:/opt/orion1
 
-var showLog = false;     //a flag to activate / deactivate the console.log
+var showLog = true;     //a flag to activate / deactivate the console.log
 var log = [];           //performance logs
 var globalStart;        //for when there are timings that cross functions...
 var async = require('async');
@@ -29,7 +29,7 @@ var writeData = require(__dirname + "/writeData.js");
 
 //capture any uncaught exception to avoid a crash...
 process.on('uncaughtException', function(err) {
-    console.log('>>>>>>>>>>>>>>> Caught exception: ' + err + " (Note that the actual error may be misleading and may not reflect tha actual problem)");
+    console.log('>>>>>>>>>>>>>>> Caught exception: ' + err);
 });
 
 var localConfig = require(__dirname + '/config.json');
@@ -50,7 +50,7 @@ if (!environment) {
     environment = 'snapp';
 }
 
-//default port
+//deault port
 var port = process.env.port;
 if (! port) {
     port=3000;
@@ -66,10 +66,19 @@ app.use('/', express.static(__dirname,{index:'/login.html'}));
 
 //--- ============= authentication callback & other routine
 
+//get known configurations - key & display only...
+
+app.get('/configDEP', function(req, res)  {
+    var ar = []
+    localConfig.configs.forEach(function (config) {
+        ar.push({key:config.key,display:config.display});
+    });
+    res.json(ar)
+});
+
 //when authenticating...
 app.get('/auth', function(req, res)  {
     globalStart = new Date().getTime();
-    req.session["page"] = req.query.page || 'orion.html'
 
     // now getting this form teh command line... var environment =  req.params['environment'];
     if (showLog) {console.log('env=', environment)};
@@ -83,7 +92,7 @@ app.get('/auth', function(req, res)  {
         }
     });
 
-
+    console.log(config);
 
     var authorizationUri = config.baseUrl + "/oauth2/authorize";
     authorizationUri += "?redirect_uri=" + encodeURIComponent(config.callback);
@@ -96,6 +105,17 @@ app.get('/auth', function(req, res)  {
     res.redirect(authorizationUri);
 
 });
+
+
+/* stripped auth code for doc
+app.get('/auth', function(req, res)  {
+    var authorizationUri = config.baseUrl + "/oauth2/authorize";
+    authorizationUri += "?redirect_uri=" + encodeURIComponent(config.callback);
+    authorizationUri += "&response_type=code";
+    authorizationUri += "&client_id="+config.clientId;
+    res.redirect(authorizationUri);
+});
+*/
 
 
 //after authentication
@@ -124,19 +144,15 @@ app.get('/callback', function(req, res) {
     var start = new Date().getTime();
     request(options, function (error, response, body) {
         addLog(start,options.uri,'get token');
-
+       // console.log('error ',error)
         if (showLog) {
             console.log(' ----- after token call -------');
             console.log('body ', body);
         }
         if (response && response.statusCode == 200) {
 
-
             req.session['accessToken'] = JSON.parse(body)['access_token']
-
-            console.log('access token: ' + req.session['accessToken'])
-            res.redirect(req.session["page"]);
-            //res.redirect('orion.html')
+            res.redirect('orion.html')
         } else {
             res.redirect('error.html')
         }
@@ -186,163 +202,209 @@ app.get('/orion/getLog',function(req,res){
 
 app.post('/orion/clearLog',function(req,res){
     log.length = 0;
-
+    console.log(log)
     res.json(log)
 })
 
+
 //get the risk for a single patient
 app.get('/orion/getRisk',function(req,res){
-    var getRiskStart = new Date().getTime();
-    var identifier = req.query['identifier'];
-    var access_token = req.session['accessToken'];  //set at login
+    var identifier = req.query.identifier;
+    var saveRisk = req.query.saveRisk;
+    var access_token = req.session['accessToken'];
     var config = req.session["config"];     //retrieve the configuration from the session...
 
-    //get all the data that we're going to need - Patient, Observation, Condition using async parallel calls...
-    getAllData(identifier,access_token,config,function(err,results){
-        if (showLog) {console.log('data loaded...')};
-        if (err) {
-            res.json(err,500);
-        } else {
-            //pull the data into a hash for easier manipulation
-            var hash = {};
-            results.forEach(function (item) {
-                hash[item.type] = item.result;      //result is a bundle
-            });
-
-
-            //todo - check for no observations (? no conditions) here...
-
-            getRiskOnePatient(hash,function(err,result){
-                if (err) {
-                    res.json(err,500)
-                } else {
-                    res.json(result)
-                }
-            })
-        }
+    var getRiskStart = new Date().getTime();
+    getRiskOnePatient(identifier,config.apiEndPoint,access_token,function(result){
+        addLog(getRiskStart,null,'Overall time for risk assessment');
+        res.json(result)
     })
 });
 
 
 
-//get the risk for a single patient using the data already loaded...
-function getRiskOnePatient(hash,cb) {
+//get the risk for a single patient (assuming that we have the patient identifier)
+//been a bit lazy and used synchronous calls - but it is only a prototype...
+function getRiskOnePatient(patientIdentifier,endPoint,token,cb) {
+    var saveRisk = false;
 
     var voData = {};        //this will hold all the data for the risk calculator...
 
     //first get the patient
-    var patientBundle = hash['Patient'];
-    if (! patientBundle.entry || patientBundle.entry.length == 0) {
-        cb('No patient with this identifier was located.')
-        return;
-    }
-    var patient = patientBundle.entry[0].resource;      //assume only 1 - really should check...
-
-    //now check that the required patient demographics are present...
-    if (!patient.birthDate) {
-        cb('Patient has no birth date!')
-        return;
-    }
-
-    var birthdate = new Date(patient.birthDate);
-    var cur = new Date();
-    var diff = cur-birthdate; // This is the difference in milliseconds
-    voData.age = {value:{value: Math.floor(diff/31557600000),unit:'a'},display:'Age'}; // Divide by 1000*60*60*24*365.25
-
-    if (!patient.gender || patient.gender=='other' || patient.gender=='unknown') {
-        cb('Patient has no recognizable gender!')
-        return;
-    }
-
-    voData.gender = {value:{value:'M'},type:'code',display:'Gender',type:'code'};
-    if (patient.gender == 'female'){
-        voData.gender = {value:{value:'F'},display:'Gender',type:'code'};
-    }
-
-    //add the codes to the list of data for framingham
-    framingham.demogList().forEach(function(item) {
-        voData[item.key].code = item.code;
-        voData[item.key].system = item.system;
-    });
-
-
-    //now find out if the patient has diabetes. We'll look for a single SNOMED code, but there are more robust ways of doing this...
-
-    var diabetesCode = framingham.diabetesSNOMEDCode();
-    diabetesEntry = _.find(hash['Condition'].entry,function(o){
-        try {
-            return o.resource.code.coding[0].code == diabetesCode;
-        } catch(ex) {
-            return false;
-        }
-
-    });
-
-    //default to no...
-    voData.diabetes = {value:{value:'No'},type:'code',display:'Has Diabetes',type:'code'};
-    if (diabetesEntry) {
-        voData.diabetes = {value:{value:'Yes'},type:'code',display:'Has Diabetes',type:'code'};
-    }
+    var url = endPoint + "/fhir/1.0/Patient?identifier="+patientIdentifier;
+    var options = {
+        method: 'GET',
+        headers: {'accept':'application/json','authorization': 'Bearer ' + token}
+    };
+    var start = new Date().getTime();
+    //use the synchronous HTTP client to make the call. Only suitable in a demo app!
+    var response = syncRequest('GET', url, options);
 
 
 
-    var observations = hash['Observation'];
-
-    //get the most recent for all the configured Observations
-    //voData[item.key] has structure {value: date: code: system: type:}
-   framingham.observationList().forEach(function (item) {
-       voData[item.key] = mostRecent(observations,item.code);
-
-       if (voData[item.key]) {
-           voData[item.key].display = item.name;
-       }
-
-   });
+    addLog(start,url);
 
 
-    //get all the existing observations that are risk assessments to return to the client...
-    var assessments = _.filter(observations.entry,function(o){
-        if (o.resource && o.resource.code && o.resource.code.coding ) {
-            return o.resource.code.coding[0].code == '65853-4' && o.resource.effectiveDateTime ;
-        } else {
-            return false;
-        }})
 
-    //adjust the smoker values for the DSS and
-
-    //doesn't seem to be saving the value when smoker is false. todo - look into this...
-   // if (! voData.smoker || ! voData.smoker.value) {
-        //voData.smoker = {value:{value:'no'},type:'code',display:'Is smoker',type:'code'};
-   // }
+    var patient;
 
     try {
-        var tmp = framingham.getRisk(voData);       //calculates the risk and generates a summary observation
-    } catch(ex) {
-        console.log('error calculating score ',ex)
-    }
+        var patientBundle = JSON.parse(response.body.toString());
+
+        if (! patientBundle.entry || patientBundle.entry.length == 0) {
+            cb({err:'No patient with the identifier ' +patientIdentifier+ ' was located.'})
+            return;
+        }
+
+        patient = patientBundle.entry[0].resource;
+
+        if (!patient.birthDate) {
+            cb({err:'Patient has no birth date!'})
+            return;
+        }
+
+        var birthdate = new Date(patient.birthDate);
+        var cur = new Date();
+        var diff = cur-birthdate; // This is the difference in milliseconds
+        voData.age = {value:{value: Math.floor(diff/31557600000),unit:'a'},display:'Age'}; // Divide by 1000*60*60*24*365.25
+
+        if (!patient.gender || patient.gender=='other' || patient.gender=='unknown') {
+            cb({err:'Patient has no recognizable gender!'})
+            return;
+        }
+
+        voData.gender = {value:{value:'M'},type:'code',display:'Gender',type:'code'};
+
+        if (patient.gender == 'female'){
+            voData.gender = {value:{value:'F'},display:'Gender',type:'code'};
+        }
+
+        //add the codes to the
+        framingham.demogList().forEach(function(item) {
+            voData[item.key].code = item.code;
+            voData[item.key].system = item.system;
+        })
 
 
-
-    if (tmp.missingData) {
-        //true when not all of the data required for the assessment is present...
-        //it's not an error (in the api sense - just can't be computed)
-        cb(tmp)
+    } catch (ex) {
+        cb({err:'Unable to locate Patient'})
         return;
     }
 
-    var reply = {totalPoints:tmp.points,risk:tmp.risk,data:voData,obs:tmp.obs,assess:assessments}
+    //set the diabetes to 'no' for now...
+    voData.diabetes = {value:{value:'No'},type:'code',display:'Has Diabetes',type:'code'};
 
-    //finally create an observation that represents the risk calculation...
-    var Observation = tmp.obs;
-    Observation.subject = {reference:'Patient/'+patient.id};
 
-    //add the conditions and the demographics to the reference list (for display in the UI)
-    var lst = framingham.observationList().concat(framingham.conditionList());
-    reply.ref = lst.concat(framingham.demogList())
-    reply.jsonObservations = observations;
 
-    cb(null,reply);
-    return;
+
+    //next get all the conditions. todo: likely need a date filter
+    var url =  endPoint + "/fhir/1.0/Condition?patient.identifier="+patientIdentifier+"&_count=100";
+    var response = syncRequest('GET', url, options);
+
+    console.log(response.body.toString());
+    voData.diab = {code : framingham.diabetesLOINCCode(), value: {value: false},type:'bool',display:'Has Diabetes'};        //true if the patient has diabetes...
+    try {
+        var conditionBundle = JSON.parse(response.body.toString());
+       // console.log(conditionBundle)
+
+        if (conditionBundle && conditionBundle.entry) {
+            conditionBundle.entry.forEach(function (ent) {
+                if (ent.resource && ent.resource.code && ent.resource.code.coding) {
+                    ent.resource.code.coding.forEach(function (coding) {
+                        console.log(coding.code, framingham.diabetesSNOMEDCode())
+                        if (coding.code == framingham.diabetesSNOMEDCode()) {
+                            voData.diab = {code : framingham.diabetesLOINCCode(), value: {value: true},type:'bool',display:'Has Diabetes'};
+                        }
+                    })
+                }
+            })
+        }
+
+
+    } catch (ex) {
+        cb({err:'Unable to retrieve Conditions'})
+        return;
+    }
+
+
+    //finally get all the observations. todo: likely need a date filter
+    var url = endPoint + "/fhir/1.0/Observation?subject.identifier="+patientIdentifier;
+    var start = new Date().getTime();
+    var response = syncRequest('GET', url, options);
+    addLog(start,url);
+
+    var jsonObservations = JSON.parse(response.body.toString());
+
+    if (response.statusCode == 200) {
+        //this will be a bundle
+
+        //get the most recent for all the configured Observations
+       framingham.observationList().forEach(function (item) {
+           voData[item.key] = mostRecent(jsonObservations,item.code);
+
+           if (voData[item.key]) {
+               voData[item.key].display = item.name;
+           }
+
+       });
+
+        //get all the existing observations that are risk assessments to return to the client...
+        var assessments = _.filter(jsonObservations.entry,function(o){
+            if (o.resource && o.resource.code && o.resource.code.coding ) {
+                return o.resource.code.coding[0].code == '65853-4' && o.resource.effectiveDateTime ;
+            } else {
+                return false;
+            }})
+
+
+        //doesn't seem to be saving the value when smoker is false. todo - look into this...
+        if (! voData.smoker || ! voData.smoker.value) {
+            voData.smoker = {value:{value:'yes'},type:'code',display:'Is smoker',type:'code'};
+        }
+
+
+        var tmp = framingham.getRisk(voData);       //calculates the risk and generates a summary observation
+
+
+        if (tmp.missingData) {
+            //true when not all of the data required for the assessment is present...
+            //it's not an error (in the api sense - just can't be computed)
+            cb(tmp)
+            return;
+        }
+
+        var reply = {totalPoints:tmp.points,risk:tmp.risk,data:voData,obs:tmp.obs,assess:assessments}
+
+        //finally create an observation that represents the risk calculation...
+        var Observation = tmp.obs;
+        Observation.subject = {reference:'Patient/'+patient.id};
+
+        //only write it out if the 'saveRisk' flag is set...
+        if (saveRisk) {
+            options.json = Observation;
+            var url = remoteFhirServer + "Observation/";
+            var response = syncRequest('POST', url, options);
+
+
+            //If there's an error, at least return the Observation so I can debug...
+            if (response.statusCode !== 201) {
+                reply.err = 'Error saving assessment '+ response.body;
+
+            }
+        }
+
+        //add the conditions and the demographics to the reference list (for display in the UI)
+        var lst = framingham.observationList().concat(framingham.conditionList());
+        reply.ref = lst.concat(framingham.demogList())
+        reply.jsonObservations = jsonObservations;
+
+        cb(reply);
+
+
+    } else {
+        cb({err:'No Observations for this patient'})
+    }
+
 
     function mostRecent(bundle,code) {
         var sys = _.filter(bundle.entry,function(o){
@@ -354,9 +416,9 @@ function getRiskOnePatient(hash,cb) {
         }).map(function(o){
             //warning! if the coding is empty this coud barf... (though it is checked in the _.filter()...)
             var ret = {value:o.resource.valueQuantity,date:o.resource.effectiveDateTime,code:code,system:o.resource.code.coding[0].system};
-            if (! _.isUndefined(o.resource.valueString)) {
-                ret.value = {value:o.resource.valueString};
-                ret.type = 'string';
+            if (! _.isUndefined(o.resource.valueBoolean)) {
+                ret.value = {value:o.resource.valueBoolean};
+                ret.type = 'bool';
             }
             return ret;
         });
@@ -364,53 +426,13 @@ function getRiskOnePatient(hash,cb) {
         sys = _.orderBy(sys,['date'],['desc']);
         return sys[0];
     }
+
+
 }
-
-
-app.get('/orion/currentPatient',function(req,res){
-
-
-    var access_token = req.session['accessToken'];
-    var config = req.session["config"];     //retrieve the configuration from the session...
-
-    var uri = config.apiEndPoint + "/user/as/Patient";
-
-    var options = {
-        method: 'GET',
-        uri: uri,
-        headers: {'accept':'application/json','authorization': 'Bearer ' + access_token}
-    };
-
-    var start = new Date().getTime();
-    request(options, function (error, response, body) {
-        addLog(start,uri);
-        if (error || response.statusCode !== 200) {
-            console.log('err',error,response)
-            res.send(error,500)
-        } else {
-            try {
-                var usr = JSON.parse(body);
-
-
-                res.json(usr)
-            } catch (ex){
-                console.log('getpat',ex)
-                res.send('Error processing User',500)
-            }
-
-        }
-
-    })
-
-});
 
 
 //return the current user - and the environment  (This is not a FHIR call)
 app.get('/orion/currentUser',function(req,res){
-
-
-    //      user/as/Patient
-
     var access_token = req.session['accessToken'];
     var config = req.session["config"];     //retrieve the configuration from the session...
 
@@ -442,9 +464,6 @@ app.get('/orion/currentUser',function(req,res){
         }
 
     })
-
-
-
 });
 
 //return the Lists defined for the current user
@@ -570,18 +589,17 @@ app.get('/orion/getListContents',function(req,res) {
         }
         
         if (raw.mergeChains) {
-
+            //console.log(raw.mergeChains);
             patient.identifier = patient.identifier || []
 
             for(var system in raw.mergeChains){
-                var t = raw.mergeChains[system]
-                if (t.current) {
-                    patient.identifier.push({system:system,value:t.current})
-                }
+                patient.identifier.push({system:system,value:raw.mergeChains[system]})
 
-console.log(raw.mergeChains[system])
             }
 
+
+
+            
         }
         
 
@@ -593,7 +611,7 @@ console.log(raw.mergeChains[system])
 });
 
 
-//a test endpoint - not actually used...
+
 app.get('/orion/getAllData',function(req,res) {
     var identifier = req.query['identifier'];
     var access_token = req.session['accessToken'];  //set at login
@@ -604,6 +622,10 @@ app.get('/orion/getAllData',function(req,res) {
 });
 
 
+//app.get('/orion/getAllData',function(req,res) {
+   // var identifier = req.query['identifier'];
+   // var access_token = req.session['accessToken'];  //set at login
+ //   var config = req.session["config"];     //retrieve the configuration from the session...
 function getAllData(identifier,access_token,config,callback) {
     var ObservationUrl = config.apiEndPoint +"/fhir/1.0/Observation?subject.identifier="+identifier;
     var PatientUrl = config.apiEndPoint + "/fhir/1.0/Patient?identifier="+identifier;
@@ -619,6 +641,7 @@ function getAllData(identifier,access_token,config,callback) {
         function(cb) {
             singleCall(PatientUrl,access_token,function(err,result){
                 cb(null,{type:'Patient',result:result});
+
             })
         },
         function(cb) {
@@ -629,8 +652,10 @@ function getAllData(identifier,access_token,config,callback) {
     ],function(err,results){
         addLog(start,null,'get all data');
         callback(err,results)
-
+        //res.json(results)
     });
+
+
 
     function singleCall(url,token,cb) {
         var options = {
@@ -639,21 +664,25 @@ function getAllData(identifier,access_token,config,callback) {
             headers: {'accept':'application/json','authorization': 'Bearer ' + token}
         };
 
+//console.log(options)
         request(options, function (error, response, body) {
             if (response && response.statusCode == 200) {
                 try {
                     var raw = JSON.parse(body)
+                    console.log(raw)
                     cb(null,raw)
-                    return;
                 } catch (ex) {
                     cb(ex)
-                    return;
                 }
+
             } else {
                 cb('err')
             }
         })
+
+
     }
+
 }
 
 
@@ -676,7 +705,7 @@ app.post('/orion/fhir/Observation',function(req,res){
         body += chunk;
     });
     req.on('end', function () {
-
+        console.log('body: ' + body);
         var resource = JSON.parse(body);
         var access_token = req.session['accessToken'];
         var config = req.session["config"];     //retrieve the configuration from the session...

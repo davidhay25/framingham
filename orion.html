@@ -109,15 +109,20 @@
 
             </div>
 
-            <div class="col-md-1 col-sm-1">
+            <div class="col-md-2 col-sm-2">
                 <div class="navbar-text">
                     <span ng-click="getLog()" style="cursor: pointer" >Log</span>
                     <span ng-click="clearLog()" style="cursor: pointer">Clear</span>
+
+                    <span ng-click="showObs = ! showObs" style="cursor: pointer">Obs</span>
+
+
+
                 </div>
             </div>
 
 
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-2 col-sm-2">
                 <form class="navbar-form navbar-right" role="search">
                     <div class="form-group">
                         <select class="form-control" ng-model="input.listEntry" ng-change="getListContent(input.listEntry)"
@@ -147,6 +152,17 @@
         </table>
     </div>
 
+    <div ng-show="showObs">
+        <table class="table table-bordered">
+            <tr ng-repeat = 'entry in riskCalc.jsonObservations.entry'>
+                <td>{{entry.resource.effectiveDateTime | date}}</td>
+                <td><pre>{{entry.resource.code | json}}</pre></td>
+                <td><pre>{{entry.resource.valueQuantity | json }}{{entry.resource.valueBoolean | json }} {{entry.resource.valueString | json }}</pre></td>
+
+            </tr>
+        </table>
+    </div>
+
 
     <div class="row">
         <div class="col-md-2 col-sm-2">
@@ -155,7 +171,8 @@
                 <li ng-repeat = "entry in listContentsBundle.entry" ng-class="{'list-group-item':true,active:entry.resource.id == selectedPatient.id}"
                     style = 'cursor:pointer'
                     ng-click="selectPatient(entry.resource)">
-                    {{entry.resource.name[0].text}}
+                    <strong>{{entry.resource.name[0].text}}</strong>
+                    <div><em>{{entry.resource.identifier[0].value}}@{{entry.resource.identifier[0].system}}</em></div>    <!-- Orion is always the firts...-->
                     <span class="pull-right badge risk-low">{{content.riskCalc.risk}}</span>
                 </li>
             </ul>
@@ -178,7 +195,7 @@
                 <div class="col-md-6 col-sm-6">
                     <div class="row">
                         <div class="col-md-2 col-sm-2">
-                            <strong>Current risk:</strong>
+                            <strong>Risk:</strong>
                         </div>
                         <div class="col-md-6 col-sm-6">
                             <div ng-class="riskClass" style="text-align: center">{{risk}}% of CVD event in 10 years</div>
@@ -187,7 +204,7 @@
 
                     <div class="row">
                         <div class="col-md-2 col-sm-2">
-                            <strong>Raw Data:</strong>
+                            <strong>Data:</strong>
                         </div>
                         <div class="col-md-10 col-sm-10">
 
@@ -195,7 +212,9 @@
                                 <tr><th>Test</th><th>Result</th><th>Points</th><th>When done</th><th>Age</th></tr>
                                 <tr ng-repeat="(key,value) in rawData">
                                     <td>{{value.display}}</td>
-                                    <td>{{value.value.value}} {{value.value.unit}}</td>
+                                    <td>
+                                        {{getResultDisplay(key,value)}}
+                                        <!--{{value.value.value}} {{value.value.unit}}--></td>
                                     <td>{{value.points}}</td>
                                     <td>{{value.date | date : 'yyyy-MM-dd'}}</td>
                                     <td><span  ng-show="value.date">{{moment(value.date).diff(moment(),'days') * -1}} days</span></td>
@@ -245,6 +264,9 @@
                         </uib-tab>
                         <uib-tab heading="Assessment Observation">
                             <pre ng-show="riskObservation">{{riskObservation | json}}</pre>
+                        </uib-tab>
+                        <uib-tab heading="Demographics">
+                            <pre>{{selectedPatient | json}}</pre>
                         </uib-tab>
                     </uib-tabset>
 
