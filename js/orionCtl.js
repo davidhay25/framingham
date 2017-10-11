@@ -196,7 +196,16 @@ angular.module("sampleApp")
 
 
                     }, function(err) {
-                        alert (angular.toJson(err))
+                        //could be missing data...
+
+                        if (err && err.data) {
+                            $scope.missingData = err.data.missingData
+                        }
+
+                        console.log(err)
+
+
+                        //alert (angular.toJson(err))
                     }
                 ).finally(function(){
                     $scope.waiting = false;

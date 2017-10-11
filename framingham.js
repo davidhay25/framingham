@@ -21,6 +21,8 @@ exports.observationList = function() {
     //observations.push({key:'smoker',name:'Smoker',code:'365982000',system:'http://snomed.info/sct',type:'cc'})
     //smoking notes: https://chat.fhir.org/#narrow/stream/uk/topic/SNOMED.20Observation
 
+    //http://loinc.org|18262-6
+
     return observations;
 };
 

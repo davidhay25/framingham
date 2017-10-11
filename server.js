@@ -4,7 +4,7 @@
 
 // rsync -a * root@clinfhir.com:/opt/orion1
 
-var showLog = false;     //a flag to activate / deactivate the console.log
+var showLog = true;     //a flag to activate / deactivate the console.log
 var log = [];           //performance logs
 var globalStart;        //for when there are timings that cross functions...
 var async = require('async');
@@ -25,12 +25,14 @@ var _ = require('lodash');
 var framingham = require(__dirname + "/framingham.js");
 var writeData = require(__dirname + "/writeData.js");
 
-
+/*
 
 //capture any uncaught exception to avoid a crash...
 process.on('uncaughtException', function(err) {
     console.log('>>>>>>>>>>>>>>> Caught exception: ' + err + " (Note that the actual error may be misleading and may not reflect tha actual problem)");
 });
+
+*/
 
 var localConfig = require(__dirname + '/config.json');
 
@@ -199,14 +201,28 @@ app.get('/orion/getRisk',function(req,res){
 
     //get all the data that we're going to need - Patient, Observation, Condition using async parallel calls...
     getAllData(identifier,access_token,config,function(err,results){
-        if (showLog) {console.log('data loaded...')};
+        if (showLog) {console.log('data loaded...',err)};
         if (err) {
             res.json(err,500);
+            return;
         } else {
             //pull the data into a hash for easier manipulation
             var hash = {};
             results.forEach(function (item) {
-                hash[item.type] = item.result;      //result is a bundle
+                if (hash[item.type]) {
+                    //the response collection can have more that one bundle with the same type = observations
+                    if (item.result) {
+                        hash[item.type].entry = hash[item.type].entry || []
+
+                        item.result.entry.forEach(function (entry) {
+                            hash[item.type].entry.push(entry)
+                        })
+                    }
+
+                } else {
+                    hash[item.type] = item.result;      //result is a bundle
+                }
+
             });
 
 
@@ -311,17 +327,15 @@ function getRiskOnePatient(hash,cb) {
     //adjust the smoker values for the DSS and
 
     //doesn't seem to be saving the value when smoker is false. todo - look into this...
-   // if (! voData.smoker || ! voData.smoker.value) {
-        //voData.smoker = {value:{value:'no'},type:'code',display:'Is smoker',type:'code'};
-   // }
+    if (! voData.smoker || ! voData.smoker.value) {
+        voData.smoker = {value:{value:'4'},type:'code',display:'Is smoker',type:'code'};
+    }
 
     try {
         var tmp = framingham.getRisk(voData);       //calculates the risk and generates a summary observation
     } catch(ex) {
         console.log('error calculating score ',ex)
     }
-
-
 
     if (tmp.missingData) {
         //true when not all of the data required for the assessment is present...
@@ -426,6 +440,7 @@ app.get('/orion/currentUser',function(req,res){
     request(options, function (error, response, body) {
         addLog(start,uri);
         if (error || response.statusCode !== 200) {
+            console.log(error,body)
             res.send(error,500)
         } else {
             try {
@@ -579,7 +594,7 @@ app.get('/orion/getListContents',function(req,res) {
                     patient.identifier.push({system:system,value:t.current})
                 }
 
-console.log(raw.mergeChains[system])
+//console.log(raw.mergeChains[system])
             }
 
         }
@@ -603,31 +618,73 @@ app.get('/orion/getAllData',function(req,res) {
     })
 });
 
-
 function getAllData(identifier,access_token,config,callback) {
     var ObservationUrl = config.apiEndPoint +"/fhir/1.0/Observation?subject.identifier="+identifier;
     var PatientUrl = config.apiEndPoint + "/fhir/1.0/Patient?identifier="+identifier;
-    var ConditionUrl =  config.apiEndPoint + "/fhir/1.0/Condition?patient.identifier="+identifier;
+    var ConditionUrl =  config.apiEndPoint + "/fhir/1.0/Condition?patient.identifier="+identifier + "&_count=100";
 
     var start = new Date().getTime();
     async.parallel([
+
         function(cb) {
-            singleCall(ObservationUrl,access_token,function(err,result){
-                cb(null,{type:'Observation',result:result});
+            var url = ObservationUrl + "&code=http://loinc.org|18262-6";
+            singleCall(url,access_token,function(err,result){
+                cb(err,{type:'Observation',result:result});
             })
         },
+
+        function(cb) {
+            var url = ObservationUrl + "&code=http://loinc.org|65853-4";
+            singleCall(url,access_token,function(err,result){
+                cb(err,{type:'Observation',result:result});
+            })
+        },
+
+        function(cb) {
+            var url = ObservationUrl + "&code=http://loinc.org|2085-9";
+            singleCall(url,access_token,function(err,result){
+                cb(err,{type:'Observation',result:result});
+            })
+        },
+
+       function(cb) {
+           var url = ObservationUrl + "&code=http://loinc.org|8480-6";
+           singleCall(url,access_token,function(err,result){
+
+               cb(err,{type:'Observation',result:result});
+           })
+       },
+       function(cb) {
+           var url = ObservationUrl + "&code=http://loinc.org|72166-2";
+           singleCall(url,access_token,function(err,result){
+
+               cb(err,{type:'Observation',result:result});
+           })
+       },
+
+       function(cb) {
+           var url = ObservationUrl + "&code=http://loinc.org|8462-4";
+
+           singleCall(url,access_token,function(err,result){
+               cb(err,{type:'Observation',result:result});
+           })
+       },
+
         function(cb) {
             singleCall(PatientUrl,access_token,function(err,result){
-                cb(null,{type:'Patient',result:result});
+                cb(err,{type:'Patient',result:result});
             })
         },
         function(cb) {
             singleCall(ConditionUrl,access_token,function(err,result){
-                cb(null,{type:'Condition',result:result});
+                cb(err,{type:'Condition',result:result});
             })
         }
     ],function(err,results){
         addLog(start,null,'get all data');
+
+        console.log('final err',err)
+
         callback(err,results)
 
     });
@@ -640,6 +697,17 @@ function getAllData(identifier,access_token,config,callback) {
         };
 
         request(options, function (error, response, body) {
+            //values for log display
+            var x,y;
+            if (body) {
+                 x = JSON.parse(body)
+                if (x.entry) {
+                     y = x.entry.length;
+                }
+            }
+
+
+            console.log('sc ' + url + " "+ response.statusCode, x.resourceType, y)
             if (response && response.statusCode == 200) {
                 try {
                     var raw = JSON.parse(body)
@@ -650,7 +718,8 @@ function getAllData(identifier,access_token,config,callback) {
                     return;
                 }
             } else {
-                cb('err')
+                console.log(response.statusCode)
+                cb('Status code:'+response.statusCode)
             }
         })
     }
@@ -687,8 +756,6 @@ app.post('/orion/fhir/Observation',function(req,res){
     })
 
 });
-
-
 
 app.listen(port);
 
