@@ -25,14 +25,14 @@ var _ = require('lodash');
 var framingham = require(__dirname + "/framingham.js");
 var writeData = require(__dirname + "/writeData.js");
 
-/*
+
 
 //capture any uncaught exception to avoid a crash...
 process.on('uncaughtException', function(err) {
     console.log('>>>>>>>>>>>>>>> Caught exception: ' + err + " (Note that the actual error may be misleading and may not reflect tha actual problem)");
 });
 
-*/
+
 
 var localConfig = require(__dirname + '/config.json');
 
