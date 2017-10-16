@@ -26,7 +26,6 @@ var framingham = require(__dirname + "/framingham.js");
 var writeData = require(__dirname + "/writeData.js");
 
 
-
 //capture any uncaught exception to avoid a crash...
 process.on('uncaughtException', function(err) {
     console.log('>>>>>>>>>>>>>>> Caught exception: ' + err + " (Note that the actual error may be misleading and may not reflect tha actual problem)");
@@ -202,6 +201,7 @@ app.get('/orion/getRisk',function(req,res){
     //get all the data that we're going to need - Patient, Observation, Condition using async parallel calls...
     getAllData(identifier,access_token,config,function(err,results){
         if (showLog) {console.log('data loaded...',err)};
+
         if (err) {
             res.json(err,500);
             return;
@@ -209,14 +209,20 @@ app.get('/orion/getRisk',function(req,res){
             //pull the data into a hash for easier manipulation
             var hash = {};
             results.forEach(function (item) {
+
+                //console.log(item);
                 if (hash[item.type]) {
                     //the response collection can have more that one bundle with the same type = observations
                     if (item.result) {
+
                         hash[item.type].entry = hash[item.type].entry || []
 
-                        item.result.entry.forEach(function (entry) {
-                            hash[item.type].entry.push(entry)
-                        })
+                        if (item.result.entry) {
+                            item.result.entry.forEach(function (entry) {
+
+                                hash[item.type].entry.push(entry)
+                            })
+                        }
                     }
 
                 } else {
@@ -227,9 +233,11 @@ app.get('/orion/getRisk',function(req,res){
 
 
             //todo - check for no observations (? no conditions) here...
+//console.log('getting risk',hash);
 
             getRiskOnePatient(hash,function(err,result){
                 if (err) {
+                    console.log(err);
                     res.json(err,500)
                 } else {
                     res.json(result)
@@ -282,6 +290,7 @@ function getRiskOnePatient(hash,cb) {
     });
 
 
+
     //now find out if the patient has diabetes. We'll look for a single SNOMED code, but there are more robust ways of doing this...
 
     var diabetesCode = framingham.diabetesSNOMEDCode();
@@ -316,13 +325,20 @@ function getRiskOnePatient(hash,cb) {
    });
 
 
-    //get all the existing observations that are risk assessments to return to the client...
-    var assessments = _.filter(observations.entry,function(o){
-        if (o.resource && o.resource.code && o.resource.code.coding ) {
-            return o.resource.code.coding[0].code == '65853-4' && o.resource.effectiveDateTime ;
-        } else {
-            return false;
-        }})
+   try {
+       //get all the existing observations that are risk assessments to return to the client...
+       var assessments = _.filter(observations.entry,function(o){
+           if (o.resource && o.resource.code && o.resource.code.coding ) {
+               return o.resource.code.coding[0].code == '65853-4' && o.resource.effectiveDateTime ;
+           } else {
+               return false;
+           }})
+   } catch (ex) {
+       console.log('no assessments',err)
+   }
+
+
+
 
     //adjust the smoker values for the DSS and
 
@@ -636,6 +652,9 @@ function getAllData(identifier,access_token,config,callback) {
         function(cb) {
             var url = ObservationUrl + "&code=http://loinc.org|65853-4";
             singleCall(url,access_token,function(err,result){
+
+               // console.log('ra',err,result)
+
                 cb(err,{type:'Observation',result:result});
             })
         },
