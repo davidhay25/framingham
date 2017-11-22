@@ -100,7 +100,8 @@ angular.module("sampleApp")
                     }
 
                 },function(err) {
-                    alert('Error getting current user')
+                    showError('Error getting current user')
+                    //alert('Error getting current user')
                 }
             );
 
@@ -133,7 +134,8 @@ angular.module("sampleApp")
                         */
 
                     }, function(err){
-                        alert('error getting list contents: '+ angular.toJson(err))
+                        showError('error getting list contents')
+                       // alert('error getting list contents: '+ angular.toJson(err))
                     }
                 ).finally(function(){
                     $scope.waiting = false;
@@ -200,6 +202,8 @@ angular.module("sampleApp")
 
                         if (err && err.data) {
                             $scope.missingData = err.data.missingData
+                        } else {
+                            showError('Error getting user data')
                         }
 
                         console.log(err)
@@ -321,7 +325,17 @@ angular.module("sampleApp")
                 )
             }
 
+            function showError(msg) {
+                var err = msg || 'Error accessing platform';
+                var modalOptions = {
+                    closeButtonText: "No, I changed my mind",
+                    //actionButtonText: 'Yes, please create',
+                    headerText: msg,
+                    bodyText: 'There was an error retrieving data from the platform. This can be caused when your login expires, please re-log in and try again. '
+                };
 
 
+                modalService.showModal({}, modalOptions);
+            }
 
     });

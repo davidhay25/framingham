@@ -65,6 +65,11 @@ var config = {};
 app.use('/', express.static(__dirname,{index:'/login.html'}));
 
 
+app.get('/heartbeat', function(req, res) {
+    res.json({msg:'ok'});
+
+})
+
 //--- ============= authentication callback & other routine
 
 //when authenticating...
@@ -416,7 +421,8 @@ app.get('/orion/currentPatient',function(req,res){
         addLog(start,uri);
         if (error || response.statusCode !== 200) {
             console.log('err',error,response)
-            res.send(error,500)
+            var err = error || body;
+            res.send(err,500)
         } else {
             try {
                 var usr = JSON.parse(body);
@@ -488,6 +494,11 @@ app.get('/orion/getUserLists',function(req,res) {
 
     var uri = config.apiEndPoint + "/actor/"+userIdentifier + "/patientlist/watchlist";
 
+  //  https://orionhealth-sandbox-bellatrix.apigee.net/actor/current/patientlist/watchlist
+
+        var uri = config.apiEndPoint + "/actor/current/patientlist/watchlist";
+
+
     var options = {
         method: 'GET',
         uri: uri,
@@ -499,8 +510,25 @@ app.get('/orion/getUserLists',function(req,res) {
         if (response.statusCode !== 200) {
             var reply = body;
 
+            //console.log(response.statusCode)
+/*
+            //------------------ a cheat to return a fixed identifier...
+            var bundle = {resourceType:'Bundle',type:'searchset',entry:[]}
+            var list = {resourceType:'List',status:'current',mode:'snapshot',entry:[]}
+            list.title = oList.name + " (" + oList.count + ")";
+            list.id = oList.identifier;
+            bundle.entry.push({resource:list});
+            var vo = {bundle:bundle}
+            vo.raw = raw;
+            res.json(vo)
+            return;
+            //---------  end of cheat
+
+
+*/
 
             try {
+                console.log(uri,body)
                 var json = JSON.parse(body);
                 json.url = uri;
                 reply = JSON.stringify(json);
@@ -558,7 +586,10 @@ app.get('/orion/getListContents',function(req,res) {
     var access_token = req.session['accessToken'];  //set at login
     var config = req.session["config"];     //retrieve the configuration from the session...
 
-    var uri = config.apiEndPoint + "/actor/"+userIdentifier + "/patientlist/watchlist/"+listId;
+    //var uri = config.apiEndPoint + "/actor/"+userIdentifier + "/patientlist/watchlist/"+listId;
+
+    var uri = config.apiEndPoint + "/actor/current/patientlist/watchlist/"+listId;
+
 
     var options = {
         method: 'GET',
@@ -568,6 +599,9 @@ app.get('/orion/getListContents',function(req,res) {
 
     var start = new Date().getTime();
     request(options, function (error, response, body) {
+
+
+        //console.log(uri,response.statusCode)
         addLog(start,uri);
         if (response.statusCode !== 200) {
             res.send(body,500)
@@ -666,14 +700,14 @@ function getAllData(identifier,access_token,config,callback) {
             })
         },
 
-       function(cb) {
+        function(cb) {
            var url = ObservationUrl + "&code=http://loinc.org|8480-6";
            singleCall(url,access_token,function(err,result){
 
                cb(err,{type:'Observation',result:result});
            })
        },
-       function(cb) {
+        function(cb) {
            var url = ObservationUrl + "&code=http://loinc.org|72166-2";
            singleCall(url,access_token,function(err,result){
 
@@ -681,7 +715,7 @@ function getAllData(identifier,access_token,config,callback) {
            })
        },
 
-       function(cb) {
+        function(cb) {
            var url = ObservationUrl + "&code=http://loinc.org|8462-4";
 
            singleCall(url,access_token,function(err,result){
