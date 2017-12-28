@@ -1,0 +1,103 @@
+{"profiles": [
+  {
+    "name" : "clinFHIR - separate server app",
+    "description":"clinFHIR SMART proxy",
+    "fhirVersion" : "2",
+    "baseUrl" : "https://localhost:8443/cf",
+    "callback" : "https://localhost:8443/callback",
+    "clientId" : "myClientId",
+    "secret": "mySecret",
+    "clientIdConfig": "",
+    "defaultScope" :"patient/Patient.read",
+    "public" : true
+  },
+  {
+    "name" : "SmartHealthIT - successful",
+    "description":"Calls the SMART sandbox provider standalone, with a practitioner on scope",
+    "fhirVersion" : "3",
+    "baseUrl" : "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImkiOiIxIiwiZSI6InNtYXJ0LVByYWN0aXRpb25lci03MTAzMjcwMiJ9/fhir",
+    "callback" : "https://localhost:8443/callback",
+    "clientId" : "d90584cc-3b0e-40db-8543-536df45a84f4",
+    "secret": "a07NAYD7lnhfBh1b9614dPp_lZxyK5Hf7ImS8GJ2XnbD8SE-ZzAqJhyKykL7359ip0AG5bLC172_M5mhWxuRig",
+    "clientIdConfig": "https://launch.smarthealthit.org/.well-known/openid-configuration",
+    "defaultScope" :"openid profile patient/*.*"
+  },
+  {
+    "name" : "SmartHealthIT - invalid clientId",
+    "description":"Calls the SMART sandbox provider standalone, with a practitioner on scope, but an invalid clientId",
+    "fhirVersion" : "3",
+    "baseUrl" : "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImQiOjAsImkiOiIxIiwiZSI6InNtYXJ0LVByYWN0aXRpb25lci03MTAzMjcwMiJ9/fhir",
+    "callback" : "http://localhost:3000/callback",
+    "clientId" : "d90584cc-3b0e-40db-8543-536df45a84f4",
+    "secret": "a07NAYD7lnhfBh1b9614dPp_lZxyK5Hf7ImS8GJ2XnbD8SE-ZzAqJhyKykL7359ip0AG5bLC172_M5mhWxuRig",
+    "clientIdConfig": "https://launch.smarthealthit.org/.well-known/openid-configuration",
+    "defaultScope" :"openid profile patient/*.*"
+  },
+  {
+    "name" : "Cerner",
+    "description":"The Cerner sandbox",
+    "fhirVersion" : "2",
+    "baseUrl" : "https://fhir-myrecord.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca",
+    "callback" : "http://localhost:3000/callback",
+    "clientId" : "67b6bf53-d37e-4854-8d34-e2904cf523e1",
+    "secret": "",
+    "clientIdConfig": "",
+    "defaultScope" :"patient/Patient.read",
+    "public" : true,
+    "resources" : [
+      "https://groups.google.com/forum/m/#!forum/cerner-fhir-developers"
+    ]
+  },
+  {
+    "name" : "Allscripts",
+    "description":"The Allscripts sandbox",
+    "fhirVersion" : "2",
+    "baseUrl" : "https://fhir-myrecord.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca",
+    "callback" : "http://localhost:3000/callback",
+    "clientId" : "88C547DF-C753-4DED-9CDD-BC67153FB5A5",
+    "secret": "70CFA5D71CFF",
+    "clientIdConfig": "",
+    "defaultScope" :"patient/Patient.read",
+    "public" : true
+  },
+  {
+    "name" : "clinFHIR - succeed",
+    "description":"clinFHIR SMART proxy",
+    "fhirVersion" : "2",
+    "baseUrl" : "https://localhost:8443/cf",
+    "callback" : "https://localhost:8443/callback",
+    "clientId" : "myClientId",
+    "secret": "mySecret",
+    "clientIdConfig": "",
+    "defaultScope" :"patient/Patient.read",
+    "public" : true
+  },
+
+  {
+  "name" : "clinFHIR - Invalid clientId",
+  "description":"clinFHIR SMART proxy",
+  "fhirVersion" : "2",
+  "baseUrl" : "https://localhost:8443/cf",
+  "callback" : "https://localhost:8443/callback",
+  "clientId" : "WrongClientId",
+  "secret": "mySecret",
+  "clientIdConfig": "",
+  "defaultScope" :"patient/Patient.read",
+  "public" : true
+  },
+  {
+    "name" : "clinFHIR - Missing callback",
+    "description":"clinFHIR SMART proxy",
+    "fhirVersion" : "2",
+    "baseUrl" : "http://localhost:3000/cf",
+    "clientId" : "myClientId",
+    "secret": "mySecret",
+    "clientIdConfig": "",
+    "defaultScope" :"patient/Patient.read",
+    "public" : true
+  }
+
+
+
+
+]}

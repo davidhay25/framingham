@@ -1,0 +1,36 @@
+{
+  "scenarios": [
+    {"id":"s1-1","name":"PACS Testing",
+      "roleIds":["r1-1","r1-2","r1-3","r1-4"],
+      "action": "The FHIR Broker makes direct QIDO-RS and WADO-RS requests of the PACS.",
+      "precondition": "PACS needs to be loaded with specific image sets that match patient MRN's known by the EHR.",
+      "success": "Logs on the FHIR Broker will indicate if the QIDO-RS and WADO-RS requests were successful. The FHIR Broker is a tool that has been developed by WUSTL. We have the ability to update the code and log what we need to demonstrate success.",
+      "bonus" : ["The S4S protocol supports requests for new data after a certain point in time. It would be interesting to have the FHIR Broker send queries to the PACS that include date ranges to make sure the PACS filters appropriately."]
+
+    },
+    {"id":"s1-2","name":"Research App (Broker)",
+      "roleIds":["r1-1","r1-2","r1-3","r1-4"],
+      "steps" : [
+        "Research App obtains access token from SMART on FHIR Enabled EHR.",
+        "(Optional) Research App retrieves problem list from EHR. The FHIR resource is Condition.",
+        "Research App sends a search to the FHIR Broker for the ImagingStudy resources for a patient who has opted in to the research study.",
+        "FHIR Broker validates the request and sends a QIDO-RS request to the PACS to determine the answer.",
+        "FHIR Broker takes the response from the PACS, packages the response as a FHIR response, and returns that data to the Research App.",
+        "Research App performs a WADO-RS retrieve to the FHIR Broker for the images for a particular DICOM Study Instance UID.",
+        "FHIR Broker validates the request and sends a WADO-RS request to the PACS to retrieve the images.",
+        "FHIR Broker takes the response from the PACS and returns the WADO-RS quest to the Research App."
+      ]
+
+    },
+    {"id":"s1-3","name":"Research App",
+      "roleIds":["r1-1","r1-2","r1-3","r1-4"]},
+    {"id":"s2-1","name":"Solicited", "roleIds":["r2-1","r2-2","r2-3"]},
+    {"id":"s2-2","name":"Unsolicited", "roleIds":["r2-1","r2-2","r2-3"]},
+    {"id":"s2-3","name":"Prior Authorization", "roleIds":["r2-1","r2-2","r2-3"]},
+    {"id":"s3-1","name":"Develop SHR model", "roleIds":["r3-1","r3-2","r3-3"]},
+    {"id":"s3-2","name":"Upload model", "roleIds":["r3-1","r3-2","r3-3"]},
+    {"id":"s3-3","name":"Create conforming resources", "roleIds":["r3-1","r3-2","r3-3"]},
+    {"id":"s3-4","name":"Validate Domain models", "roleIds":["r3-1","r3-2","r3-3"]}
+
+  ]
+}

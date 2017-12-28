@@ -1,0 +1,79 @@
+<div>
+
+
+    <div class="modal-header">
+
+        <div class="row">
+            <div class="col-md-8 col-sm-8">
+                <h3 class="modal-title">Add Server to Scanario: {{dlgScenario.name}}</h3>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div class="pull-right">
+                    <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+
+
+        <div ng-show="dlgAllServers.length == 0" class="row">
+            <div class="col-md-12 col-sm-12">
+                All available servers have been added to this scenario!
+            </div>
+        </div>
+
+        <div ng-hide="dlgAllServers.length == 0" class="row">
+            <div class="col-md-3 col-sm-3">
+                <ul class="list-unstyled">
+                    <li class="clickable" ng-repeat="svr in dlgAllServers" ng-click="selectServer(svr)">
+                        {{svr.name}}
+                    </li>
+                </ul>
+
+            </div>
+            <div class="col-md-3 col-sm-3">
+                <ul class="list-unstyled">
+                    <li class="clickable" ng-repeat="role in scenario.roles" ng-click="selectRole(role)">
+                        {{role.name}}
+                    </li>
+                </ul>
+
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+                <div>Name: {{selectedServer.name}}</div>
+                <div>Address: {{selectedServer.address}}</div>
+
+                <div>Role: {{selectedRole.name}}</div>
+
+                <div class="pull-right" ng-show="selectedServer && selectedRole">
+                    <button class="btn btn-primary" ng-click="addServer(selectedServer)">Add to Scenario</button>
+                </div>
+
+            </div>
+
+        </div>
+        <br/>
+
+
+
+
+
+</div>
+
+<div class="modal-header">
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+
+
+        </div>
+
+    </div>
+
+
+
+</div>
+</div>

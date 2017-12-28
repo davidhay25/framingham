@@ -17,7 +17,7 @@
        // angular.module("sampleApp").constant("moment", moment);
 
     </script>
-    <script src="js/loginCtl.js"></script>
+    <script src="js/smartErrorCtl.js"></script>
 
 
 
@@ -26,9 +26,11 @@
 
 
 
-<div ng-app="sampleApp" ng-controller="loginCtrl" class="container-fluid">
+<div ng-app="sampleApp" ng-controller="smartErrorCtrl" class="container-fluid">
 
-    <h3>Sorry, there was an error Authenticating.  </h3>
+    <h3>Sorry, there was an error accessing the SMART server</h3>
+
+    <pre>{{error | json}}</pre>
 
 
 </div>

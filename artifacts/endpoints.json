@@ -1,0 +1,100 @@
+[
+  {
+    "name":"Co-ordinator",
+    "description": "The Ecosystem Co-ordinator",
+    "role" : "coord",
+    "url":"https://localhost:8441",
+    "contact": {
+      "name" : "David Hay"
+    },
+    "notes": [
+      {"text": "Holds the Endpoint resources which define the ecosystem (at least the immediately discoverable part"}
+    ]
+  },
+  {
+    "name":"Audit Service",
+    "description": "Holds AuditEvent records",
+    "role" : "aud",
+    "url":"https://localhost:8700",
+    "authz": "https://localhost:8442",
+    "notes": [
+      {"text": "All ecosystem members write to this server. Equivalent to the IHE ATNA profile"}
+    ]
+  },
+  {
+    "name":"Patient Identification Service",
+    "description": "Where patient identifiers are located. Equivalent to an EMPI",
+    "role" : "pid",
+    "url":"https://localhost:8600",
+    "authz": "https://localhost:8442"
+  },
+  {
+    "name":"Provider Registry",
+    "description": "Provider and Service lookup service",
+    "role" : "prov",
+    "url":"https://localhost:8601",
+    "authz": "https://localhost:8442"
+  },
+  {
+    "name":"Scheduling service",
+    "description": "Known patient appoinments",
+    "role" : "sched",
+    "url":"https://localhost:8601",
+    "authz": "https://localhost:8442"
+  },
+  {
+    "name":"Patient Locator Service",
+    "description": "Records where known patient records are located",
+    "role" : "pls",
+    "url":"https://localhost:8500",
+    "authz": "https://localhost:8442"
+  },
+  {
+    "name":"Conformance Server",
+    "description": "Holds profiling resources and Terminology resources",
+    "role" : "conf",
+    "url":"https://localhost:8442"
+  },
+  {
+    "name":"Authorization Server",
+    "description": "The Ecosystem Authorization server",
+    "role" : "authz",
+    "url":"https://localhost:8442"
+  },
+  {
+    "name":"Workflow service",
+    "description": "Holds shareable Task resources for multi-system workflow services",
+    "role" : "workflow",
+    "url":"https://localhost:8442",
+    "authz": "https://localhost:8442"
+  },
+  {
+    "name":"Data Server 1",
+    "description": "A patient data server",
+    "role" : "data",
+    "url":"https://localhost:9000",
+    "authz": "https://localhost:8442"
+  },
+  {
+    "name":"Data Server 2 ",
+    "description": "A patient data server",
+    "role" : "data",
+    "url":"https://localhost:9001",
+    "authz": "https://localhost:8442"
+  },
+  {
+    "name":"Data Server 3 ",
+    "description": "A patient data server",
+    "role" : "data",
+    "url":"https://localhost:9001",
+    "notes": [
+      {"text": "Does not use the ecosystem Authorization Server"}
+    ]
+  },
+  {
+    "name":"Terminology Server",
+    "description": "A terminology server",
+    "role" : "term",
+    "url":"https://localhost:9100"
+  }
+]

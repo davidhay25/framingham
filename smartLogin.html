@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SMART Login</title>
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+    <script>
+        angular.module("sampleApp",['ui.bootstrap']).config(function($locationProvider) {
+
+            // enable html5Mode for pushstate ('#'-less URLs)
+            $locationProvider.html5Mode(true);
+            $locationProvider.hashPrefix('!');
+        });
+       // angular.module("sampleApp").constant("moment", moment);
+
+    </script>
+    <script src="js/smartLoginCtl.js"></script>
+
+
+
+</head>
+<body style="padding: 8px" >
+
+
+
+<div ng-app="sampleApp" ng-controller="smartLoginCtrl" class="container-fluid">
+
+    <div class="banner">SMART Login</div>
+
+    <uib-tabset>
+        <uib-tab heading="Select server & Login">
+
+            <div class="row">
+                <div class="col-sm-3 col-md-3">
+                    <h4>SMART Profiles</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="profile in smartProfiles"
+                            style="cursor: pointer"
+                            ng-click="selectProfile(profile)">
+
+                            <strong><div>{{profile.name}}</div></strong>
+                            <div style="margin-left: 8px"><em>{{profile.description}}</em></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-9 col-md-9">
+                    <div ng-show="input.selectedProfile">
+                        <pre>{{input.selectedProfile | json}}</pre>
+
+                        <div class="row">
+                            <div class="col-sm-1 col-md-1">
+                                Scope
+                            </div>
+                            <div class="col-sm-3 col-md-3">
+                                <input class="form-control" ng-model="input.scope"/>
+                            </div>
+                            <div class="col-sm-2 col-md-2">
+                                <button class="btn btn-primary" ng-click="login(input.selectedProfile)">Login</button>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div ng-show="input.state=='login'">Querying the server CapabilityStatement for the SMART endpoints...</div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+
+
+                </div>
+                <div class="col-sm-2 col-md-2">
+
+                </div>
+
+            </div>
+
+
+        </uib-tab>
+        <uib-tab heading="Documentation">
+            <br/>
+            <div><a href="http://hl7.org/fhir/smart-app-launch/" target="_blank">Launch docs</a> </div>
+            <div><a href="http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context/" target="_blank">Scope Documentation</a></div>
+            <div><a href="http://launch.smarthealthit.org/" target="_blank">SMART test server for clients</a> </div>
+
+
+        </uib-tab>
+    </uib-tabset>
+
+
+
+
+    <!--
+
+        <div class="row" ng-show="config">
+            <div class="col-sm-1 col-md-1">
+                Scope
+            </div>
+            <div class="col-sm-3 col-md-3">
+                <input class="form-control" ng-model="input.scope"/>
+            </div>
+            <div class="col-sm-2 col-md-2">
+                <div><a href="http://hl7.org/fhir/smart-app-launch/" target="_blank">Launch docs</a> </div>
+                <a href="http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context/" target="_blank">Scope Documentation</a>
+            </div>
+
+        </div>
+
+
+
+        <div ng-hide="config">Reading Server capability statement, please wait...</div>
+        <a ng-show="config" class="btn btn-primary " ng-href="/auth?scope={{input.scope}}">Login</a>
+
+        -->
+
+</div>
+
+</body>
+</html>

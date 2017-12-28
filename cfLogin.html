@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <!-- -->
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+    <script>
+        angular.module("sampleApp",['ui.bootstrap']).config(function($locationProvider) {
+
+            // enable html5Mode for pushstate ('#'-less URLs)
+           // $locationProvider.html5Mode(true);
+            //$locationProvider.hashPrefix('!');
+        });
+       // angular.module("sampleApp").constant("moment", moment);
+
+    </script>
+    <script src="js/cfLoginCtl.js"></script>
+
+</head>
+<body style="padding: 8px" >
+
+
+<div ng-app="sampleApp" ng-controller="cfLoginCtrl" class="container-fluid">
+
+    <h3>Login to the clinFHIR server</h3>
+
+    <form action="cf/login" method="post">
+        <div class="row">
+            <div class="col-sm-3 col-md-3">
+                User Name
+            </div>
+            <div class="col-sm-3 col-md-3">
+                <input class="form-control" type="text" name="un">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 col-md-3">
+                Password
+            </div>
+            <div class="col-sm-3 col-md-3">
+                <input class="form-control" type="text" name="pw">
+            </div>
+        </div>
+
+        <div class="button">
+            <button type="submit">Login</button>
+        </div>
+
+    </form>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+</body>
+</html>

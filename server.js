@@ -2,82 +2,61 @@
 //demo.provider/V.62Q5@zdE
 //mohannadh / OrionOrion1234
 
-// rsync -a * root@clinfhir.com:/opt/orion1
 
-var showLog = true;     //a flag to activate / deactivate the console.log
-var log = [];           //performance logs
-var globalStart;        //for when there are timings that cross functions...
+//required libraries
 var async = require('async');
-
-var addLog = function(start,url,note){
-    var elap = new Date().getTime() - start;
-    var entry = {date: new Date().getTime(),elap:elap};
-    if (url) { entry.url = url;}
-    if (note) { entry.note = note;}
-    log.push(entry)
-};
-
-var syncRequest = require('sync-request');
 var express = require('express');
 var request = require('request');
 var session = require('express-session');
 var _ = require('lodash');
-var framingham = require(__dirname + "/framingham.js");
-var writeData = require(__dirname + "/writeData.js");
 
-
-//capture any uncaught exception to avoid a crash...
-process.on('uncaughtException', function(err) {
-    console.log('>>>>>>>>>>>>>>> Caught exception: ' + err + " (Note that the actual error may be misleading and may not reflect tha actual problem)");
-});
-
-
+var framingham = require(__dirname + "/framingham.js");     //perform the actual calculations...
+var writeData = require(__dirname + "/writeData.js");       //write out some sample observations
 
 var localConfig = require(__dirname + '/config.json');
 
 var app = express();
 
+var showLog = true;         //for debugging...
+
 //initialize the session...
 app.use(session({
-    secret: 'ohClinFhir',
+    secret: 'mySecret',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
-}))
+    cookie: { secure: false }   //For some reason, secure cookins are failing...
+}));
 
-//environment where this server is running. default to the snapp server (as I can easily feed in the dev environment via the IDE)
+
+//key of the environment where this server is running.
+//Default to 'production'  (as I can easily feed in the dev environment via the IDE)
 var environment = process.env.environment;
 if (!environment) {
-    environment = 'snapp';
+    environment = 'production';
 }
 
-//default port
+//the default port. This can be overwritten when the server is executed or from the IDE.
 var port = process.env.port;
 if (! port) {
     port=3000;
 }
 
-//there a certificate issue with request...
+//there a certificate issue with request. Needed for request over SSL...
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
 var config = {};
 
+//to serve up the static web pages - particularly the login page if no page is specified...
 app.use('/', express.static(__dirname,{index:'/login.html'}));
 
 
-app.get('/heartbeat', function(req, res) {
-    res.json({msg:'ok'});
-
-})
-
 //--- ============= authentication callback & other routine
 
-//when authenticating...
+//The first step in authentication. The browser will load this 'page' and receive a redirect to the login page
 app.get('/auth', function(req, res)  {
-    globalStart = new Date().getTime();
+    console.log('/auth')
     req.session["page"] = req.query.page || 'orion.html'
 
-    // now getting this form teh command line... var environment =  req.params['environment'];
     if (showLog) {console.log('env=', environment)};
     var config;
 
@@ -89,12 +68,9 @@ app.get('/auth', function(req, res)  {
         }
     });
 
-
-
+    //generate the uri to re-direct the browser to. This will be the login page for the system
     var authorizationUri = config.baseUrl + "/oauth2/authorize";
     authorizationUri += "?redirect_uri=" + encodeURIComponent(config.callback);
-    // authorizationUri += "&scope=notifications";
-    //authorizationUri += "&state=" + encodeURIComponent("3(#0/!~");
     authorizationUri += "&response_type=code";
     authorizationUri += "&client_id="+config.clientId;
 
@@ -104,45 +80,48 @@ app.get('/auth', function(req, res)  {
 });
 
 
-//after authentication
+//after authentication the browser will be redirected by the auth server to this endpoint
 app.get('/callback', function(req, res) {
-    addLog(globalStart,null,'Elapsed from login start to callback for token');
+    console.log('/callback')
+    //If authentication was successful, the Authorization Server will return a code which can be exchanged for an
+    //access token. If there is no code, then authorization failed, and a redirect to an error page is returned.
     var code = req.query.code;
     if (showLog) {
-        console.log('/callback, query=', req.query)
+        console.log('/callback, query=', req.query);
         console.log('/callback, code=' + code);
     }
 
     if (! code) {
-        res.redirect('error.html')
+        //no code, redirect to error
+        res.redirect('error.html');
         return;
     }
 
-    var config = req.session["config"];     //retrieve the configuration from the session...
 
-    //call the token endpoint directly as the library is placing key data in both headers & body, causing a failure
+    var config = req.session["config"];     //retrieve the configuration from the session. This was set in /auth.
+
+    //request an access token from the Auth server.
     var options = {
         method: 'POST',
         uri: config.baseUrl + config.tokenEndPoint,
         body: 'code=' + code + "&grant_type=authorization_code&redirect_uri=" + config.callback + "&client_id=" + config.clientId + "&client_secret=" + config.secret,
         headers: {'content-type': 'application/x-www-form-urlencoded'}
     };
-    var start = new Date().getTime();
-    request(options, function (error, response, body) {
-        addLog(start,options.uri,'get token');
 
+    //perform the request...
+    request(options, function (error, response, body) {
         if (showLog) {
             console.log(' ----- after token call -------');
             console.log('body ', body);
         }
         if (response && response.statusCode == 200) {
-
-
+            //save the access token in the session cache. Note that this is NOT sent to the client
             req.session['accessToken'] = JSON.parse(body)['access_token']
 
-            console.log('access token: ' + req.session['accessToken'])
+
+
             res.redirect(req.session["page"]);
-            //res.redirect('orion.html')
+
         } else {
             res.redirect('error.html')
         }
@@ -215,7 +194,7 @@ app.get('/orion/getRisk',function(req,res){
             var hash = {};
             results.forEach(function (item) {
 
-                //console.log(item);
+                console.log(item);
                 if (hash[item.type]) {
                     //the response collection can have more that one bundle with the same type = observations
                     if (item.result) {
@@ -245,14 +224,15 @@ app.get('/orion/getRisk',function(req,res){
                     console.log(err);
                     res.json(err,500)
                 } else {
-                    res.json(result)
+                    var rslt = result;
+                    rslt.docRef = hash['DocumentReference']
+
+                    res.json(rslt)
                 }
             })
         }
     })
 });
-
-
 
 //get the risk for a single patient using the data already loaded...
 function getRiskOnePatient(hash,cb) {
@@ -402,6 +382,73 @@ function getRiskOnePatient(hash,cb) {
 }
 
 
+//retrieve the metadata (conformance) resource
+app.get('/orion/metadata',function(req,res){
+    var access_token = req.session['accessToken'];
+    var config = req.session["config"];     //retrieve the configuration from the session...
+    var uri = config.apiEndPoint + "/fhir/1.0/metadata"
+
+    var options = {
+        method: 'GET',
+        uri: uri,
+        encoding : null,
+        headers: {'authorization': 'Bearer ' + access_token}
+    };
+
+    var start = new Date().getTime();
+    request(options, function (error, response, body) {
+
+        if (error) {
+            console.log('error:',error)
+            var err = error || body;
+            res.send(err,500)
+        } else if (response && response.statusCode !== 200) {
+            console.log(uri)
+            console.log(response.statusCode,body)
+            res.send(body,response.statusCode);//,'binary')
+        } else {
+            console.log('body',body)
+            res.send(body);//,'binary')
+
+        }
+    })
+});
+
+app.get('/orion/getDocument',function(req,res){
+
+    var urlToDoc = req.query['url'];
+    var contentType = req.query['contentType'];
+    console.log(urlToDoc,contentType)
+
+    var access_token = req.session['accessToken'];
+    var config = req.session["config"];     //retrieve the configuration from the session...
+    var uri =  "https://orionhealth-sandbox-bellatrix.apigee.net/" + urlToDoc;
+
+    var options = {
+        method: 'GET',
+        uri: uri,
+        encoding : null,
+        headers: {'authorization': 'Bearer ' + access_token}
+    };
+
+    var start = new Date().getTime();
+    request(options, function (error, response, body) {
+
+        if (error || response.statusCode !== 200) {
+            console.log('err',response.statusCode,error)
+            var err = error || body;
+            res.send(err,500)
+        } else {
+
+            console.log('body',body)
+            res.setHeader('Content-disposition', 'inline');
+            res.setHeader('content-type',contentType)
+            res.send(body);//,'binary')
+
+        }
+    })
+});
+
 app.get('/orion/currentPatient',function(req,res){
 
 
@@ -418,7 +465,7 @@ app.get('/orion/currentPatient',function(req,res){
 
     var start = new Date().getTime();
     request(options, function (error, response, body) {
-        addLog(start,uri);
+
         if (error || response.statusCode !== 200) {
             console.log('err',error,response)
             var err = error || body;
@@ -460,7 +507,7 @@ app.get('/orion/currentUser',function(req,res){
 
     var start = new Date().getTime();
     request(options, function (error, response, body) {
-        addLog(start,uri);
+
         if (error || response.statusCode !== 200) {
             console.log(error,body)
             res.send(error,500)
@@ -492,11 +539,8 @@ app.get('/orion/getUserLists',function(req,res) {
     var access_token = req.session['accessToken'];
     var config = req.session["config"];     //retrieve the configuration from the session...
 
-    var uri = config.apiEndPoint + "/actor/"+userIdentifier + "/patientlist/watchlist";
-
-  //  https://orionhealth-sandbox-bellatrix.apigee.net/actor/current/patientlist/watchlist
-
-        var uri = config.apiEndPoint + "/actor/current/patientlist/watchlist";
+    //var uri = config.apiEndPoint + "/actor/"+userIdentifier + "/patientlist/watchlist";
+    var uri = config.apiEndPoint + "/actor/current/patientlist/watchlist";
 
 
     var options = {
@@ -506,7 +550,7 @@ app.get('/orion/getUserLists',function(req,res) {
     };
     var start = new Date().getTime();
     request(options, function (error, response, body) {
-        addLog(start,uri);
+
         if (response.statusCode !== 200) {
             var reply = body;
 
@@ -601,8 +645,6 @@ app.get('/orion/getListContents',function(req,res) {
     request(options, function (error, response, body) {
 
 
-        //console.log(uri,response.statusCode)
-        addLog(start,uri);
         if (response.statusCode !== 200) {
             res.send(body,500)
         } else {
@@ -672,9 +714,17 @@ function getAllData(identifier,access_token,config,callback) {
     var ObservationUrl = config.apiEndPoint +"/fhir/1.0/Observation?subject.identifier="+identifier;
     var PatientUrl = config.apiEndPoint + "/fhir/1.0/Patient?identifier="+identifier;
     var ConditionUrl =  config.apiEndPoint + "/fhir/1.0/Condition?patient.identifier="+identifier + "&_count=100";
+    var DocRefUrl = config.apiEndPoint + "/fhir/1.0/DocumentReference?patient.identifier="+identifier;
 
     var start = new Date().getTime();
     async.parallel([
+
+        function(cb) {
+            var url = DocRefUrl;
+            singleCall(url,access_token,function(err,result){
+                cb(err,{type:'DocumentReference',result:result});
+            })
+        },
 
         function(cb) {
             var url = ObservationUrl + "&code=http://loinc.org|18262-6";
@@ -734,7 +784,7 @@ function getAllData(identifier,access_token,config,callback) {
             })
         }
     ],function(err,results){
-        addLog(start,null,'get all data');
+
 
         console.log('final err',err)
 

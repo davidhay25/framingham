@@ -20,7 +20,6 @@
 
     <script>
         angular.module("sampleApp",['ui.bootstrap']).config(function($locationProvider) {
-
             // enable html5Mode for pushstate ('#'-less URLs)  -- ,'ngStorage'
             $locationProvider.html5Mode(true);
             $locationProvider.hashPrefix('!');
@@ -184,107 +183,148 @@
                 <span class="pull-right" ng-show="waiting"><em>Loading data, please wait...</em></span>
             </div>
 
-            <div ng-show="missingData">
-                <h3>Unable to calculate the Framingham risk for the following reasons:</h3>
-                <ul class="list-unstyled">
-                    <li ng-repeat="m in missingData">{{m}}</li>
-                </ul>
-            </div>
 
-            <div class="row" ng-show="rawData">
-                <div class="col-md-6 col-sm-6">
-                    <div class="row">
-                        <div class="col-md-2 col-sm-2">
-                            <strong>Risk:</strong>
-                        </div>
+            <uib-tabset>
+                <uib-tab heading="Framingham Risk">
+
+                    <div ng-show="missingData">
+                        <h3>Unable to calculate the Framingham risk for the following reasons:</h3>
+                        <ul class="list-unstyled">
+                            <li ng-repeat="m in missingData">{{m}}</li>
+                        </ul>
+                    </div>
+
+                    <div class="row" ng-show="rawData">
                         <div class="col-md-6 col-sm-6">
-                            <div ng-class="riskClass" style="text-align: center">{{risk}}% of CVD event in 10 years</div>
+                            <div class="row">
+                                <div class="col-md-2 col-sm-2">
+                                    <strong>Risk:</strong>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div ng-class="riskClass" style="text-align: center">{{risk}}% of CVD event in 10 years</div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-2 col-sm-2">
+                                    <strong>Data:</strong>
+                                </div>
+                                <div class="col-md-10 col-sm-10">
+
+                                    <table ng-show="rawData" class="table table-bordered">
+                                        <tr><th>Test</th><th>Result</th><th>Points</th><th>When done</th><th>Age</th></tr>
+                                        <tr ng-repeat="(key,value) in rawData">
+                                            <td>{{value.display}}</td>
+                                            <td>
+                                                {{getResultDisplay(key,value)}}
+                                                <!--{{value.value.value}} {{value.value.unit}}--></td>
+                                            <td>{{value.points}}</td>
+                                            <td>{{value.date | date : 'yyyy-MM-dd'}}</td>
+                                            <td><span  ng-show="value.date">{{moment(value.date).diff(moment(),'days') * -1}} days</span></td>
+                                        </tr>
+                                        <tr ng-show="totalPoints > 0">
+                                            <td></td>
+                                            <td></td>
+                                            <td>{{totalPoints}}</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+
+                                    </table>
+
+                                    <!--
+
+                                    <table ng-show="rawData" class="table table-bordered">
+                                        <tr><th>Test</th><th>Result</th><th>Points</th><th>When done</th><th>Age</th></tr>
+                                        <tr ng-repeat="item in reference">
+                                            <td>{{item.name}}</td>
+                                            <td>{{rawData[item.key].value.value}} {{rawData[item.key].value.unit}}</td>
+                                            <td>{{item.points}}</td>
+                                            <td>{{rawData[item.key].date | date : 'yyyy-MM-dd'}}</td>
+                                            <td><span  ng-show="rawData[item.key].date">{{moment(rawData[item.key].date).diff(moment(),'days') * -1}} days</span></td>
+                                        </tr>
+
+                                    </table>
+
+                                    -->
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="col-md-6 col-sm-6">
+                            <uib-tabset>
+                                <uib-tab heading="History of Assessments">
+                                    <table class="table table-bordered">
+                                        <tr><th>Date</th><th>Risk</th></tr>
+                                        <tr ng-repeat="entry in assess">
+                                            <td>{{entry.resource.effectiveDateTime | date : 'yyyy-MM-dd'}}</td>
+                                            <td>{{entry.resource.valueQuantity.value}}%</td>
+                                        </tr>
+                                    </table>
+                                </uib-tab>
+                                <uib-tab heading="Assessment Observation">
+                                    <pre ng-show="riskObservation">{{riskObservation | json}}</pre>
+                                </uib-tab>
+                                <uib-tab heading="Demographics">
+                                    <pre>{{selectedPatient | json}}</pre>
+                                </uib-tab>
+                            </uib-tabset>
+
+
                         </div>
                     </div>
+
+
 
                     <div class="row">
-                        <div class="col-md-2 col-sm-2">
-                            <strong>Data:</strong>
+                        <div class="col-md-4 col-sm-4 col-sm-offset-2 col-md-offset-2 ">
+                            <button ng-show="riskObservation"  class="btn btn-success pull-left" ng-click="saveRiskObs()">Save Risk Assessment</button>
+                            <button ng-show="risk || missingData" class="btn btn-danger pull-right" ng-click="writeSample()">Generate Sample data</button>
                         </div>
-                        <div class="col-md-10 col-sm-10">
 
-                            <table ng-show="rawData" class="table table-bordered">
-                                <tr><th>Test</th><th>Result</th><th>Points</th><th>When done</th><th>Age</th></tr>
-                                <tr ng-repeat="(key,value) in rawData">
-                                    <td>{{value.display}}</td>
-                                    <td>
-                                        {{getResultDisplay(key,value)}}
-                                        <!--{{value.value.value}} {{value.value.unit}}--></td>
-                                    <td>{{value.points}}</td>
-                                    <td>{{value.date | date : 'yyyy-MM-dd'}}</td>
-                                    <td><span  ng-show="value.date">{{moment(value.date).diff(moment(),'days') * -1}} days</span></td>
-                                </tr>
-                                <tr ng-show="totalPoints > 0">
-                                    <td></td>
-                                    <td></td>
-                                    <td>{{totalPoints}}</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
+                    </div>
+                </uib-tab>
+                <uib-tab heading="Documents">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <ul class="list-group">
+                                <li class="list-group-item" ng-repeat = 'entry in docRef.entry'
+                                    ng-click="selectDocRef(entry.resource)">
+                                    {{entry.resource.class.coding[0].display}}
 
-                            </table>
 
-                            <!--
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-9 col-sm-9">
+                            <uib-tabset>
+                                <uib-tab heading="json">
+                                    <pre>{{selectedDocRef | json}}</pre>
+                                </uib-tab>
+                                <uib-tab heading="Document Dtl">
+                                    <div ng-repeat="content in selectedDocRef.content">
+                                        <div class="clickable" ng-click="selectDocument(content.attachment)">
+                                            {{content.attachment.title}} ({{content.attachment.contentType}})
+                                        </div>
+                                    </div>
 
-                            <table ng-show="rawData" class="table table-bordered">
-                                <tr><th>Test</th><th>Result</th><th>Points</th><th>When done</th><th>Age</th></tr>
-                                <tr ng-repeat="item in reference">
-                                    <td>{{item.name}}</td>
-                                    <td>{{rawData[item.key].value.value}} {{rawData[item.key].value.unit}}</td>
-                                    <td>{{item.points}}</td>
-                                    <td>{{rawData[item.key].date | date : 'yyyy-MM-dd'}}</td>
-                                    <td><span  ng-show="rawData[item.key].date">{{moment(rawData[item.key].date).diff(moment(),'days') * -1}} days</span></td>
-                                </tr>
+                                    <iframe id="myFrame" width="100%" ng-src="{{documentUrl}}" height='600px'/>
+                                </uib-tab>
 
-                            </table>
 
-                            -->
+                            </uib-tabset>
+
+
                         </div>
                     </div>
 
 
 
-                </div>
-
-                <div class="col-md-6 col-sm-6">
-                    <uib-tabset>
-                        <uib-tab heading="History of Assessments">
-                            <table class="table table-bordered">
-                                <tr><th>Date</th><th>Risk</th></tr>
-                                <tr ng-repeat="entry in assess">
-                                    <td>{{entry.resource.effectiveDateTime | date : 'yyyy-MM-dd'}}</td>
-                                    <td>{{entry.resource.valueQuantity.value}}%</td>
-                                </tr>
-                            </table>
-                        </uib-tab>
-                        <uib-tab heading="Assessment Observation">
-                            <pre ng-show="riskObservation">{{riskObservation | json}}</pre>
-                        </uib-tab>
-                        <uib-tab heading="Demographics">
-                            <pre>{{selectedPatient | json}}</pre>
-                        </uib-tab>
-                    </uib-tabset>
-
-
-                </div>
-            </div>
-
-
-
-            <div class="row">
-                <div class="col-md-4 col-sm-4 col-sm-offset-2 col-md-offset-2 ">
-                    <button ng-show="riskObservation"  class="btn btn-success pull-left" ng-click="saveRiskObs()">Save Risk Assessment</button>
-                    <button ng-show="risk || missingData" class="btn btn-danger pull-right" ng-click="writeSample()">Generate Sample data</button>
-                </div>
-
-            </div>
-
-
+                </uib-tab>
+            </uib-tabset>
         </div>
     </div>
 

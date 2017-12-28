@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ecosystem</title>
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+    <script src="js/libs/ngStorage.min.js"></script>
+
+    <script src="js/libs/angular-sanitize.js"></script>
+
+    <script>
+        angular.module("sampleApp",['ui.bootstrap','ngSanitize','ngStorage']).config(function($locationProvider) {
+            $locationProvider.html5Mode(true);
+            $locationProvider.hashPrefix('!');
+        });
+
+    </script>
+    <script src="js/ecosystemCtl.js"></script>
+    <script src="js/ecosystemSvc.js"></script>
+    <script src="js/modalDialogSvc.js"></script>
+    <script src="js/addServerToScenarioCtrl.js"></script>
+
+
+</head>
+<body style="padding: 8px" >
+
+
+<div ng-app="sampleApp" ng-controller="ecosystemCtrl" class="container-fluid">
+
+    <div class="banner">Connectathon Mananger</div>
+
+    <div class="row">
+
+        <div class="col-sm-12 col-md-12">
+            <uib-tabset>
+                <uib-tab heading="Connectathon Design">
+                    <br/>
+                    <div class="row">
+                        <div class="col-sm-2 col-md-2">
+                            <ul class="list-group">
+                                <li ng-class="{'list-group-item':1,'listItemSelected':selectedTrack.id == track.id}" style="cursor: pointer"
+                                    ng-repeat="track in tracks"
+                                    ng-click="selectTrack(track)">
+                                    {{track.name}}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-10 col-md-10" ng-show="selectedTrack">
+                            <div class="row">
+                                <div class="col-sm-2 col-md-2">
+                                    <strong>Description</strong>
+                                </div>
+                                <div class="col-sm-9 col-md-9">
+                                    {{selectedTrack.description}}
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-sm-2 col-md-2">
+                                    <strong>Track Leads</strong>
+                                </div>
+                                <div class="col-sm-9 col-md-9">
+                                    <ul class="list-unstyled">
+                                        <li ng-repeat="lead in selectedTrack.leads">
+                                            {{lead.name}}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-2 col-md-2">
+                                    <strong>Roles</strong>
+                                </div>
+                                <div class="col-sm-10 col-md-10">
+
+                                    <div class="row">
+                                        <div class="col-sm-4 col-md-4">
+                                            <ul class="list-group">
+                                                <li ng-class="{'list-group-item':1,'listItemSelected':selectedRole.id == role.id}"
+                                                    style="cursor: pointer"
+                                                    ng-repeat="role in selectedTrack.roles track by $index"
+                                                    ng-click="selectRole(role)">
+                                                    {{role.name}}
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                        <div class="col-sm-4 col-md-4">
+                                            <p ng-bind-html="selectedRole.description"></p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-2 col-md-2">
+                                    <strong>Scenarios</strong>
+                                </div>
+                                <div class="col-sm-10 col-md-10">
+                                    <div class="row">
+
+                                        <div class="col-sm-4 col-md-4">
+                                            <ul class="list-group">
+                                                <li ng-class="{'list-group-item':1,'listItemSelected':selectedScenario.id == scenario.id}"
+                                                    style="cursor: pointer"
+                                                     ng-repeat="scenario in selectedTrack.scenarios track by $index"
+                                                     ng-click="selectScenario(scenario)">
+                                                    {{scenario.name}}
+                                                </li>
+                                            </ul>
+
+                                        </div>
+
+
+                                        <div class="col-sm-8 col-md-8" ng-show="selectedScenario">
+                                            <p ng-bind-html="scenario.description"></p>
+
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-3">
+                                                    Action
+                                                </div>
+                                                <div class="col-sm-9 col-md-9">
+                                                    {{selectedScenario.action}}
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-3">
+                                                    Precondition
+                                                </div>
+                                                <div class="col-sm-9 col-md-9">
+                                                    {{selectedScenario.precondition}}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-3">
+                                                    Steps
+                                                </div>
+                                                <div class="col-sm-9 col-md-9">
+                                                    <ol>
+                                                        <li ng-repeat="step in selectedScenario.steps">
+                                                            {{step}}
+                                                        </li>
+                                                    </ol>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-3">
+                                                    Success
+                                                </div>
+                                                <div class="col-sm-9 col-md-9">
+                                                    {{selectedScenario.success}}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-3">
+                                                    Bonus
+                                                </div>
+                                                <div class="col-sm-9 col-md-9">
+                                                    <ul class="list-unstyled">
+                                                        <li ng-repeat="bonus in selectedScenario.bonus">
+                                                            {{bonus}}
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-3">
+                                                    Servers
+                                                </div>
+                                                <div class="col-sm-9 col-md-9">
+                                                    <ul>
+                                                        <li ng-repeat="server in selectedScenario.servers">
+                                                            {{server.ip}}
+                                                        </li>
+                                                    </ul>
+                                                    <button class="btn btn-link" ng-click="addServerToScenario(selectedScenario)">Add Server</button>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-3">
+                                                    Clients
+                                                </div>
+                                                <div class="col-sm-9 col-md-9">
+                                                    <ul>
+                                                        <li ng-repeat="client in selectedScenario.clients">
+                                                            {{client.name}}
+                                                        </li>
+                                                    </ul>
+                                                    <button class="btn btn-link" ng-click="addClientToScenario(selectedScenario)">Add Client</button>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+                        </div>
+                    </div>
+
+
+
+
+
+                </uib-tab>
+
+
+                <uib-tab heading="Connectathon Scoring">
+                    <br/>
+                    <div class="row">
+                        <div class="col-sm-2 col-md-2">
+                            <ul class="list-group">
+                                <li ng-class="{'list-group-item':1,'listItemSelected':selectedTrack.id == track.id}" style="cursor: pointer"
+                                    ng-repeat="track in tracks"
+                                    ng-click="selectTrack(track)">
+                                    {{track.name}}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-10 col-md-10">
+
+                            <div ng-repeat="scenario in selectedTrack.scenarios track by $index">
+
+                                <div class="banner">{{scenario.name}}</div>
+
+                                <div class="row">
+                                    <div class="col-sm-10 col-md-10">
+
+                                        <table class="table">
+                                            <tr>
+                                                <th></th>
+                                                <th ng-repeat="server in scenario.servers">
+                                                    {{server.server.name}}
+                                                    <div><em>({{server.role.name}})</em></div>
+                                                </th>
+                                            </tr>
+
+                                            <tr ng-repeat="client in scenario.clients">
+                                                <td>{{client.name}}</td>
+                                                <td ng-repeat="server in scenario.servers">
+                                                    <a href="#" ng-click="addTestResult(scenario,client,server)">
+                                                        {{showTestResult(scenario,client,server)}}
+                                                    </a>
+
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-sm-2 col-md-2">
+                                        <button class="btn btn-link" ng-click="addServerToScenario(scenario)">Add Server</button>
+                                        <div>
+                                            <button class="btn btn-link" ng-click="addClientToScenario(scenario)">Add Client</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--
+                                <pre>{{scenario | json}}</pre>
+-->
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </uib-tab>
+
+
+                <uib-tab heading="Servers">
+                    <br/>
+                    <table class="table table-bordered">
+                        <tr><th>Name</th><th>Description</th></tr>
+                        <tr ng-repeat="svr in allServers">
+                            <td>{{svr.name}}</td>
+                            <td>{{svr.address}}</td>
+                            <td>
+                                <div ng-repeat="scenarioName in getScenariosForServer(svr)">
+                                    {{scenarioName }}
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </uib-tab>
+
+                <uib-tab heading="Clients">
+
+                </uib-tab>
+
+                <uib-tab heading="List">
+                    <br/>
+                    <select ng-model="input.filterRole" ng-change="setFilter()"
+                            ng-options = "concept.display for concept in csAllRoles.concept"></select>
+
+                    <table class="table table-bordered">
+                        <tr><th>Name</th><th>Description</th><th>Role</th><th>Url</th><th>Auth Svr.</th><th>Notes</th><th>Tags</th></tr>
+                        <tr ng-repeat="ep in endpoints" ng-show="canShow(ep)">
+                            <td>{{ep.name}}</td>
+                            <td>{{ep.description}}</td>
+                            <td>{{ep.role}}</td>
+                            <td>{{ep.url}}</td>
+                            <td>{{ep.authz}}</td>
+                            <td>
+                                <div ng-repeat="note in ep.notes">
+                                    {{note.text}}
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-repeat="tag in ep.tags">
+                                    {{tag}}
+                                </div>
+                                <a class='pull-right' href="#" ng-click="addTag(ep)">Add</a>
+                            </td>
+                        </tr>
+                    </table>
+                </uib-tab>
+                <uib-tab heading="Graph">
+                    <div class="row">
+                        <div class="col-sm-4 col-md-4">
+
+                        </div>
+                        <div class="col-sm-4 col-md-4">
+
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab heading="json">
+                    <pre>{{endpoints | json}}</pre>
+                </uib-tab>
+            </uib-tabset>
+
+        </div>
+
+
+    </div>
+
+<!--
+    <div><a class="btn btn-warning" ng-href="/auth?page=orion.html">Login as Clinician</a></div>
+    <div><a class="btn btn-success" ng-href="/auth?page=patient.html">Login as Patient</a></div>
+
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+
+        </div>
+        <div class="col-sm-6 col-md-6">
+
+        </div>
+    </div>
+-->
+
+
+</div>
+
+</body>
+</html>

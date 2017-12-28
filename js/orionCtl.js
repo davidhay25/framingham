@@ -50,21 +50,25 @@ angular.module("sampleApp")
                     })
             };
 
-
-/*
-            $http.get('/orion/getAllData?identifier=ORION|AAAA-0200-7').then(
-                function (data) {
-                   console.log(data.data)
-
-                },function(err) {
-                    alert('Error getting current user')
-                }
-            );
-            */
-
-            //return;
+            var ctHash = {}; //contentType hash - change some of the content types into standard ones...
+            ctHash['application/cda+xml'] = encodeURIComponent('application/xml');
 
 
+            $scope.selectDocRef = function (resource) {
+                $scope.selectedDocRef = resource
+            };
+
+            //select a document from the list
+            $scope.selectDocument = function(attachment) {
+                //convert the content type to a standard one...
+                var contentType = attachment.contentType;
+                contentType = ctHash[contentType] || contentType;
+
+                //this will cause the iframe to navigate to a url on the server that queries Amadeus & returns the document...
+                $scope.documentUrl = 'orion/getDocument?url='+attachment.url + '&contentType='+
+                    contentType + '&ts=' + new Date().getTime();
+
+            };
 
 
             //get the details for the currently logged in user (remember we have authenticated when this page loads)
@@ -101,7 +105,22 @@ angular.module("sampleApp")
 
                 },function(err) {
                     showError('Error getting current user')
-                    //alert('Error getting current user')
+                }
+            );
+
+            //get the conformnce resource
+            $http.get('/orion/metadata').then(
+                function (data) {
+                    if (data.data) {
+                        console.log(data.data)
+
+                    } else {
+                        alert('Error getting current user')
+                    }
+
+                },function(err) {
+                    console.log(err)
+                    alert('Error getting conformance')
                 }
             );
 
@@ -168,6 +187,7 @@ angular.module("sampleApp")
                 $http.get('/orion/getRisk?identifier='+ fIdentifier+"&saveRisk="+false).then(
                     function (data) {
                         console.log(data.data)
+                        $scope.docRef = data.data.docRef;
 
                         var riskCalc = data.data;
                         $scope.riskCalc = data.data;
@@ -208,8 +228,6 @@ angular.module("sampleApp")
 
                         console.log(err)
 
-
-                        //alert (angular.toJson(err))
                     }
                 ).finally(function(){
                     $scope.waiting = false;
@@ -220,7 +238,7 @@ angular.module("sampleApp")
 
             //generate the result display in a more himan readible form...
             $scope.getResultDisplay = function(key,value) {
-                console.log(key,value)
+
                 var disp
 
                 //the value for smoker is a number (thanks LOINC!) so convert it to something nicer...
@@ -238,9 +256,6 @@ angular.module("sampleApp")
                         } else {
                             disp += " " +value.value.unit;
                         }
-
-
-
                     }
 
                 }

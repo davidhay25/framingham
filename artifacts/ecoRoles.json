@@ -1,0 +1,82 @@
+
+{
+  "resourceType": "CodeSystem",
+  "id": "ecoRole",
+
+  "url": "http://clinfhir.com/CodeSystem/ecoRole",
+
+  "version": "20160128",
+  "name": "Roles for ecosystem",
+  "status": "draft",
+  "contact": [
+    {
+      "name": "David Hay",
+      "telecom": [
+        {
+          "system": "email",
+          "value": "david.hay25@gmail.com"
+        }
+      ]
+    }
+  ],
+  "description": "roles that an Endpoint can have in the clinFHIR ecosystem",
+  "caseSensitive": true,
+  "content": "complete",
+  "concept": [
+    {
+      "code": "coord",
+      "display": "Co-Ordinator",
+      "definition": "The co-ordinator role has the Endpoints and possibly cached CapabilityStatement resources"
+    },
+    {
+      "code": "aud",
+      "display": "Audit server",
+      "definition": ""
+    },
+    {
+      "code": "pid",
+      "display": "Patient identities",
+      "definition": ""
+    },
+    {
+      "code": "prov",
+      "display": "Provider registry",
+      "definition": ""
+    },
+    {
+      "code": "sched",
+      "display": "Schedules",
+      "definition": ""
+    },
+    {
+      "code": "pls",
+      "display": "Patient Locator Service - indicates where patient record may be found (like XDS)",
+      "definition": ""
+    },
+    {
+      "code": "conf",
+      "display": "Conformance resources",
+      "definition": ""
+    },
+    {
+      "code": "authz",
+      "display": "Authorization server",
+      "definition": ""
+    },
+    {
+      "code": "workflow",
+      "display": "Workflow Server",
+      "definition": ""
+    },
+    {
+      "code": "data",
+      "display": "Data repository",
+      "definition": ""
+    },
+    {
+      "code": "term",
+      "display": "Terminology server",
+      "definition": ""
+    }
+  ]
+}

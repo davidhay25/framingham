@@ -39,7 +39,7 @@ angular.module("sampleApp").
                 },
                 function(err) {
                     deferred.reject(err);
-                    //alert('error saving resource: '+angular.toJson(err))
+
                 }
             );
             return deferred.promise;
