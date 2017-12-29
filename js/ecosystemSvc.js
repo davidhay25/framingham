@@ -1,7 +1,6 @@
-angular.module("sampleApp").service('ecosystemSvc', function($q,$http) {
+angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStorage) {
 
     var serverIP = "http://localhost:8080/baseDstu3/";    //hard code to local server for now...
-
     var addExtension =  function(resource,url,value) {
         if (angular.isArray(url)) {
             url = url[0];       //stus/3
@@ -14,7 +13,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http) {
         angular.extend(ext,value);
         resource.extension.push(ext)
     };
-
     var getExtension = function(resource,url) {
         //return the value of an extension assuming there can be more than 1...
         var extension = [];
@@ -26,14 +24,10 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http) {
         }
         return extension;
     };
-
-
     var extDescriptionUrl = "http://clinfhir.com/StructureDefinition/cf-eco-description";
     var extRoleUrl = "http://clinfhir.com/StructureDefinition/cf-eco-role";
     var extNoteUrl = 'http://clinfhir.com/StructureDefinition/cf-eco-note';
-
     var tagUrl = 'http://clinfhir.com/NamingSystem/cf-eco-tag';
-
 
     //construct an Endpoint resource from an ep internal model..
     var makeResourceFromEP = function(ep){
@@ -126,14 +120,68 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http) {
 
     var allServers;
     var allClients;
-    var allResults = {};
-
-    //get all currently known servers. For now read the json file - todo: persist as fhir resource
-
-
-
+    var allResults = $localStorage.allResults || {};
     return {
 
+        getTrackResults : function(track) {
+            //get a summary object for a track
+            var summary = {total : 0, scenario : {}}
+            angular.forEach(allResults,function(value,key) {
+                if (value.track.id == track.id) {
+                    summary.total ++;
+
+
+                    var scenarioName = value.scenario.name;
+                    var scenarioId = value.scenario.id;
+                    summary.scenario[scenarioName] = summary.scenario[scenarioName] || {pass:0,fail:0,partial:0}
+                    var item = summary.scenario[scenarioName];
+                    item[value.text]++;         //todo - shoudl change the name of 'text'
+
+                }
+
+            })
+            return summary;
+
+
+        },
+
+        makeResultsDownloadObject : function () {
+            var obj = {name:'connectathon 17',results:[]};
+            angular.forEach(allResults,function(value,key) {
+                var lne = {};
+                lne.track = value.track.name;
+                lne.scenario = value.scenario.name;
+                lne.participants = [];
+                value.participants.forEach(function (part) {
+                    var p = {name:part.participant.name,role:part.role.name,systemRole:part.systemRole};
+                    lne.participants.push(p)
+                });
+                lne.result = value.text;
+                lne.note = value.note;
+                obj.results.push(lne)
+
+            });
+            return obj;
+        },
+
+        makeResultsDownload : function () {
+            //make an array for downloading results
+            var ar = "";
+            angular.forEach(allResults,function(value,key) {
+                console.log(value);
+                var lne = quote(value.track.name) + "," + quote(value.scenario.name) + ",";
+                lne += value.client.participant.name + " (" + value.client.role.name + "),";
+                lne += value.server.participant.name + " (" + value.server.role.name + "),";
+                lne += value.text + ",";
+                lne += value.note;
+                ar += lne + "\n";
+            });
+            return ar;
+
+            function quote(s) {
+                return "'" + s + "'";
+            }
+        },
 
         getAllClients : function() {
             var deferred = $q.defer();
@@ -148,6 +196,10 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http) {
                 );
             }
             return deferred.promise;
+        },
+        getAllResults : function() {
+            return $localStorage.allResults
+            //return allResults;
         },
 
         getAllServers : function() {
@@ -165,12 +217,25 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http) {
             return deferred.promise;
         },
         getScenarioResult : function(scenario,client,server) {
-            var key = scenario.id + "|" + server.id + "|" + client.id;
+            var key = scenario.id + "|" + server.server.id + "|" + client.client.id;
             return allResults[key]
         },
-        addScenarioResult : function(scenario,client,server,result) {
-            var key = scenario.id + "|" + server.id + "|" + client.id;
+        addScenarioResult : function(track,scenario,client,server,result) {
+            var key = scenario.id + "|" + server.server.id + "|" + client.client.id;
+
+            //add the participants to the result. In this somple case there is one client and one server
+            result.participants = result.participants || []
+            result.participants.length = 0;
+            result.participants.push({systemRole:'client',role: client.role,participant:client.client});
+            result.participants.push({systemRole:'server',role: server.role,participant:server.server});
+            result.server = {role: server.role,participant:server.server};  //used for download
+            result.client = {role: client.role,participant:client.client};  //used for download
+            result.scenario = scenario;
+            result.track = track;
+
             allResults[key] = result;
+
+            $localStorage.allResults = allResults;
         },
         addServerToScenario : function(scenario,server,role) {
 
@@ -178,13 +243,9 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http) {
             scenario.servers.push({server:server,role:role});
 
         },
-        addClientToScenario : function(scenario,name) {
+        addClientToScenario : function(scenario,client,role) {
             scenario.clients = scenario.clients || [];
-            var id = new Date().getTime();
-            var client = {id:id,name:name};
-            scenario.clients.push(client);
-            allClients[client.id] = client;
-           // allClients.push(client)
+            scenario.clients.push({client:client,role:role});
         },
         getConnectathonResources : function() {
             //get scenarios
@@ -243,8 +304,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http) {
                             })
                         }
 
-
-
                         if (track.scenarioIds) {
                             track.scenarioIds.forEach(function (id) {
                                 var scenario = hashScenario[id];
@@ -300,13 +359,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http) {
 
             var lstTags = [];
             var deferred = $q.defer();
-
-
-            //var url = 'artifacts/endpoints.json';
-
-
-
-            //var url = 'artifacts/endpoints.json';
             var url = serverIP + 'Endpoint?_count=100';     //todo need paging
 
             $http.get(url).then(

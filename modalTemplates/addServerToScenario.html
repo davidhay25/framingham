@@ -17,8 +17,6 @@
     </div>
 
     <div class="modal-body">
-
-
         <div ng-show="dlgAllServers.length == 0" class="row">
             <div class="col-md-12 col-sm-12">
                 All available servers have been added to this scenario!
@@ -27,14 +25,15 @@
 
         <div ng-hide="dlgAllServers.length == 0" class="row">
             <div class="col-md-3 col-sm-3">
+                <strong>Servers</strong>
                 <ul class="list-unstyled">
                     <li class="clickable" ng-repeat="svr in dlgAllServers" ng-click="selectServer(svr)">
                         {{svr.name}}
                     </li>
                 </ul>
-
             </div>
             <div class="col-md-3 col-sm-3">
+                <strong>Roles</strong>
                 <ul class="list-unstyled">
                     <li class="clickable" ng-repeat="role in scenario.roles" ng-click="selectRole(role)">
                         {{role.name}}

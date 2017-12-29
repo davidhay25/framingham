@@ -6,6 +6,68 @@ angular.module("sampleApp")
 
             $scope.input = {};
 
+
+            $scope.chartLabels = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
+            $scope.chartData = [300, 500, 100];
+            $scope.chartOptions = {legend:{display:true}}
+
+
+/*
+            var randomScalingFactor = function() {
+                return Math.round(Math.random() * 100);
+            };
+
+            window.chartColors = {
+                red: 'rgb(255, 99, 132)',
+                orange: 'rgb(255, 159, 64)',
+                yellow: 'rgb(255, 205, 86)',
+                green: 'rgb(75, 192, 192)',
+                blue: 'rgb(54, 162, 235)',
+                purple: 'rgb(153, 102, 255)',
+                grey: 'rgb(201, 203, 207)'
+            };
+
+
+            var config = {
+                type: 'pie',
+                data: {
+                    datasets: [{
+                        data: [
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                            randomScalingFactor(),
+                        ],
+                        backgroundColor: [
+                            window.chartColors.red,
+                            window.chartColors.orange,
+                            window.chartColors.yellow,
+                            window.chartColors.green,
+                            window.chartColors.blue,
+                        ],
+                        label: 'Dataset 1'
+                    }],
+                    labels: [
+                        "Red",
+                        "Orange",
+                        "Yellow",
+                        "Green",
+                        "Blue"
+                    ]
+                },
+                options: {
+                    responsive: true
+                }
+            };
+
+
+            var ctx = document.getElementById("chart").getContext("2d");
+            window.myPie = new Chart(ctx, config);
+*/
+
+            $scope.ecosystemSvc = ecosystemSvc;
+
             ecosystemSvc.getAllServers().then(
                 function (data) {
                     $scope.allServers = data;
@@ -13,6 +75,12 @@ angular.module("sampleApp")
                 }
             );
 
+            ecosystemSvc.getAllClients().then(
+                function (data) {
+                    $scope.allClients = data;
+                    console.log($scope.allClients)
+                }
+            );
 
             //retieve to whole 'tree' of tracks -> scenarios -> roles
             ecosystemSvc.getConnectathonResources().then(
@@ -22,21 +90,91 @@ angular.module("sampleApp")
                 }
             );
 
+            $scope.selectTrackResults = function(track) {
+                //in the results tab, select a track...
+                $scope.selectedTrackSummary = track;
+                $scope.resultsSummary = ecosystemSvc.getTrackResults(track); //get a summary object for the results for a track
+
+
+                //set the scenario list
+
+
+                //set the chart values...
+                $scope.chartLabels = [];// ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
+                $scope.chartData = []; //[300, 500, 100];
+                $scope.chartOptions = {legend:{display:true}};
+
+                angular.forEach($scope.resultsSummary.scenario,function(value,key){
+                   // $scope.chartLabels.push(key)
+                })
+
+            };
+
+            $scope.selectScenarioResults = function(scenario) {
+                //in the results tab, select a scenario...
+                $scope.selectedScenarioSummary = scenario;
+                //set the chart values...
+                $scope.chartLabels = [];// ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
+                $scope.chartData = []; //[300, 500, 100];
+                $scope.chartColors = ['#00cc00', '#cc3300', '#ffff99']
+                $scope.chartOptions = {legend:{display:true}};
+                console.log(summary)
+
+                var summary = $scope.resultsSummary.scenario[scenario.name];
+                if (summary) {
+                    angular.forEach(summary,function(v,k){
+                        $scope.chartLabels.push(k)
+                        $scope.chartData.push(v)
+                       // $scope.chartData.push(v)
+                    })
+                }
+
+
+
+            };
+
+
             $scope.showTestResult = function(scenario,client,server) {
-                console.log(scenario,client,server)
+                //console.log(scenario,client,server)
                 var result = ecosystemSvc.getScenarioResult(scenario,client,server) || {text: 'Enter result'}
                 return result.text
             };
 
+            $scope.showTestResultNote = function(scenario,client,server) {
+                //console.log(scenario,client,server)
+                var result = ecosystemSvc.getScenarioResult(scenario,client,server) || {note: ''}
+                return result.note
+            };
 
-            $scope.addTestResult = function(scenario,client,server) {
 
-                console.log(scenario,client,server)
-                var result = $window.prompt("What was the result?");
-                if (result) {
-                    ecosystemSvc.addScenarioResult(scenario,client,server,{text:result})
-                }
+            //add the result from a simple (one client, one server) scenario...
+            $scope.addTestResult = function(track,scenario,client,server) {
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/result.html',
+                    controller: 'resultCtrl',
+                    resolve : {
 
+                        scenario: function () {          //the default config
+                            return scenario;
+                        },
+                        track: function () {          //the default config
+                            return track;
+                        },
+                        server: function () {          //the default config
+                            return server;
+                        },
+                        client: function () {          //the default config
+                            return client;
+                        },
+                        previousResult : function() {
+                            return ecosystemSvc.getScenarioResult(scenario,client,server)
+                        }
+                    }
+                }).result.then(function(vo){
+                    console.log(vo)
+
+                    ecosystemSvc.addScenarioResult(track,scenario,client,server,vo)
+                });
 
             };
 
@@ -59,7 +197,56 @@ angular.module("sampleApp")
                     console.log(vo)
                     ecosystemSvc.addServerToScenario(scenario,vo.server,vo.role)
                 });
+            };
 
+            $scope.download = function(downloadThing) {
+                var object;
+                switch (downloadThing) {
+                    case 'results' :
+                        object = ecosystemSvc.makeResultsDownloadObject();  //a simplified object
+                        //object = ecosystemSvc.makeResultsDownload();  //csv option not working...
+                        break;
+                }
+
+                if (! object) {
+                    alert('no download specified');
+                    return
+                }
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/download.html',
+                    //size: 'lg',
+                    controller: 'downloadCtrl',
+                    resolve : {
+                        object: function () {          //the default config
+                            return object;
+                        }
+                    }
+                }).result.then(function(vo){
+                    console.log(vo)
+                    //ecosystemSvc.addServerToScenario(scenario,vo.server,vo.role)
+                });
+
+            };
+
+            $scope.addClientToScenario = function(scenario) {
+                //todo expand to a full server object...
+
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/addClientToScenario.html',
+                    //size: 'lg',
+                    controller: 'addClientToScenarioCtrl',
+                    resolve : {
+                        allClients: function () {          //the default config
+                            return $scope.allClients;
+                        },
+                        scenario: function () {          //the default config
+                            return scenario;
+                        }
+                    }
+                }).result.then(function(vo){
+                    console.log(vo)
+                    ecosystemSvc.addClientToScenario(scenario,vo.client,vo.role)
+                });
 
             };
 
@@ -72,7 +259,7 @@ angular.module("sampleApp")
                             track.scenarios.forEach(function(scenario){
                                 if (scenario.servers) {
                                     scenario.servers.forEach(function (svr1) {
-                                        if (svr1.id == svr.id) {
+                                        if (svr1.server.id == svr.id) {
                                             scenarios.push(track.name + " / "+  scenario.name)
                                         }
                                     })
@@ -86,7 +273,12 @@ angular.module("sampleApp")
                 return scenarios;
             };
 
-            $scope.addClientToScenario = function(scenario) {
+            $scope.getScenariosForClient = function(clnt){
+                return []
+
+            }
+
+            $scope.addClientToScenarioDEP = function(scenario) {
                 //todo expand to a full server object...
                 var ip = $window.prompt("Enter Client name","client 1");
                 if (ip) {

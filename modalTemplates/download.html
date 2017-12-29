@@ -1,0 +1,42 @@
+<div>
+
+
+    <div class="modal-header">
+
+        <div class="row">
+            <div class="col-md-8 col-sm-8">
+                <h3 class="modal-title">Download {{downloadType}}</h3>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div class="pull-right">
+                    <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+
+        <p>Down the results as a JSON object. The dialog will automatically close after the download.</p>
+
+        <a class="btn btn-primary pull-right" download="{{downloadLinkJsonName}}.json"
+           href="{{downloadLinkJsonContent}}" title="{{downloadLinkJsonName}}" ng-click="$close()">
+            Download
+        </a>
+
+    </div>
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <em></em>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>

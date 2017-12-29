@@ -1,7 +1,7 @@
 {
   "roles":[
     {"id":"r1-1","name":"Research App","description":"The Research App will be expected to:<ul><li>Implement the API defined here to retrieve clinical data: S4S API calls</li><li>Implement the API defined here to retrieve imaging data: Research App S4S Imaging Requirements</li></ul>"},
-    {"id":"r1-2","name":"SMART EHR","description":""},
+    {"id":"r1-2","name":"SMART EHR","description":"The EHR will be expected to:<ul><li>Implement the API defined here to retrieve clinical data: S4S API Calls</li><li>Communicate with a Token Introspection Service to allow a broker system (FHIR Broker) to request authorization for image retrieval. Specifications are here: EHR S4S Imaging Requirements</li><li>(Optional) Directly support the FHIR ImagingStudy resource to support image search</li><li>(Optional) Support DICOM QIDO-RS and WADO-RS queries that will be passed through to a PACS. Detailed specifications are here: EHR S4S Imaging Requirements</li><ul>"},
     {"id":"r1-3","name":"S4S Broker","description":""},
     {"id":"r1-4","name":"PACS","description":""},
     {"id":"r2-1","name":"Payer","description":""},

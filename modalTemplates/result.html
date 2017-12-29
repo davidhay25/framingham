@@ -1,0 +1,68 @@
+<div>
+
+
+    <div class="modal-header">
+
+        <div class="row">
+            <div class="col-md-8 col-sm-8">
+                <h3 class="modal-title">Result of test {{dlgScenario.name}}</h3>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div class="pull-right">
+                    <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-5 col-sm-5">
+                <div class="btn-group">
+                    <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'pass'">Pass</label>
+                    <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'fail'">Fail</label>
+                    <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'partial'">Partial</label>
+                </div>
+            </div>
+            <div class="col-md-7 col-sm-7">
+                <div ng-show="radioModel=='pass'">
+                    Well done! Please add any notes you have and save...
+                </div>
+                <div ng-show="radioModel=='fail'">
+                    That's a pity. Any particular reason?
+                </div>
+                <div ng-show="radioModel=='partial'">
+                    Well, that's better than a fail! Please add the details in the box below...
+                </div>
+
+            </div>
+        </div>
+        <br/>
+
+        <textarea class="form-control" ng-model="input.note"></textarea>
+
+        <br/>
+
+
+
+        <div>
+            <button class="btn btn-primary pull-right" ng-show="input.note && radioModel" ng-click="save()">Save result</button>
+        </div>
+
+</div>
+
+<div class="modal-header">
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <em>Select the client and the role that they will play in this scenario</em>
+
+        </div>
+
+    </div>
+
+
+
+</div>
+</div>

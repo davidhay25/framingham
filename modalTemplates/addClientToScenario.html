@@ -1,0 +1,80 @@
+<div>
+
+
+    <div class="modal-header">
+
+        <div class="row">
+            <div class="col-md-8 col-sm-8">
+                <h3 class="modal-title">Add Client to Scenario: {{dlgScenario.name}}</h3>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div class="pull-right">
+                    <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+
+
+        <div ng-show="dlgAllServers.length == 0" class="row">
+            <div class="col-md-12 col-sm-12">
+                All available clients have been added to this scenario!
+            </div>
+        </div>
+
+        <div ng-hide="dlgAllServers.length == 0" class="row">
+            <div class="col-md-3 col-sm-3">
+                <strong>Clients</strong>
+                <ul class="list-unstyled">
+                    <li class="clickable" ng-repeat="clnt in dlgAllClients" ng-click="selectClient(clnt)">
+                        {{clnt.name}}
+                    </li>
+                </ul>
+
+            </div>
+            <div class="col-md-3 col-sm-3">
+                <strong>Roles</strong>
+                <ul class="list-unstyled">
+                    <li class="clickable" ng-repeat="role in scenario.roles" ng-click="selectRole(role)">
+                        {{role.name}}
+                    </li>
+                </ul>
+
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+                <div ng-show="selectedClient">Name: {{selectedClient.name}}</div>
+
+                <div ng-show="selectedRole">Role: {{selectedRole.name}}</div>
+
+                <div class="pull-right" ng-show="selectedClient && selectedRole">
+                    <button class="btn btn-primary" ng-click="addClient()">Add to Scenario</button>
+                </div>
+
+            </div>
+
+        </div>
+        <br/>
+
+
+
+
+
+</div>
+
+<div class="modal-header">
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <em>Select the client and the role that they will play in this scenario</em>
+
+        </div>
+
+    </div>
+
+
+
+</div>
+</div>
