@@ -42,6 +42,8 @@
     <script src="js/addClientToScenarioCtrl.js"></script>
     <script src="js/resultCtrl.js"></script>
     <script src="js/downloadCtrl.js"></script>
+    <script src="js/addClientCtrl.js"></script>
+    <script src="js/addServerCtrl.js"></script>
 
 </head>
 <body style="padding: 8px" >
@@ -61,8 +63,7 @@
         <div class="col-sm-12 col-md-12">
             <uib-tabset>
 
-
-                <uib-tab heading="Scoring">
+                <uib-tab heading="Track Scoring">
                     <br/>
                     <div class="row">
                         <div class="col-sm-2 col-md-2">
@@ -129,7 +130,7 @@
 
                 </uib-tab>
 
-                <uib-tab heading="Description">
+                <uib-tab heading="Track Descriptions">
                     <br/>
                     <div class="row">
                         <div class="col-sm-2 col-md-2">
@@ -299,6 +300,7 @@
                                                     Clients
                                                 </div>
                                                 <div class="col-sm-9 col-md-9">
+
                                                     <ul>
                                                         <li ng-repeat="client in selectedScenario.clients">
                                                             {{client.name}}
@@ -331,8 +333,32 @@
 
                 </uib-tab>
 
+                <uib-tab heading="Clients">
+                    <br/>
+                    <div>
+                        <button class="btn btn-link pull-right" ng-click="addNewClient()">New Client</button>
+                    </div>
+                    <table class="table table-bordered">
+                        <tr><th>Name</th><th>Description</th><th>Scenarios</th></tr>
+                        <tr ng-repeat="clnt in allClients">
+                            <td>{{clnt.name}}</td>
+                            <td>{{clnt.description}}</td>
+                            <td>
+                                <div ng-repeat="scenarioName in getScenariosForClient(clnt)">
+                                    {{scenarioName }}
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+
+                </uib-tab>
+
                 <uib-tab heading="Servers">
                     <br/>
+                    <div>
+                        <button class="btn btn-link pull-right" ng-click="addNewServer()">New Server</button>
+                    </div>
                     <table class="table table-bordered">
                         <tr><th>Name</th><th>Description</th><th>Scenarios</th></tr>
                         <tr ng-repeat="svr in allServers">
@@ -348,25 +374,6 @@
 
                 </uib-tab>
 
-                <uib-tab heading="Clients">
-                    <br/>
-                    <table class="table table-bordered">
-                        <tr><th>Name</th><th>Description</th></tr>
-                        <tr ng-repeat="clnt in allClients">
-                            <td>{{clnt.name}}</td>
-                            <td>{{clnt.description}}</td>
-                            <td>
-                                <div ng-repeat="scenarioName in getScenariosForClient(clnt)">
-                                    {{scenarioName }}
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-
-
-                </uib-tab>
-
-
                 <uib-tab heading="All results">
                     <br/>
 
@@ -380,26 +387,59 @@
                                             ng-repeat="track in tracks"
                                             ng-click="selectTrackResults(track)">
                                             {{track.name}}
+
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="col-md-2 col-sm-2">
-                                    <ul class="list-group">
-                                        <li ng-class="{'list-group-item':1,'listItemSelected':selectedScenarioSummary.id == scenario.id}" style="cursor: pointer"
-                                            ng-repeat="scenario in selectedTrackSummary.scenarios"
-                                            ng-click="selectScenarioResults(scenario)">
-                                            {{scenario.name}}
-                                        </li>
-                                    </ul>
+                                <div class="col-md-10 col-sm-10">
+                                    <uib-tabset>
+                                        <uib-tab heading="By Scenario">
+                                            <div class="row">
+
+                                                <div class="col-md-4 col-sm-4">
+                                                    <ul class="list-group">
+                                                        <li ng-class="{'list-group-item':1,'listItemSelected':selectedScenarioSummary.id == scenario.id}" style="cursor: pointer"
+                                                            ng-repeat="scenario in selectedTrackSummary.scenarios"
+                                                            ng-click="selectScenarioResults(scenario)">
+                                                            {{scenario.name}}
+                                                            <span class="pull-right" ng-show="resultsSummary.scenario[scenario.name].total > 0">
+                                                                <span class=" badge">
+                                                                    {{resultsSummary.scenario[scenario.name].total}}
+                                                                </span>
+
+                                                                <span class=" badge">
+
+                                                                    {{resultsSummary.scenario[scenario.name].pass}} /
+                                                                    {{resultsSummary.scenario[scenario.name].fail}} /
+                                                                    {{resultsSummary.scenario[scenario.name].partial}}
+                                                                </span>
+                                                            </span>
 
 
 
+                                                        </li>
+                                                    </ul>
+
+
+
+                                                </div>
+                                                <div class="col-md-8 col-sm-8">
+                                                    <canvas id="pie" class="chart chart-pie"
+                                                            chart-data="chartData" chart-labels="chartLabels" chart-options="chartOptions" chart-colors="chartColors">
+                                                    </canvas>
+                                                </div>
+
+                                            </div>
+                                        </uib-tab>
+                                        <uib-tab heading="Totals">
+
+                                        </uib-tab>
+                                    </uib-tabset>
                                 </div>
-                                <div class="col-md-8 col-sm-8">
-                                    <canvas id="pie" class="chart chart-pie"
-                                            chart-data="chartData" chart-labels="chartLabels" chart-options="chartOptions" chart-colors="chartColors">
-                                    </canvas>
-                                </div>
+
+
+
+
                             </div>
 
 
@@ -413,7 +453,7 @@
 
                             <table class="table table-bordered">
                                 <tr>
-                                    <th>Track</th><th>Scenario</th><th>Participants</th><th>result</th><th>Note</th><th>Key</th>
+                                    <th>Track</th><th>Scenario</th><th>Participants</th><th>Result</th><th>Note</th><th>Key</th>
                                 </tr>
                                 <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults()">
 

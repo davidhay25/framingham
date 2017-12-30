@@ -10,24 +10,18 @@ var fs = require('fs');
 
 var db;
 
-var MongoClient = require('mongodb').MongoClient;
-MongoClient.connect('mongodb://127.0.0.1:27017/clinfhir', function(err, ldb) {
+const MongoClient = require('mongodb').MongoClient;
+MongoClient.connect('mongodb://localhost:27017', function(err, client) {
     if(err) {
         //throw err;
         console.log('>>> Mongo server not running')
     } else {
-        console.log('connected...')
-        db = ldb;
-
-
+        console.log("Connected successfully to 'connectathon' server");
+        db = client.db('connectathon');
+        //db.collection("client").insert({test: 'Test'})
     }
 });
 
-
-
-
-//var mongoose = require('mongoose');
-//mongoose.connect('mongodb://localhost/connectathon');
 
 var app = express();
 app.use(bodyParser.json())
@@ -37,8 +31,6 @@ var port = process.env.port;
 if (! port) {
     port=8443;
 }
-
-
 
 useSSL = false;
 
@@ -75,40 +67,73 @@ var bodyParser = require('body-parser')
 bodyParser.json();
 
 
-app.get('client',function(req,res){
-
-});
-
-app.post('/client',function(req,res){
-
-    console.log(req.body)
-
-    console.log(db.collection)
-
-    db.client.insertOne(req.body,function(err){
-
-    })
-
-    return;
-
-    db.collection("client").insert(req.body, function (err, result) {
+//get all clients
+app.get('/client',function(req,res){
+    db.collection("client").find({}).toArray(function(err,result){
         if (err) {
-            console.log('Error adding client ',audit)
+            res.send(err,500)
         } else {
-
-            if (result && result.length) {
-                console.log('logged ',err)
-                updateLocation(result[0],clientIp);
-
-            }
+            res.send(result)
         }
-    });
+    })
+});
 
+//add a single client
+app.post('/client',function(req,res){
+    db.collection("client").insert(req.body,function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
 });
 
 
+//get all servers
+app.get('/server',function(req,res){
+    db.collection("server").find({}).toArray(function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
+
+//add a single server
+app.post('/server',function(req,res){
+    db.collection("server").insert(req.body,function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
 
 
+//get all results
+app.get('/result',function(req,res){
+    db.collection("result").find({}).toArray(function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
+
+//add a single result
+app.post('/result',function(req,res){
+    db.collection("result").insert(req.body,function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
 
 //to serve up the static web pages - particularly the login page if no page is specified...
 app.use('/', express.static(__dirname,{index:'/ecosystemMain.html'}));

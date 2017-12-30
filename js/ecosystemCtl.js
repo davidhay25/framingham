@@ -116,17 +116,39 @@ angular.module("sampleApp")
                 //set the chart values...
                 $scope.chartLabels = [];// ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
                 $scope.chartData = []; //[300, 500, 100];
-                $scope.chartColors = ['#00cc00', '#cc3300', '#ffff99']
+                $scope.chartColors = []; //'#00cc00', '#cc3300', '#ffff99']
                 $scope.chartOptions = {legend:{display:true}};
                 console.log(summary)
 
                 var summary = $scope.resultsSummary.scenario[scenario.name];
                 if (summary) {
+                    if (summary.pass > 0) {
+                        $scope.chartLabels.push('pass ' + summary.pass);
+                        $scope.chartData.push(summary.pass)
+                        $scope.chartColors.push('#00cc00')
+                    }
+                    if (summary.fail > 0) {
+                        $scope.chartLabels.push('fail ' + summary.fail);
+                        $scope.chartData.push(summary.fail)
+                        $scope.chartColors.push('#cc3300')
+                    }
+                    if (summary.partial > 0) {
+                        $scope.chartLabels.push('partial ' + summary.pass);
+                        $scope.chartData.push(summary.partial)
+                        $scope.chartColors.push('#ffff99')
+                    }
+
+
+
+
+
+                    /*
                     angular.forEach(summary,function(v,k){
                         $scope.chartLabels.push(k)
                         $scope.chartData.push(v)
                        // $scope.chartData.push(v)
                     })
+                    */
                 }
 
 
@@ -196,6 +218,29 @@ angular.module("sampleApp")
                 }).result.then(function(vo){
                     console.log(vo)
                     ecosystemSvc.addServerToScenario(scenario,vo.server,vo.role)
+                });
+            };
+
+            $scope.addNewClient = function() {
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/addClient.html',
+                    //size: 'lg',
+                    controller: 'addClientCtrl'
+
+                }).result.then(function(vo){
+                    console.log(vo)
+
+                });
+            };
+            $scope.addNewServer = function() {
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/addServer.html',
+                    //size: 'lg',
+                    controller: 'addServerCtrl'
+
+                }).result.then(function(vo){
+                    console.log(vo)
+
                 });
             };
 

@@ -133,9 +133,10 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
 
                     var scenarioName = value.scenario.name;
                     var scenarioId = value.scenario.id;
-                    summary.scenario[scenarioName] = summary.scenario[scenarioName] || {pass:0,fail:0,partial:0}
+                    summary.scenario[scenarioName] = summary.scenario[scenarioName] || {pass:0,fail:0,partial:0,total:0}
                     var item = summary.scenario[scenarioName];
                     item[value.text]++;         //todo - shoudl change the name of 'text'
+                    item.total ++;
 
                 }
 
@@ -183,14 +184,32 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
             }
         },
 
+        addNewClient : function(client) {
+            var deferred = $q.defer();
+            $http.post("/client",client).then(
+                function(data){
+                    //now add the client to the cached list...
+                    allClients.push(client);
+                    deferred.resolve(client)
+                }, function(err) {
+                    console.log(err);
+                    deferred.reject(err)
+                }
+            );
+            return deferred.promise;
+        },
         getAllClients : function() {
             var deferred = $q.defer();
             if (allClients) {
                 deferred.resolve(allClients)
             } else {
-                $http.get("artifacts/clients.json").then(
+
+                //var url = "artifacts/clients.json";
+                var url = "/client";
+
+                $http.get(url).then(
                     function(data) {
-                        allClients = data.data.clients;
+                        allClients = data.data;//.clients;
                         deferred.resolve(allClients)
                     }
                 );
@@ -207,13 +226,30 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
             if (allServers) {
                 deferred.resolve(allServers)
             } else {
-                $http.get("artifacts/servers.json").then(
+                //var url = "artifacts/servers.json";
+                var url = "/server";
+
+                $http.get(url).then(
                     function(data) {
-                        allServers = data.data.servers;
+                        allServers = data.data;//.servers;
                         deferred.resolve(allServers)
                     }
                 );
             }
+            return deferred.promise;
+        },
+        addNewServer : function(server) {
+            var deferred = $q.defer();
+            $http.post("/server",server).then(
+                function(data){
+                    //now add the client to the cached list...
+                    allServers.push(server);
+                    deferred.resolve(server)
+                }, function(err) {
+                    console.log(err);
+                    deferred.reject(err)
+                }
+            );
             return deferred.promise;
         },
         getScenarioResult : function(scenario,client,server) {
