@@ -118,9 +118,17 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
 
     };
 
+    var makeKey = function(scenario,clientRole,serverRole){
+        var key = scenario.id + "|" + clientRole.client.id + '|' + clientRole.role.id + "|"+
+            serverRole.server.id + '|' + serverRole.role.id;
+        console.log(key);
+        return key;
+    };
+
+
     var allServers;
     var allClients;
-    var allResults = $localStorage.allResults || {};
+    var allResults = {};// = $localStorage.allResults || {};
     return {
 
         getTrackResults : function(track) {
@@ -217,7 +225,27 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
             return deferred.promise;
         },
         getAllResults : function() {
-            return $localStorage.allResults
+            return allResults
+
+
+            var deferred = $q.defer();
+            if (allResults) {
+                deferred.resolve(allResults)
+            } else {
+
+                //var url = "artifacts/clients.json";
+                var url = "/client";
+
+                $http.get(url).then(
+                    function(data) {
+                        allResults = data.data;//.clients;
+                        deferred.resolve(allResults)
+                    }
+                );
+            }
+            //return deferred.promise;
+            return deferred.promise;
+           // return $localStorage.allResults
             //return allResults;
         },
 
@@ -228,7 +256,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
             } else {
                 //var url = "artifacts/servers.json";
                 var url = "/server";
-
+console.log('read')
                 $http.get(url).then(
                     function(data) {
                         allServers = data.data;//.servers;
@@ -252,36 +280,115 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
             );
             return deferred.promise;
         },
-        getScenarioResult : function(scenario,client,server) {
-            var key = scenario.id + "|" + server.server.id + "|" + client.client.id;
+        getScenarioResult : function(scenario,clientRole,serverRole) {
+
+            var key = makeKey(scenario,clientRole,serverRole)
+
+           // var key = scenario.id + "|" + serverRole.server.id + '|' + serverRole.role.id + "|" +
+             //   clientRole.client.id + '|' + clientRole.role.id;
+
+
+
+            //var key = scenario.id + "|" + server.server.id + "|" + client.client.id;
             return allResults[key]
         },
-        addScenarioResult : function(track,scenario,client,server,result) {
-            var key = scenario.id + "|" + server.server.id + "|" + client.client.id;
+        addScenarioResult : function(track,scenario,clientRole,serverRole,result) {
+            var key = makeKey(scenario,clientRole,serverRole)
+
+          //  var key = scenario.id + "|" + serverRole.server.id + '-' + serverRole.role.id + "|" +
+              //  clientRole.client.id + '-' + clientRole.role.id;
+
+            console.log(key);
+
+            result.id = result.id || 'id'+ new Date().getTime();
 
             //add the participants to the result. In this somple case there is one client and one server
-            result.participants = result.participants || []
-            result.participants.length = 0;
-            result.participants.push({systemRole:'client',role: client.role,participant:client.client});
-            result.participants.push({systemRole:'server',role: server.role,participant:server.server});
-            result.server = {role: server.role,participant:server.server};  //used for download
-            result.client = {role: client.role,participant:client.client};  //used for download
+            //todo - leave this for now - consider multi participant in v2...
+            //result.participants = result.participants || []
+            //result.participants.length = 0;
+            //result.participants.push({systemRole:'client',role: client.role,participant:client.client});
+            //result.participants.push({systemRole:'server',role: server.role,participant:server.server});
+            result.server = {role: serverRole.role,participant:serverRole.server};  //used for download
+            result.client = {role: clientRole.role,participant:clientRole.client};  //used for download
             result.scenario = scenario;
             result.track = track;
 
             allResults[key] = result;
 
-            $localStorage.allResults = allResults;
+            console.log(result);
+
+            var resultToSave = {}
+            resultToSave.id = result.id;
+            resultToSave.text = result.text;
+            resultToSave.note = result.note;
+            resultToSave.server = {serverid:serverRole.server.id,roleid:serverRole.role.id};
+            resultToSave.client = {clientid:clientRole.client.id,roleid:clientRole.role.id};
+            resultToSave.scenarioid = scenario.id;
+            resultToSave.trackid = track.id;
+            $http.put("/result",resultToSave).then(
+                function(){
+
+                }, function(err) {
+                    alert('error saving result '+angular.toJson(err))
+                }
+            )
+
+
+
+            //$localStorage.allResults = allResults;
         },
         addServerToScenario : function(scenario,server,role) {
+            var deferred = $q.defer();
 
-            scenario.servers = scenario.servers || [];
-            scenario.servers.push({server:server,role:role});
+            //create a link object to save on the server
+            var link = {id:'id'+new Date().getTime(),type:'server',serverid:server.id,scenarioid:scenario.id};
+            link.roleid = role.id;
+
+            $http.post("/link",link).then(
+                function(data){
+                    //now add the client to the cached list...
+                    scenario.servers = scenario.servers || [];
+                    scenario.servers.push({server:server,role:role});
+
+                    deferred.resolve(link)
+                }, function(err) {
+                    console.log(err);
+                    deferred.reject(err)
+                }
+            );
+
+
+
+            return deferred.promise;
 
         },
         addClientToScenario : function(scenario,client,role) {
-            scenario.clients = scenario.clients || [];
-            scenario.clients.push({client:client,role:role});
+
+
+
+            var deferred = $q.defer();
+
+            //create a link object to save on the server
+            var link = {id:'id'+new Date().getTime(),type:'client',clientid:client.id,scenarioid:scenario.id}
+            link.roleid = role.id;
+            $http.post("/link",link).then(
+                function(data){
+                    //now add the client to the cached list...
+                    scenario.clients = scenario.clients || [];
+                    scenario.clients.push({client:client,role:role});
+                    deferred.resolve(link)
+                }, function(err) {
+                    console.log(err);
+                    deferred.reject(err)
+                }
+            );
+
+
+
+            return deferred.promise;
+
+
+
         },
         getConnectathonResources : function() {
             //get scenarios
@@ -291,6 +398,11 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
             urls.push({url:'artifacts/roles.json',"name":"roles"});
             urls.push({url:'artifacts/tracks.json',"name":"tracks"});
             urls.push({url:'artifacts/persons.json',"name":"persons"});
+
+            urls.push({url:'/client',"name":"clients"});
+            urls.push({url:'/server',"name":"servers"});
+            urls.push({url:'/result',"name":"results"});
+
             //urls.push({url:'artifacts/servers.json',"name":"servers"});
             var vo = {}
 
@@ -300,7 +412,15 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
                 queries.push(
                     $http.get(item.url).then(
                         function(data) {
-                            vo[item.name] = data.data[item.name]
+
+                            if (angular.isArray(data.data)) {
+                                //server calls return an array...
+                                vo[item.name] = data.data
+                            } else {
+                                vo[item.name] = data.data[item.name]
+                            }
+
+
                         }
                     )
                 );
@@ -309,6 +429,26 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
             $q.all(queries).then(
                 function(data) {
                     console.log(vo);
+                    //allResults = vo.allResults
+                    //the session cache for clients & servers.. todo - there's a race between this and getAllServers()...
+                    //allServers = vo.servers;
+                    //allClients = vo.clients;
+
+                    var hashServer = {};//vo.servers;
+                    vo.servers.forEach(function (server) {
+                        hashServer[server.id] = server
+                    });
+
+                    var hashClient = {};//vo.servers;
+                    vo.clients.forEach(function (client) {
+                        hashClient[client.id] = client
+                    });
+
+                    var hashTrack = {};
+                    vo.tracks.forEach(function (track) {
+                        hashTrack[track.id] = track
+                    });
+
                     //link scenarios to tracks
                     var hashScenario = {};
                     vo.scenarios.forEach(function (scenario) {
@@ -365,10 +505,96 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
                         }
                     });
 
+                    //now get the links - servers/clients to scenarios...
+                    $http.get("/link").then(
+                        function(data) {
+                            var links = data.data;
+                            links.forEach(function (link) {
+                                var scenario = hashScenario[link.scenarioid];
+                                var role = hashRole[link.roleid];
+
+                                if (! scenario) {
+                                    alert('unknown scenario id '+ link.scenarioid)
+                                }
+
+                                if (! role) {
+                                    alert('unknown role id '+ link.roleid)
+                                }
+
+
+                                if (scenario && role) {
+                                    if (link.type == 'server') {
+                                        var server = hashServer[link.serverid]
+                                        if (! server) {
+                                            alert('unknown server id '+ link.serverid)
+                                        } else {
+                                            scenario.servers = scenario.servers || []
+                                            scenario.servers.push({server:server,role:role});
+                                        }
+
+                                    } else {
+                                        //client
+                                        var client = hashClient[link.clientid]
+                                        if (! client) {
+                                            alert('unknown client id '+ link.clientid)
+                                        } else {
+                                            scenario.clients = scenario.clients || []
+                                            scenario.clients.push({client:client,role:role});
+                                        }
+
+                                    }
+                                } else {
+                                    console.log('no scenario with the id '+ link.scenarioid)
+                                }
+                            });
+
+                            //and the scores (this could be concurrent with the links)
+                            allResults = {};    //scoped to the service...
+                            $http.get("/result").then(
+                                function(data) {
+                                    var results = data.data;    //the results as saved in the database
+                                    results.forEach(function(dataResult){
+                                        var result = {id:dataResult.id};
+                                        result.text = dataResult.text;
+                                        result.note = dataResult.note;
+                                        result.track = hashTrack[dataResult.trackid];
+                                        result.scenario = hashScenario[dataResult.scenarioid];
+                                        result.server = {server: hashServer[dataResult.server.serverid],
+                                            role: hashRole[dataResult.server.roleid]};
+                                        result.client = {client: hashClient[dataResult.client.clientid],
+                                            role: hashRole[dataResult.client.roleid]}
 
 
 
-                    deferred.resolve(vo);
+
+                                        var key = result.scenario.id + "|" + result.client.client.id + '|' + result.client.role.id +
+                                            "|" + result.server.server.id + '|' + result.server.role.id;
+                                        console.log(key);
+
+                                        allResults[key] = result;
+                                    })
+                                    deferred.resolve(vo);
+                                },
+                                function(err){
+                                    alert('error loading results: '+ angular.toJson(err))
+                                }
+                            );
+
+                        },
+                        function(err){
+                            alert('error loading links: '+ angular.toJson(err))
+                        }
+                    );
+
+
+
+
+
+
+
+
+
+                   // deferred.resolve(vo);
                 }
             );
 

@@ -3,7 +3,7 @@ angular.module("sampleApp")
         function ($scope,scenario,server,client,previousResult) {
 
             $scope.input = {};
-
+            $scope.previousResult = previousResult;
             $scope.radioModel = '';
 
             if (previousResult) {
@@ -12,10 +12,14 @@ angular.module("sampleApp")
             }
 
             $scope.save = function() {
-                var vo = {}
-                vo.text = $scope.radioModel;
-                vo.note = $scope.input.note;
-                $scope.$close(vo);
+                var result = {}
+                result.text = $scope.radioModel;
+                result.note = $scope.input.note;
+                if (previousResult) {
+                    result.id = previousResult.id;
+                }
+
+                $scope.$close(result);
             }
 
         }

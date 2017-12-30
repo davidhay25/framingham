@@ -159,7 +159,10 @@ angular.module("sampleApp")
             $scope.showTestResult = function(scenario,client,server) {
                 //console.log(scenario,client,server)
                 var result = ecosystemSvc.getScenarioResult(scenario,client,server) || {text: 'Enter result'}
-                return result.text
+
+                //var colorClass = 'green'
+
+                return "<span class='"+result.text+"'>" + result.text + "</span>"
             };
 
             $scope.showTestResultNote = function(scenario,client,server) {
@@ -305,7 +308,7 @@ angular.module("sampleApp")
                                 if (scenario.servers) {
                                     scenario.servers.forEach(function (svr1) {
                                         if (svr1.server.id == svr.id) {
-                                            scenarios.push(track.name + " / "+  scenario.name)
+                                            scenarios.push(track.name + " / "+  scenario.name + " / " + svr1.role.name)
                                         }
                                     })
                                 }

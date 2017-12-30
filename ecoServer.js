@@ -9,7 +9,7 @@ var fs = require('fs');
 
 
 var db;
-
+//http://mongodb.github.io/node-mongodb-native/3.0/quick-start/quick-start/
 const MongoClient = require('mongodb').MongoClient;
 MongoClient.connect('mongodb://localhost:27017', function(err, client) {
     if(err) {
@@ -113,6 +113,7 @@ app.post('/server',function(req,res){
 });
 
 
+//============== results ===============
 //get all results
 app.get('/result',function(req,res){
     db.collection("result").find({}).toArray(function(err,result){
@@ -124,9 +125,34 @@ app.get('/result',function(req,res){
     })
 });
 
-//add a single result
-app.post('/result',function(req,res){
-    db.collection("result").insert(req.body,function(err,result){
+
+//add a single result. This is always a put as the result can be updated
+app.put('/result',function(req,res){
+    var result = req.body;
+    db.collection("result").update({id:result.id},result,{upsert:true},function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
+
+//============= links ==============
+//get all servers
+app.get('/link',function(req,res){
+    db.collection("link").find({}).toArray(function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
+
+//add a single server
+app.post('/link',function(req,res){
+    db.collection("link").insert(req.body,function(err,result){
         if (err) {
             res.send(err,500)
         } else {

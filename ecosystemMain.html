@@ -34,6 +34,53 @@
 
     </script>
 
+    <style>
+        .pass {
+            border : 1px solid #eeeeee;
+            padding : 5px;
+            display: inline-block;
+            text-align : center;
+            width: 50px;
+            margin: 0px;
+            /*margin-left : 10px;*/
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color:green;
+            color:white;
+        }
+        .fail {
+            border : 1px solid #eeeeee;
+            padding : 5px;
+            display: inline-block;
+            text-align : center;
+            width: 50px;
+            margin: 0px;
+            /*margin-left : 10px;*/
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color:red;
+            color:white;
+
+        }
+        .partial {
+            border : 1px solid #eeeeee;
+            padding : 5px;
+            display: inline-block;
+            text-align : center;
+            width: 50px;
+            margin: 0px;
+            /*margin-left : 10px;*/
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color: #FFC200;
+            color:white;
+
+        }
+    </style>
+
 
     <script src="js/ecosystemCtl.js"></script>
     <script src="js/ecosystemSvc.js"></script>
@@ -51,12 +98,6 @@
 <div ng-app="sampleApp" ng-controller="ecosystemCtrl" class="container-fluid">
 
     <div class="banner">Connectathon Mananger</div>
-
-
-
-
-
-
 
     <div class="row">
 
@@ -86,7 +127,9 @@
 
                                         <table class="table">
                                             <tr>
-                                                <th></th>
+                                                <td>
+                                                    <button class="btn btn-link" ng-click="addClientToScenario(scenario)">Add Client</button>
+                                                </td>
                                                 <th ng-repeat="server in scenario.servers">
                                                     {{server.server.name}}
                                                     <div><em>({{server.role.name}})</em></div>
@@ -94,16 +137,27 @@
                                             </tr>
 
                                             <tr ng-repeat="client in scenario.clients">
-                                                <td>
+                                                <td><strong>
                                                     {{client.client.name}}
                                                     <div><em>({{client.role.name}})</em></div>
+                                                </strong>
                                                 </td>
                                                 <td ng-repeat="server in scenario.servers">
                                                     <a href="#" ng-click="addTestResult(selectedTrack,scenario,client,server)">
                                                         <span uib-popover={{showTestResultNote(scenario,client,server)}}
                                                               popover-placement="left"
                                                               popover-trigger="'mouseenter'">
-                                                            {{showTestResult(scenario,client,server)}}
+
+
+                                                            <p ng-bind-html="showTestResult(scenario,client,server)"></p>
+
+                                                            <!--
+                                                            <span>
+                                                                 {{showTestResult(scenario,client,server)}}
+                                                            </span>
+                                                           -->
+
+
                                                         </span>
                                                     </a>
                                                 </td>
@@ -111,9 +165,11 @@
                                         </table>
                                     </div>
                                     <div class="col-sm-2 col-md-2">
+                                        <!--
                                         <div>
                                             <button class="btn btn-link" ng-click="addClientToScenario(scenario)">Add Client</button>
                                         </div>
+                                        -->
                                         <button class="btn btn-link" ng-click="addServerToScenario(scenario)">Add Server</button>
 
                                     </div>
@@ -360,7 +416,7 @@
                         <button class="btn btn-link pull-right" ng-click="addNewServer()">New Server</button>
                     </div>
                     <table class="table table-bordered">
-                        <tr><th>Name</th><th>Description</th><th>Scenarios</th></tr>
+                        <tr><th>Name</th><th>Description</th><th>Track / Scenario / Role</th></tr>
                         <tr ng-repeat="svr in allServers">
                             <td>{{svr.name}}</td>
                             <td>{{svr.address}}</td>
