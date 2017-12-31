@@ -66,29 +66,26 @@ angular.module("sampleApp")
             window.myPie = new Chart(ctx, config);
 */
 
-            $scope.ecosystemSvc = ecosystemSvc;
-
-            ecosystemSvc.getAllServers().then(
-                function (data) {
-                    $scope.allServers = data;
-                    console.log($scope.allServers)
-                }
-            );
-
-            ecosystemSvc.getAllClients().then(
-                function (data) {
-                    $scope.allClients = data;
-                    console.log($scope.allClients)
-                }
-            );
-
-            //retieve to whole 'tree' of tracks -> scenarios -> roles
             ecosystemSvc.getConnectathonResources().then(
                 function(vo) {
                     console.log(vo)
                     $scope.tracks = vo.tracks;
+
+                    $scope.allClients =  ecosystemSvc.getAllClients();
+                    $scope.allServers = ecosystemSvc.getAllServers();
+                    $scope.allPersons = ecosystemSvc.getAllPersons();
                 }
             );
+
+            $scope.ecosystemSvc = ecosystemSvc;
+
+
+            $scope.selectPerson = function(person) {
+
+                var summary = ecosystemSvc.getPersonSummary(person);
+                $scope.personSummary = summary;
+                console.log(summary)
+            };
 
             $scope.selectTrackResults = function(track) {
                 //in the results tab, select a track...

@@ -5,7 +5,7 @@
 
         <div class="row">
             <div class="col-md-8 col-sm-8">
-                <h3 class="modal-title">Result of test {{dlgScenario.name}}</h3>
+                <h3 class="modal-title">Result of test {{scenario.name}}</h3>
             </div>
 
             <div class="col-md-4 col-sm-4">
@@ -17,6 +17,20 @@
     </div>
 
     <div class="modal-body">
+
+
+        <div class="row">
+            <div class="col-md-2 col-sm-2">
+                Asserter
+            </div>
+            <div class="col-md-5 col-sm-5">
+                <input type="text" ng-model="input.asserter"
+                       typeahead-on-select = "asserterSelected($item, $model, $label, $event)"
+                       uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control">
+
+            </div>
+        </div>
+        <br/>
 
         <div class="row">
             <div class="col-md-5 col-sm-5">
@@ -42,22 +56,22 @@
         <br/>
 
         <textarea class="form-control" ng-model="input.note"></textarea>
-
         <br/>
 
-
-
         <div>
-            <button class="btn btn-primary pull-right" ng-show="input.note && radioModel" ng-click="save()">Save result</button>
+            <button class="btn btn-primary pull-right" ng-show="radioModel && selectedPerson" ng-click="save()">Save result</button>
         </div>
+
+
 
 </div>
 
 <div class="modal-header">
     <div class="row">
         <div class="col-md-12 col-sm-12">
-            {{previousResult.id}}
-            <em>Select the client and the role that they will play in this scenario</em>
+            <div>Server: {{server.server.name}} ({{server.role.name}})</div>
+            <div>Client: {{client.client.name}} ({{client.role.name}})</div>
+            <em>You must selecte an asserter and a result to save.</em>
 
         </div>
 

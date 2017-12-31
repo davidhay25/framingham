@@ -121,15 +121,35 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
     var makeKey = function(scenario,clientRole,serverRole){
         var key = scenario.id + "|" + clientRole.client.id + '|' + clientRole.role.id + "|"+
             serverRole.server.id + '|' + serverRole.role.id;
-        console.log(key);
+       // console.log(key);
         return key;
     };
 
 
-    var allServers;
-    var allClients;
+    var allServers = [];
+    var allClients = [];
+    var allPersons = [];
+    var hashAllPersons = {}
+
     var allResults = {};// = $localStorage.allResults || {};
     return {
+
+        getPersonSummary : function(person) {
+            var personid = person.id;
+            var summary = {results:[]}
+
+            //get all the results for this person
+            angular.forEach(allResults,function (v,k) {
+                console.log(v);
+                if (v.asserter && v.asserter.id == personid) {
+                    summary.results.push(v)
+                }
+
+            })
+
+            return summary;
+
+        },
 
         getTrackResults : function(track) {
             //get a summary object for a track
@@ -194,6 +214,16 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
 
         addNewClient : function(client) {
             var deferred = $q.defer();
+
+            //replace contact details with id
+            if (client.contact) {
+                var arContact = angular.copy(client.contact);
+                client.contactid = [];//.length = 0;
+                arContact.forEach(function (c) {
+                    client.contactid.push(c.id)
+                })
+            }
+
             $http.post("/client",client).then(
                 function(data){
                     //now add the client to the cached list...
@@ -206,7 +236,12 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
             );
             return deferred.promise;
         },
+        getAllPersons : function(){
+            return allPersons;
+        },
         getAllClients : function() {
+            return allClients;
+/*
             var deferred = $q.defer();
             if (allClients) {
                 deferred.resolve(allClients)
@@ -223,10 +258,11 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
                 );
             }
             return deferred.promise;
+            */
         },
         getAllResults : function() {
             return allResults
-
+/*
 
             var deferred = $q.defer();
             if (allResults) {
@@ -245,11 +281,14 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
             }
             //return deferred.promise;
             return deferred.promise;
+            */
            // return $localStorage.allResults
             //return allResults;
         },
 
         getAllServers : function() {
+            return allServers;
+            /*
             var deferred = $q.defer();
             if (allServers) {
                 deferred.resolve(allServers)
@@ -265,6 +304,7 @@ console.log('read')
                 );
             }
             return deferred.promise;
+            */
         },
         addNewServer : function(server) {
             var deferred = $q.defer();
@@ -280,6 +320,7 @@ console.log('read')
             );
             return deferred.promise;
         },
+
         getScenarioResult : function(scenario,clientRole,serverRole) {
 
             var key = makeKey(scenario,clientRole,serverRole)
@@ -325,6 +366,10 @@ console.log('read')
             resultToSave.client = {clientid:clientRole.client.id,roleid:clientRole.role.id};
             resultToSave.scenarioid = scenario.id;
             resultToSave.trackid = track.id;
+            if (result.asserter){
+                resultToSave.asserterid = result.asserter.id
+            }
+
             $http.put("/result",resultToSave).then(
                 function(){
 
@@ -390,6 +435,7 @@ console.log('read')
 
 
         },
+
         getConnectathonResources : function() {
             //get scenarios
             var deferred = $q.defer();
@@ -402,6 +448,7 @@ console.log('read')
             urls.push({url:'/client',"name":"clients"});
             urls.push({url:'/server',"name":"servers"});
             urls.push({url:'/result',"name":"results"});
+            urls.push({url:'/person',"name":"persons"});
 
             //urls.push({url:'artifacts/servers.json',"name":"servers"});
             var vo = {}
@@ -434,14 +481,36 @@ console.log('read')
                     //allServers = vo.servers;
                     //allClients = vo.clients;
 
+                    allPersons = vo.persons;    //scoped to service
+                    hashAllPersons = {};
+                    allPersons.forEach(function(p){
+                        hashAllPersons[p.id] = p;
+                    })
+
+
                     var hashServer = {};//vo.servers;
                     vo.servers.forEach(function (server) {
                         hashServer[server.id] = server
+                        allServers.push(server);
                     });
+
 
                     var hashClient = {};//vo.servers;
                     vo.clients.forEach(function (client) {
+                        client.contact =[]
+                        if (client.contactid) {
+                            client.contactid.forEach(function (personid) {
+                                client.contact.push(hashAllPersons[personid])
+                            })
+
+                        }
+
                         hashClient[client.id] = client
+
+
+
+
+                        allClients.push(client);        //scoped to the service...
                     });
 
                     var hashTrack = {};
@@ -550,7 +619,7 @@ console.log('read')
 
                             //and the scores (this could be concurrent with the links)
                             allResults = {};    //scoped to the service...
-                            $http.get("/result").then(
+                            $http.get("/result?_dummy="+new Date()).then(
                                 function(data) {
                                     var results = data.data;    //the results as saved in the database
                                     results.forEach(function(dataResult){
@@ -564,12 +633,14 @@ console.log('read')
                                         result.client = {client: hashClient[dataResult.client.clientid],
                                             role: hashRole[dataResult.client.roleid]}
 
-
+                                        if (dataResult.asserterid) {
+                                            result.asserter = hashAllPersons[dataResult.asserterid];
+                                        }
 
 
                                         var key = result.scenario.id + "|" + result.client.client.id + '|' + result.client.role.id +
                                             "|" + result.server.server.id + '|' + result.server.role.id;
-                                        console.log(key);
+                                        //console.log(key);
 
                                         allResults[key] = result;
                                     })

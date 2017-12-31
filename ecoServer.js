@@ -66,7 +66,7 @@ app.use(session({
 var bodyParser = require('body-parser')
 bodyParser.json();
 
-
+//================================ clients =======================
 //get all clients
 app.get('/client',function(req,res){
     db.collection("client").find({}).toArray(function(err,result){
@@ -89,7 +89,7 @@ app.post('/client',function(req,res){
     })
 });
 
-
+//================================ servers =======================
 //get all servers
 app.get('/server',function(req,res){
     db.collection("server").find({}).toArray(function(err,result){
@@ -113,7 +113,7 @@ app.post('/server',function(req,res){
 });
 
 
-//============== results ===============
+//============================== results ===============
 //get all results
 app.get('/result',function(req,res){
     db.collection("result").find({}).toArray(function(err,result){
@@ -138,8 +138,8 @@ app.put('/result',function(req,res){
     })
 });
 
-//============= links ==============
-//get all servers
+//============================= links ==============
+//get all links
 app.get('/link',function(req,res){
     db.collection("link").find({}).toArray(function(err,result){
         if (err) {
@@ -150,9 +150,33 @@ app.get('/link',function(req,res){
     })
 });
 
-//add a single server
+//add a single link
 app.post('/link',function(req,res){
     db.collection("link").insert(req.body,function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
+
+//============================= persons ==============
+//get all people
+app.get('/person',function(req,res){
+    db.collection("person").find({}).toArray(function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
+
+//add/update a single person. This will check the id
+app.post('/person',function(req,res){
+    var person = req.body;
+    db.collection("person").update({id:person.id},person,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)
         } else {
