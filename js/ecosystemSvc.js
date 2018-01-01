@@ -1,4 +1,4 @@
-angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStorage) {
+angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalService,$localStorage) {
 
     var serverIP = "http://localhost:8080/baseDstu3/";    //hard code to local server for now...
     var addExtension =  function(resource,url,value) {
@@ -134,9 +134,10 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
     var allResults = {};// = $localStorage.allResults || {};
     return {
 
-        getPersonSummary : function(person) {
+
+        getPersonSummary : function(person,tracks) {
             var personid = person.id;
-            var summary = {results:[]}
+            var summary = {results:[],clients:[],servers:[],scenarios:[]}
 
             //get all the results for this person
             angular.forEach(allResults,function (v,k) {
@@ -146,6 +147,51 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
                 }
 
             })
+
+            //get all the clients that this person is a contact for
+            allClients.forEach(function (client) {
+                console.log(client)
+                if (client.contact) {
+                    client.contact.forEach(function (contact) {
+                        if (contact.id == personid) {
+                            summary.clients.push(client)
+                        }
+                    })
+                }
+            });
+
+            //get all the servers that this personis a contact for
+            allServers.forEach(function (server) {
+                console.log(server)
+                if (server.contact) {
+                    server.contact.forEach(function (contact) {
+                        if (contact.id == personid) {
+                            summary.servers.push(server)
+                        }
+                    })
+                }
+            });
+
+            //get all the scenarios for which this person has an association through a client or a server
+            tracks.forEach(function (track) {
+                track.scenarios.forEach(function (scenario) {
+                    if (scenario.clients) {
+                        scenario.clients.forEach(function (clientRole) {
+                            if (clientRole.client) {
+                                summary.clients.forEach(function (cl) {
+                                    if (cl.id == clientRole.client.id) {
+                                        //this is a client that this user has a relationship with..
+                                        summary.scenarios.push({track:track,systemRole:'client',scenario:scenario,clientRole:clientRole})
+                                    }
+                                })
+                            }
+
+                        })
+                    }
+
+                })
+            })
+
 
             return summary;
 
@@ -181,10 +227,19 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,$localStor
                 lne.track = value.track.name;
                 lne.scenario = value.scenario.name;
                 lne.participants = [];
+
+                var p = {name:value.server.server.name,role:value.server.role.name,systemRole:'server'};
+                lne.participants.push(p)
+                var p = {name:value.client.client.name,role:value.client.role.name,systemRole:'client'};
+                lne.participants.push(p)
+
+                /* - leave for when we want to support multiple partipants...
                 value.participants.forEach(function (part) {
                     var p = {name:part.participant.name,role:part.role.name,systemRole:part.systemRole};
                     lne.participants.push(p)
                 });
+
+                */
                 lne.result = value.text;
                 lne.note = value.note;
                 obj.results.push(lne)
@@ -349,8 +404,14 @@ console.log('read')
             //result.participants.length = 0;
             //result.participants.push({systemRole:'client',role: client.role,participant:client.client});
             //result.participants.push({systemRole:'server',role: server.role,participant:server.server});
-            result.server = {role: serverRole.role,participant:serverRole.server};  //used for download
-            result.client = {role: clientRole.role,participant:clientRole.client};  //used for download
+
+            //todo - not sure if participant is needed here...
+            //result.server = {role: serverRole.role,participant:serverRole.server};  //used for download
+            //result.client = {role: clientRole.role,participant:clientRole.client};  //used for download
+
+            result.server = {role: serverRole.role,server:serverRole.server};  //used for download
+            result.client = {role: clientRole.role,client:clientRole.client};  //used for download
+
             result.scenario = scenario;
             result.track = track;
 
@@ -386,14 +447,15 @@ console.log('read')
             var deferred = $q.defer();
 
             //create a link object to save on the server
-            var link = {id:'id'+new Date().getTime(),type:'server',serverid:server.id,scenarioid:scenario.id};
+            var link = {active:true,id:'id'+new Date().getTime(),type:'server',serverid:server.id,scenarioid:scenario.id};
             link.roleid = role.id;
+
 
             $http.post("/link",link).then(
                 function(data){
                     //now add the client to the cached list...
                     scenario.servers = scenario.servers || [];
-                    scenario.servers.push({server:server,role:role});
+                    scenario.servers.push({server:server,role:role,link:link});
 
                     deferred.resolve(link)
                 }, function(err) {
@@ -402,38 +464,125 @@ console.log('read')
                 }
             );
 
-
-
             return deferred.promise;
 
         },
+        removeServerFromScenario : function(scenario,serverRole) {
+            var deferred = $q.defer();
+            //make sure there are no results against this serverRole
+            var canDelete = true
+            try {
+                angular.forEach(allResults,function(v,k){
+                    if (v.scenario.id == scenario.id && v.server.server.id == serverRole.server.id &&
+                        v.server.role.id == serverRole.role.id) {
+
+                        //if (svr.server.id == serverRole.server.id && svr.role.id == serverRole.role.id) {
+                        canDelete = false;
+                    }
+                });
+            } catch(err) {
+                console.log(err);
+                alert('Unable to check before deletion. Please refresh and try again.')
+                return;
+            }
+            if (!canDelete ) {
+                modalService.showModal({},{bodyText:"Sorry, there are results against this Server/Role so it cannot be deleted."})
+                return;
+            }
+            //change the link to inactive and update...
+            var link = serverRole.link;
+            link.active = false;
+
+            $http.post("/link",link).then(
+                function(data){
+                    //now remove the server from the cached list...
+                    var inx = -1;
+                    scenario.servers.forEach(function (svr,pos) {
+                        if (svr.server.id == serverRole.server.id && svr.role.id == serverRole.role.id) {
+                            inx = pos;
+                        }
+                    });
+                    if (inx > -1) {
+                        scenario.servers.splice(inx,1)
+                    } else {
+                        alert("error - can't find in scenario list")
+                    }
+                    deferred.resolve(link)
+                }, function(err) {
+                    console.log(err);
+                    deferred.reject(err)
+                }
+            );
+            return deferred.promise;
+        },
+
         addClientToScenario : function(scenario,client,role) {
-
-
-
             var deferred = $q.defer();
 
             //create a link object to save on the server
-            var link = {id:'id'+new Date().getTime(),type:'client',clientid:client.id,scenarioid:scenario.id}
+            var link = {active:true,id:'id'+new Date().getTime(),type:'client',clientid:client.id,scenarioid:scenario.id}
             link.roleid = role.id;
             $http.post("/link",link).then(
                 function(data){
                     //now add the client to the cached list...
                     scenario.clients = scenario.clients || [];
-                    scenario.clients.push({client:client,role:role});
+                    scenario.clients.push({client:client,role:role,link:link});
                     deferred.resolve(link)
                 }, function(err) {
                     console.log(err);
                     deferred.reject(err)
                 }
             );
-
-
-
             return deferred.promise;
+        },
 
+        removeClientFromScenario : function(scenario,clientRole) {
+            var deferred = $q.defer();
+            //make sure there are no results against this clientRole
+            var canDelete = true
+            try {
+                angular.forEach(allResults,function(v,k){
+                    if (v.scenario.id == scenario.id && v.client.client.id == clientRole.client.id &&
+                        v.client.role.id == clientRole.role.id) {
 
+                        //if (svr.server.id == clientRole.server.id && svr.role.id == clientRole.role.id) {
+                        canDelete = false;
+                    }
+                });
+            } catch(err) {
+                console.log(err)
+                alert('Unable to check before deletion. Please refresh and try again.')
+                return;
+            }
+            if (!canDelete ) {
+                modalService.showModal({},{bodyText:"Sorry, there are results against this Client/Role so it cannot be deleted."})
+                return;
+            }
+            //change the link to inactive and update...
+            var link = clientRole.link;
+            link.active = false;
 
+            $http.post("/link",link).then(
+                function(data){
+                    //now remove the server from the cached list...
+                    var inx = -1;
+                    scenario.clients.forEach(function (clnt,pos) {
+                        if (clnt.client.id == clientRole.client.id && clnt.role.id == clientRole.role.id) {
+                            inx = pos;
+                        }
+                    });
+                    if (inx > -1) {
+                        scenario.clients.splice(inx,1)
+                    } else {
+                        alert("error - can't find in scenario list")
+                    }
+                    deferred.resolve(link)
+                }, function(err) {
+                    console.log(err);
+                    deferred.reject(err)
+                }
+            );
+            return deferred.promise;
         },
 
         getConnectathonResources : function() {
@@ -598,7 +747,7 @@ console.log('read')
                                             alert('unknown server id '+ link.serverid)
                                         } else {
                                             scenario.servers = scenario.servers || []
-                                            scenario.servers.push({server:server,role:role});
+                                            scenario.servers.push({server:server,role:role,link:link});
                                         }
 
                                     } else {
@@ -608,7 +757,7 @@ console.log('read')
                                             alert('unknown client id '+ link.clientid)
                                         } else {
                                             scenario.clients = scenario.clients || []
-                                            scenario.clients.push({client:client,role:role});
+                                            scenario.clients.push({client:client,role:role,link:link});
                                         }
 
                                     }
@@ -657,15 +806,6 @@ console.log('read')
                         }
                     );
 
-
-
-
-
-
-
-
-
-                   // deferred.resolve(vo);
                 }
             );
 

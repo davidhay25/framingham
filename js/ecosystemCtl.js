@@ -6,64 +6,10 @@ angular.module("sampleApp")
 
             $scope.input = {};
 
-
+/*
             $scope.chartLabels = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
             $scope.chartData = [300, 500, 100];
             $scope.chartOptions = {legend:{display:true}}
-
-
-/*
-            var randomScalingFactor = function() {
-                return Math.round(Math.random() * 100);
-            };
-
-            window.chartColors = {
-                red: 'rgb(255, 99, 132)',
-                orange: 'rgb(255, 159, 64)',
-                yellow: 'rgb(255, 205, 86)',
-                green: 'rgb(75, 192, 192)',
-                blue: 'rgb(54, 162, 235)',
-                purple: 'rgb(153, 102, 255)',
-                grey: 'rgb(201, 203, 207)'
-            };
-
-
-            var config = {
-                type: 'pie',
-                data: {
-                    datasets: [{
-                        data: [
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                            randomScalingFactor(),
-                        ],
-                        backgroundColor: [
-                            window.chartColors.red,
-                            window.chartColors.orange,
-                            window.chartColors.yellow,
-                            window.chartColors.green,
-                            window.chartColors.blue,
-                        ],
-                        label: 'Dataset 1'
-                    }],
-                    labels: [
-                        "Red",
-                        "Orange",
-                        "Yellow",
-                        "Green",
-                        "Blue"
-                    ]
-                },
-                options: {
-                    responsive: true
-                }
-            };
-
-
-            var ctx = document.getElementById("chart").getContext("2d");
-            window.myPie = new Chart(ctx, config);
 */
 
             ecosystemSvc.getConnectathonResources().then(
@@ -80,9 +26,40 @@ angular.module("sampleApp")
             $scope.ecosystemSvc = ecosystemSvc;
 
 
+            $scope.removeServerFromScenario = function (scenario,server) {
+                var modalOptions = {
+                    closeButtonText: "No, I changed my mind",
+                    headerText: "Remove server",
+                    actionButtonText: 'Yes, please remove',
+                    bodyText: 'Are you sure you wish to remove this server in this role from the scenario?'
+                };
+
+                modalService.showModal({}, modalOptions).then(
+                    function() {
+                        ecosystemSvc.removeServerFromScenario(scenario,server);
+                        //alert('delete')
+                    }
+                );
+            };
+            $scope.removeClientFromScenario = function (scenario,client) {
+                var modalOptions = {
+                    closeButtonText: "No, I changed my mind",
+                    headerText: "Remove client",
+                    actionButtonText: 'Yes, please remove',
+                    bodyText: 'Are you sure you wish to remove this client in this role from the scenario?'
+                };
+
+                modalService.showModal({}, modalOptions).then(
+                    function() {
+                        ecosystemSvc.removeClientFromScenario(scenario,client);
+                        //alert('delete')
+                    }
+                );
+            }
+
             $scope.selectPerson = function(person) {
 
-                var summary = ecosystemSvc.getPersonSummary(person);
+                var summary = ecosystemSvc.getPersonSummary(person,$scope.tracks);
                 $scope.personSummary = summary;
                 console.log(summary)
             };

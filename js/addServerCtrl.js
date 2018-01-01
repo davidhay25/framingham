@@ -4,6 +4,11 @@ angular.module("sampleApp")
 
         $scope.input = {}
         $scope.addServer = function(){
+
+
+
+
+
             var server = {id:'id'+new Date().getTime()};
             server.name = $scope.input.name;
             server.description = $scope.input.description;

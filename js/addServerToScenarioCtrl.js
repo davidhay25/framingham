@@ -1,6 +1,6 @@
 angular.module("sampleApp")
     .controller('addServerToScenarioCtrl',
-        function ($scope,ecosystemSvc,allServers,scenario) {
+        function ($scope,ecosystemSvc,allServers,modalService, scenario) {
 
             console.log(allServers)
             $scope.dlgAllServers = [];
@@ -37,6 +37,22 @@ angular.module("sampleApp")
 
 
             $scope.addServer = function(svr){
+
+
+                //make sure this combination has not already been added...
+                var canAdd = true;
+                scenario.servers = scenario.servers || []
+                scenario.servers.forEach(function (serverRole) {
+                    if (serverRole.server.id == $scope.selectedServer.id && serverRole.role.id == $scope.selectedRole.id) {
+                        canAdd = false;
+                    }
+                });
+                if (!canAdd) {
+                    modalService.showModal({},{bodyText:"This combination of server and role has already been specified for this scenario."})
+                    return;
+                }
+
+
                 $scope.$close({server:$scope.selectedServer,role:$scope.selectedRole})
             }
         }

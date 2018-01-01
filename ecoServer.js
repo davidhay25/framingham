@@ -141,7 +141,7 @@ app.put('/result',function(req,res){
 //============================= links ==============
 //get all links
 app.get('/link',function(req,res){
-    db.collection("link").find({}).toArray(function(err,result){
+    db.collection("link").find({active:true}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -152,14 +152,19 @@ app.get('/link',function(req,res){
 
 //add a single link
 app.post('/link',function(req,res){
-    db.collection("link").insert(req.body,function(err,result){
+    var link = req.body;
+    delete link._id;
+    db.collection("link").update({id:link.id},link,{upsert:true},function(err,result){
+    //db.collection("link").insert(req.body,function(err,result){
         if (err) {
-            res.send(err,500)
+            res.status(500).send(err)
         } else {
             res.send(result)
         }
     })
 });
+
+
 
 //============================= persons ==============
 //get all people
