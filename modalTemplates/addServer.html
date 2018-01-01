@@ -20,7 +20,9 @@
 
         <div class="row">
             <div class="col-md-6 col-sm-6">
-                <input type="text" class="form-control" ng-model="input.name" placeholder="Enter the client name. Keep it short"/>
+                <input type="text" class="form-control" ng-model="input.name"
+                       ng-blur = "checkName()"
+                       placeholder="Enter the client name. Keep it short"/>
             </div>
 
             <div class="col-md-6 col-sm-6">
@@ -30,21 +32,37 @@
         <br/>
         <div class="row">
             <div class="col-md-8 col-sm-8">
-                <input type="text" class="form-control" ng-model="input.address" placeholder="Enter the IP Address"/>
+                <input type="text" class="form-control" ng-model="input.address" placeholder="Enter the Url to the server FHIR root"/>
             </div>
 
             <div class="col-md-4 col-sm-4">
-                <button class="btn btn-primary ">Check </button>
+                <button class="btn btn-primary" ng-click="checkServerExists()">Check </button>
+                <div class="pull-right" ng-show="waiting">
+                    <img src="css/ajax_loader_blue_32.gif"/>
+                </div>
             </div>
         </div>
 
+        <br/>
+
+        <div class="row">
+            <div class="col-md-2 col-sm-2">
+                Contact
+            </div>
+            <div class="col-md-5 col-sm-5">
+                <input type="text" ng-model="contact"
+                       typeahead-on-select = "contactSelected($item, $model, $label, $event)"
+                       uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control">
+
+            </div>
+        </div>
         <br/>
         <div class="row">
             <div class="col-md-6 col-sm-6">
 
             </div>
             <div class="col-md-6 col-sm-6">
-                <button ng-show="input.name" class="btn btn-primary pull-right" ng-click="addServer()">Add new Server</button>
+                <button ng-show="input.name && input.address && selectedPerson && input.description" class="btn btn-primary pull-right" ng-click="addServer()">Add new Server</button>
             </div>
         </div>
     </div>
@@ -52,7 +70,8 @@
     <div class="modal-header">
         <div class="row">
             <div class="col-md-12 col-sm-12">
-                <em>Add the details (name and description) for a new client. After this the client can be added to any number of scenarios.</em>
+                <em>Add the details (name and description) for a new client. After this the client can be added to any
+                    number of scenarios. All items are required.</em>
 
             </div>
 

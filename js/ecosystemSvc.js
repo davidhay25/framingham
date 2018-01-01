@@ -363,6 +363,15 @@ console.log('read')
         },
         addNewServer : function(server) {
             var deferred = $q.defer();
+
+            if (server.contact) {
+                var arContact = angular.copy(server.contact);
+                server.contactid = [];//.length = 0;
+                arContact.forEach(function (c) {
+                    server.contactid.push(c.id)
+                })
+            }
+
             $http.post("/server",server).then(
                 function(data){
                     //now add the client to the cached list...
