@@ -26,6 +26,23 @@ angular.module("sampleApp")
             $scope.ecosystemSvc = ecosystemSvc;
 
 
+            $scope.editPerson = function(person) {
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/editPerson.html',
+                    controller: 'editPersonCtrl',
+                    resolve : {
+
+                        person: function () {          //the default config
+                            return person;
+                        }
+                    }
+                }).result.then(function(vo){
+                    console.log(vo)
+
+                    //ecosystemSvc.addScenarioResult(track,scenario,client,server,vo)
+                });
+            }
+
             $scope.removeServerFromScenario = function (scenario,server) {
                 var modalOptions = {
                     closeButtonText: "No, I changed my mind",

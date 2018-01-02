@@ -91,6 +91,7 @@
     <script src="js/downloadCtrl.js"></script>
     <script src="js/addClientCtrl.js"></script>
     <script src="js/addServerCtrl.js"></script>
+    <script src="js/editPersonCtrl.js"></script>
 
 </head>
 <body style="padding: 8px" >
@@ -411,14 +412,15 @@
 
                 <uib-tab heading="People">
                     <br/>
+                    <!--
                     <div>
                         <button class="btn btn-link pull-right" ng-click="editPerson()">New Person</button>
                     </div>
-
+-->
                     <div class="row">
                         <div class="col-sm-6 col-md-6">
                             <table class="table table-bordered">
-                                <tr><th>Name</th><th>Organization</th><th>Contacts</th><th></th></tr>
+                                <tr><th>Name</th><th>Organization</th><th>Contacts</th><th><button class="btn btn-link pull-right" ng-click="editPerson()">New Person</button></th></tr>
                                 <tr ng-repeat="person in allPersons">
                                     <td><button class="btn btn-link" ng-click="selectPerson(person)">{{person.name}}</button> </td>
                                     <td>{{person.organization}}</td>
@@ -433,6 +435,7 @@
                         </div>
                         <div class="col-sm-6 col-md-6" ng-show="personSummary">
 
+                            <div class="banner">{{personSummary.person.name}}</div>
                             <h4>Clients</h4>
                             <div ng-show="personSummary.clients.length == 0">No clients for this user.</div>
                             <table class="table table-bordered" ng-show="personSummary.clients.length > 0">

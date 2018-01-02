@@ -125,7 +125,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         return key;
     };
 
-
     var allServers = [];
     var allClients = [];
     var allPersons = [];
@@ -134,10 +133,44 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     var allResults = {};// = $localStorage.allResults || {};
     return {
 
+        updatePerson : function(person) {
+            var deferred = $q.defer();
+            $http.post("/person",person).then(
+                function(data){
+                    //now add (or update) the client to the cached list...
+                    var inx = -1;
+                    allPersons.forEach(function (p,pos) {
+                        if (p.id == person.id) {
+                            inx = pos
+                        }
+                    });
+                    if (inx > -1) {
+                        allPersons.splice(inx,1)
+                    }
+                    allPersons.push(person);
+
+                    allPersons.sort(function(a,b){
+                        if (a.name < b.name) {
+                            return -1
+                        } else {
+                            return 1
+                        }
+                    })
+
+
+                    deferred.resolve(person)
+                }, function(err) {
+                    console.log(err);
+                    deferred.reject(err)
+                }
+            );
+            return deferred.promise;
+        },
+
 
         getPersonSummary : function(person,tracks) {
             var personid = person.id;
-            var summary = {results:[],clients:[],servers:[],scenarios:[]}
+            var summary = {results:[],clients:[],servers:[],scenarios:[],person:person};
 
             //get all the results for this person
             angular.forEach(allResults,function (v,k) {
@@ -146,7 +179,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     summary.results.push(v)
                 }
 
-            })
+            });
 
             //get all the clients that this person is a contact for
             allClients.forEach(function (client) {
@@ -190,7 +223,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     }
 
                 })
-            })
+            });
 
 
             return summary;

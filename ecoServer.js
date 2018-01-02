@@ -1,4 +1,4 @@
-
+#!/usr/bin/env node
 
 var express = require('express');
 var request = require('request');
@@ -169,7 +169,7 @@ app.post('/link',function(req,res){
 //============================= persons ==============
 //get all people
 app.get('/person',function(req,res){
-    db.collection("person").find({}).toArray(function(err,result){
+    db.collection("person").find({}).sort( { name: 1 }).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -181,6 +181,7 @@ app.get('/person',function(req,res){
 //add/update a single person. This will check the id
 app.post('/person',function(req,res){
     var person = req.body;
+    delete person._id;
     db.collection("person").update({id:person.id},person,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)
