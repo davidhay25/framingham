@@ -30,7 +30,28 @@
     {"id":"s3-1","name":"Develop SHR model", "roleIds":["r3-1","r3-2","r3-3"]},
     {"id":"s3-2","name":"Upload model", "roleIds":["r3-1","r3-2","r3-3"]},
     {"id":"s3-3","name":"Create conforming resources", "roleIds":["r3-1","r3-2","r3-3"]},
-    {"id":"s3-4","name":"Validate Domain models", "roleIds":["r3-1","r3-2","r3-3"]}
+    {"id":"s3-4","name":"Validate Domain models", "roleIds":["r3-1","r3-2","r3-3"]},
+
+
+    {"id":"s18a-1","name":"Eligibility",
+      "description":"Submit an Eligibility, Retrieve/Receive an EligibilityResponse", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
+    {"id":"s18a-2","name":"Pre-Auth",
+      "description":"Submit a Pre-Authorization (Claim Resource) then an Attachment, Retrieve/Receive a ClaimResponse", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
+    {"id":"s18a-3","name":"Submit Claim",
+      "description":"Submit a Claim, Retrieve/Receive a ClaimResponse :via REST (Create), Retrieve a ClaimResponse (Get) :via HTTP and Receive a ClaimResponse", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
+    {"id":"s18a-4","name":"Submit Instititional Claim",
+      "description":"Submit Veteran Institutional Claim to VA Payor, Receive/Retrieve ClaimResponse", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
+    {"id":"s18a-5","name":"Retrieve Deferred response",
+      "description":"Retrieve deferred ClaimResponse via ProcessRequest", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
+    {"id":"s18a-6","name":"Retrieve processing status",
+      "description":"Retrieve the processing status (ProcessResponse) via ProcessRequest", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
+    {"id":"s18a-7","name":"Retrieve payment reconciliation",
+      "description":"Retrieve a PaymentReconciliation via ProcessRequest", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
+    {"id":"s18a-8","name":"Retrieve EOB",
+      "description":"Retrieve an ExplanationOfBenefit via ProcessRequest", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]}
+
+
+
 
   ]
 }

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+
+    <meta charset="UTF-8">
+    <title>Docs</title>
+</head>
+<body style="padding:8px" >
+
+<h3>Purpose</h3>
+
+To support a FHIR connectathon, and record the results.
+
+<h3>Structure</h3>
+
+The tracks are defined as follows:
+
+<br/>
+
+<img src="/artifacts/structure.png"/>
+
+<br/>
+
+So each track has have any number of scenarios, each of which has any number of roles. (Note that for this event all of the scenarios have all of the roles, as this is how the data has been captured in the spreadsheets)
+
+Each outcome has 2 participants - a client in a role, and a server in a role. (This is not a limit of the underlying structure - simply the User Interface at the moment). The data collected for an outcome is:
+<br/><br/>
+<ul>
+    <li>The person who is asserting the outcome of the test</li>
+    <li>Pass, Fail or Partial</li>
+    <li>An optional note for any other information </li>
+</ul>
+
+The outcomes can be viewed and edited in the scoring tab, and summarized in the results tab.
+
+<h3>Tabs</h3>
+The following tabs are present:
+
+<ul>
+    <li><em>Documentation</em></li>
+    <li><em>Track Descriptions</em>. A display that shows tracks, scenarios and roles as described above.</li>
+    <li><em>People</em>. All the people participating in the event. Each Client and Server has a person associated with them (currently one only) and this association (plus the scenario associations) forms the basis of the summary for each person found on this page.
+    <li><em>Clients</em>. All the registered Clients (including person contact).</li>
+    <li><em>Servers</em>. All the registered Servers (including person contact).</li>
+    <li><em>Track Scoring</em>. Allows Clients and Servers to be associated with a scenario (in some role) and for the outcome of the interaction to be recorded.</li>
+    <li><em>Result</em>s. Various displays of the outcomes of testing (as entered in the scoring tab).</li>
+    <ul>
+        <li>The Summary tab shows a pie chart giving the outcomes against each scenario</li>
+        <li>The Details tab lists the details of all the outcomes, and provides an option to download the results as a JSON file.</li>
+    </ul>
+</ul>
+
+<h3>Using</h3>
+
+To use the Manager, follow these steps.
+
+<ul>
+    <li>First, add yourself as a person using the 'People' tab. Once you've done this, you can then be associated with a
+        client or a server, and a summary will appear in the people tab.</li>
+    <li>Next, add any clients or servers that you have using the Client or Server tab. For a client you add the name of the client (which must be unique), a description, and yourself as the contact. A Server is similar, except that you add the URL to the server root, and click the 'check' button to retrieve the CapabilityStatement (which is required of all FHIR servers).</li>
+    <li>Next, use the Track Scoring tab to register your interest in a particular scenario. When adding the client or server, you indicate which role you will be participating as. The actual outcome is registered at the intersection of a client with a server, and can be pass, fail or partial. Note that currently the app only supports a 2 participant (client & server) interaction.</li>
+</ul>
+
+<h3>Known limitations</h3>
+<ul>
+    <li>Only 2 participants (Client and Server) for each test</li>
+    <li>Can't edit the track contents (Track, Scenario & Roles). These are currently configuration files that need to be manually updated.</li>
+</ul>
+</body>
+</html>

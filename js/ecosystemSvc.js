@@ -121,7 +121,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     var makeKey = function(scenario,clientRole,serverRole){
         var key = scenario.id + "|" + clientRole.client.id + '|' + clientRole.role.id + "|"+
             serverRole.server.id + '|' + serverRole.role.id;
-       // console.log(key);
+
         return key;
     };
 
@@ -167,14 +167,13 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             return deferred.promise;
         },
 
-
         getPersonSummary : function(person,tracks) {
             var personid = person.id;
             var summary = {results:[],clients:[],servers:[],scenarios:[],person:person};
 
             //get all the results for this person
             angular.forEach(allResults,function (v,k) {
-                console.log(v);
+
                 if (v.asserter && v.asserter.id == personid) {
                     summary.results.push(v)
                 }
@@ -183,7 +182,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
             //get all the clients that this person is a contact for
             allClients.forEach(function (client) {
-                console.log(client)
+
                 if (client.contact) {
                     client.contact.forEach(function (contact) {
                         if (contact.id == personid) {
@@ -195,7 +194,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
             //get all the servers that this personis a contact for
             allServers.forEach(function (server) {
-                console.log(server)
+
                 if (server.contact) {
                     server.contact.forEach(function (contact) {
                         if (contact.id == personid) {
@@ -285,7 +284,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             //make an array for downloading results
             var ar = "";
             angular.forEach(allResults,function(value,key) {
-                console.log(value);
+
                 var lne = quote(value.track.name) + "," + quote(value.scenario.name) + ",";
                 lne += value.client.participant.name + " (" + value.client.role.name + "),";
                 lne += value.server.participant.name + " (" + value.server.role.name + "),";
@@ -376,23 +375,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
         getAllServers : function() {
             return allServers;
-            /*
-            var deferred = $q.defer();
-            if (allServers) {
-                deferred.resolve(allServers)
-            } else {
-                //var url = "artifacts/servers.json";
-                var url = "/server";
-console.log('read')
-                $http.get(url).then(
-                    function(data) {
-                        allServers = data.data;//.servers;
-                        deferred.resolve(allServers)
-                    }
-                );
-            }
-            return deferred.promise;
-            */
+
         },
         addNewServer : function(server) {
             var deferred = $q.defer();
@@ -433,11 +416,6 @@ console.log('read')
         addScenarioResult : function(track,scenario,clientRole,serverRole,result) {
             var key = makeKey(scenario,clientRole,serverRole)
 
-          //  var key = scenario.id + "|" + serverRole.server.id + '-' + serverRole.role.id + "|" +
-              //  clientRole.client.id + '-' + clientRole.role.id;
-
-            console.log(key);
-
             result.id = result.id || 'id'+ new Date().getTime();
 
             //add the participants to the result. In this somple case there is one client and one server
@@ -459,7 +437,7 @@ console.log('read')
 
             allResults[key] = result;
 
-            console.log(result);
+
 
             var resultToSave = {}
             resultToSave.id = result.id;
@@ -666,7 +644,7 @@ console.log('read')
 
             $q.all(queries).then(
                 function(data) {
-                    console.log(vo);
+
                     //allResults = vo.allResults
                     //the session cache for clients & servers.. todo - there's a race between this and getAllServers()...
                     //allServers = vo.servers;
@@ -831,7 +809,7 @@ console.log('read')
 
                                         var key = result.scenario.id + "|" + result.client.client.id + '|' + result.client.role.id +
                                             "|" + result.server.server.id + '|' + result.server.role.id;
-                                        //console.log(key);
+
 
                                         allResults[key] = result;
                                     })

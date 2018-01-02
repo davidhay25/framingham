@@ -38,8 +38,11 @@
       "url":"http://wiki.hl7.org/index.php?title=201801_Electronic_Case_Reporting","scenarios":[]},
     {"id":"t14","name":"Encounter",
       "url":"http://wiki.hl7.org/index.php?title=201801_Encounter","scenarios":[]},
-    {"id":"t15","name":"Financial",
-      "url":"http://wiki.hl7.org/index.php?title=","scenarios":[]},
+    {"id":"t15","name":"Financial *",
+      "url":"http://wiki.hl7.org/index.php?title=201801_Financial_Management","scenarios":[],
+      "description":"The FM resources for Claims and Reimbursement Resources are of interest internationally for implementing modern claim processing and connectathon exposure allows implementers to test and contribute to the resources as they are currently STU. Since September 2013 FM resources have gained maturity and been tested in many of the connectathons with increased complexity of the test scenarios with each successive connectathon.",
+      "scenarioIds":["s18a-1","s18a-2","s18a-3","s18a-4","s18a-5","s18a-6","s18a-7","s18a-8"]
+    },
     {"id":"t16","name":"FHIR Documents",
       "url":"http://wiki.hl7.org/index.php?title=201801_FHIR_Documents","scenarios":[]},
     {"id":"t17","name":"FHIR Subscriptions",

@@ -312,8 +312,27 @@ angular.module("sampleApp")
                 return scenarios;
             };
 
-            $scope.getScenariosForClient = function(clnt){
-                return []
+            $scope.getScenariosForClient = function(client){
+
+                var scenarios = [];
+                if ($scope.tracks) {
+                    $scope.tracks.forEach(function(track){
+                        if (track.scenarios) {
+                            track.scenarios.forEach(function(scenario){
+                                if (scenario.clients) {
+                                    scenario.clients.forEach(function (clnt) {
+                                        if (clnt.client.id == client.id) {
+                                            scenarios.push(track.name + " / "+  scenario.name + " / " + clnt.role.name)
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    });
+                }
+
+
+                return scenarios;
 
             }
 
