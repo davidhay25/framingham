@@ -13,7 +13,7 @@ var db;
 const MongoClient = require('mongodb').MongoClient;
 MongoClient.connect('mongodb://localhost:27017', function(err, client) {
     if(err) {
-        //throw err;
+        console.log(err);
         console.log('>>> Mongo server not running')
     } else {
         console.log("Connected successfully to 'connectathon' server");
