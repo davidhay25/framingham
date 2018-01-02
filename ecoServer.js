@@ -48,8 +48,8 @@ if (useSSL) {
     console.log('server listening via TLS on port ' + port);
 } else {
     var http = require('http');
-    http.createServer(app).listen(3000)
-    console.log('server listening  on port ' + 3000);
+    http.createServer(app).listen(4000)
+    console.log('server listening  on port ' + 4000);
 }
 
 
