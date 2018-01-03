@@ -26,7 +26,7 @@
         </div>
 
         <div ng-hide="dlgAllServers.length == 0" class="row">
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-4 col-sm-4">
                 <strong>Clients</strong>
                 <ul class="list-unstyled">
                     <li class="clickable" ng-repeat="clnt in dlgAllClients" ng-click="selectClient(clnt)">
@@ -35,17 +35,17 @@
                 </ul>
 
             </div>
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-4 col-sm-4">
                 <strong>Roles</strong>
                 <ul class="list-unstyled">
-                    <li class="clickable" ng-repeat="role in scenario.roles" ng-click="selectRole(role)">
+                    <li class="clickable" ng-repeat="role in roles" ng-click="selectRole(role)">
                         {{role.name}}
                     </li>
                 </ul>
 
             </div>
 
-            <div class="col-md-6 col-sm-6">
+            <div class="col-md-4 col-sm-4">
                 <div ng-show="selectedClient">Name: {{selectedClient.name}}</div>
 
                 <div ng-show="selectedRole">Role: {{selectedRole.name}}</div>

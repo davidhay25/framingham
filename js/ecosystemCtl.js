@@ -199,7 +199,7 @@ angular.module("sampleApp")
 
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addServerToScenario.html',
-                    //size: 'lg',
+                    size: 'lg',
                     controller: 'addServerToScenarioCtrl',
                     resolve : {
                         allServers: function () {          //the default config
@@ -272,7 +272,7 @@ angular.module("sampleApp")
 
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addClientToScenario.html',
-                    //size: 'lg',
+                    size: 'lg',
                     controller: 'addClientToScenarioCtrl',
                     resolve : {
                         allClients: function () {          //the default config

@@ -9,17 +9,51 @@
     {"id":"r2-3","name":"Clearing House","description":""},
     {"id":"r3-1","name":"Profile Creator","description":""},
     {"id":"r3-2","name":"Profile Server","description":""},
-    {"id":"r3-3","name":"Patient Endpoint","description":""}
+    {"id":"r3-3","name":"Patient Endpoint","description":""},
+
+
+    {"id":"r5-1","name":"Care Plan Server","description":"A FHIR server (version 3.0) should support the following resources for this track<ul><li>CarePlan, CareTeam, Goal, Condition</li><li>Other resources as needed for value of CarePlan.activity.reference</li></ul>"},
+    {"id":"r5-2","name":"Care Plan Requestor","description":""},
+    {"id":"r5-3","name":"CDS Service Requestor","description":""},
+    {"id":"r5-4","name":"Care Plan Protocol Creator","description":""},
+
+
+    {"id":"r18a-1","name":"Eligibility Submitter",
+      "role":"client",
+      "description":"Enable the creation and submission of the Eligibility resource and the receiving or obtaining of an EligibilityResponse."},
+    {"id":"r18a-2","name":"Eligibility Processor",
+      "role":"server",
+      "description":"Support the receiving and processing of the Eligibility resource and creation of the EligibilityResponse resource."},
+    {"id":"r18a-3","name":"Claims Submitter",
+      "role":"client",
+      "description":"Enable the creation and submission of the Claim resource and the receiving or obtaining of a ClaimResponse. This may be as a Pre-Authorization, Pre-Determination or a completed Claim for actual adjudication."},
+    {"id":"r18a-4","name":"Claims Processor",
+      "role":"server",
+      "description":"Support the receiving and processing of the Claim resource as a: Pre-Authorization; Predetermination; or, actual Claim; and creation of the ClaimResponse resource."},
+    {"id":"r18a-5","name":"Claims Attachment Submitter",
+      "role":"client",
+      "description":"Enable the creation and submission of the Communication resource and the receiving or obtaining of a ProcessResponse. This may be as supporting information for a Pre-Authorization, Pre-Determination or a completed Claim for actual adjudication."},
+    {"id":"r18a-6","name":"Claims Attachment Processor",
+      "role":"server",
+      "description":"Support the receiving and processing of the Communication resource as supporting information for a Pre-Authorization, Predetermination or actual Claim; and creation of the ProcessResponse resource."},
+    {"id":"r18a-7","name":"Claims Attachment Requestor",
+      "role":"server",
+      "description":"Support the receiving and processing of the ProcessRequest resource and return a CommunicationRequest resource for a previously received and pended Pre-Authorization, Predetermination or actual Claim."},
+    {"id":"r18a-8","name":"ProcessRequest Submitter",
+      "role":"client",
+      "description":"Enable the creation and submission of the ProcessRequest resource and the receiving or obtaining of a ProcessResponse. This may be to: request a Claim Reversal, request a deferred response, or a PaymentReconciliation or to obtain the processing status."},
+    {"id":"r18a-9","name":"ProcessRequest Processor",
+      "role":"server",
+      "description":"Support the receiving and processing of the ProcessRequest resource and creation of the ProcessResponse resource."},
+    {"id":"r18a-10","name":"PaymentReconciliation Processor",
+      "role":"server",
+      "description":"Support the receiving and processing of the ProcessRequest resource and creation of the PaymentReconciliation resource."},
+    {"id":"r18a-11","name":"Explanation of Benefit Processor",
+      "role":"server",
+      "description":"Support the receiving and processing of the ProcessRequest resource and creation of the ExplanationOfBenefit resource."}
 
 
 
-
-
-
-
-
-
-    
 
 
   ]

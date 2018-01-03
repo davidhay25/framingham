@@ -609,7 +609,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             //get scenarios
             var deferred = $q.defer();
             var urls = []
-            urls.push({url:'artifacts/scenarios.json',"name":"scenarios"});
+            urls.push({url:'artifacts/scenarios.json?_dummy='+new Date(),"name":"scenarios"});
             urls.push({url:'artifacts/roles.json',"name":"roles"});
             urls.push({url:'artifacts/tracks.json',"name":"tracks"});
             urls.push({url:'artifacts/persons.json',"name":"persons"});
@@ -684,6 +684,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                     var hashTrack = {};
                     vo.tracks.forEach(function (track) {
+                        track.resultTotals = {'pass':0,'fail':0,'partial':0}
                         hashTrack[track.id] = track
                     });
 
@@ -806,13 +807,17 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                             result.asserter = hashAllPersons[dataResult.asserterid];
                                         }
 
-
                                         var key = result.scenario.id + "|" + result.client.client.id + '|' + result.client.role.id +
                                             "|" + result.server.server.id + '|' + result.server.role.id;
 
-
                                         allResults[key] = result;
-                                    })
+
+                                        //now update the track totals
+                                        result.track.resultTotals[result.text]++
+
+
+
+                                    });
                                     deferred.resolve(vo);
                                 },
                                 function(err){
