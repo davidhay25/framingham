@@ -12,10 +12,15 @@
     {"id":"r3-3","name":"Patient Endpoint","description":""},
 
 
-    {"id":"r5-1","name":"Care Plan Server","description":"A FHIR server (version 3.0) should support the following resources for this track<ul><li>CarePlan, CareTeam, Goal, Condition</li><li>Other resources as needed for value of CarePlan.activity.reference</li></ul>"},
-    {"id":"r5-2","name":"Care Plan Requestor","description":""},
-    {"id":"r5-3","name":"CDS Service Requestor","description":""},
-    {"id":"r5-4","name":"Care Plan Protocol Creator","description":""},
+    {"id":"r5-1","name":"Care Plan Server",
+      "role":"server",
+      "description":"A FHIR server (version 3.0) should support the following resources for this track<ul><li>CarePlan, CareTeam, Goal, Condition</li><li>Other resources as needed for value of CarePlan.activity.reference</li></ul>"},
+    {"id":"r5-2","name":"Care Plan Requestor",
+      "role":"client","description":""},
+    {"id":"r5-3","name":"CDS Service Requestor",
+      "role":"client","description":""},
+    {"id":"r5-4","name":"Care Plan Protocol Creator",
+      "role":"client","description":""},
 
 
     {"id":"r18a-1","name":"Eligibility Submitter",

@@ -435,6 +435,12 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             result.scenario = scenario;
             result.track = track;
 
+            result.track.resultTotals = result.track.resultTotals || {};
+            result.track.resultTotals[result.text] = result.track.resultTotals[result.text] || 0;
+            result.track.resultTotals[result.text]++;
+
+            // track.resultTotals = {'pass':0,'fail':0,'partial':0}
+
             allResults[key] = result;
 
 
@@ -451,6 +457,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 resultToSave.asserterid = result.asserter.id
             }
 
+
+
             $http.put("/result",resultToSave).then(
                 function(){
 
@@ -463,6 +471,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
             //$localStorage.allResults = allResults;
         },
+
         addServerToScenario : function(scenario,server,role) {
             var deferred = $q.defer();
 

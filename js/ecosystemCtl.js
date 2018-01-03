@@ -148,16 +148,11 @@ angular.module("sampleApp")
 
 
             $scope.showTestResult = function(scenario,client,server) {
-                //console.log(scenario,client,server)
                 var result = ecosystemSvc.getScenarioResult(scenario,client,server) || {text: 'Enter result'}
-
-                //var colorClass = 'green'
-
                 return "<span class='"+result.text+"'>" + result.text + "</span>"
             };
 
             $scope.showTestResultNote = function(scenario,client,server) {
-                //console.log(scenario,client,server)
                 var result = ecosystemSvc.getScenarioResult(scenario,client,server) || {note: ''}
                 return result.note
             };
@@ -189,7 +184,10 @@ angular.module("sampleApp")
                 }).result.then(function(vo){
                     console.log(vo)
 
-                    ecosystemSvc.addScenarioResult(track,scenario,client,server,vo)
+                    ecosystemSvc.addScenarioResult(track,scenario,client,server,vo);
+                    //update the results summary
+                    $scope.resultsSummary = ecosystemSvc.getTrackResults(track); //get a summary object for the results for a track
+
                 });
 
             };

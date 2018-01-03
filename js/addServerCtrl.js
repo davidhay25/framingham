@@ -37,7 +37,7 @@ angular.module("sampleApp")
                 var canAdd = true;
                 var allServers = ecosystemSvc.getAllServers();
                 allServers.forEach(function (svr) {
-                    if (svr.name.toLowerCase() == $scope.input.name.toLowerCase()) {
+                    if (svr.name && (svr.name.toLowerCase() == $scope.input.name.toLowerCase())) {
                         modalService.showModal({},{bodyText:"This server name has already been used. Please use another one."});
                         canAdd = false;
                     }

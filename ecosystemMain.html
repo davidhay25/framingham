@@ -97,11 +97,29 @@
     <script src="js/editPersonCtrl.js"></script>
 
 </head>
-<body style="padding: 8px" >
+<body style="padding: 8px;padding-top: 80px" >
 
 <div ng-app="sampleApp" ng-controller="ecosystemCtrl" class="container-fluid">
 
-    <div class="banner">clinFHIR Connectathon Mananger</div>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+        <div class="container-fluid row">
+            <div class="col-md-3 col-sm-3">
+                <a class="navbar-brand" href="#">
+
+                    Connectathon Mananger
+                </a>
+            </div>
+
+
+            <div class="col-md-4 col-sm-4">
+
+            </div>
+        </div>
+    </nav>
+
+
+
 
     <div class="row">
 
@@ -460,7 +478,7 @@
 
                 </uib-tab>
 
-                <uib-tab heading="Track Scoring">
+                <uib-tab heading="Testing">
                     <br/>
 
                     <div class="row">
@@ -493,7 +511,6 @@
 
                                 <div class="row">
                                     <div class="col-sm-12 col-md-12">
-
                                         <table class="table">
                                             <tr>
                                                 <td>
@@ -565,7 +582,7 @@
                 </uib-tab>
 
 
-                <uib-tab heading="Results">
+                <uib-tab heading="Test Results">
                     <br/>
 
                     <uib-tabset>
@@ -619,6 +636,7 @@
                                             ng-click="selectTrackResults(track)">
 
                                              <span class="pull-right badge"
+                                                   ng-show="track.resultTotals.pass || track.resultTotals.fail || track.resultTotals.partial"
                                                    uib-popover="{{track.resultTotals.pass}} Pass / {{track.resultTotals.fail}} Fail / {{track.resultTotals.partial}} Partial"
                                                    popover-placement="top"
                                                    popover-append-to-body = true
