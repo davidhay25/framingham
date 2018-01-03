@@ -508,12 +508,27 @@
                                 </span>
 
                                 </div>
+<!--
+                                {{scenario.clients.length}} {{scenario.servers.length}}
+                                <div ng-show="! scenario.clients && !scenario.servers">
+                                    <em>You need to add at least one server and one client to record test results</em>
+                                </div>
 
+                                <div ng-show="scenario.clients.length == 0 && scenario.servers.length > 0">
+                                    <em>You need to add at least one client as well to record test results</em>
+                                </div>
+
+                                <div ng-show="scenario.servers.length ==0 && scenario.clients.length == 0">
+                                    <em>You need to add at least one server as well to record test results</em>
+                                </div>
+-->
                                 <div class="row">
                                     <div class="col-sm-12 col-md-12">
-                                        <table class="table">
+
+
+                                        <table class="table table-bordered">
                                             <tr>
-                                                <td>
+                                                <td width="150px"  >
                                                     <!--
                                                     <button class="btn btn-link" ng-click="addClientToScenario(scenario)">Add Client</button>
                                                     -->
@@ -530,7 +545,7 @@
                                             </tr>
 
                                             <tr ng-repeat="client in scenario.clients">
-                                                <td><strong>
+                                                <td ><strong>
                                                     {{client.client.name}}
                                                     <div><em>({{client.role.name}})</em>
                                                         <i class="clickable glyphicon glyphicon-remove-sign"
@@ -539,7 +554,7 @@
                                                     </div>
                                                 </strong>
                                                 </td>
-                                                <td ng-repeat="server in scenario.servers">
+                                                <td  ng-repeat="server in scenario.servers">
                                                     <a href="#" ng-click="addTestResult(selectedTrack,scenario,client,server)">
                                                         <span uib-popover={{showTestResultNote(scenario,client,server)}}
                                                               popover-placement="left"
