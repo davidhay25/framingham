@@ -55,9 +55,40 @@
     {"id":"s18a-7","name":"Retrieve payment reconciliation",
       "description":"Retrieve a PaymentReconciliation via ProcessRequest", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
     {"id":"s18a-8","name":"Retrieve EOB",
-      "description":"Retrieve an ExplanationOfBenefit via ProcessRequest", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]}
+      "description":"Retrieve an ExplanationOfBenefit via ProcessRequest", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
 
 
+    {"id":"s22-1","name":"Register a new patient", "roleIds":["r22-1","r22-2"],
+      "description":"Register a new patient",
+      "action":"FHIR client creates a new patient and save to FHIR server. The client can assign the Id.",
+      "precondition":"Patient does not exist in FHIR server prior to action",
+      "success":"Patient created correctly on FHIR server (use browser to inspect Patient)",
+      "bonus":["The Patient resource has an extension"]
+    },
+    {"id":"s22-2","name":"Update a patient", "roleIds":["r22-1","r22-2"],
+      "description":"Update a patient",
+      "action":"FHIR client updates the patient created in scenario #1 and updates to FHIR server. The patient is retrieved by Id.",
+      "precondition":"Patient has been created",
+      "success":"Patient updated on FHIR server (use browser to inspect Patient)",
+      "bonus":["Update a patient that has extensions, but leaving the extension untouched.",
+        "Update a patient that has extensions, and update the extension also."]
+    },
+    {"id":"s22-3","name":"Retrieve Patient history", "roleIds":["r22-1","r22-2"],
+      "description":"Retrieve Patient history",
+      "action":"FHIR client searches the FHIR server for the history of a Patient",
+      "precondition":"There is a patient that has at least one update",
+      "success":"Patient's history displayed in interface. (use browser to query FHIR server)",
+      "bonus":["The UI allows the user to display previous versions of the Patient"]},
+    {"id":"s22-4","name":"Search for a patient on name", "roleIds":["r22-1","r22-2"],
+      "description":"Search for a patient on name",
+      "action":"FHIR client searches the FHIR server for patients with a given name",
+      "precondition":"Patients with that name have  been created",
+      "success":"patients displayed in interface. (use browser query to confirm)"},
+    {"id":"s22-5","name":"Delete a patient", "roleIds":["r22-1","r22-2"],
+      "description":"Delete a patient",
+      "action":"FHIR client deletes the patient with a given id",
+      "precondition":"a Patients with that Id has been created",
+      "success":"Subsequently querying for the patient - either searching by name or by Id - fails."}
 
 
   ]

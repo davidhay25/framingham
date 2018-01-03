@@ -105,8 +105,8 @@ angular.module("sampleApp")
                 //in the results tab, select a scenario...
                 $scope.selectedScenarioSummary = scenario;
                 //set the chart values...
-                $scope.chartLabels = [];// ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
-                $scope.chartData = []; //[300, 500, 100];
+                $scope.chartLabels = [];
+                $scope.chartData = [];
                 $scope.chartColors = []; //'#00cc00', '#cc3300', '#ffff99']
                 $scope.chartOptions = {legend:{display:true}};
                 console.log(summary)
@@ -114,17 +114,17 @@ angular.module("sampleApp")
                 var summary = $scope.resultsSummary.scenario[scenario.name];
                 if (summary) {
                     if (summary.pass > 0) {
-                        $scope.chartLabels.push('pass ' + summary.pass);
+                        $scope.chartLabels.push('pass ');// + summary.pass);
                         $scope.chartData.push(summary.pass)
                         $scope.chartColors.push('#00cc00')
                     }
                     if (summary.fail > 0) {
-                        $scope.chartLabels.push('fail ' + summary.fail);
+                        $scope.chartLabels.push('fail ');// + summary.fail);
                         $scope.chartData.push(summary.fail)
                         $scope.chartColors.push('#cc3300')
                     }
                     if (summary.partial > 0) {
-                        $scope.chartLabels.push('partial ' + summary.pass);
+                        $scope.chartLabels.push('partial ');// + summary.pass);
                         $scope.chartData.push(summary.partial)
                         $scope.chartColors.push('#ffff99')
                     }

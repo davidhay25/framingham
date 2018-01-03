@@ -50,8 +50,14 @@
       "description":"Support the receiving and processing of the ProcessRequest resource and creation of the PaymentReconciliation resource."},
     {"id":"r18a-11","name":"Explanation of Benefit Processor",
       "role":"server",
-      "description":"Support the receiving and processing of the ProcessRequest resource and creation of the ExplanationOfBenefit resource."}
+      "description":"Support the receiving and processing of the ProcessRequest resource and creation of the ExplanationOfBenefit resource."},
 
+    {"id":"r22-1","name":"Patient Client",
+      "role":"client",
+      "description":"A client that can create and query Patient resources"},
+    {"id":"r22-2","name":"Patient Server",
+      "role":"server",
+      "description":"A server that can store & expose Patient resources"}
 
 
 

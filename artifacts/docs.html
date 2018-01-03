@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="/css/main.css"/>
-
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <meta charset="UTF-8">
     <title>Docs</title>
 </head>
@@ -18,30 +18,51 @@ To support a FHIR connectathon, and record the results.
 The tracks are defined as follows:
 
 <br/>
+<div class="row">
+    <div class="col-md-5">
+        <img src="/artifacts/structure.png"/>
+    </div>
+    <div class="col-md-7">
+        So each track has have any number of scenarios, each of which has any number of roles. (Note that for this event all of the scenarios have all of the roles, as this is how the data has been captured in the spreadsheets)
 
-<img src="/artifacts/structure.png"/>
+    </div>
+</div>
+
+
+
 
 <br/>
 
-So each track has have any number of scenarios, each of which has any number of roles. (Note that for this event all of the scenarios have all of the roles, as this is how the data has been captured in the spreadsheets)
 
 <h3>Testing</h3>
 
 
-Each test has 2 participants - a client in a role, and a server in a role.
-(This is not a limit of the underlying structure - simply the User Interface at the moment).
-The data collected for the outcome of the test is:
+<br/>
+
+<div class="row">
+    <div class="col-md-5">
+        <img src="/artifacts/test.png"/>
+    </div>
+    <div class="col-md-7">
+        Each test has 2 participants - a client in a role, and a server in a role.
+        (This is not a limit of the underlying structure - simply the User Interface at the moment).
+        The data collected for the outcome of the test is:
+
+        <br/><br/>
+        <ul>
+            <li>The person who is asserting the outcome of the test</li>
+            <li>Pass, Fail or Partial</li>
+            <li>An optional note for any other information </li>
+        </ul>
+
+        The test results can be viewed and edited in the Scoring tab, and summarized in the Results tab. There is also a download option in the Results tab.
+    </div>
+</div>
+
 
 <br/><br/>
-<ul>
-    <li>The person who is asserting the outcome of the test</li>
-    <li>Pass, Fail or Partial</li>
-    <li>An optional note for any other information </li>
-</ul>
 
 
-
-The outcomes can be viewed and edited in the Scoring tab, and summarized in the Results tab.
 
 <h3>Tabs</h3>
 The following tabs are present:

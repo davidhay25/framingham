@@ -150,7 +150,7 @@
                                     <ul class="list-unstyled">
                                         <li ng-repeat="lead in selectedTrack.leads">
                                             {{lead.name}}
-                                            <div style="margin-left: 20px" ng-repeat="contact in lead.contact">
+                                            <div ng-show="contact.value" style="margin-left: 20px" ng-repeat="contact in lead.contact">
                                                 {{contact.type}}: {{contact.value}}
                                             </div>
                                         </li>
@@ -220,7 +220,7 @@
 
                                             <p ng-bind-html="selectedScenario.description"></p>
 
-                                            <div class="row">
+                                            <div class="row" ng-show="selectedScenario.action">
                                                 <div class="col-sm-3 col-md-3">
                                                     Action
                                                 </div>
@@ -229,7 +229,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row">
+                                            <div class="row" ng-show="selectedScenario.precondition">
                                                 <div class="col-sm-3 col-md-3">
                                                     Precondition
                                                 </div>
@@ -237,7 +237,7 @@
                                                     {{selectedScenario.precondition}}
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row"ng-show="selectedScenario.steps.length > 0">
                                                 <div class="col-sm-3 col-md-3">
                                                     Steps
                                                 </div>
@@ -249,7 +249,7 @@
                                                     </ol>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row" ng-show="selectedScenario.success">
                                                 <div class="col-sm-3 col-md-3">
                                                     Success
                                                 </div>
@@ -257,7 +257,7 @@
                                                     {{selectedScenario.success}}
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row" ng-show="selectedScenario.bonus.length > 0">
                                                 <div class="col-sm-3 col-md-3">
                                                     Bonus
                                                 </div>
@@ -271,10 +271,10 @@
                                                 </div>
                                             </div>
 
-
+                                            <hr style="height: 8px"/>
                                             <div class="row">
                                                 <div class="col-sm-3 col-md-3">
-                                                    Servers
+                                                    Configured Servers
                                                 </div>
                                                 <div class="col-sm-9 col-md-9">
                                                     <ul >
@@ -282,14 +282,14 @@
                                                             {{serverRole.server.name}} ({{serverRole.role.name}})
                                                         </li>
                                                     </ul>
-                                                    <button class="btn btn-link" ng-click="addServerToScenario(selectedScenario)">Add Server</button>
+                                                    <button class="btn btn-link  pull-right" ng-click="addServerToScenario(selectedScenario)">Add Server</button>
 
                                                 </div>
                                             </div>
 
                                             <div class="row">
                                                 <div class="col-sm-3 col-md-3">
-                                                    Clients
+                                                    Configured Clients
                                                 </div>
                                                 <div class="col-sm-9 col-md-9">
 
@@ -299,30 +299,15 @@
                                                         </li>
                                                     </ul>
 
-                                                    <button class="btn btn-link"
+                                                    <button class="btn btn-link pull-right"
                                                             ng-click="addClientToScenario(selectedScenario)">Add Client</button>
 
                                                 </div>
                                             </div>
-
-
                                         </div>
-
-
                                     </div>
-
-
-
                                 </div>
                             </div>
-
-
-
-
-
-
-
-
                         </div>
                     </div>
 
@@ -585,7 +570,7 @@
 
                     <uib-tabset>
 
-                        <uib-tab heading="Details">
+                        <uib-tab heading="Details of all tests">
                             <br/>
 
 
@@ -622,7 +607,7 @@
                         </uib-tab>
 
 
-                        <uib-tab heading="Summary">
+                        <uib-tab heading="Summary by track">
                             <br/>
                             <div class="row">
                                 <div class="col-md-3 col-sm-3">
@@ -633,7 +618,11 @@
                                             ng-repeat="track in tracks"
                                             ng-click="selectTrackResults(track)">
 
-                                             <span class="pull-right badge">
+                                             <span class="pull-right badge"
+                                                   uib-popover="{{track.resultTotals.pass}} Pass / {{track.resultTotals.fail}} Fail / {{track.resultTotals.partial}} Partial"
+                                                   popover-placement="top"
+                                                   popover-append-to-body = true
+                                                   popover-trigger="'mouseenter'">
 
                                                     {{track.resultTotals.pass}} /
                                                     {{track.resultTotals.fail}} /
