@@ -9,45 +9,54 @@ angular.module("sampleApp")
             $scope.server = server;
             $scope.client = client;
             $scope.previousResult = previousResult;
+            $scope.trackers = [];
 
-            if (previousResult && previousResult.asserter) {
-                $scope.selectedPerson = previousResult.asserter;
-                $scope.input.asserter = previousResult.asserter;
+            $scope.input.radioModel = '';
+
+            if (previousResult) {
+
+                if (previousResult.trackers) {
+                    $scope.trackers = previousResult.trackers;
+                }
+
+
+                if( previousResult.asserter) {
+                    $scope.selectedPerson = previousResult.asserter;
+                    $scope.input.asserter = previousResult.asserter;
+                }
             }
 
             console.log(previousResult)
 
             $scope.allPersons = ecosystemSvc.getAllPersons();//[]
-           // var selectedPerson;
-            /*var ar = ecosystemSvc.getAllPersons();
-            ar.forEach(function (p) {
-                console.log(p)
-                $scope.allPersons.push({name:p.name,'x':'d'})
-            })
-*/
 
 
+            $scope.addNewTracker = function() {
+                $scope.trackers.push({url:$scope.input.newTracker})
+
+            };
 
             $scope.asserterSelected = function(item){
                 $scope.selectedPerson = item;
-                console.log(item);//, $model, $label, $event)
+                console.log($scope.selectedPerson);//, $model, $label, $event)
                 //typeahead-on-select($item, $model, $label, $event)
-            }
+            };
 
 
-            $scope.radioModel = '';
+
 
             if (previousResult) {
                 $scope.input.note = previousResult.note;
-                $scope.radioModel = previousResult.text;
+                $scope.input.radioModel = previousResult.text;
 
             }
 
             $scope.save = function() {
                 var result = {}
-                result.text = $scope.radioModel;
+                result.text = $scope.input.radioModel;
                 result.note = $scope.input.note;
                 result.asserter = $scope.selectedPerson;
+                result.trackers = $scope.trackers;
                 if (previousResult) {
                     result.id = previousResult.id;
                 }

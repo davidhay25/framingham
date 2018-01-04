@@ -1,4 +1,4 @@
-angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalService,$localStorage) {
+angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalService,$localStorage,ecoUtilitiesSvc) {
 
     var serverIP = "http://localhost:8080/baseDstu3/";    //hard code to local server for now...
     var addExtension =  function(resource,url,value) {
@@ -347,30 +347,24 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             return deferred.promise;
             */
         },
-        getAllResults : function() {
-            return allResults
-/*
+        getAllResults : function(scenario) {
+            var allResultsCopy = allResults;
 
-            var deferred = $q.defer();
-            if (allResults) {
-                deferred.resolve(allResults)
-            } else {
+            if (scenario) {
+                //we only want the results for this scenario...
+                var resp = {};
+                angular.forEach(allResultsCopy,function (result,key) {
+                    if (result.scenario.id == scenario.id) {
 
-                //var url = "artifacts/clients.json";
-                var url = "/client";
-
-                $http.get(url).then(
-                    function(data) {
-                        allResults = data.data;//.clients;
-                        deferred.resolve(allResults)
+                        resp[key] = result
                     }
-                );
+                });
+                return resp;
+                
+            } else {
+                return allResults
             }
-            //return deferred.promise;
-            return deferred.promise;
-            */
-           // return $localStorage.allResults
-            //return allResults;
+
         },
 
         getAllServers : function() {
@@ -402,21 +396,35 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         },
 
         getScenarioResult : function(scenario,clientRole,serverRole) {
+            //get the previous result
+            if (clientRole && serverRole) {
+                //result is being requested from the client/server tab...
+                var key = makeKey(scenario,clientRole,serverRole)
+                return allResults[key]
+            } else {
 
-            var key = makeKey(scenario,clientRole,serverRole)
+            }
 
-           // var key = scenario.id + "|" + serverRole.server.id + '|' + serverRole.role.id + "|" +
-             //   clientRole.client.id + '|' + clientRole.role.id;
-
-
-
-            //var key = scenario.id + "|" + server.server.id + "|" + client.client.id;
-            return allResults[key]
         },
         addScenarioResult : function(track,scenario,clientRole,serverRole,result) {
-            var key = makeKey(scenario,clientRole,serverRole)
 
             result.id = result.id || 'id'+ new Date().getTime();
+
+            var key;
+            if (clientRole && serverRole) {
+                //this has come from the client/server tab...
+                key = makeKey(scenario,clientRole,serverRole)
+                result.type = 'cs';     //client/server type...
+                result.server = {role: serverRole.role,server:serverRole.server};  //used for download
+                result.client = {role: clientRole.role,client:clientRole.client};  //used for download
+
+
+            } else {
+                //this has come from the direct tab..
+                key = result.id;
+                result.type = 'direct';     //direct against the scenario
+            }
+
 
             //add the participants to the result. In this somple case there is one client and one server
             //todo - leave this for now - consider multi participant in v2...
@@ -429,35 +437,34 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             //result.server = {role: serverRole.role,participant:serverRole.server};  //used for download
             //result.client = {role: clientRole.role,participant:clientRole.client};  //used for download
 
-            result.server = {role: serverRole.role,server:serverRole.server};  //used for download
-            result.client = {role: clientRole.role,client:clientRole.client};  //used for download
 
             result.scenario = scenario;
             result.track = track;
-
             result.track.resultTotals = result.track.resultTotals || {};
             result.track.resultTotals[result.text] = result.track.resultTotals[result.text] || 0;
             result.track.resultTotals[result.text]++;
 
-            // track.resultTotals = {'pass':0,'fail':0,'partial':0}
-
             allResults[key] = result;
 
-
-
-            var resultToSave = {}
+            var resultToSave = {};
             resultToSave.id = result.id;
+            resultToSave.type = result.type;
             resultToSave.text = result.text;
             resultToSave.note = result.note;
-            resultToSave.server = {serverid:serverRole.server.id,roleid:serverRole.role.id};
-            resultToSave.client = {clientid:clientRole.client.id,roleid:clientRole.role.id};
+            if (serverRole) {
+                resultToSave.server = {serverid:serverRole.server.id,roleid:serverRole.role.id};
+            }
+            if (clientRole) {
+                resultToSave.client = {clientid:clientRole.client.id,roleid:clientRole.role.id};
+            }
+
             resultToSave.scenarioid = scenario.id;
             resultToSave.trackid = track.id;
+            resultToSave.trackers = result.trackers;
+
             if (result.asserter){
                 resultToSave.asserterid = result.asserter.id
             }
-
-
 
             $http.put("/result",resultToSave).then(
                 function(){
@@ -467,9 +474,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 }
             )
 
-
-
-            //$localStorage.allResults = allResults;
         },
 
         addServerToScenario : function(scenario,server,role) {
@@ -665,13 +669,11 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                         hashAllPersons[p.id] = p;
                     })
 
-
                     var hashServer = {};//vo.servers;
                     vo.servers.forEach(function (server) {
                         hashServer[server.id] = server
                         allServers.push(server);
                     });
-
 
                     var hashClient = {};//vo.servers;
                     vo.clients.forEach(function (client) {
@@ -804,20 +806,33 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                     results.forEach(function(dataResult){
                                         var result = {id:dataResult.id};
                                         result.text = dataResult.text;
+                                        result.type = dataResult.type;
                                         result.note = dataResult.note;
+                                        result.trackers = dataResult.trackers;
                                         result.track = hashTrack[dataResult.trackid];
                                         result.scenario = hashScenario[dataResult.scenarioid];
-                                        result.server = {server: hashServer[dataResult.server.serverid],
-                                            role: hashRole[dataResult.server.roleid]};
-                                        result.client = {client: hashClient[dataResult.client.clientid],
-                                            role: hashRole[dataResult.client.roleid]}
+                                        if (dataResult.server) {
+                                            result.server = {server: hashServer[dataResult.server.serverid],
+                                                role: hashRole[dataResult.server.roleid]};
+                                        }
+                                        if (dataResult.client) {
+                                            result.client = {client: hashClient[dataResult.client.clientid],
+                                                role: hashRole[dataResult.client.roleid]}
+                                        }
 
                                         if (dataResult.asserterid) {
                                             result.asserter = hashAllPersons[dataResult.asserterid];
                                         }
 
-                                        var key = result.scenario.id + "|" + result.client.client.id + '|' + result.client.role.id +
-                                            "|" + result.server.server.id + '|' + result.server.role.id;
+                                        var key;
+                                        if (dataResult.type == 'cs') {
+                                            key = result.scenario.id + "|" + result.client.client.id + '|' + result.client.role.id +
+                                                "|" + result.server.server.id + '|' + result.server.role.id;
+                                        } else {
+                                            key = dataResult.id;
+                                        }
+
+
 
                                         allResults[key] = result;
 

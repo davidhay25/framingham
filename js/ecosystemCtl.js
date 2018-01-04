@@ -2,7 +2,7 @@
 
 angular.module("sampleApp")
     .controller('ecosystemCtrl',
-        function ($scope,$http,modalService,ecosystemSvc,$window,$localStorage,$uibModal) {
+        function ($scope,$http,modalService,ecosystemSvc,$window,$localStorage,$uibModal,ecoUtilitiesSvc) {
 
             $scope.input = {};
 
@@ -15,6 +15,11 @@ angular.module("sampleApp")
             ecosystemSvc.getConnectathonResources().then(
                 function(vo) {
                     console.log(vo)
+                    //console.log(angular.toJson(vo))
+
+
+                    console.log(ecoUtilitiesSvc.getObjectSize(vo));
+
                     $scope.tracks = vo.tracks;
 
                     $scope.allClients =  ecosystemSvc.getAllClients();
@@ -25,6 +30,9 @@ angular.module("sampleApp")
 
             $scope.ecosystemSvc = ecosystemSvc;
 
+            $scope.selectScenarioDirect = function (scenario) {
+                $scope.selectedScenarioDirect = scenario;
+            }
 
             $scope.editPerson = function(person) {
                 $uibModal.open({
@@ -159,7 +167,7 @@ angular.module("sampleApp")
 
 
             //add the result from a simple (one client, one server) scenario...
-            $scope.addTestResult = function(track,scenario,client,server) {
+            $scope.addTestResult = function(track,scenario,client,server,previous) {
                 $uibModal.open({
                     templateUrl: 'modalTemplates/result.html',
                     controller: 'resultCtrl',
@@ -178,7 +186,13 @@ angular.module("sampleApp")
                             return client;
                         },
                         previousResult : function() {
-                            return ecosystemSvc.getScenarioResult(scenario,client,server)
+                            if (previous) {
+                                return previous
+                            } else {
+                                //assumes this is from client/server
+                                return ecosystemSvc.getScenarioResult(scenario,client,server)
+                            }
+
                         }
                     }
                 }).result.then(function(vo){
@@ -190,6 +204,19 @@ angular.module("sampleApp")
 
                 });
 
+            };
+
+            $scope.editTestResult = function(result) {
+                console.log(result);
+               // return;
+                if (result.type == 'direct') {
+                    //this result is directly against a scenario...
+                    $scope.addTestResult(result.track,result.scenario,null,null,result)
+                } else {
+                    //this is from client/server
+                    $scope.addTestResult(result.track,result.scenario,result.client,result.server,result)
+                   // $scope.addTestResult = function(track,scenario,client,server,previous)
+                }
             };
 
             $scope.addServerToScenario = function(scenario) {
@@ -334,15 +361,6 @@ angular.module("sampleApp")
 
             }
 
-            $scope.addClientToScenarioDEP = function(scenario) {
-                //todo expand to a full server object...
-                var ip = $window.prompt("Enter Client name","client 1");
-                if (ip) {
-                    ecosystemSvc.addClientToScenario(scenario,ip)
-                }
-
-            };
-
             $scope.selectTrack = function(track) {
                 delete $scope.selectedScenario;
                 delete $scope.selectedRole;
@@ -412,7 +430,6 @@ angular.module("sampleApp")
 
             };
 
-            //$scope.
 
 
             function showError(msg) {

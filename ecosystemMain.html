@@ -17,8 +17,9 @@
     <script src="js/libs/angular-chart.js"></script>
 
     <script>
-        angular.module("sampleApp",['ui.bootstrap','ngSanitize','ngStorage','chart.js']).config(function($locationProvider) {
-            $locationProvider.html5Mode(true);
+        angular.module("sampleApp",['ui.bootstrap','ngSanitize','ngStorage','chart.js']).
+        config(function($locationProvider) {
+           // $locationProvider.html5Mode(true);
             $locationProvider.hashPrefix('!');
         });
 
@@ -95,7 +96,8 @@
     <script src="js/addClientCtrl.js"></script>
     <script src="js/addServerCtrl.js"></script>
     <script src="js/editPersonCtrl.js"></script>
-
+    <script src="js/ecoUtilitiesSvc.js"></script>
+    <script src="js/editTrackCtrl.js"></script>
 </head>
 <body style="padding: 8px;padding-top: 80px" >
 
@@ -111,26 +113,16 @@
                 </a>
             </div>
 
-
             <div class="col-md-4 col-sm-4">
 
             </div>
         </div>
     </nav>
 
-
-
-
     <div class="row">
 
         <div class="col-sm-12 col-md-12">
             <uib-tabset>
-                <uib-tab heading="Documentation">
-                    <br/>
-
-                    <iframe width="100%" height="900px" src="/artifacts/docs.html"></iframe>
-
-                </uib-tab>
 
                 <uib-tab heading="Track Descriptions">
                     <br/>
@@ -233,9 +225,6 @@
 
 
                                         <div class="col-sm-8 col-md-8" ng-show="selectedScenario">
-
-
-
                                             <p ng-bind-html="selectedScenario.description"></p>
 
                                             <div class="row" ng-show="selectedScenario.action">
@@ -326,6 +315,8 @@
                                     </div>
                                 </div>
                             </div>
+
+
                         </div>
                     </div>
 
@@ -339,7 +330,7 @@
                     </div>
 -->
                     <div class="row">
-                        <div class="col-sm-6 col-md-6">
+                        <div class="col-sm-5 col-md-5">
                             <table class="table table-bordered">
                                 <tr><th>Name</th><th>Organization</th><th>Contacts</th><th><button class="btn btn-link pull-right" ng-click="editPerson()">New Person</button></th></tr>
                                 <tr ng-repeat="person in allPersons">
@@ -354,7 +345,7 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="col-sm-6 col-md-6" ng-show="personSummary">
+                        <div class="col-sm-7 col-md-7" ng-show="personSummary">
 
                             <div class="banner">{{personSummary.person.name}}</div>
                             <h4>Clients</h4>
@@ -399,12 +390,13 @@
                             <h4>Asserted results</h4>
                             <div ng-show="personSummary.results.length == 0">None yet.</div>
                             <table class="table table-bordered" ng-show="personSummary.results.length > 0">
-                                <tr><th>Track</th></th><th>Scenario</th><th>Client</th><th>Server</th><th>Result</th><th>Note</th></tr>
+                                <tr><th>Type<th>Track</th></th><th>Scenario</th><th>Client</th><th>Server</th><th>Result</th><th>Note</th></tr>
                                 <tr ng-repeat = "result in personSummary.results">
+                                    <td>{{result.type}}</td>
                                     <td>{{result.track.name}}</td>
                                     <td>{{result.scenario.name}}</td>
-                                    <td>{{result.client.client.name}} ({{result.client.role.name}})</td>
-                                    <td>{{result.server.server.name}} ({{result.server.role.name}})</td>
+                                    <td><div ng-show="result.client">{{result.client.client.name}} ({{result.client.role.name}})</div></td>
+                                    <td><div ng-show="result.server">{{result.server.server.name}} ({{result.server.role.name}})</div></td>
                                     <td>{{result.text}}</td>
                                     <td>{{result.note}}</td>
                                 </tr>
@@ -494,68 +486,71 @@
                             </div>
                         </div>
                         <div class="col-sm-10 col-md-10">
-                            <p class="rounded-box">This is used when a scenario only uses 2 participants - a client and a server</p>
-                            <div ng-repeat="scenario in selectedTrack.scenarios track by $index">
+                            <uib-tabset>
+                                <uib-tab heading="Client/Server">
+                                    <br/>
+                                    <p class="banner">This is used when a scenario only uses 2 participants - a client and a server</p>
+                                    <div ng-repeat="scenario in selectedTrack.scenarios track by $index">
 
-                                <div class="banner" style="height: 40px">{{scenario.name}}
+                                        <div class="banner" style="height: 40px">{{scenario.name}}
 
-                                    <span class="pull-left">
+                                            <span class="pull-left">
                                     <button class="btn btn-link" ng-click="addClientToScenario(scenario)">Add Client</button>
                                 </span>
 
-                                    <span class="pull-right">
+                                            <span class="pull-right">
                                     <button class="btn btn-link" ng-click="addServerToScenario(scenario)">Add Server</button>
                                 </span>
 
-                                </div>
-<!--
-                                {{scenario.clients.length}} {{scenario.servers.length}}
-                                <div ng-show="! scenario.clients && !scenario.servers">
-                                    <em>You need to add at least one server and one client to record test results</em>
-                                </div>
+                                        </div>
+                                        <!--
+                                                                        {{scenario.clients.length}} {{scenario.servers.length}}
+                                                                        <div ng-show="! scenario.clients && !scenario.servers">
+                                                                            <em>You need to add at least one server and one client to record test results</em>
+                                                                        </div>
 
-                                <div ng-show="scenario.clients.length == 0 && scenario.servers.length > 0">
-                                    <em>You need to add at least one client as well to record test results</em>
-                                </div>
+                                                                        <div ng-show="scenario.clients.length == 0 && scenario.servers.length > 0">
+                                                                            <em>You need to add at least one client as well to record test results</em>
+                                                                        </div>
 
-                                <div ng-show="scenario.servers.length ==0 && scenario.clients.length == 0">
-                                    <em>You need to add at least one server as well to record test results</em>
-                                </div>
--->
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-12">
+                                                                        <div ng-show="scenario.servers.length ==0 && scenario.clients.length == 0">
+                                                                            <em>You need to add at least one server as well to record test results</em>
+                                                                        </div>
+                                        -->
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12">
 
 
-                                        <table class="table table-bordered">
-                                            <tr>
-                                                <td width="150px"  >
-                                                    <!--
-                                                    <button class="btn btn-link" ng-click="addClientToScenario(scenario)">Add Client</button>
-                                                    -->
-                                                </td>
-                                                <th ng-repeat="server in scenario.servers">
-                                                    {{server.server.name}}
-                                                    <div><em>({{server.role.name}})
-                                                        <i class="clickable glyphicon glyphicon-remove-sign"
-                                                           title="Remove server" ng-click="removeServerFromScenario(scenario,server)">
-                                                        </i>
+                                                <table class="table table-bordered">
+                                                    <tr>
+                                                        <td width="150px"  >
+                                                            <!--
+                                                            <button class="btn btn-link" ng-click="addClientToScenario(scenario)">Add Client</button>
+                                                            -->
+                                                        </td>
+                                                        <th ng-repeat="server in scenario.servers">
+                                                            {{server.server.name}}
+                                                            <div><em>({{server.role.name}})
+                                                                <i class="clickable glyphicon glyphicon-remove-sign"
+                                                                   title="Remove server" ng-click="removeServerFromScenario(scenario,server)">
+                                                                </i>
 
-                                                    </em></div>
-                                                </th>
-                                            </tr>
+                                                            </em></div>
+                                                        </th>
+                                                    </tr>
 
-                                            <tr ng-repeat="client in scenario.clients">
-                                                <td ><strong>
-                                                    {{client.client.name}}
-                                                    <div><em>({{client.role.name}})</em>
-                                                        <i class="clickable glyphicon glyphicon-remove-sign"
-                                                           title="Remove client" ng-click="removeClientFromScenario(scenario,client)">
-                                                        </i>
-                                                    </div>
-                                                </strong>
-                                                </td>
-                                                <td  ng-repeat="server in scenario.servers">
-                                                    <a href="#" ng-click="addTestResult(selectedTrack,scenario,client,server)">
+                                                    <tr ng-repeat="client in scenario.clients">
+                                                        <td ><strong>
+                                                            {{client.client.name}}
+                                                            <div><em>({{client.role.name}})</em>
+                                                                <i class="clickable glyphicon glyphicon-remove-sign"
+                                                                   title="Remove client" ng-click="removeClientFromScenario(scenario,client)">
+                                                                </i>
+                                                            </div>
+                                                        </strong>
+                                                        </td>
+                                                        <td  ng-repeat="server in scenario.servers">
+                                                            <a href="#" ng-click="addTestResult(selectedTrack,scenario,client,server)">
                                                         <span uib-popover={{showTestResultNote(scenario,client,server)}}
                                                               popover-placement="left"
                                                               popover-trigger="'mouseenter'">
@@ -571,24 +566,88 @@
 
 
                                                         </span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <!--
+                                            <div class="col-sm-2 col-md-2">
+
+                                                <button class="btn btn-link" ng-click="addServerToScenario(scenario)">Add Server</button>
+
+                                            </div>
+                                            -->
+                                        </div>
+                                        <!--
+                                        <pre>{{scenario | json}}</pre>
+        -->
+
                                     </div>
-                                    <!--
-                                    <div class="col-sm-2 col-md-2">
 
-                                        <button class="btn btn-link" ng-click="addServerToScenario(scenario)">Add Server</button>
+
+                                </uib-tab>
+
+                                <uib-tab heading="Scenario Direct">
+                                    <br/>
+                                    <p class="banner">This allows a result to be recorded directly against a scenario</p>
+                                    <div class="row">
+
+                                        <div class="col-md-3 col-sm-3">
+                                            <ul class="list-group">
+                                                <li ng-class="{'list-group-item':1,
+                                                    'listItemSelected':selectedScenarioDirect.id == scenario.id}"
+                                                    style="cursor: pointer"
+                                                    ng-repeat="scenario in selectedTrack.scenarios"
+                                                    ng-click="selectScenarioDirect(scenario)">
+                                                    {{scenario.name}}
+
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                        <div class="col-md-9 col-sm-9">
+                                            <div ng-show="selectedScenarioDirect">
+
+
+                                                <table class="table table-bordered">
+                                                    <tr>
+                                                        <th>Type</th><th>Asserter</th><th>Result</th>
+                                                        <th>Note</th><th>Trackers</th>
+                                                    </tr>
+                                                    <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(selectedScenarioDirect)">
+                                                        <td>{{result.type}}</td>
+                                                        <td>{{result.asserter.name}}</td>
+                                                        <td>{{result.text}}</td>
+
+                                                        <td>{{result.note}}</td>
+                                                        <td>
+                                                            <div ng-repeat="tracker in result.trackers">
+                                                                {{tracker.url}}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <a href="#" ng-click="editTestResult(result)">edit</a>
+                                                        </td>
+
+
+                                                    </tr>
+                                                </table>
+
+
+
+
+                                                <a href="#" ng-click="addTestResult(selectedTrack,selectedScenarioDirect,null,null)">Add new result</a>
+                                            </div>
+                                        </div>
 
                                     </div>
-                                    -->
-                                </div>
-                                <!--
-                                <pre>{{scenario | json}}</pre>
--->
 
-                            </div>
+                                </uib-tab>
+
+                            </uib-tabset>
+
+
 
                         </div>
 
@@ -611,7 +670,7 @@
                             <table class="table table-bordered">
                                 <tr>
                                     <th>Track</th><th>Scenario</th><th>Participants</th><th>Asserter</th><th>Result</th>
-                                    <th>Note</th><!--<th>Key--> </th>
+                                    <th>Note</th><th>Trackers</th>
                                 </tr>
                                 <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults()">
 
@@ -630,6 +689,11 @@
                                     <td>{{result.text}}</td>
 
                                     <td>{{result.note}}</td>
+                                    <td>
+                                        <div ng-repeat="tracker in result.trackers">
+                                            {{tracker.url}}
+                                        </div>
+                                    </td>
                                     <!--<td>{{key}}</td>-->
 
                                 </tr>
@@ -734,7 +798,18 @@
 
 -->
                 </uib-tab>
+
+                <uib-tab heading="Documentation">
+                    <br/>
+
+                    <iframe width="100%" height="900px" src="/artifacts/docs.html"></iframe>
+
+                </uib-tab>
+
+
 <!--
+ ng-controller = "editTrackCtrl"
+
                 <uib-tab heading="List">
                     <br/>
                     <select ng-model="input.filterRole" ng-change="setFilter()"
