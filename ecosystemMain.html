@@ -743,7 +743,14 @@
                                 </div>
                                 <div class="col-md-9 col-sm-9">
                                     <uib-tabset>
+                                        <uib-tab heading="All scenario summary">
+                                            <br/>
+                                            <canvas id="bar" class="chart chart-bar" chart-options="barOptions"
+                                                    chart-data="barData" chart-labels="barLabels" chart-series="barSeries">
+                                            </canvas>
+                                        </uib-tab>
                                         <uib-tab heading="Summary by Scenario">
+                                            <br/>
                                             <div class="row">
 
                                                 <div class="col-md-4 col-sm-4">
@@ -777,7 +784,15 @@
                                                     <canvas id="pie" class="chart chart-pie"
                                                             chart-data="chartData" chart-labels="chartLabels" chart-options="chartOptions" chart-colors="chartColors">
                                                     </canvas>
+
+
+
+
                                                 </div>
+
+
+
+
 
                                             </div>
                                         </uib-tab>

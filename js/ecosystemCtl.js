@@ -12,6 +12,31 @@ angular.module("sampleApp")
             $scope.chartOptions = {legend:{display:true}}
 */
 
+            Chart.defaults.global.colors = ['#00cc00','#cc3300','#ffff99']; //for the stacked bar chart...
+/*
+            $scope.barLabels = ['Scenario1', 'Scenario2', 'Scenario3', 'Scenario4'];
+            $scope.barSeries = ['Pass', 'Fail','Partial'];
+
+            $scope.barOptions = {scales: {
+                yAxes: [{
+                    stacked: true,
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }],xAxes: [{
+                    stacked: true
+
+                }]
+            }};
+
+            //$scope.barOptions = {'chart-colors':['#00cc00','#cc3300','#ffff99']};
+
+            $scope.barData = [
+                [7, 4, 4, 5],  //pass
+                [5, 3, 7, 5], //fail
+                [8, 3, 3, 5]
+            ];
+*/
             ecosystemSvc.getConnectathonResources().then(
                 function(vo) {
                     console.log(vo)
@@ -95,9 +120,58 @@ angular.module("sampleApp")
                 $scope.resultsSummary = ecosystemSvc.getTrackResults(track); //get a summary object for the results for a track
 
 
+                console.log($scope.resultsSummary)
                 //set the scenario list
 
+                //set the options for the stacked bar chart
+                $scope.barSeries = ['Pass', 'Fail','Partial'];
+                $scope.barOptions = {scales: {
+                    yAxes: [{
+                        stacked: true,
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }],xAxes: [{
+                        stacked: true
 
+                    }]
+                }};
+                $scope.barLabels = [];
+                var arPass=[], arFail=[],arPartial=[]
+                track.scenarios.forEach(function (scenario) {
+                    $scope.barLabels.push(scenario.name)
+                    var scenarioSummary = $scope.resultsSummary.scenario[scenario.name];
+                    if (scenarioSummary) {
+                        arPass.push(scenarioSummary.pass)
+                        arFail.push(scenarioSummary.fail)
+                        arPartial.push(scenarioSummary.partial)
+                    } else {
+                        arPass.push(0)
+                        arFail.push(0)
+                        arPartial.push(0)
+                    }
+                    console.log(scenarioSummary)
+
+                });
+
+                //$scope.barLabels = ['Scenario1', 'Scenario2', 'Scenario3', 'Scenario4'];
+                $scope.barData = [arPass,arFail,arPartial]
+/*
+                $scope.barData = [
+                    [7, 4, 4, 5],  //pass
+                    [5, 3, 7, 5], //fail
+                    [8, 3, 3, 5]
+                ];
+
+
+
+                angular.forEach($scope.resultsSummary.scenario,function(value,key){
+                    // $scope.chartLabels.push(key)
+
+                })
+                */
+
+/*
                 //set the chart values...
                 $scope.chartLabels = [];// ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
                 $scope.chartData = []; //[300, 500, 100];
@@ -106,7 +180,7 @@ angular.module("sampleApp")
                 angular.forEach($scope.resultsSummary.scenario,function(value,key){
                    // $scope.chartLabels.push(key)
                 })
-
+*/
             };
 
             $scope.selectScenarioResults = function(scenario) {
