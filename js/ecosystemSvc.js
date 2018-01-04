@@ -252,19 +252,24 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
         },
 
-        makeResultsDownloadObject : function () {
+        makeResultsDownloadObject : function (track) {
+            //if track specified, then only include results for that track...
             var obj = {name:'connectathon 17',results:[]};
             angular.forEach(allResults,function(value,key) {
                 var lne = {};
                 lne.track = value.track.name;
                 lne.scenario = value.scenario.name;
+                lne.type = value.type;
                 lne.participants = [];
 
-                var p = {name:value.server.server.name,role:value.server.role.name,systemRole:'server'};
-                lne.participants.push(p)
-                var p = {name:value.client.client.name,role:value.client.role.name,systemRole:'client'};
-                lne.participants.push(p)
-
+                if (value.server) {
+                    var p = {name:value.server.server.name,role:value.server.role.name,systemRole:'server'};
+                    lne.participants.push(p)
+                }
+                if (value.client) {
+                    var p = {name: value.client.client.name, role: value.client.role.name, systemRole: 'client'};
+                    lne.participants.push(p)
+                }
                 /* - leave for when we want to support multiple partipants...
                 value.participants.forEach(function (part) {
                     var p = {name:part.participant.name,role:part.role.name,systemRole:part.systemRole};
@@ -274,7 +279,17 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 */
                 lne.result = value.text;
                 lne.note = value.note;
-                obj.results.push(lne)
+
+                if (track) {
+                    if (value.track.id == track.id) {
+                        obj.results.push(lne)
+                    }
+                } else {
+                    obj.results.push(lne)
+                }
+
+
+
 
             });
             return obj;
@@ -347,7 +362,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             return deferred.promise;
             */
         },
-        getAllResults : function(scenario) {
+        getAllResults : function(track,scenario) {
             var allResultsCopy = allResults;
 
             if (scenario) {
@@ -357,6 +372,17 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     if (result.scenario.id == scenario.id) {
 
                         resp[key] = result
+                    }
+                });
+                return resp;
+
+            } else if (track) {
+                //we want all the results for a track
+                var resp = {};
+                angular.forEach(allResultsCopy,function (result,key) {
+                    if (result.track.id == track.id) {
+
+                        resp[key] = result;
                     }
                 });
                 return resp;

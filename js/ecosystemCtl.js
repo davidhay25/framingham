@@ -263,14 +263,16 @@ angular.module("sampleApp")
                 });
             };
 
-            $scope.download = function(downloadThing) {
+            $scope.download = function(downloadThingType,track) {
                 var object;
-                switch (downloadThing) {
+                switch (downloadThingType) {
                     case 'results' :
-                        object = ecosystemSvc.makeResultsDownloadObject();  //a simplified object
+                        object = ecosystemSvc.makeResultsDownloadObject(track);  //a simplified object
                         //object = ecosystemSvc.makeResultsDownload();  //csv option not working...
                         break;
                 }
+
+
 
                 if (! object) {
                     alert('no download specified');

@@ -615,7 +615,7 @@
                                                         <th>Type</th><th>Asserter</th><th>Result</th>
                                                         <th>Note</th><th>Trackers</th>
                                                     </tr>
-                                                    <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(selectedScenarioDirect)">
+                                                    <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(null,selectedScenarioDirect)">
                                                         <td>{{result.type}}</td>
                                                         <td>{{result.asserter.name}}</td>
                                                         <td>{{result.text}}</td>
@@ -661,7 +661,7 @@
 
                     <uib-tabset>
 
-                        <uib-tab heading="Details of all tests">
+                        <uib-tab heading="All tests">
                             <br/>
 
 
@@ -677,8 +677,12 @@
                                     <td>{{result.track.name}}</td>
                                     <td>{{result.scenario.name}}</td>
                                     <td>
-                                        <div>Client: {{result.client.client.name}}</div>
-                                        <div>Server: {{result.server.server.name}}</div>
+                                        <div ng-show="result.client">Client: {{result.client.client.name}}
+                                            ({{result.client.role.name}})
+                                        </div>
+                                        <div ng-show="result.server">Server: {{result.server.server.name}}
+                                            ({{result.server.role.name}})
+                                        </div>
                                         <!--
                                         <div ng-repeat="part in result.participants">
                                             {{part.systemRole}}:  {{part.participant.name}} ({{part.role.name}})
@@ -703,7 +707,7 @@
                         </uib-tab>
 
 
-                        <uib-tab heading="Summary by track">
+                        <uib-tab heading="Analysis by track">
                             <br/>
                             <div class="row">
                                 <div class="col-md-3 col-sm-3">
@@ -739,7 +743,7 @@
                                 </div>
                                 <div class="col-md-9 col-sm-9">
                                     <uib-tabset>
-                                        <uib-tab heading="By Scenario">
+                                        <uib-tab heading="Summary by Scenario">
                                             <div class="row">
 
                                                 <div class="col-md-4 col-sm-4">
@@ -777,7 +781,51 @@
 
                                             </div>
                                         </uib-tab>
-                                        <uib-tab heading="Totals">
+                                        <uib-tab heading="Details all scenarios this track">
+
+                                            <br/>
+
+
+                                            <button class="btn btn-link pull-right"
+                                                    ng-click="download('results',selectedTrackSummary)">Download results</button>
+
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <th>Scenario</th><th>Participants</th><th>Asserter</th><th>Result</th>
+                                                    <th>Note</th><th>Trackers</th>
+                                                </tr>
+                                                <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(selectedTrackSummary)">
+
+
+                                                    <td>{{result.scenario.name}}</td>
+                                                    <td>
+                                                        <div ng-show="result.client">Client: {{result.client.client.name}}
+                                                            ({{result.client.role.name}})
+                                                        </div>
+                                                        <div ng-show="result.server">Server: {{result.server.server.name}}
+                                                            ({{result.server.role.name}})
+                                                        </div>
+                                                        <!--
+                                                        <div ng-repeat="part in result.participants">
+                                                            {{part.systemRole}}:  {{part.participant.name}} ({{part.role.name}})
+                                                        </div>
+                                                        -->
+                                                    </td>
+                                                    <td>{{result.asserter.name}}</td>
+                                                    <td>{{result.text}}</td>
+
+                                                    <td>{{result.note}}</td>
+                                                    <td>
+                                                        <div ng-repeat="tracker in result.trackers">
+                                                            {{tracker.url}}
+                                                        </div>
+                                                    </td>
+                                                    <!--<td>{{key}}</td>-->
+
+                                                </tr>
+                                            </table>
+
+
 
                                         </uib-tab>
                                     </uib-tabset>
