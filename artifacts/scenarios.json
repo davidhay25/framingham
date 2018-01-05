@@ -109,19 +109,10 @@
     {"id":"s16-7","name":"Comprehensive pathology report", "roleIds":[]},
     {"id":"s16-8","name":"Sequence quality", "roleIds":[]},
 
-
-
-    {"id":"s17-1","name":"Scenario (mACM) Crisis response", "roleIds":[]},
+    {"id":"s17-1","name":"Scenario (mACM) Crisis response", "roleIds":["r17-1","r17-2","r17-3","r17-4","r17-5","r17-6","r17-7","r17-8","r17-9","r17-10"]},
     {"id":"s17-2","name":"MHD document publication", "roleIds":[]},
     {"id":"s17-3","name":"MHD document discovery & retrieval", "roleIds":[]},
     {"id":"s17-4","name":"mXDE Reconstruct patient history from document trail", "roleIds":[]},
-
-    {"id":"","name":"", "roleIds":[]},
-    {"id":"","name":"", "roleIds":[]},
-    {"id":"","name":"", "roleIds":[]},
-    {"id":"","name":"", "roleIds":[]},
-
-
 
     {"id":"s18a-1","name":"Eligibility",
       "description":"Submit an Eligibility, Retrieve/Receive an EligibilityResponse", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
@@ -139,6 +130,18 @@
       "description":"Retrieve a PaymentReconciliation via ProcessRequest", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
     {"id":"s18a-8","name":"Retrieve EOB",
       "description":"Retrieve an ExplanationOfBenefit via ProcessRequest", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
+
+    {"id":"s20-1","name":"Register device", "roleIds":["r20-1","r20-2","r20-3"]},
+    {"id":"s20-2","name":"Start procedure at Point Of Care", "roleIds":[]},
+    {"id":"s20-3","name":"Complete Procedure", "roleIds":[]},
+    {"id":"s20-4","name":"Complete Implantable procedure", "roleIds":[]},
+    {"id":"s20-5","name":"Search Procedures", "roleIds":[]},
+    {"id":"s20-6","name":"Search devices", "roleIds":[]},
+
+    {"id":"s21-1","name":"Match existing Patient (same server)", "roleIds":["r21-1","r21-2"]},
+    {"id":"s21-2","name":"Match existing Patient (remote server)", "roleIds":[]},
+    {"id":"s21-3","name":"Match partial Patient", "roleIds":[]},
+
 
 
     {"id":"s22-1","name":"Register a new patient", "roleIds":["r22-1","r22-2"],
@@ -171,7 +174,36 @@
       "description":"Delete a patient",
       "action":"FHIR client deletes the patient with a given id",
       "precondition":"a Patients with that Id has been created",
-      "success":"Subsequently querying for the patient - either searching by name or by Id - fails."}
+      "success":"Subsequently querying for the patient - either searching by name or by Id - fails."},
+
+
+    {"id":"s25-1","name":"Process Order", "roleIds":["r25-1","r25-2","r25-3","r25-4"]},
+
+
+    {"id":"s26-1","name":"Directory search", "roleIds":["r26-1","r26-2"]},
+
+
+
+    {"id":"s27-1","name":"Availability search", "roleIds":["r27-1","r27-2"]},
+    {"id":"s27-2","name":"Book Appointment", "roleIds":[]},
+    {"id":"s27-3","name":"Confirm & Process appointment", "roleIds":[]},
+    {"id":"s27-4","name":"Cancel Appointment", "roleIds":[]},
+    {"id":"s27-5","name":"Amend appointment", "roleIds":[]},
+
+
+
+    {"id":"s28-1","name":"ValueSet $expand", "roleIds":["r28-1","r28-2"]},
+    {"id":"s28-2","name":"CodeSystem $lookup", "roleIds":[]},
+    {"id":"s28-3","name":"CodeSystem $subsumes", "roleIds":[]},
+    {"id":"s28-4","name":"CodeSystem $translate", "roleIds":[]},
+    {"id":"s28-5","name":"ValueSet $validate-code", "roleIds":[]},
+
+
+
+    {"id":"s29-1","name":"Specify server version", "roleIds":[]},
+    {"id":"s29-2","name":"Server version discovery", "roleIds":[]},
+    {"id":"s29-3","name":"Explicit version conversion", "roleIds":[]},
+    {"id":"s29-4","name":"Implicit version conversion", "roleIds":[]}
 
 
   ]

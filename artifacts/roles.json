@@ -95,21 +95,25 @@
     {"id":"r15-2","name":"Subscribing Client","description":""},
 
 
-    {"id":"r16-1","name":"Alert Reporter",
-      "role":"server","description":""},
-    {"id":"r16-2","name":"Alert Aggregator","role":"client","description":""},
+    {"id":"r16-1","name":"FHIR Client",
+      "role":"","description":""},
+    {"id":"r16-2","name":"FHIR Server","role":"","description":""},
+
+    {"id":"r17-1","name":"Alert Reporter",
+      "role":"","description":""},
+    {"id":"r17-2","name":"Alert Aggregator","role":"","description":""},
     {"id":"r17-3","name":"Document Recipient",
       "role":"","description":""},
-    {"id":"r17-4","name":"Document Responder","role":"client","description":""},
+    {"id":"r17-4","name":"Document Responder","role":"","description":""},
     {"id":"r17-5","name":"Document Source",
       "role":"","description":""},
-    {"id":"r17-6","name":"Document Consumer","role":"client","description":""},
+    {"id":"r17-6","name":"Document Consumer","role":"","description":""},
     {"id":"r17-7","name":"Patient Demographics Supplier",
       "role":"","description":""},
-    {"id":"r17-8","name":"Patient Demographics Consumer","role":"client","description":""},
+    {"id":"r17-8","name":"Patient Demographics Consumer","role":"","description":""},
     {"id":"r17-9","name":"Patient Identifier Cross reference manager",
       "role":"","description":""},
-    {"id":"r17-10","name":"Patient Identifier Cross reference consumer","role":"client","description":""},
+    {"id":"r17-10","name":"Patient Identifier Cross reference consumer","role":"","description":""},
 
 
 
@@ -148,12 +152,77 @@
       "role":"server",
       "description":"Support the receiving and processing of the ProcessRequest resource and creation of the ExplanationOfBenefit resource."},
 
+
+
+    {"id":"r20-1","name":"Point of Care device reporter",
+      "role":"",
+      "description":""},
+    {"id":"r20-2","name":"Medical Device Server",
+      "role":"",
+      "description":""},
+    {"id":"r20-3","name":"POC device requester",
+      "role":"",
+      "description":""},
+
+
+
+    {"id":"r21-1","name":"Patient Match Server",
+      "role":"",
+      "description":""},
+    {"id":"r21-2","name":"Patient Match Client",
+      "role":"",
+      "description":""},
+
+
     {"id":"r22-1","name":"Patient Client",
       "role":"client",
       "description":"A client that can create and query Patient resources"},
     {"id":"r22-2","name":"Patient Server",
       "role":"server",
-      "description":"A server that can store & expose Patient resources"}
+      "description":"A server that can store & expose Patient resources"},
+
+
+    {"id":"r25-1","name":"PGx CDS Service",
+      "role":"",
+      "description":""},
+    {"id":"r25-2","name":"OMIC Data Store",
+      "role":"",
+      "description":""},
+    {"id":"r25-3","name":"EHR",
+      "role":"",
+      "description":""},
+    {"id":"r25-4","name":"Terminology Service",
+      "role":"",
+      "description":""},
+
+    {"id":"r26-1","name":"Provider Directory",
+      "role":"",
+      "description":""},
+    {"id":"r26-2","name":"Client",
+      "role":"",
+      "description":""},
+
+    {"id":"r27-1","name":"Appointment server",
+      "role":"",
+      "description":""},
+    {"id":"r27-2","name":"Client",
+      "role":"",
+      "description":""},
+
+    {"id":"r28-1","name":"Server",
+      "role":"",
+      "description":""},
+    {"id":"r28-2","name":"Client",
+      "role":"",
+      "description":""},
+
+    {"id":"r29-1","name":"Server",
+      "role":"",
+      "description":""},
+    {"id":"r29-2","name":"Client",
+      "role":"",
+      "description":""}
+
 
 
 

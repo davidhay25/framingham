@@ -67,23 +67,30 @@
       "scenarioIds":["s17-1","s17-2","s17-3","s17-4"]},
 
     {"id":"t20","name":"Medical Device - UDI",
-      "url":"http://wiki.hl7.org/index.php?title=201801_Medical_Device_and_Implantables_Tracking_using_UDI","scenarios":[]},
+      "url":"http://wiki.hl7.org/index.php?title=201801_Medical_Device_and_Implantables_Tracking_using_UDI","scenarios":[],
+      "scenarioIds":["s20-1","s20-2","s20-3","s20-4"]
+    },
 
-    {"id":"t22","name":"Patient *",
+    {"id":"t22","name":"Patient",
       "url":"http://wiki.hl7.org/index.php?title=201801_Patient_Track","scenarios":[],
       "scenarioIds":["s22-1","s22-2","s22-3","s22-4","s22-5"]},
 
-    {"id":"t24","name":"Patient Match",
+    {"id":"t24","name":"Patient Match","scenarioIds":["s21-1","s12-2","s21-3"],
       "url":"http://wiki.hl7.org/index.php?title=201801_Patient_Match","scenarios":[]},
-    {"id":"t25","name":"Pharmacogenomics",
+
+    {"id":"t25","name":"Pharmacogenomics","scenarioIds":["s25-1"],
       "url":"http://wiki.hl7.org/index.php?title=201801_Pharmacogenomics_CDS","scenarios":[]},
-    {"id":"t26","name":"Provider Directory",
+
+    {"id":"t26","name":"Provider Directory","scenarioIds":["s26-1"],
       "url":"http://wiki.hl7.org/index.php?title=201801_Provider_Directory","scenarios":[]},
-    {"id":"t27","name":"Scheduling",
+
+    {"id":"t27","name":"Scheduling","scenarioIds":["s27-1","s27-2","s27-3","s27-4","s27-5"],
       "url":"http://wiki.hl7.org/index.php?title=201801_Scheduling","scenarios":[]},
-    {"id":"t28","name":"Terminology Services",
+
+    {"id":"t28","name":"Terminology Services","scenarioIds":["s28-1","s28-2","s28-3","s28-4","s28-5"],
       "url":"http://wiki.hl7.org/index.php?title=201801_Terminology_Services_Track","scenarios":[]},
-    {"id":"t29","name":"Versioned API",
+
+    {"id":"t29","name":"Versioned API","scenarioIds":["s29-1","s29-2","s29-3","s29-4"],
       "url":"http://wiki.hl7.org/index.php?title=201801_Versioned_API","scenarios":[]}
   ]
 }
