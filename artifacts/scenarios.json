@@ -200,10 +200,13 @@
 
 
 
-    {"id":"s29-1","name":"Specify server version", "roleIds":[]},
+    {"id":"s29-1","name":"Specify server version", "roleIds":["r29-1","r29-2"]},
     {"id":"s29-2","name":"Server version discovery", "roleIds":[]},
     {"id":"s29-3","name":"Explicit version conversion", "roleIds":[]},
-    {"id":"s29-4","name":"Implicit version conversion", "roleIds":[]}
+    {"id":"s29-4","name":"Implicit version conversion", "roleIds":[]},
+
+    {"id":"s30-1","name":"Comment on App", "roleIds":["r30-1"],
+    "description":"Allows a user to make a comment about the app (using the 'Scenario Direct' sub tab in 'Testing')"}
 
 
   ]

@@ -1,59 +1,59 @@
 {
   "tracks" : [
-    {"id":"t1","name":"Apps for Imaging Research *",
+    {"id":"t1","name":"Apps for Imaging Research ",
       "url":"http://wiki.hl7.org/index.php?title=201801_Apps_for_Imaging_Research",
       "description": "The RSNA Image Share network was created (under a contract with NIH/NIBIB) to enable radiologists to share medical images with patients using personal health record (PHR) accounts, giving patients control over their medical images and radiology reports. <br/><br/> Beginning in 2017, Image Share has worked with the NIH Sync for Science (S4S) program, which is designed to allow patients to consent to have their medical records used for research and to enable research apps to search for and retrieve records from consenting patient from clinical systems for relevant research. <br/><br/>Image Share is working on adding medical images and radiology reports to the body of records available for sharing through S4S. The approach uses a combination of FHIR resources and DICOM web services with SMART on FHIR authorization to first search for (FHIR resources) and then retrieve (DICOM web services) radiology images.",
       "scenarioIds":["s1-1","s1-2","s1-3"],
       "leadIds": ["p1","p2"]
     },
-    {"id":"t2","name":"Attachments *",
+    {"id":"t2","name":"Attachments ",
       "url":"http://wiki.hl7.org/index.php?title=201801_Attachments",
       "description": "Electronic attachments are a high priority for processing claims and other payer/provider interactions. Current thinking has attachment submissions occurring via X12 messaging. However, there is substantial interest in experimenting with FHIR-based messaging for exchanging attachments. This track will explore the feasibility of this approach.",
       "scenarioIds":["s2-1","s2-2","s2-3"],
       "leadIds": ["p3","p4"]},
-    {"id":"t3","name":"Automated Profiling *",
+    {"id":"t3","name":"Automated Profiling ",
       "url":"http://wiki.hl7.org/index.php?title=201801_Automated_Profiling_From_Domain_Models",
       "description": "There is a practical gap between documenting the clinical content in a healthcare domain via a domain analysis model, and the ability to deliver a corresponding FHIR implementation. While it is possible with existing manual tools to create FHIR Profiles in small numbers, when a domain requires 20, 50, or 100 profiles, efficient specification and automation is required. This track will to test a proposed methodology for creating FHIR profiles that should make it possible to convert a domain analysis model to a set of FHIR profiles in a relatively simple, efficient manner. This track will also test the accuracy of profiles generated, by generating patients that conform to the profiles and exchanging them between servers/testing for compliance.  NOTE: This Connectathon track is agnostic to the approaches to logical modeling and FHIR Profiling. It is being supported by the Standard Health Record team, but any and all methods of modeling and profiling are welcomed and encouraged.",
       "scenarioIds":["s3-1","s3-2","s3-3","s3-4"],
       "leadIds": ["p5"]},
-    {"id":"t4","name":"Bulk Data *",
+    {"id":"t4","name":"Bulk Data ",
       "url":"http://wiki.hl7.org/index.php?title=201801_Bulk_Data","scenarioIds":["s4-1","s4-2","s4-3"],"scenarios":[]},
-    {"id":"t5","name":"Care Plan *",
+    {"id":"t5","name":"Care Plan ",
       "description": "Test Care Plan",
       "url":"http://wiki.hl7.org/index.php?title=201801_Care_Plan","scenarioIds":["s5-1","s5-2"],"scenarios":[]},
-    {"id":"t6","name":"Catalog *",
+    {"id":"t6","name":"Catalog ",
       "url":"http://wiki.hl7.org/index.php?title=201801_Catalog","scenarioIds":["s6-1","s6-2"],"scenarios":[]},
 
-    {"id":"t7","name":"CDS Hooks *",
+    {"id":"t7","name":"CDS Hooks ",
       "url":"http://wiki.hl7.org/index.php?title=201801_CDS_Hooks","scenarioIds":["s7-1","s7-2"],"scenarios":[]},
-    {"id":"t8","name":"Clinical Reasoning *"    ,
+    {"id":"t8","name":"Clinical Reasoning "    ,
       "url":"http://wiki.hl7.org/index.php?title=201801_Clinical_Reasoning","scenarioIds":["s8-1","s8-2","s8-3","s8-4","s8-5"],"scenarios":[]},
 
-    {"id":"t9","name":"Clinical Research *",
+    {"id":"t9","name":"Clinical Research ",
       "url":"http://wiki.hl7.org/index.php?title=201801_Clinical_Research","scenarioIds":["s9-1","s9-2","s9-3"],"scenarios":[]},
 
-    {"id":"t10","name":"Consumer Centered Data Exchange *",
+    {"id":"t10","name":"Consumer Centered Data Exchange ",
       "url":"http://wiki.hl7.org/index.php?title=201801_Consumer_Centered_Data_Exchange","scenarioIds":["s10-1","s10-2"],"scenarios":[]},
 
     {"id":"t11","name":"Devices",
       "url":"http://wiki.hl7.org/index.php?title=201801_Devices_on_FHIR_-_Postpartum_Preeclampsia_Care","scenarios":[]},
 
-    {"id":"t12","name":"Direct *",
+    {"id":"t12","name":"Direct ",
       "url":"http://wiki.hl7.org/index.php?title=201801_Direct_Track","scenarioIds":["s11-1","s11-2"],"scenarios":[]},
 
-    {"id":"t13","name":"Electronic Case Reporting *",
+    {"id":"t13","name":"Electronic Case Reporting ",
       "url":"http://wiki.hl7.org/index.php?title=201801_Electronic_Case_Reporting","scenarioIds":["s12-1","s12-2","s12-3"],"scenarios":[]},
 
-    {"id":"t14","name":"Encounter *",
+    {"id":"t14","name":"Encounter ",
       "url":"http://wiki.hl7.org/index.php?title=201801_Encounter","scenarioIds":["s13-1"],"scenarios":[]},
 
-    {"id":"t16","name":"FHIR Documents *",
+    {"id":"t16","name":"FHIR Documents ",
       "url":"http://wiki.hl7.org/index.php?title=201801_FHIR_Documents","scenarioIds":["s14-1","s14-2","s14-3","s14-4","s14-5"],"scenarios":[]},
 
-    {"id":"t17","name":"FHIR Subscriptions * ","scenarioIds":["s15-1","s15-2","s15-3"],
+    {"id":"t17","name":"FHIR Subscriptions  ","scenarioIds":["s15-1","s15-2","s15-3"],
       "url":"http://wiki.hl7.org/index.php?title=201801_FHIR_Subscriptions","scenarios":[]},
 
-    {"id":"t15","name":"Financial *",
+    {"id":"t15","name":"Financial ",
       "url":"http://wiki.hl7.org/index.php?title=201801_Financial_Management","scenarios":[],
       "description":"The FM resources for Claims and Reimbursement Resources are of interest internationally for implementing modern claim processing and connectathon exposure allows implementers to test and contribute to the resources as they are currently STU. Since September 2013 FM resources have gained maturity and been tested in many of the connectathons with increased complexity of the test scenarios with each successive connectathon.",
       "scenarioIds":["s18a-1","s18a-2","s18a-3","s18a-4","s18a-5","s18a-6","s18a-7","s18a-8"]
@@ -91,6 +91,9 @@
       "url":"http://wiki.hl7.org/index.php?title=201801_Terminology_Services_Track","scenarios":[]},
 
     {"id":"t29","name":"Versioned API","scenarioIds":["s29-1","s29-2","s29-3","s29-4"],
-      "url":"http://wiki.hl7.org/index.php?title=201801_Versioned_API","scenarios":[]}
+      "url":"http://wiki.hl7.org/index.php?title=201801_Versioned_API","scenarios":[]},
+
+    {"id":"t30","name":"App comments","scenarioIds":["s30-1"],
+      "url":"","scenarios":[]}
   ]
 }

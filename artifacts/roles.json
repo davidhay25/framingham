@@ -159,18 +159,18 @@
       "description":""},
     {"id":"r20-2","name":"Medical Device Server",
       "role":"",
-      "description":""},
+      "description":"server"},
     {"id":"r20-3","name":"POC device requester",
-      "role":"",
+      "role":"client",
       "description":""},
 
 
 
     {"id":"r21-1","name":"Patient Match Server",
-      "role":"",
+      "role":"server",
       "description":""},
     {"id":"r21-2","name":"Patient Match Client",
-      "role":"",
+      "role":"client",
       "description":""},
 
 
@@ -180,48 +180,51 @@
     {"id":"r22-2","name":"Patient Server",
       "role":"server",
       "description":"A server that can store & expose Patient resources"},
-
-
     {"id":"r25-1","name":"PGx CDS Service",
-      "role":"",
+      "role":"server",
       "description":""},
     {"id":"r25-2","name":"OMIC Data Store",
       "role":"",
-      "description":""},
+      "description":"server"},
     {"id":"r25-3","name":"EHR",
-      "role":"",
+      "role":"server",
       "description":""},
     {"id":"r25-4","name":"Terminology Service",
-      "role":"",
+      "role":"server",
       "description":""},
 
     {"id":"r26-1","name":"Provider Directory",
-      "role":"",
+      "role":"server",
       "description":""},
     {"id":"r26-2","name":"Client",
-      "role":"",
+      "role":"client",
       "description":""},
 
     {"id":"r27-1","name":"Appointment server",
-      "role":"",
+      "role":"server",
       "description":""},
     {"id":"r27-2","name":"Client",
-      "role":"",
+      "role":"client",
       "description":""},
 
     {"id":"r28-1","name":"Server",
-      "role":"",
+      "role":"server",
       "description":""},
     {"id":"r28-2","name":"Client",
-      "role":"",
+      "role":"client",
       "description":""},
 
     {"id":"r29-1","name":"Server",
-      "role":"",
+      "role":"server",
       "description":""},
     {"id":"r29-2","name":"Client",
-      "role":"",
-      "description":""}
+      "role":"client",
+      "description":""},
+
+    {"id":"r30-1","name":"App User",
+      "role":"client",
+      "description":"User of the Connectathon App"}
+
 
 
 

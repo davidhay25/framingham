@@ -12,7 +12,7 @@ angular.module("sampleApp")
             $scope.chartOptions = {legend:{display:true}}
 */
 
-            Chart.defaults.global.colors = ['#00cc00','#cc3300','#ffff99']; //for the stacked bar chart...
+            Chart.defaults.global.colors = ['#00cc00','#cc3300','#ffff99','#6E94FF']; //for the stacked bar chart...
 /*
             $scope.barLabels = ['Scenario1', 'Scenario2', 'Scenario3', 'Scenario4'];
             $scope.barSeries = ['Pass', 'Fail','Partial'];
@@ -124,7 +124,7 @@ angular.module("sampleApp")
                 //set the scenario list
 
                 //set the options for the stacked bar chart
-                $scope.barSeries = ['Pass', 'Fail','Partial'];
+                $scope.barSeries = ['Pass', 'Fail','Partial','Note'];
                 $scope.barOptions = {scales: {
                     yAxes: [{
                         stacked: true,
@@ -137,7 +137,7 @@ angular.module("sampleApp")
                     }]
                 }};
                 $scope.barLabels = [];
-                var arPass=[], arFail=[],arPartial=[]
+                var arPass=[], arFail=[],arPartial=[], arNote =[]
                 track.scenarios.forEach(function (scenario) {
                     $scope.barLabels.push(scenario.name)
                     var scenarioSummary = $scope.resultsSummary.scenario[scenario.name];
@@ -145,17 +145,19 @@ angular.module("sampleApp")
                         arPass.push(scenarioSummary.pass)
                         arFail.push(scenarioSummary.fail)
                         arPartial.push(scenarioSummary.partial)
+                        arNote.push(scenarioSummary.note)
                     } else {
                         arPass.push(0)
                         arFail.push(0)
                         arPartial.push(0)
+                        arNote.push(0)
                     }
                     console.log(scenarioSummary)
 
                 });
 
                 //$scope.barLabels = ['Scenario1', 'Scenario2', 'Scenario3', 'Scenario4'];
-                $scope.barData = [arPass,arFail,arPartial]
+                $scope.barData = [arPass,arFail,arPartial,arNote]
 /*
                 $scope.barData = [
                     [7, 4, 4, 5],  //pass
@@ -210,7 +212,11 @@ angular.module("sampleApp")
                         $scope.chartData.push(summary.partial)
                         $scope.chartColors.push('#ffff99')
                     }
-
+                    if (summary.note > 0) {
+                        $scope.chartLabels.push('note ');// + summary.pass);
+                        $scope.chartData.push(summary.note)
+                        $scope.chartColors.push('#6E94FF')
+                    }
 
 
 

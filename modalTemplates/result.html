@@ -37,14 +37,18 @@
                 <br/>
 
                 <div class="row">
-                    <div class="col-md-5 col-sm-5">
+                    <div class="col-md-6 col-sm-6">
+
                         <div class="btn-group">
                             <label class="btn btn-success" ng-model="input.radioModel" uib-btn-radio="'pass'">Pass</label>
                             <label class="btn btn-danger" ng-model="input.radioModel" uib-btn-radio="'fail'">Fail</label>
                             <label class="btn btn-warning" ng-model="input.radioModel" uib-btn-radio="'partial'">Partial</label>
+                            <label class="btn btn-primary" ng-model="input.radioModel" uib-btn-radio="'note'">Note</label>
                         </div>
+                        <div ng-show="input.radioModel">Current value: <strong>{{input.radioModel}}</strong></div>
+
                     </div>
-                    <div class="col-md-7 col-sm-7">
+                    <div class="col-md-6 col-sm-6">
                         <div ng-show="input.radioModel=='pass'">
                             Well done! Please add any notes you have and save...
                         </div>
@@ -54,13 +58,16 @@
                         <div ng-show="input.radioModel=='partial'">
                             Well, that's better than a fail! Please add the details in the box below...
                         </div>
+                        <div ng-show="input.radioModel=='note'">
+                            So not actually a test then? Fine - make sure you add the details in the box below...
+                        </div>
 
                     </div>
                 </div>
                 <br/>
 
                 <textarea class="form-control" ng-model="input.note"></textarea>
-                <br/>
+
 
 
 
@@ -106,8 +113,11 @@
 <div class="modal-header">
     <div class="row">
         <div class="col-md-8 col-sm-8">
-            <div>Server: {{server.server.name}} ({{server.role.name}})</div>
-            <div>Client: {{client.client.name}} ({{client.role.name}})</div>
+            <div ng-show="server">Server: {{server.server.name}} ({{server.role.name}})</div>
+            <div ng-show="client">Client: {{client.client.name}} ({{client.role.name}})</div>
+
+
+
             <em>You must select an asserter and a result to save.</em>
 
 

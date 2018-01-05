@@ -239,7 +239,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                     var scenarioName = value.scenario.name;
                     var scenarioId = value.scenario.id;
-                    summary.scenario[scenarioName] = summary.scenario[scenarioName] || {pass:0,fail:0,partial:0,total:0}
+                    summary.scenario[scenarioName] = summary.scenario[scenarioName] || {pass:0,fail:0,partial:0,note:0,total:0}
                     var item = summary.scenario[scenarioName];
                     item[value.text]++;         //todo - shoudl change the name of 'text'
                     item.total ++;
@@ -684,11 +684,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             $q.all(queries).then(
                 function(data) {
 
-                    //allResults = vo.allResults
-                    //the session cache for clients & servers.. todo - there's a race between this and getAllServers()...
-                    //allServers = vo.servers;
-                    //allClients = vo.clients;
-
                     allPersons = vo.persons;    //scoped to service
                     hashAllPersons = {};
                     allPersons.forEach(function(p){
@@ -721,7 +716,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                     var hashTrack = {};
                     vo.tracks.forEach(function (track) {
-                        track.resultTotals = {'pass':0,'fail':0,'partial':0}
+                        track.resultTotals = {'pass':0,'fail':0,'partial':0,'note':0}
                         hashTrack[track.id] = track
                     });
 

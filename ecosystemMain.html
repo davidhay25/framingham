@@ -24,7 +24,10 @@
         });
 
         angular.module("sampleApp").config(['$compileProvider', function ($compileProvider) {
-            $compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|):/);
+            //$compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|):/);
+
+            $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|blob):/);
+
         }]);
 
         window.onerror = function(message, url, linenumber) {
@@ -36,7 +39,7 @@
     <style>
 
         .trackScroll {
-            height: 700px;
+            height: 650px;
             overflow-y: scroll;
         }
 
@@ -81,6 +84,22 @@
             -moz-border-radius: 5px;
             border-radius: 5px;
             background-color: #FFC200;
+            color:white;
+
+        }
+
+        .note {
+            border : 1px solid #eeeeee;
+            padding : 5px;
+            display: inline-block;
+            text-align : center;
+            width: 50px;
+            margin: 0px;
+            /*margin-left : 10px;*/
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color:#6E94FF;
             color:white;
 
         }
@@ -173,7 +192,7 @@
                                     <strong>Wiki Page</strong>
                                 </div>
                                 <div class="col-sm-9 col-md-9">
-                                    <a target="_blank" ng-href="{{selectedTrack.url}}">{{selectedTrack.url}}</a>
+                                    <a target="_blank" ng-href="{{selectedTrack.url}}">{{selectedTrack.url}}</a> (Opens in a new tab)
                                 </div>
                             </div>
                             <br/>
@@ -198,6 +217,13 @@
                                         </div>
                                         <div class="col-sm-8 col-md-8">
                                             <p ng-bind-html="selectedRole.description"></p>
+
+                                            <div ng-show="selectedRole.role == 'client'">
+                                                This role acts as a Client in a Client/Server test
+                                            </div>
+                                            <div ng-show="selectedRole.role == 'server'">
+                                                This role acts as a Server in a Client/Server test
+                                            </div>
                                         </div>
                                     </div>
 
@@ -719,15 +745,16 @@
                                             ng-click="selectTrackResults(track)">
 
                                              <span class="pull-right badge"
-                                                   ng-show="track.resultTotals.pass || track.resultTotals.fail || track.resultTotals.partial"
-                                                   uib-popover="{{track.resultTotals.pass}} Pass / {{track.resultTotals.fail}} Fail / {{track.resultTotals.partial}} Partial"
+                                                   ng-show="track.resultTotals.pass || track.resultTotals.fail || track.resultTotals.partial || track.resultTotals.note"
+                                                   uib-popover="{{track.resultTotals.pass}} Pass / {{track.resultTotals.fail}} Fail / {{track.resultTotals.partial}} Partial / {{track.resultTotals.note}} Note"
                                                    popover-placement="top"
                                                    popover-append-to-body = true
                                                    popover-trigger="'mouseenter'">
 
                                                     {{track.resultTotals.pass}} /
                                                     {{track.resultTotals.fail}} /
-                                                    {{track.resultTotals.partial}}
+                                                    {{track.resultTotals.partial}} /
+                                                    {{track.resultTotals.note}}
                                                 </span>
                                             <div>{{track.name}}</div>
 
@@ -768,7 +795,8 @@
 
                                                                     {{resultsSummary.scenario[scenario.name].pass}} /
                                                                     {{resultsSummary.scenario[scenario.name].fail}} /
-                                                                    {{resultsSummary.scenario[scenario.name].partial}}
+                                                                    {{resultsSummary.scenario[scenario.name].partial}} /
+                                                                    {{resultsSummary.scenario[scenario.name].note}}
                                                                 </span>
                                                             </span>
 
