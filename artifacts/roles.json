@@ -11,6 +11,8 @@
     {"id":"r3-2","name":"Profile Server","description":""},
     {"id":"r3-3","name":"Patient Endpoint","description":""},
 
+    {"id":"r4-1","name":"Data Provider","description":""},
+    {"id":"r4-2","name":"Data Consumer","description":""},
 
     {"id":"r5-1","name":"Care Plan Server",
       "role":"server",
@@ -21,6 +23,95 @@
       "role":"client","description":""},
     {"id":"r5-4","name":"Care Plan Protocol Creator",
       "role":"client","description":""},
+
+
+    {"id":"r6-1","name":"Catalog Server",
+      "role":"server","description":""},
+    {"id":"r6-2","name":"Catalog Consumer",
+      "role":"client","description":""},
+
+
+    {"id":"r7-1","name":"EHR",
+      "role":"server","description":""},
+    {"id":"r7-2","name":"CDS Service",
+      "role":"client","description":"CDS Service"},
+
+    {"id":"r8-1","name":"CDS Service",
+      "role":"server","description":""},
+    {"id":"r8-2","name":"EHR","description":""},
+    {"id":"r8-3","name":"Knowledge Management Repository",
+      "role":"server","description":""},
+    {"id":"r8-4","name":"CKnowledge Artifact Consumer","description":""},
+    {"id":"r8-5","name":"Order Set Service",
+      "role":"server","description":""},
+    {"id":"r8-6","name":"Order Set Client","description":""},
+    {"id":"r8-7","name":"Measure Reporting Service",
+      "role":"server","description":""},
+
+
+    {"id":"r9-1","name":"FHIR Client",
+      "role":"server","description":""},
+    {"id":"r9-2","name":"Clinical Trial Designer",
+      "role":"server","description":""},
+    {"id":"r9-3","name":"Subject Matter Expert",
+      "role":"server","description":""},
+
+
+    {"id":"r10-1","name":"Consumer",
+      "role":"client","description":""},
+    {"id":"r10-2","name":"Auth Service","description":""},
+    {"id":"r10-3","name":"Resource Service",
+      "role":"server","description":""},
+    {"id":"r10-4","name":"End Point","description":""},
+    {"id":"r10-5","name":"Consent capture",
+      "role":"server","description":""},
+
+
+    {"id":"r11-1","name":"Source FHIR Server",
+      "role":"","description":""},
+    {"id":"r11-2","name":"Source EMR","description":""},
+    {"id":"r11-3","name":"Target FHIR Server",
+      "role":"","description":""},
+    {"id":"r11-4","name":"Target EMR","description":""},
+
+    {"id":"r12-1","name":"Public Health",
+      "role":"","description":""},
+    {"id":"r12-2","name":"Public Health Agency","description":""},
+    {"id":"r12-3","name":"Intermediaries",
+      "role":"","description":""},
+    {"id":"r12-4","name":"HCO","description":""},
+
+
+    {"id":"r13-1","name":"Encounter Server",
+      "role":"","description":""},
+    {"id":"r13-2","name":"Statistics Counter","description":""},
+
+    {"id":"r14-1","name":"Document Creator",
+      "role":"","description":""},
+    {"id":"r14-2","name":"Document Consumer","description":""},
+
+    {"id":"r15-1","name":"FHIR Server",
+      "role":"","description":""},
+    {"id":"r15-2","name":"Subscribing Client","description":""},
+
+
+    {"id":"r16-1","name":"Alert Reporter",
+      "role":"server","description":""},
+    {"id":"r16-2","name":"Alert Aggregator","role":"client","description":""},
+    {"id":"r17-3","name":"Document Recipient",
+      "role":"","description":""},
+    {"id":"r17-4","name":"Document Responder","role":"client","description":""},
+    {"id":"r17-5","name":"Document Source",
+      "role":"","description":""},
+    {"id":"r17-6","name":"Document Consumer","role":"client","description":""},
+    {"id":"r17-7","name":"Patient Demographics Supplier",
+      "role":"","description":""},
+    {"id":"r17-8","name":"Patient Demographics Consumer","role":"client","description":""},
+    {"id":"r17-9","name":"Patient Identifier Cross reference manager",
+      "role":"","description":""},
+    {"id":"r17-10","name":"Patient Identifier Cross reference consumer","role":"client","description":""},
+
+
 
 
     {"id":"r18a-1","name":"Eligibility Submitter",

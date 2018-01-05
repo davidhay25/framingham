@@ -27,16 +27,99 @@
     {"id":"s2-1","name":"Solicited", "roleIds":["r2-1","r2-2","r2-3"]},
     {"id":"s2-2","name":"Unsolicited", "roleIds":["r2-1","r2-2","r2-3"]},
     {"id":"s2-3","name":"Prior Authorization", "roleIds":["r2-1","r2-2","r2-3"]},
+
     {"id":"s3-1","name":"Develop SHR model", "roleIds":["r3-1","r3-2","r3-3"]},
     {"id":"s3-2","name":"Upload model", "roleIds":["r3-1","r3-2","r3-3"]},
     {"id":"s3-3","name":"Create conforming resources", "roleIds":["r3-1","r3-2","r3-3"]},
     {"id":"s3-4","name":"Validate Domain models", "roleIds":["r3-1","r3-2","r3-3"]},
 
 
+
+
+    {"id":"s4-1","name":"Full export (open)", "roleIds":["r4-1","r4-2"]},
+    {"id":"s4-2","name":"Targeted export (open)", "roleIds":[]},
+    {"id":"s4-3","name":"SMART secured export", "roleIds":[]},
+
+
     {"id":"s5-1","name":"Chronic Conditions", "roleIds":["r5-1","r5-2","r5-3","r5-4"]},
     {"id":"s5-2","name":"Multi-Provider Care Coordination", "roleIds":["r5-1","r5-2","r5-3","r5-4"]},
 
 
+
+    {"id":"s6-1","name":"Search compendium for tests", "roleIds":["r6-1","r6-2"]},
+    {"id":"s6-2","name":"Add entry to compendium", "roleIds":[]},
+
+
+    {"id":"s7-1","name":"Implement 1.0 spec", "roleIds":["r7-1","r7-2"]},
+    {"id":"s7-2","name":"Implement infobutton", "roleIds":[]},
+
+
+
+
+
+    {"id":"s8-1","name":"CDC Opiod Guideline", "roleIds":["r8-1","r8-2","r8-3","r8-4","r8-5","r8-6","r8-7"]},
+    {"id":"s8-2","name":"Zika Virus Reporting", "roleIds":[]},
+    {"id":"s8-3","name":"Quality Measure Evaluation", "roleIds":[]},
+    {"id":"s8-4","name":"Single Measure Individual (open)", "roleIds":[]},
+    {"id":"s8-5","name":"Multiple Measures", "roleIds":[]},
+
+
+    {"id":"s9-1","name":"EMR to EDC", "roleIds":["r9-1","r9-2","r9-3"]},
+    {"id":"s9-2","name":"Real world evidence", "roleIds":[]},
+    {"id":"s9-3","name":"Lab data import", "roleIds":[]},
+
+
+
+    {"id":"s10-1","name":"Consumer access via OAuth", "roleIds":["r10-1","r10-2"]},
+    {"id":"s10-2","name":"Consumer initiated 'on behalf of'", "roleIds":[]},
+
+    {"id":"s11-1","name":"Physician to Patient", "roleIds":["r11-1","r11-2","r11-3","r11-4"]},
+    {"id":"s11-2","name":"Patient request for data", "roleIds":[]},
+
+
+
+    {"id":"s12-1","name":"Update trigger codes on Public Health Server", "roleIds":["r12-1","r12-2","r12-3","r12-4"]},
+    {"id":"s12-2","name":"Subscribe to trigger code updates", "roleIds":[]},
+    {"id":"s12-3","name":"Ingest trigger codes into EHR", "roleIds":[]},
+
+    {"id":"s13-1","name":"Expose Server", "roleIds":["r13-1"]},
+
+    {"id":"s14-1","name":"Create a narrative document", "roleIds":["r14-1","r14-2"]},
+    {"id":"s14-2","name":"Create a document with section entries", "roleIds":[]},
+    {"id":"s14-3","name":"Display document", "roleIds":[]},
+    {"id":"s14-4","name":"Extract resources from document", "roleIds":[]},
+    {"id":"s14-5","name":"Digitally sign document", "roleIds":[]},
+
+
+
+    {"id":"s15-1","name":"Create subscription", "roleIds":["r15-1","r15-2"]},
+    {"id":"s15-2","name":"REST hook with payload", "roleIds":[]},
+    {"id":"s15-3","name":"FHIRCast", "roleIds":[]},
+
+
+
+
+
+    {"id":"s16-1","name":"Register a new sequence & Observation", "roleIds":["r16-1","r16-2"]},
+    {"id":"s16-2","name":"Clinical sequence: germline testing", "roleIds":[]},
+    {"id":"s16-3","name":"Family Member History", "roleIds":[]},
+    {"id":"s16-4","name":"Clinical and research data warehouse", "roleIds":[]},
+    {"id":"s16-5","name":"HLA Typing", "roleIds":[]},
+    {"id":"s16-6","name":"Species Identification", "roleIds":[]},
+    {"id":"s16-7","name":"Comprehensive pathology report", "roleIds":[]},
+    {"id":"s16-8","name":"Sequence quality", "roleIds":[]},
+
+
+
+    {"id":"s17-1","name":"Scenario (mACM) Crisis response", "roleIds":[]},
+    {"id":"s17-2","name":"MHD document publication", "roleIds":[]},
+    {"id":"s17-3","name":"MHD document discovery & retrieval", "roleIds":[]},
+    {"id":"s17-4","name":"mXDE Reconstruct patient history from document trail", "roleIds":[]},
+
+    {"id":"","name":"", "roleIds":[]},
+    {"id":"","name":"", "roleIds":[]},
+    {"id":"","name":"", "roleIds":[]},
+    {"id":"","name":"", "roleIds":[]},
 
 
 
