@@ -37,8 +37,8 @@
 
 
     {"id":"s4-1","name":"Full export (open)", "roleIds":["r4-1","r4-2"]},
-    {"id":"s4-2","name":"Targeted export (open)", "roleIds":[]},
-    {"id":"s4-3","name":"SMART secured export", "roleIds":[]},
+    {"id":"s4-2","name":"Targeted export (open)", "roleIds":["r4-1","r4-2"]},
+    {"id":"s4-3","name":"SMART secured export", "roleIds":["r4-1","r4-2"]},
 
 
     {"id":"s5-1","name":"Chronic Conditions", "roleIds":["r5-1","r5-2","r5-3","r5-4"]},
@@ -47,72 +47,69 @@
 
 
     {"id":"s6-1","name":"Search compendium for tests", "roleIds":["r6-1","r6-2"]},
-    {"id":"s6-2","name":"Add entry to compendium", "roleIds":[]},
+    {"id":"s6-2","name":"Add entry to compendium", "roleIds":["r6-1","r6-2"]},
 
 
     {"id":"s7-1","name":"Implement 1.0 spec", "roleIds":["r7-1","r7-2"]},
-    {"id":"s7-2","name":"Implement infobutton", "roleIds":[]},
+    {"id":"s7-2","name":"Implement infobutton", "roleIds":["r7-1","r7-2"]},
 
 
 
 
 
     {"id":"s8-1","name":"CDC Opiod Guideline", "roleIds":["r8-1","r8-2","r8-3","r8-4","r8-5","r8-6","r8-7"]},
-    {"id":"s8-2","name":"Zika Virus Reporting", "roleIds":[]},
-    {"id":"s8-3","name":"Quality Measure Evaluation", "roleIds":[]},
-    {"id":"s8-4","name":"Single Measure Individual (open)", "roleIds":[]},
-    {"id":"s8-5","name":"Multiple Measures", "roleIds":[]},
+    {"id":"s8-2","name":"Zika Virus Reporting", "roleIds":["r8-1","r8-2","r8-3","r8-4","r8-5","r8-6","r8-7"]},
+    {"id":"s8-3","name":"Quality Measure Evaluation", "roleIds":["r8-1","r8-2","r8-3","r8-4","r8-5","r8-6","r8-7"]},
+    {"id":"s8-4","name":"Single Measure Individual (open)", "roleIds":["r8-1","r8-2","r8-3","r8-4","r8-5","r8-6","r8-7"]},
+    {"id":"s8-5","name":"Multiple Measures", "roleIds":["r8-1","r8-2","r8-3","r8-4","r8-5","r8-6","r8-7"]},
 
 
     {"id":"s9-1","name":"EMR to EDC", "roleIds":["r9-1","r9-2","r9-3"]},
-    {"id":"s9-2","name":"Real world evidence", "roleIds":[]},
-    {"id":"s9-3","name":"Lab data import", "roleIds":[]},
+    {"id":"s9-2","name":"Real world evidence", "roleIds":["r9-1","r9-2","r9-3"]},
+    {"id":"s9-3","name":"Lab data import", "roleIds":["r9-1","r9-2","r9-3"]},
 
 
 
     {"id":"s10-1","name":"Consumer access via OAuth", "roleIds":["r10-1","r10-2"]},
-    {"id":"s10-2","name":"Consumer initiated 'on behalf of'", "roleIds":[]},
+    {"id":"s10-2","name":"Consumer initiated 'on behalf of'", "roleIds":["r10-1","r10-2"]},
 
     {"id":"s11-1","name":"Physician to Patient", "roleIds":["r11-1","r11-2","r11-3","r11-4"]},
-    {"id":"s11-2","name":"Patient request for data", "roleIds":[]},
+    {"id":"s11-2","name":"Patient request for data", "roleIds":["r11-1","r11-2","r11-3","r11-4"]},
 
 
 
     {"id":"s12-1","name":"Update trigger codes on Public Health Server", "roleIds":["r12-1","r12-2","r12-3","r12-4"]},
-    {"id":"s12-2","name":"Subscribe to trigger code updates", "roleIds":[]},
-    {"id":"s12-3","name":"Ingest trigger codes into EHR", "roleIds":[]},
+    {"id":"s12-2","name":"Subscribe to trigger code updates", "roleIds":["r12-1","r12-2","r12-3","r12-4"]},
+    {"id":"s12-3","name":"Ingest trigger codes into EHR", "roleIds":["r12-1","r12-2","r12-3","r12-4"]},
 
     {"id":"s13-1","name":"Expose Server", "roleIds":["r13-1"]},
 
     {"id":"s14-1","name":"Create a narrative document", "roleIds":["r14-1","r14-2"]},
-    {"id":"s14-2","name":"Create a document with section entries", "roleIds":[]},
-    {"id":"s14-3","name":"Display document", "roleIds":[]},
-    {"id":"s14-4","name":"Extract resources from document", "roleIds":[]},
-    {"id":"s14-5","name":"Digitally sign document", "roleIds":[]},
+    {"id":"s14-2","name":"Create a document with section entries", "roleIds":["r14-1","r14-2"]},
+    {"id":"s14-3","name":"Display document", "roleIds":["r14-1","r14-2"]},
+    {"id":"s14-4","name":"Extract resources from document", "roleIds":["r14-1","r14-2"]},
+    {"id":"s14-5","name":"Digitally sign document", "roleIds":["r14-1","r14-2"]},
 
 
 
     {"id":"s15-1","name":"Create subscription", "roleIds":["r15-1","r15-2"]},
-    {"id":"s15-2","name":"REST hook with payload", "roleIds":[]},
-    {"id":"s15-3","name":"FHIRCast", "roleIds":[]},
-
-
-
+    {"id":"s15-2","name":"REST hook with payload", "roleIds":["r15-1","r15-2"]},
+    {"id":"s15-3","name":"FHIRCast", "roleIds":["r15-1","r15-2"]},
 
 
     {"id":"s16-1","name":"Register a new sequence & Observation", "roleIds":["r16-1","r16-2"]},
-    {"id":"s16-2","name":"Clinical sequence: germline testing", "roleIds":[]},
-    {"id":"s16-3","name":"Family Member History", "roleIds":[]},
-    {"id":"s16-4","name":"Clinical and research data warehouse", "roleIds":[]},
-    {"id":"s16-5","name":"HLA Typing", "roleIds":[]},
-    {"id":"s16-6","name":"Species Identification", "roleIds":[]},
-    {"id":"s16-7","name":"Comprehensive pathology report", "roleIds":[]},
-    {"id":"s16-8","name":"Sequence quality", "roleIds":[]},
+    {"id":"s16-2","name":"Clinical sequence: germline testing", "roleIds":["r16-1","r16-2"]},
+    {"id":"s16-3","name":"Family Member History", "roleIds":["r16-1","r16-2"]},
+    {"id":"s16-4","name":"Clinical and research data warehouse", "roleIds":["r16-1","r16-2"]},
+    {"id":"s16-5","name":"HLA Typing", "roleIds":["r16-1","r16-2"]},
+    {"id":"s16-6","name":"Species Identification", "roleIds":["r16-1","r16-2"]},
+    {"id":"s16-7","name":"Comprehensive pathology report", "roleIds":["r16-1","r16-2"]},
+    {"id":"s16-8","name":"Sequence quality", "roleIds":["r16-1","r16-2"]},
 
     {"id":"s17-1","name":"Scenario (mACM) Crisis response", "roleIds":["r17-1","r17-2","r17-3","r17-4","r17-5","r17-6","r17-7","r17-8","r17-9","r17-10"]},
-    {"id":"s17-2","name":"MHD document publication", "roleIds":[]},
-    {"id":"s17-3","name":"MHD document discovery & retrieval", "roleIds":[]},
-    {"id":"s17-4","name":"mXDE Reconstruct patient history from document trail", "roleIds":[]},
+    {"id":"s17-2","name":"MHD document publication", "roleIds":["r17-1","r17-2","r17-3","r17-4","r17-5","r17-6","r17-7","r17-8","r17-9","r17-10"]},
+    {"id":"s17-3","name":"MHD document discovery & retrieval", "roleIds":["r17-1","r17-2","r17-3","r17-4","r17-5","r17-6","r17-7","r17-8","r17-9","r17-10"]},
+    {"id":"s17-4","name":"mXDE Reconstruct patient history from document trail", "roleIds":["r17-1","r17-2","r17-3","r17-4","r17-5","r17-6","r17-7","r17-8","r17-9","r17-10"]},
 
     {"id":"s18a-1","name":"Eligibility",
       "description":"Submit an Eligibility, Retrieve/Receive an EligibilityResponse", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
@@ -132,15 +129,15 @@
       "description":"Retrieve an ExplanationOfBenefit via ProcessRequest", "roleIds":["r18a-1","r18a-2","r18a-3","r18a-4","r18a-5","r18a-6","r18a-7","r18a-8","r18a-9","r18a-10","r18a-11"]},
 
     {"id":"s20-1","name":"Register device", "roleIds":["r20-1","r20-2","r20-3"]},
-    {"id":"s20-2","name":"Start procedure at Point Of Care", "roleIds":[]},
-    {"id":"s20-3","name":"Complete Procedure", "roleIds":[]},
-    {"id":"s20-4","name":"Complete Implantable procedure", "roleIds":[]},
-    {"id":"s20-5","name":"Search Procedures", "roleIds":[]},
-    {"id":"s20-6","name":"Search devices", "roleIds":[]},
+    {"id":"s20-2","name":"Start procedure at Point Of Care", "roleIds":["r20-1","r20-2","r20-3"]},
+    {"id":"s20-3","name":"Complete Procedure", "roleIds":["r20-1","r20-2","r20-3"]},
+    {"id":"s20-4","name":"Complete Implantable procedure", "roleIds":["r20-1","r20-2","r20-3"]},
+    {"id":"s20-5","name":"Search Procedures", "roleIds":["r20-1","r20-2","r20-3"]},
+    {"id":"s20-6","name":"Search devices", "roleIds":["r20-1","r20-2","r20-3"]},
 
     {"id":"s21-1","name":"Match existing Patient (same server)", "roleIds":["r21-1","r21-2"]},
-    {"id":"s21-2","name":"Match existing Patient (remote server)", "roleIds":[]},
-    {"id":"s21-3","name":"Match partial Patient", "roleIds":[]},
+    {"id":"s21-2","name":"Match existing Patient (remote server)", "roleIds":["r21-1","r21-2"]},
+    {"id":"s21-3","name":"Match partial Patient", "roleIds":["r21-1","r21-2"]},
 
 
 
@@ -179,31 +176,28 @@
 
     {"id":"s25-1","name":"Process Order", "roleIds":["r25-1","r25-2","r25-3","r25-4"]},
 
-
     {"id":"s26-1","name":"Directory search", "roleIds":["r26-1","r26-2"]},
 
-
-
     {"id":"s27-1","name":"Availability search", "roleIds":["r27-1","r27-2"]},
-    {"id":"s27-2","name":"Book Appointment", "roleIds":[]},
-    {"id":"s27-3","name":"Confirm & Process appointment", "roleIds":[]},
-    {"id":"s27-4","name":"Cancel Appointment", "roleIds":[]},
-    {"id":"s27-5","name":"Amend appointment", "roleIds":[]},
+    {"id":"s27-2","name":"Book Appointment", "roleIds":["r27-1","r27-2"]},
+    {"id":"s27-3","name":"Confirm & Process appointment", "roleIds":["r27-1","r27-2"]},
+    {"id":"s27-4","name":"Cancel Appointment", "roleIds":["r27-1","r27-2"]},
+    {"id":"s27-5","name":"Amend appointment", "roleIds":["r27-1","r27-2"]},
 
 
 
     {"id":"s28-1","name":"ValueSet $expand", "roleIds":["r28-1","r28-2"]},
-    {"id":"s28-2","name":"CodeSystem $lookup", "roleIds":[]},
-    {"id":"s28-3","name":"CodeSystem $subsumes", "roleIds":[]},
-    {"id":"s28-4","name":"CodeSystem $translate", "roleIds":[]},
-    {"id":"s28-5","name":"ValueSet $validate-code", "roleIds":[]},
+    {"id":"s28-2","name":"CodeSystem $lookup", "roleIds":["r28-1","r28-2"]},
+    {"id":"s28-3","name":"CodeSystem $subsumes", "roleIds":["r28-1","r28-2"]},
+    {"id":"s28-4","name":"CodeSystem $translate", "roleIds":["r28-1","r28-2"]},
+    {"id":"s28-5","name":"ValueSet $validate-code", "roleIds":["r28-1","r28-2"]},
 
 
 
     {"id":"s29-1","name":"Specify server version", "roleIds":["r29-1","r29-2"]},
-    {"id":"s29-2","name":"Server version discovery", "roleIds":[]},
-    {"id":"s29-3","name":"Explicit version conversion", "roleIds":[]},
-    {"id":"s29-4","name":"Implicit version conversion", "roleIds":[]},
+    {"id":"s29-2","name":"Server version discovery", "roleIds":["r29-1","r29-2"]},
+    {"id":"s29-3","name":"Explicit version conversion", "roleIds":["r29-1","r29-2"]},
+    {"id":"s29-4","name":"Implicit version conversion", "roleIds":["r29-1","r29-2"]},
 
     {"id":"s30-1","name":"Comment on App", "roleIds":["r30-1"],
     "description":"Allows a user to make a comment about the app (using the 'Scenario Direct' sub tab in 'Testing')"}

@@ -7,6 +7,35 @@ var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
+var dbName = 'connectathon';
+
+
+//the default port. This can be overwritten when the server is executed or from the IDE.
+var port = process.env.port;
+if (! port) {
+    port=4000; //8443;
+}
+
+
+
+process.argv.forEach(function (val, index, array) {
+    //console.log(index + ': ' + val);
+
+    var ar = val.split('=');
+    if (ar.length == 2) {
+        switch (ar[0]) {
+            case 'db' :
+                dbName = ar[1]
+                console.log('Setting database to '+ dbName)
+                break;
+            case 'port' :
+                port = ar[1];
+                console.log('setting port to '+port )
+                break;
+        }
+    }
+});
+
 
 var db;
 //http://mongodb.github.io/node-mongodb-native/3.0/quick-start/quick-start/
@@ -16,9 +45,9 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
         console.log(err);
         console.log('>>> Mongo server not running')
     } else {
-        console.log("Connected successfully to 'connectathon' server");
-        db = client.db('connectathon');
-        //db.collection("client").insert({test: 'Test'})
+        console.log("Connected successfully to local server, dataBase="+dbName);
+        //db = client.db('connectathon');
+        db = client.db(dbName);
     }
 });
 
@@ -26,11 +55,6 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
 var app = express();
 app.use(bodyParser.json())
 
-//the default port. This can be overwritten when the server is executed or from the IDE.
-var port = process.env.port;
-if (! port) {
-    port=8443;
-}
 
 useSSL = false;
 
@@ -42,14 +66,12 @@ if (useSSL) {
         cert: fs.readFileSync('cert.pem'),
         passphrase:'ne11ieh@y'
     };
-
-
     https.createServer(sslOptions, app).listen(8443)
     console.log('server listening via TLS on port ' + port);
 } else {
     var http = require('http');
-    http.createServer(app).listen(4000)
-    console.log('server listening  on port ' + 4000);
+    http.createServer(app).listen(port)
+    console.log('server listening  on port ' + port);
 }
 
 
@@ -190,6 +212,40 @@ app.post('/person',function(req,res){
         }
     })
 });
+
+//=============== config items tracks, scnarios, roles
+
+
+app.get('/config/:type',function(req,res){
+
+    var type = req.params.type;
+    //console.log(type)
+    db.collection(type).find({}).toArray(function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
+
+app.post('/config/:type',function(req,res){
+    var item = req.body;
+    var type = req.params.type;
+    //console.log(type,item)
+
+  //  res.send({})
+   // return
+
+    db.collection(type).update({id:item.id},item,{upsert:true},function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
+
 
 //to serve up the static web pages - particularly the login page if no page is specified...
 app.use('/', express.static(__dirname,{index:'/ecosystemMain.html'}));

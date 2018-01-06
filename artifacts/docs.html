@@ -13,6 +13,55 @@
 
 To support a FHIR connectathon, and record the results.
 
+<h3>Using</h3>
+
+To use the Manager, follow these steps.
+
+<div style="margin-left: 12px">
+<h4>Register</h4>
+There are a number of registration steps to perform (some of which may have already been done for you).
+<ul>
+    <li>See if you have already been added as a 'Person' in the 'People tab. If not, then add yourself using the 'new Person link.
+        You might also want to check and possibly update the data there.
+        Once you've done this, you can then be associated with a client or a server, and a summary will appear in the people tab. </li>
+    <li>Next, add any clients or servers that you have using the Client or Server tab. For a client you add the name of the client (which must be unique), a description, and yourself as the contact. A Server is similar, except that you add the URL to the server root, and click the 'check' button to retrieve the CapabilityStatement (which is required of all FHIR servers).</li>
+    <li>Finally, for any Client/Server scenarios that you intend to participate in, add your client or server to the appropriate
+    scenario in the 'Testing' tab (using the Client/Server subtab).</li>
+</ul>
+
+<h4>Record</h4>
+At any stage, you can record the outcome of a test - or just make a note against a scenario. There are a number ways to do this.
+
+
+<ul>
+    <li>For a Client/Server interaction, use the Testing tab (where you registered your Client or Server in the previous step).
+        There is a link at the intersettion of the Client and Server where the details can be entered. The data that can be entered
+        includes:
+        <ul>
+            <li>The person entering the result (the Asserter). This is an auto-complete picklist from the registered people </li>
+            <li>The outcome of the test. Options are Pass, Fail, Partial and Note (The latter used when no test was actually
+            performed, but some notes want to be registered</li>
+            <li>A general comments field</li>
+            <li>Tracker items made as a result of the test. There is a link to GForge (where trackers are entered), and the
+            tracker is entered directly into GForge, and the URL pasted manually back to the form</li>
+        </ul>
+        There can only be a single result for any combination of Client & Server, but it can be edited. Note that there is no
+        security applied - anyone can make any change.
+    </li>
+    <li>There is also a 'Scenario Direct' option. This is similar to the above, except that there is no Client or Server,
+    and is intended to allow ah-hoc notes to be made, or more complex interactions described.</li>
+</ul>
+
+<h4>Report</h4>
+
+<ul>
+
+    <li>Finally, view (and download) the results in the Results tab.</li>
+</ul>
+
+</div>
+
+
 <h3>Structure</h3>
 
 The tracks are defined as follows:
@@ -81,17 +130,6 @@ The following tabs are present:
     </ul>
 </ul>
 
-<h3>Using</h3>
-
-To use the Manager, follow these steps.
-
-<ul>
-    <li>First, add yourself as a person using the 'People' tab. Once you've done this, you can then be associated with a
-        client or a server, and a summary will appear in the people tab.</li>
-    <li>Next, add any clients or servers that you have using the Client or Server tab. For a client you add the name of the client (which must be unique), a description, and yourself as the contact. A Server is similar, except that you add the URL to the server root, and click the 'check' button to retrieve the CapabilityStatement (which is required of all FHIR servers).</li>
-    <li>Next, use the Testing tab to register your interest in a particular scenario. When adding the client or server, you indicate which role you will be participating as. The actual outcome is registered at the intersection of a client with a server, and can be pass, fail or partial. Note that currently the app only supports a 2 participant (client & server) interaction.</li>
-    <li>Finally, view (and download) the results in the Results tab.</li>
-</ul>
 
 <h3>Known limitations</h3>
 <ul>

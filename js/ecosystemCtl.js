@@ -76,6 +76,25 @@ angular.module("sampleApp")
                 });
             }
 
+            $scope.editTrack = function(track) {
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/editTrack.html',
+                    size: 'lg',
+                    controller: 'editTrackCtrl',
+                    resolve : {
+
+                        track: function () {          //the default config
+                            return $scope.selectedTrack;
+                        }
+                    }
+                }).result.then(function(vo){
+                    console.log(vo)
+
+                    //ecosystemSvc.addScenarioResult(track,scenario,client,server,vo)
+                });
+            }
+
+
             $scope.removeServerFromScenario = function (scenario,server) {
                 var modalOptions = {
                     closeButtonText: "No, I changed my mind",
@@ -459,6 +478,7 @@ angular.module("sampleApp")
                 $scope.selectedRole = role;
             };
 
+            //========  previous functions =========
 
             $scope.addTag = function(ep) {
                 var tag = $window.prompt("enter tag")

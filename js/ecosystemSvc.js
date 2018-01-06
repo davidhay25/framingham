@@ -322,7 +322,10 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 var arContact = angular.copy(client.contact);
                 client.contactid = [];//.length = 0;
                 arContact.forEach(function (c) {
-                    client.contactid.push(c.id)
+                    if (c) {
+                        client.contactid.push(c.id)
+                    }
+
                 })
             }
 
@@ -369,7 +372,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 //we only want the results for this scenario...
                 var resp = {};
                 angular.forEach(allResultsCopy,function (result,key) {
-                    if (result.scenario.id == scenario.id) {
+                    if (result.scenario && result.scenario.id == scenario.id) {
 
                         resp[key] = result
                     }
@@ -648,10 +651,16 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             //get scenarios
             var deferred = $q.defer();
             var urls = []
-            urls.push({url:'artifacts/scenarios.json?_dummy='+new Date(),"name":"scenarios"});
-            urls.push({url:'artifacts/roles.json',"name":"roles"});
-            urls.push({url:'artifacts/tracks.json',"name":"tracks"});
+            //urls.push({url:'artifacts/scenarios.json?_dummy='+new Date(),"name":"scenarios"});
+            //urls.push({url:'artifacts/roles.json',"name":"roles"});
+            //urls.push({url:'artifacts/tracks.json',"name":"tracks"});
             urls.push({url:'artifacts/persons.json',"name":"persons"});
+
+
+            urls.push({url:'/config/track',"name":"tracks"});
+            urls.push({url:'/config/scenario',"name":"scenarios"});
+            urls.push({url:'/config/role',"name":"roles"});
+
 
             urls.push({url:'/client',"name":"clients"});
             urls.push({url:'/server',"name":"servers"});
@@ -714,17 +723,28 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                         allClients.push(client);        //scoped to the service...
                     });
 
-                    var hashTrack = {};
-                    vo.tracks.forEach(function (track) {
-                        track.resultTotals = {'pass':0,'fail':0,'partial':0,'note':0}
-                        hashTrack[track.id] = track
-                    });
-
-                    //link scenarios to tracks
+                    //create scenario hash
                     var hashScenario = {};
                     vo.scenarios.forEach(function (scenario) {
                         hashScenario[scenario.id] = scenario
                     });
+
+                    var hashTrack = {};
+                    vo.tracks.forEach(function (track) {
+                        track.resultTotals = {'pass':0,'fail':0,'partial':0,'note':0}
+                        hashTrack[track.id] = track
+
+                        //this occurs when the track definition has embedded scenarios, rather than referring to seperate scenarios...
+                        if (track.scenarios) {
+                            track.scenarios.forEach(function (sc) {
+                                hashScenario[sc.id] = sc
+                            })
+                        }
+
+                    });
+
+                    //link scenarios to tracks
+
 
                     var hashRole = {};
                     vo.roles.forEach(function (role) {
@@ -737,9 +757,9 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     });
 
                     vo.tracks.forEach(function (track) {
-                        track.scenarios = [];
-                        track.roles = []
-                        track.leads = [];
+                        track.scenarios = track.scenarios || [];
+                        track.roles = track.roles || [];
+                        track.leads = track.leads || [];
                         if (track.leadIds) {
                             track.leadIds.forEach(function (id) {
                                 var person = hashPerson[id];
@@ -755,15 +775,20 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                             track.scenarioIds.forEach(function (id) {
                                 var scenario = hashScenario[id];
                                 if (scenario) {
-                                    scenario.roles = [];
+                                    scenario.roles = scenario.roles || [];
                                     track.scenarios.push(scenario);
                                     if (scenario.roleIds) {
                                         scenario.roleIds.forEach(function (id) {
                                             var role = hashRole[id];
-                                            scenario.roles.push(role);
-                                            if (track.roles.indexOf(role) == -1) {
-                                                track.roles.push(role);
+                                            if (role) {
+                                                scenario.roles.push(role);
+                                                if (track.roles.indexOf(role) == -1) {
+                                                    track.roles.push(role);
+                                                }
+                                            } else {
+                                                console.log(" role id:" + id + " missing from track: "+ track.id +  " scenario id: "+ scenario.id )
                                             }
+
 
 
                                         })

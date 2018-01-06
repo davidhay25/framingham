@@ -1,0 +1,65 @@
+<div>
+    <div class="modal-header">
+
+        <div class="row">
+            <div class="col-md-8 col-sm-8">
+                <h3 class="modal-title">Edit Track</h3>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div class="pull-right">
+                    <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <form name="form">
+                    <markdown-editor  ng-model="input.description"
+                                      text-preview="Preview"
+                                      text-provide-text="Site name"
+                                      text-provide-link="Site link"
+
+                                      name="thearea"
+                                      placeholder="Enter the description of this track"
+                                      options="mdOptions" >
+
+                    </markdown-editor>
+                </form>
+
+
+            </div>
+    </div>
+
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+
+
+
+
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+
+                <button class="btn btn-primary" ng-click="save()">Save</button>
+            </div>
+        </div>
+
+        <br/>
+
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <em>Add the details (name and description) for a new client. After this the client can be added to any number of scenarios.</em>
+
+            </div>
+
+        </div>
+    </div>
+</div>

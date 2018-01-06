@@ -7,6 +7,7 @@
     <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="css/angular-lightweight-markdown-editor.css"/>
 
     <script src="js/libs/ngStorage.min.js"></script>
 
@@ -17,7 +18,7 @@
     <script src="js/libs/angular-chart.js"></script>
 
     <script>
-        angular.module("sampleApp",['ui.bootstrap','ngSanitize','ngStorage','chart.js']).
+        angular.module("sampleApp",['ui.bootstrap','ngSanitize','ngStorage','chart.js',"angular-lightweight-markdown-editor"]).
         config(function($locationProvider) {
            // $locationProvider.html5Mode(true);
             $locationProvider.hashPrefix('!');
@@ -37,7 +38,10 @@
     </script>
 
     <style>
-
+        .markdown-editor {
+            border: 1px solid #ccc;
+            border-radius: 2px;
+        }
         .trackScroll {
             height: 650px;
             overflow-y: scroll;
@@ -105,6 +109,9 @@
         }
     </style>
 
+    <script src="js/libs/showdown.min.js"></script>
+    <script src="js/libs/angular-lightweight-markdown-editor.min.js"></script>
+
     <script src="js/ecosystemCtl.js"></script>
     <script src="js/ecosystemSvc.js"></script>
     <script src="js/modalDialogSvc.js"></script>
@@ -117,6 +124,7 @@
     <script src="js/editPersonCtrl.js"></script>
     <script src="js/ecoUtilitiesSvc.js"></script>
     <script src="js/editTrackCtrl.js"></script>
+    <script src="js/filters.js"></script>
 </head>
 <body style="padding: 8px;padding-top: 80px" >
 
@@ -160,13 +168,16 @@
 
                         </div>
                         <div class="col-sm-10 col-md-10" ng-show="selectedTrack">
+
+                            <a ng-click="editTrack(selectedTrack)">Edit</a>
+
                             <div class="row">
                                 <div class="col-sm-2 col-md-2">
 
                                     <strong>Description</strong>
                                 </div>
                                 <div class="col-sm-9 col-md-9">
-                                    <p ng-bind-html="selectedTrack.description"></p>
+                                    <p ng-bind-html="selectedTrack.description | markDown"></p>
                                     <!--{{selectedTrack.description}}-->
                                 </div>
                             </div>
@@ -341,6 +352,8 @@
                                     </div>
                                 </div>
                             </div>
+
+
 
 
                         </div>
