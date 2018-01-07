@@ -133,22 +133,34 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 
         <div class="container-fluid row">
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-6 col-sm-6">
                 <a class="navbar-brand" href="#">
 
-                    Connectathon Mananger
+                    Connectathon Mananger: {{eventConfig.name}}
                 </a>
             </div>
 
             <div class="col-md-4 col-sm-4">
 
             </div>
+
+            <div class="col-md-2 col-sm-2">
+                <div class="navbar-text">
+                    <input type="text" ng-model="input.currentUser"
+                           placeholder="Enter current user"
+                       typeahead-on-select = "userSelected($item, $model, $label, $event)"
+                       uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control">
+                </div>
+            </div>
+
+
         </div>
     </nav>
 
     <div class="row">
 
         <div class="col-sm-12 col-md-12">
+
             <uib-tabset>
 
                 <uib-tab heading="Track Descriptions">
@@ -168,9 +180,9 @@
 
                         </div>
                         <div class="col-sm-10 col-md-10" ng-show="selectedTrack">
-
+<!--
                             <a ng-click="editTrack(selectedTrack)">Edit</a>
-
+-->
                             <div class="row">
                                 <div class="col-sm-2 col-md-2">
 

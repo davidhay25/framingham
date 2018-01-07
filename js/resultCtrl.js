@@ -24,6 +24,9 @@ angular.module("sampleApp")
                     $scope.selectedPerson = previousResult.asserter;
                     $scope.input.asserter = previousResult.asserter;
                 }
+            } else {
+                $scope.selectedPerson = ecosystemSvc.getCurrentUser();
+                $scope.input.asserter = ecosystemSvc.getCurrentUser();
             }
 
             console.log(previousResult)

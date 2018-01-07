@@ -6,37 +6,22 @@ angular.module("sampleApp")
 
             $scope.input = {};
 
-/*
-            $scope.chartLabels = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
-            $scope.chartData = [300, 500, 100];
-            $scope.chartOptions = {legend:{display:true}}
-*/
-
             Chart.defaults.global.colors = ['#00cc00','#cc3300','#ffff99','#6E94FF']; //for the stacked bar chart...
-/*
-            $scope.barLabels = ['Scenario1', 'Scenario2', 'Scenario3', 'Scenario4'];
-            $scope.barSeries = ['Pass', 'Fail','Partial'];
 
-            $scope.barOptions = {scales: {
-                yAxes: [{
-                    stacked: true,
-                    ticks: {
-                        beginAtZero:true
+            $http.get("config/admin/").then(
+                function(data) {
+                    console.log(data.data)
+                    if (data.data) {
+                        $scope.eventConfig = data.data[0];
                     }
-                }],xAxes: [{
-                    stacked: true
+                }
+            );
 
-                }]
-            }};
+            $scope.userSelected = function(item){
+                $scope.input.currentUser = item;
+                ecosystemSvc.setCurrentUser(item)
+            };
 
-            //$scope.barOptions = {'chart-colors':['#00cc00','#cc3300','#ffff99']};
-
-            $scope.barData = [
-                [7, 4, 4, 5],  //pass
-                [5, 3, 7, 5], //fail
-                [8, 3, 3, 5]
-            ];
-*/
             ecosystemSvc.getConnectathonResources().then(
                 function(vo) {
                     console.log(vo)

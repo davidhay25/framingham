@@ -128,11 +128,18 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     var allServers = [];
     var allClients = [];
     var allPersons = [];
-    var hashAllPersons = {}
+    var hashAllPersons = {};
+
+    var currentUser;
 
     var allResults = {};// = $localStorage.allResults || {};
     return {
-
+        setCurrentUser : function(user) {
+            currentUser = user
+        },
+        getCurrentUser : function () {
+            return currentUser;
+        },
         updatePerson : function(person) {
             var deferred = $q.defer();
             $http.post("/person",person).then(

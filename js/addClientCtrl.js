@@ -4,7 +4,8 @@ angular.module("sampleApp")
 
             $scope.allPersons = ecosystemSvc.getAllPersons();//[]
 
-
+            $scope.contact = ecosystemSvc.getCurrentUser();
+            $scope.selectedPerson = ecosystemSvc.getCurrentUser();
 
             $scope.input = {}
 

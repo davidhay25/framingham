@@ -5,6 +5,10 @@ angular.module("sampleApp")
             $scope.input = {};
             var serverExists = false;
 
+            $scope.contact = ecosystemSvc.getCurrentUser();
+            $scope.selectedPerson = ecosystemSvc.getCurrentUser();
+
+
             $scope.contactSelected = function(item){
                 $scope.selectedPerson = item;
             };

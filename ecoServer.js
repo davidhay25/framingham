@@ -248,7 +248,7 @@ app.post('/config/:type',function(req,res){
 
 
 //to serve up the static web pages - particularly the login page if no page is specified...
-app.use('/', express.static(__dirname,{index:'/ecosystemMain.html'}));
+app.use('/', express.static(__dirname,{index:'/connectathonMain.html'}));
 
 
 
