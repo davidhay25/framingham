@@ -130,15 +130,33 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     var allPersons = [];
     var hashAllPersons = {};
 
-    var currentUser;
+    //var currentUser;
+    //case insensitive sort
+    var ciSort = function(ar,eleName) {
+        ar.sort(function(a,b){
+            var n1 = a[eleName], n2=b[eleName];
+            if (n1 && n2) {
+                if (n1.toLowerCase() > n2.toLowerCase()) {
+                    return 1
+                } else {
+                    return -1
+                }
+            } else {return 0}
+        })
+
+    }
 
     var allResults = {};// = $localStorage.allResults || {};
     return {
         setCurrentUser : function(user) {
-            currentUser = user
+            $localStorage.ecoCurrentUser = user;
+            //currentUser = user
         },
         getCurrentUser : function () {
-            return currentUser;
+            return $localStorage.ecoCurrentUser;
+        },
+        clearCurrentUser : function(){
+            delete $localStorage.ecoCurrentUser;
         },
         updatePerson : function(person) {
             var deferred = $q.defer();
@@ -340,6 +358,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 function(data){
                     //now add the client to the cached list...
                     allClients.push(client);
+                    ciSort(allClients,'name');
                     deferred.resolve(client)
                 }, function(err) {
                     console.log(err);
@@ -352,7 +371,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             return allPersons;
         },
         getAllClients : function() {
-            return allClients;
+            return  allClients;
 /*
             var deferred = $q.defer();
             if (allClients) {
@@ -407,7 +426,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             return allServers;
 
         },
-        addNewServer : function(server) {
+        updateServer : function(server,isNewServer) {
             var deferred = $q.defer();
 
             if (server.contact) {
@@ -421,7 +440,18 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             $http.post("/server",server).then(
                 function(data){
                     //now add the client to the cached list...
+                    if (! isNewServer) {
+                       //we'ue updated a server - need to remove it from the list...
+                        for (var i=0; i < allServers.length; i++) {
+                            var svr = allServers[i]
+                            if (svr.id == server.id) {
+                                allServers.splice(i,1);
+                                break;
+                            }
+                        }
+                    }
                     allServers.push(server);
+                    ciSort(allServers,'name');
                     deferred.resolve(server)
                 }, function(err) {
                     console.log(err);
@@ -442,6 +472,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             }
 
         },
+
         addScenarioResult : function(track,scenario,clientRole,serverRole,result) {
 
             result.id = result.id || 'id'+ new Date().getTime();
@@ -499,8 +530,13 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             resultToSave.trackers = result.trackers;
 
             if (result.asserter){
-                resultToSave.asserterid = result.asserter.id
+                resultToSave.asserterid = result.asserter.id    //todo - should this be the whole object (like author)???
             }
+
+            if ($localStorage.ecoCurrentUser) {
+                resultToSave.author = $localStorage.ecoCurrentUser;    //save the whole object.
+            }
+
 
             $http.put("/result",resultToSave).then(
                 function(){
@@ -701,6 +737,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 function(data) {
 
                     allPersons = vo.persons;    //scoped to service
+                    ciSort(allPersons,'name');
                     hashAllPersons = {};
                     allPersons.forEach(function(p){
                         hashAllPersons[p.id] = p;
@@ -711,7 +748,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                         hashServer[server.id] = server
                         allServers.push(server);
                     });
-
+                    ciSort(allServers,'name');
                     var hashClient = {};//vo.servers;
                     vo.clients.forEach(function (client) {
                         client.contact =[]
@@ -724,12 +761,9 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                         hashClient[client.id] = client
 
-
-
-
                         allClients.push(client);        //scoped to the service...
                     });
-
+                    ciSort(allClients,'name');
                     //create scenario hash
                     var hashScenario = {};
                     vo.scenarios.forEach(function (scenario) {
@@ -853,7 +887,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                             //and the scores (this could be concurrent with the links)
                             allResults = {};    //scoped to the service...
-                            $http.get("/result?_dummy="+new Date()).then(
+                            //$http.get("/result?_dummy="+new Date()).then(
+                            $http.get("/result").then(
                                 function(data) {
                                     var results = data.data;    //the results as saved in the database
                                     results.forEach(function(dataResult){
@@ -877,6 +912,12 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                             result.asserter = hashAllPersons[dataResult.asserterid];
                                         }
 
+                                        //note that the full author is saved. ?should this be the same for the asserter?
+                                        if (dataResult.author) {
+                                            result.author = hashAllPersons[dataResult.author.id];
+                                        }
+
+
                                         var key;
                                         if (dataResult.type == 'cs') {
                                             key = result.scenario.id + "|" + result.client.client.id + '|' + result.client.role.id +
@@ -890,7 +931,12 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                         allResults[key] = result;
 
                                         //now update the track totals
-                                        result.track.resultTotals[result.text]++
+                                        if (result.track && result.track.resultTotals) {
+                                            result.track.resultTotals[result.text]++
+                                        } else {
+                                            console.log('error processing result: ',dataResult)
+                                        }
+
 
 
 

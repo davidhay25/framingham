@@ -20,12 +20,10 @@
     <script>
         angular.module("sampleApp",['ui.bootstrap','ngSanitize','ngStorage','chart.js',"angular-lightweight-markdown-editor"]).
         config(function($locationProvider) {
-           // $locationProvider.html5Mode(true);
             $locationProvider.hashPrefix('!');
         });
 
         angular.module("sampleApp").config(['$compileProvider', function ($compileProvider) {
-            //$compileProvider.aHrefSanitizationWhitelist(/^\s*(|blob|):/);
 
             $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|blob):/);
 
@@ -146,12 +144,28 @@
 
             <div class="col-md-2 col-sm-2">
                 <div class="navbar-text">
-                    <input type="text" ng-model="input.currentUser"
-                           placeholder="Enter current user"
-                       typeahead-on-select = "userSelected($item, $model, $label, $event)"
-                       uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control">
+                    <div class="row">
+                        <div class="col-md-10 col-sm-10">
+                            <input type="text" ng-model="input.currentUser"
+                                   placeholder="Enter current user"
+                                   typeahead-on-select = "userSelected($item, $model, $label, $event)"
+                                   uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control"/>
+
+                        </div>
+                        <div class="col-md-2 col-sm-2">
+                            <i class="glyphicon glyphicon-remove-sign"
+                               ng-show = "input.currentUser"
+                               style="padding-top: 8px"
+                               title="Clear user" ng-click="clearUser()">
+                            </i>
+                        </div>
+                    </div>
+
+
+
                 </div>
             </div>
+
 
 
         </div>
@@ -467,7 +481,7 @@
                 <uib-tab heading="Clients">
                     <br/>
                     <div>
-                        <button class="btn btn-link pull-right" ng-click="addNewClient()">New Client</button>
+                        <button class="btn btn-link pull-right" ng-click="editClient()">New Client</button>
                     </div>
                     <table class="table table-bordered">
                         <tr><th>Name</th><th>Description</th><th>Contacts</th><th>Track / Scenario / Role</th></tr>
@@ -496,13 +510,14 @@
                 <uib-tab heading="Servers">
                     <br/>
                     <div>
-                        <button class="btn btn-link pull-right" ng-click="addNewServer()">New Server</button>
+                        <button class="btn btn-link pull-right" ng-click="editServer()">New Server</button>
                     </div>
                     <table class="table table-bordered">
-                        <tr><th>Name</th><th>Description</th><th>Contacts</th><th>Track / Scenario / Role</th></tr>
+                        <tr><th>Name</th><th>Url</th><th>Description</th><th>Contacts</th><th>Track / Scenario / Role</th><th></th></tr>
                         <tr ng-repeat="svr in allServers">
                             <td>{{svr.name}}</td>
                             <td>{{svr.address}}</td>
+                            <td>{{svr.description}}</td>
                             <td>
                                 <div ng-repeat = "person in svr.contact">
                                     {{person.name}}
@@ -516,6 +531,7 @@
                                     {{scenarioName }}
                                 </div>
                             </td>
+                            <td><button class="btn btn-link" ng-click="editServer(svr)">Edit</button> </td>
                         </tr>
                     </table>
 
@@ -602,21 +618,14 @@
                                                         </td>
                                                         <td  ng-repeat="server in scenario.servers">
                                                             <a href="#" ng-click="addTestResult(selectedTrack,scenario,client,server)">
-                                                        <span uib-popover={{showTestResultNote(scenario,client,server)}}
-                                                              popover-placement="left"
-                                                              popover-trigger="'mouseenter'">
+
+                                                                <span uib-popover-html=showTestResultNote(scenario,client,server)
+                                                                      popover-placement="left"
+                                                                      popover-trigger="'mouseenter'">
+                                                                    <p ng-bind-html="showTestResult(scenario,client,server)"></p>
+                                                                </span>
 
 
-                                                            <p ng-bind-html="showTestResult(scenario,client,server)"></p>
-
-                                                            <!--
-                                                            <span>
-                                                                 {{showTestResult(scenario,client,server)}}
-                                                            </span>
-                                                           -->
-
-
-                                                        </span>
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -859,12 +868,12 @@
 
                                             <table class="table table-bordered">
                                                 <tr>
-                                                    <th>Scenario</th><th>Participants</th><th>Asserter</th><th>Result</th>
+                                                    <th>Type</th><th>Scenario</th><th>Participants</th><th>Asserter</th><th>Result</th>
                                                     <th>Note</th><th>Trackers</th>
                                                 </tr>
                                                 <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(selectedTrackSummary)">
 
-
+                                                    <td>{{result.type}}</td>
                                                     <td>{{result.scenario.name}}</td>
                                                     <td>
                                                         <div ng-show="result.client">Client: {{result.client.client.name}}

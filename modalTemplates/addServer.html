@@ -26,7 +26,7 @@
             </div>
 
             <div class="col-md-6 col-sm-6">
-               <textarea class="form-control" placeholder="An optional description of the server" ng-model = "input.description"></textarea>
+               <textarea class="form-control" placeholder="A required description of the server" ng-model = "input.description"></textarea>
             </div>
         </div>
         <br/>
@@ -62,7 +62,8 @@
 
             </div>
             <div class="col-md-6 col-sm-6">
-                <button ng-show="input.name && input.address && selectedPerson && input.description" class="btn btn-primary pull-right" ng-click="addServer()">Add new Server</button>
+                <button ng-show="input.name && input.address && selectedPerson && input.description"
+                        class="btn btn-primary pull-right" ng-click="addServer()">{{saveText}}</button>
             </div>
         </div>
     </div>

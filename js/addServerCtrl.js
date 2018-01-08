@@ -1,13 +1,32 @@
 angular.module("sampleApp")
     .controller('addServerCtrl',
-        function ($scope,ecosystemSvc,modalService,$http) {
+        function ($scope,ecosystemSvc,modalService,$http,existingServer) {
 
             $scope.input = {};
+            $scope.saveText = "Add new Server";
             var serverExists = false;
 
-            $scope.contact = ecosystemSvc.getCurrentUser();
-            $scope.selectedPerson = ecosystemSvc.getCurrentUser();
+            if (existingServer) {
+                //this is an edit
+                serverExists = true;
+                $scope.saveText = "Update server";
+                $scope.input.name = existingServer.name;
+                $scope.input.description = existingServer.description ;
+                $scope.input.address = existingServer.address ;
 
+                if (existingServer.contact) {
+                    $scope.contact = existingServer.contact[0];
+                    $scope.selectedPerson = existingServer.contact[0];
+                } else {
+                    $scope.contact = ecosystemSvc.getCurrentUser();
+                    $scope.selectedPerson = ecosystemSvc.getCurrentUser();
+                }
+
+            } else {
+                //this is new...
+                $scope.contact = ecosystemSvc.getCurrentUser();
+                $scope.selectedPerson = ecosystemSvc.getCurrentUser();
+            }
 
             $scope.contactSelected = function(item){
                 $scope.selectedPerson = item;
@@ -38,6 +57,12 @@ angular.module("sampleApp")
             };
 
             $scope.checkName = function() {
+                //if this is an edit, then don't check for dupes!
+                if (existingServer) {
+                    return true;
+                }
+
+
                 var canAdd = true;
                 var allServers = ecosystemSvc.getAllServers();
                 allServers.forEach(function (svr) {
@@ -51,13 +76,21 @@ angular.module("sampleApp")
 
             $scope.addServer = function(){
 
-                if (serverExists) {
+                if (serverExists) {     //is there a FHIR server at the configured Url?
+
+                    var isNewServer = true;
                     var server = {id:'id'+new Date().getTime()};
+                    if (existingServer) {
+                        server.id = existingServer.id;
+                        isNewServer = false;
+                    }
+
+
                     server.name = $scope.input.name;
                     server.description = $scope.input.description;
                     server.address = $scope.input.address;
                     server.contact = [$scope.selectedPerson];
-                    ecosystemSvc.addNewServer(server).then(
+                    ecosystemSvc.updateServer(server,isNewServer).then(
                         function(data) {
                             $scope.$close()
                         }, function(err) {
@@ -65,6 +98,8 @@ angular.module("sampleApp")
                             $scope.$dismiss()
                         }
                     )
+                } else {
+                    alert("You need to check that the server exists...")
                 }
 
 

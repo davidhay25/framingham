@@ -17,9 +17,16 @@ angular.module("sampleApp")
                 }
             );
 
+            $scope.input.currentUser = ecosystemSvc.getCurrentUser();
             $scope.userSelected = function(item){
                 $scope.input.currentUser = item;
                 ecosystemSvc.setCurrentUser(item)
+            };
+
+            $scope.clearUser = function(){
+                ecosystemSvc.clearCurrentUser();
+                delete $scope.input.currentUser
+
             };
 
             ecosystemSvc.getConnectathonResources().then(
@@ -32,9 +39,12 @@ angular.module("sampleApp")
 
                     $scope.tracks = vo.tracks;
 
-                    $scope.allClients =  ecosystemSvc.getAllClients();
+                    $scope.allClients =   ecosystemSvc.getAllClients();
                     $scope.allServers = ecosystemSvc.getAllServers();
                     $scope.allPersons = ecosystemSvc.getAllPersons();
+
+
+
                 }
             );
 
@@ -221,20 +231,8 @@ angular.module("sampleApp")
                         $scope.chartData.push(summary.note)
                         $scope.chartColors.push('#6E94FF')
                     }
-
-
-
-
-                    /*
-                    angular.forEach(summary,function(v,k){
-                        $scope.chartLabels.push(k)
-                        $scope.chartData.push(v)
-                       // $scope.chartData.push(v)
-                    })
-                    */
+                    
                 }
-
-
 
             };
 
@@ -245,8 +243,27 @@ angular.module("sampleApp")
             };
 
             $scope.showTestResultNote = function(scenario,client,server) {
-                var result = ecosystemSvc.getScenarioResult(scenario,client,server) || {note: ''}
-                return result.note
+
+                var result = ecosystemSvc.getScenarioResult(scenario,client,server);// || {note: ''}
+                if (result) {
+                    var display = "";
+                    if (result.asserter) {
+                        display += "<div>Asserter: " + result.asserter.name + "</div>"
+                    }
+                    if (result.author) {
+                        display += "<div>Author: " + result.author.name + "</div>"
+                    }
+                    if (result.note) {
+                        display += "<div><br/>" + result.note + "</div>"
+                    }
+
+
+                    return display;
+                } else {
+                    return "";
+                }
+
+                //return result.note
             };
 
 
@@ -324,7 +341,7 @@ angular.module("sampleApp")
                 });
             };
 
-            $scope.addNewClient = function() {
+            $scope.editClient = function() {
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addClient.html',
                     //size: 'lg',
@@ -335,16 +352,18 @@ angular.module("sampleApp")
 
                 });
             };
-            $scope.addNewServer = function() {
+            $scope.editServer = function(svr) {
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addServer.html',
                     //size: 'lg',
-                    controller: 'addServerCtrl'
+                    controller: 'addServerCtrl',
+                    resolve : {
+                        existingServer: function () {          //the default config
+                            return svr;
+                        }
+                    }
 
-                }).result.then(function(vo){
-                    console.log(vo)
-
-                });
+                })
             };
 
             $scope.download = function(downloadThingType,track) {

@@ -18,6 +18,7 @@ if (! port) {
 
 
 
+//look for command line parameters...
 process.argv.forEach(function (val, index, array) {
     //console.log(index + ': ' + val);
 
@@ -74,6 +75,41 @@ if (useSSL) {
     console.log('server listening  on port ' + port);
 }
 
+//middleware invoked on every request...
+app.use(function (req, res, next) {
+
+    console.log('Time:', Date.now(), dbName)
+    if (!db) {
+        res.send({err:'Database could not be connected to. It may not be running...'},500)
+    } else {
+        //save in the audit if a PUT or a POST
+        if (req.method == 'PUT' || req.method == 'POST') {
+            var audit = {url:req.url,body:req.body,time:new Date(),method:req.method}
+            db.collection("audit").insert(audit,function(err,result){
+                if (err) {
+                    res.send({err:'Unable to insert record into the audit database...'},500)
+
+                } else {
+                    next()
+                }
+            })
+
+
+        } else {
+            //this is a GET...
+            next()
+        }
+
+
+
+        console.log(req.url,req.method,req.body)
+
+    }
+
+
+
+
+})
 
 var showLog = false;         //for debugging...
 
@@ -91,6 +127,7 @@ bodyParser.json();
 //================================ clients =======================
 //get all clients
 app.get('/client',function(req,res){
+    // db.collection("client").find({}).sort( { name: 1 }).toArray(function(err,result){
     db.collection("client").find({}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
@@ -114,7 +151,7 @@ app.post('/client',function(req,res){
 //================================ servers =======================
 //get all servers
 app.get('/server',function(req,res){
-    db.collection("server").find({}).toArray(function(err,result){
+    db.collection("server").find({}).sort( { name: 1 }).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -123,9 +160,13 @@ app.get('/server',function(req,res){
     })
 });
 
-//add a single server
+//add or updates a single server
 app.post('/server',function(req,res){
-    db.collection("server").insert(req.body,function(err,result){
+
+    var server = req.body;
+    db.collection("server").update({id:server.id},server,{upsert:true},function(err,result){
+
+   // db.collection("server").insert(req.body,function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -191,7 +232,8 @@ app.post('/link',function(req,res){
 //============================= persons ==============
 //get all people
 app.get('/person',function(req,res){
-    db.collection("person").find({}).sort( { name: 1 }).toArray(function(err,result){
+    //db.collection("person").find({}).sort( { name: 1 }).collation({locale:'en',strength:2}).toArray(function(err,result){
+    db.collection("person").find({}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -232,10 +274,6 @@ app.get('/config/:type',function(req,res){
 app.post('/config/:type',function(req,res){
     var item = req.body;
     var type = req.params.type;
-    //console.log(type,item)
-
-  //  res.send({})
-   // return
 
     db.collection(type).update({id:item.id},item,{upsert:true},function(err,result){
         if (err) {
