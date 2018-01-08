@@ -20,7 +20,9 @@
 
         <div class="row">
             <div class="col-md-6 col-sm-6">
-                <input type="text" class="form-control" ng-model="input.name" placeholder="Enter the client name. Keep it short"/>
+                <input type="text" class="form-control" ng-model="input.name"
+                       ng-blur = "checkName()"
+                       placeholder="Enter the client name. Keep it short"/>
             </div>
 
             <div class="col-md-6 col-sm-6">
@@ -49,7 +51,7 @@
 
             </div>
             <div class="col-md-6 col-sm-6">
-                <button ng-show="input.name && contact" class="btn btn-primary pull-right" ng-click="addClient()">Add new Client</button>
+                <button ng-show="input.name && contact && canAdd" class="btn btn-primary pull-right" ng-click="addClient()">{{saveText}}</button>
             </div>
         </div>
     </div>

@@ -258,18 +258,24 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             //get a summary object for a track
             var summary = {total : 0, scenario : {}}
             angular.forEach(allResults,function(value,key) {
-                if (value.track.id == track.id) {
-                    summary.total ++;
+
+                if (value.track) {
+                    if (value.track.id == track.id) {
+                        summary.total ++;
 
 
-                    var scenarioName = value.scenario.name;
-                    var scenarioId = value.scenario.id;
-                    summary.scenario[scenarioName] = summary.scenario[scenarioName] || {pass:0,fail:0,partial:0,note:0,total:0}
-                    var item = summary.scenario[scenarioName];
-                    item[value.text]++;         //todo - shoudl change the name of 'text'
-                    item.total ++;
+                        var scenarioName = value.scenario.name;
+                        var scenarioId = value.scenario.id;
+                        summary.scenario[scenarioName] = summary.scenario[scenarioName] || {pass:0,fail:0,partial:0,note:0,total:0}
+                        var item = summary.scenario[scenarioName];
+                        item[value.text]++;         //todo - shoudl change the name of 'text'
+                        item.total ++;
 
+                    }
+                } else {
+                    alert("There's an invalid result with the id: "+value.id)
                 }
+
 
             })
             return summary;
@@ -339,7 +345,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             }
         },
 
-        addNewClient : function(client) {
+        updateClient : function(client,isNewClient) {
             var deferred = $q.defer();
 
             //replace contact details with id
@@ -356,9 +362,23 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
             $http.post("/client",client).then(
                 function(data){
+
+
+                    if (! isNewClient) {
+                        //we'ue updated a client - need to remove it from the list...
+                        for (var i=0; i < allClients.length; i++) {
+                            var clnt = allClients[i]
+                            if (clnt.id == client.id) {
+                                allClients.splice(i,1);
+                                break;
+                            }
+                        }
+                    }
+
                     //now add the client to the cached list...
+
                     allClients.push(client);
-                    ciSort(allClients,'name');
+                    ciSort(allClients,'name');  //and sort...
                     deferred.resolve(client)
                 }, function(err) {
                     console.log(err);

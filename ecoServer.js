@@ -137,9 +137,11 @@ app.get('/client',function(req,res){
     })
 });
 
-//add a single client
+//add/update a single client
 app.post('/client',function(req,res){
-    db.collection("client").insert(req.body,function(err,result){
+    var client = req.body
+    db.collection("client").update({id:client.id},client,{upsert:true},function(err,result){
+   // db.collection("client").insert(req.body,function(err,result){
         if (err) {
             res.send(err,500)
         } else {

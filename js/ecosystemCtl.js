@@ -341,17 +341,20 @@ angular.module("sampleApp")
                 });
             };
 
-            $scope.editClient = function() {
+            $scope.editClient = function(clnt) {
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addClient.html',
                     //size: 'lg',
-                    controller: 'addClientCtrl'
+                    controller: 'addClientCtrl',
+                    resolve : {
+                        existingClient: function () {          //the default config
+                            return clnt;
+                        }
+                    }
 
-                }).result.then(function(vo){
-                    console.log(vo)
-
-                });
+                })
             };
+
             $scope.editServer = function(svr) {
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addServer.html',
