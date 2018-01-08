@@ -153,7 +153,7 @@ app.post('/client',function(req,res){
 //================================ servers =======================
 //get all servers
 app.get('/server',function(req,res){
-    db.collection("server").find({}).sort( { name: 1 }).toArray(function(err,result){
+    db.collection("server").find({}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {

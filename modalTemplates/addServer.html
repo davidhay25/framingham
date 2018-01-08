@@ -18,45 +18,75 @@
 
     <div class="modal-body">
 
-        <div class="row">
-            <div class="col-md-6 col-sm-6">
-                <input type="text" class="form-control" ng-model="input.name"
-                       ng-blur = "checkName()"
-                       placeholder="Enter the server name. Keep it short"/>
-            </div>
+        <uib-tabset>
+            <uib-tab heading="Description">
+                <br/>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <input type="text" class="form-control" ng-model="input.name"
+                               ng-blur = "checkName()"
+                               placeholder="Enter the server name. Keep it short"/>
+                    </div>
 
-            <div class="col-md-6 col-sm-6">
-               <textarea class="form-control" placeholder="A required description of the server" ng-model = "input.description"></textarea>
-            </div>
-        </div>
-        <br/>
-        <div class="row">
-            <div class="col-md-8 col-sm-8">
-                <input type="text" class="form-control" ng-model="input.address" placeholder="Enter the Url to the server FHIR root"/>
-            </div>
-
-            <div class="col-md-4 col-sm-4">
-                <button class="btn btn-primary" ng-click="checkServerExists()">Check </button>
-                <div class="pull-right" ng-show="waiting">
-                    <img src="css/ajax_loader_blue_32.gif"/>
+                    <div class="col-md-6 col-sm-6">
+                        <textarea class="form-control" placeholder="A required description of the server" ng-model = "input.description"></textarea>
+                    </div>
                 </div>
-            </div>
-        </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-8 col-sm-8">
+                        <input type="text" class="form-control" ng-model="input.address" placeholder="Enter the Url to the server FHIR root"/>
+                    </div>
 
-        <br/>
+                    <div class="col-md-4 col-sm-4">
+                        <button class="btn btn-primary" ng-click="checkServerExists()">Check </button>
+                        <div class="pull-right" ng-show="waiting">
+                            <img src="css/ajax_loader_blue_32.gif"/>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="row">
-            <div class="col-md-2 col-sm-2">
-                Contact
-            </div>
-            <div class="col-md-5 col-sm-5">
-                <input type="text" ng-model="contact"
-                       typeahead-on-select = "contactSelected($item, $model, $label, $event)"
-                       uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control">
+                <br/>
 
-            </div>
-        </div>
-        <br/>
+                <div class="row">
+                    <div class="col-md-2 col-sm-2">
+                        Contact
+                    </div>
+                    <div class="col-md-5 col-sm-5">
+                        <input type="text" ng-model="input.contact"
+                               typeahead-on-select = "contactSelected($item, $model, $label, $event)"
+                               uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control">
+
+                    </div>
+                </div>
+                <br/>
+
+
+            </uib-tab>
+            <uib-tab>
+                <uib-tab-heading>
+                    Ecosystem roles
+                    <span class="badge" ng-show="input.serverRoleCount > 0">{{input.serverRoleCount}}</span>
+                </uib-tab-heading>
+                <br/>
+                <div ng-repeat="serverRole in eventConfig.serverRoles">
+                    <span  uib-popover={{serverRole.definition}}
+                          popover-placement="top"
+                          popover-trigger="'mouseenter'">
+                        <input type="checkbox" model="input.serverRole[serverRole.code]"
+                               ng-checked = "input.serverRole[serverRole.code]"
+                               ng-click = "input.serverRole[serverRole.code] = ! input.serverRole[serverRole.code]"
+
+                        /> {{serverRole.display}}
+                    </span>
+
+                </div>
+
+
+            </uib-tab>
+        </uib-tabset>
+
+
         <div class="row">
             <div class="col-md-6 col-sm-6">
 

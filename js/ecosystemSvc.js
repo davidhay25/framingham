@@ -129,6 +129,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     var allClients = [];
     var allPersons = [];
     var hashAllPersons = {};
+    var eventConfig = {};
 
     //var currentUser;
     //case insensitive sort
@@ -148,6 +149,12 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
     var allResults = {};// = $localStorage.allResults || {};
     return {
+        setEventConfig : function(config) {
+            eventConfig = config;
+        },
+        getEventConfig : function() {
+            return eventConfig;
+        },
         setCurrentUser : function(user) {
             $localStorage.ecoCurrentUser = user;
             //currentUser = user

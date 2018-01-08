@@ -6,14 +6,72 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <meta charset="UTF-8">
     <title>Docs</title>
+
+    <style>
+        .myBox {
+            margin-top: 10px;
+            box-shadow: 0 0 8px black;
+            padding:12px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+
+        }
+    </style>
 </head>
 <body style="padding:8px" >
 
-<h3>Purpose</h3>
 
-To support a FHIR connectathon, and record the results.
+<div class="row">
+    <div class="col-md-6 col-sm-6">
+        <h3>Purpose</h3>
 
-<h3>Using</h3>
+        To support a FHIR connectathon, and record the results. Key features:
+        <ul>
+            <li>Configurable track setup (though no UI yet)</li>
+            <li>User configurable Clients & Servers</li>
+            <li>Client/Server and 'note style' tests with link to Tracker</li>
+            <li>Result reporting - summary and detail. Can be downloaded.</li>
+        </ul>
+
+    </div>
+    <div class="col-md-6 col-sm-6">
+        <div class="myBox">
+            <h3>Useful links</h3>
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <ul class="list-unstyled">
+                        <li><a target="_blank" href="http://build.fhir.org/">Current Build (R4)</a></li>
+                        <li><a target="_blank" href="http://hl7.org/fhir/DSTU2/index.html">STU-2 Specification</a></li>
+                        <li><a target="_blank" href="http://hl7.org/fhir/index.html">STU-3 (R3) Specification</a></li>
+                        <li><a target="_blank" href="http://hl7.org/fhir/DSTU2/index.html">STU-2 Specification</a></li>
+
+                    </ul>
+
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <ul class="list-unstyled">
+                        <li><a href="http://wiki.hl7.org/index.php?title=FHIR_Connectathon_17" target="_blank">Connectathon wiki page</a></li>
+                        <li><a target="_blank" href="http://wiki.hl7.org/index.php?title=FHIR">FHIR wiki</a></li>
+
+
+                        <li><a target="_blank" href="http://clinfhir.com">clinFHIR</a></li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+            <div><em class="pull-right">(All links open in a new tab)</em></div>
+            <br/>
+        </div>
+
+    </div>
+</div>
+
+
+
+<h3>Using the application</h3>
 
 To use the Manager, follow these steps.
 
@@ -43,7 +101,7 @@ At any stage, you can record the outcome of a test - or just make a note against
             performed, but some notes want to be registered</li>
             <li>A general comments field</li>
             <li>Tracker items made as a result of the test. There is a link to GForge (where trackers are entered), and the
-            tracker is entered directly into GForge, and the URL pasted manually back to the form</li>
+            tracker is entered directly into GForge, and the URL is then pasted manually back to the form</li>
         </ul>
         There can only be a single result for any combination of Client & Server, but it can be edited. Note that there is no
         security applied - anyone can make any change.

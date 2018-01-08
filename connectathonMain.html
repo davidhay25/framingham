@@ -36,6 +36,9 @@
     </script>
 
     <style>
+
+
+
         .markdown-editor {
             border: 1px solid #ccc;
             border-radius: 2px;
@@ -342,20 +345,6 @@
                                             </div>
 
                                             <hr style="height: 8px"/>
-                                            <div class="row">
-                                                <div class="col-sm-3 col-md-3">
-                                                    Configured Servers
-                                                </div>
-                                                <div class="col-sm-9 col-md-9">
-                                                    <ul >
-                                                        <li ng-repeat="serverRole in selectedScenario.servers">
-                                                            {{serverRole.server.name}} ({{serverRole.role.name}})
-                                                        </li>
-                                                    </ul>
-                                                    <button class="btn btn-link  pull-right" ng-click="addServerToScenario(selectedScenario)">Add Server</button>
-
-                                                </div>
-                                            </div>
 
                                             <div class="row">
                                                 <div class="col-sm-3 col-md-3">
@@ -374,6 +363,22 @@
 
                                                 </div>
                                             </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-3">
+                                                    Configured Servers
+                                                </div>
+                                                <div class="col-sm-9 col-md-9">
+                                                    <ul >
+                                                        <li ng-repeat="serverRole in selectedScenario.servers">
+                                                            {{serverRole.server.name}} ({{serverRole.role.name}})
+                                                        </li>
+                                                    </ul>
+                                                    <button class="btn btn-link  pull-right" ng-click="addServerToScenario(selectedScenario)">Add Server</button>
+
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -933,6 +938,7 @@
                     <iframe width="100%" height="900px" src="/artifacts/docs.html"></iframe>
 
                 </uib-tab>
+
 
 
 <!--

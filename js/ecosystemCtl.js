@@ -13,6 +13,7 @@ angular.module("sampleApp")
                     console.log(data.data)
                     if (data.data) {
                         $scope.eventConfig = data.data[0];
+                        ecosystemSvc.setEventConfig(data.data[0]);
                     }
                 }
             );
@@ -47,6 +48,8 @@ angular.module("sampleApp")
 
                 }
             );
+
+            $scope.wikiPageUrl = "http://wiki.hl7.org/index.php?title=FHIR_Connectathon_17";
 
             $scope.ecosystemSvc = ecosystemSvc;
 

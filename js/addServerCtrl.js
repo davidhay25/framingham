@@ -3,8 +3,11 @@ angular.module("sampleApp")
         function ($scope,ecosystemSvc,modalService,$http,existingServer) {
 
             $scope.input = {};
+            $scope.input.serverRole = {}
             $scope.saveText = "Add new Server";
             var serverExists = false;
+
+            $scope.eventConfig = ecosystemSvc.getEventConfig();
 
             if (existingServer) {
                 //this is an edit
@@ -15,16 +18,26 @@ angular.module("sampleApp")
                 $scope.input.address = existingServer.address ;
 
                 if (existingServer.contact) {
-                    $scope.contact = existingServer.contact[0];
+                    $scope.input.contact = existingServer.contact[0];
                     $scope.selectedPerson = existingServer.contact[0];
                 } else {
-                    $scope.contact = ecosystemSvc.getCurrentUser();
+                    $scope.input.contact = ecosystemSvc.getCurrentUser();
                     $scope.selectedPerson = ecosystemSvc.getCurrentUser();
                 }
 
+                $scope.input.serverRoleCount = 0;
+                if (existingServer.serverRoles) {
+                    existingServer.serverRoles.forEach(function (sr) {
+                        $scope.input.serverRole[sr.code] = true;
+                        $scope.input.serverRoleCount++;
+                    })
+                }
+
+                //console.log($scope.input.serverRole)
+
             } else {
                 //this is new...
-                $scope.contact = ecosystemSvc.getCurrentUser();
+                $scope.input.contact = ecosystemSvc.getCurrentUser();
                 $scope.selectedPerson = ecosystemSvc.getCurrentUser();
             }
 
@@ -78,6 +91,7 @@ angular.module("sampleApp")
 
                 if (serverExists) {     //is there a FHIR server at the configured Url?
 
+
                     var isNewServer = true;
                     var server = {id:'id'+new Date().getTime()};
                     if (existingServer) {
@@ -90,6 +104,18 @@ angular.module("sampleApp")
                     server.description = $scope.input.description;
                     server.address = $scope.input.address;
                     server.contact = [$scope.selectedPerson];
+
+                    //now the ecosystem roles
+                    server.serverRoles = []
+                    console.log($scope.input.serverRole);
+
+                    angular.forEach($scope.input.serverRole,function (v,k) {
+                        console.log(v,k)
+                        if (v) {
+                            server.serverRoles.push({code:k})
+                        }
+                    });
+
                     ecosystemSvc.updateServer(server,isNewServer).then(
                         function(data) {
                             $scope.$close()
