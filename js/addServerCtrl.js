@@ -5,6 +5,7 @@ angular.module("sampleApp")
             $scope.input = {};
             $scope.input.serverRole = {}
             $scope.saveText = "Add new Server";
+
             var serverExists = false;
 
             $scope.eventConfig = ecosystemSvc.getEventConfig();
@@ -60,6 +61,34 @@ angular.module("sampleApp")
                     function(data) {
                         modalService.showModal({},{bodyText:"The CapabilityStatement was returned, so this server can be addded!"});
                         serverExists = true;
+                        console.log(data.data);
+                        var cs = data.data;
+                        //extract key data from the CapabilityStatement
+                        $scope.serverDetails = {types:[]};
+
+                        if (cs.rest && cs.rest[0].resource) {
+                            cs.rest[0].resource.forEach(function (res) {
+                                var item = {type:res.type};
+                                if (res.interaction) {
+                                    var cap = ""
+                                    res.interaction.forEach(function (int) {
+                                        if (int.code == 'read') {
+                                            cap += 'R'
+                                        }
+                                        if (int.code == 'create') {
+                                            cap += 'W'
+                                        }
+                                        if (int.code == 'update') {
+                                            cap += 'U'
+                                        }
+                                    })
+                                    item.cap = cap;
+                                }
+                                $scope.serverDetails.types.push(item);
+                            })
+                        }
+
+
                     },
                     function(err) {
                         modalService.showModal({},{bodyText:"There was no CapabilityStatement returned from "+url+". Are you sure address is correct?"});
@@ -108,13 +137,16 @@ angular.module("sampleApp")
                     //now the ecosystem roles
                     server.serverRoles = []
                     console.log($scope.input.serverRole);
-
                     angular.forEach($scope.input.serverRole,function (v,k) {
                         console.log(v,k)
                         if (v) {
                             server.serverRoles.push({code:k})
                         }
                     });
+
+                    if ($scope.serverDetails) {
+                        server.serverDetails = $scope.serverDetails;
+                    }
 
                     ecosystemSvc.updateServer(server,isNewServer).then(
                         function(data) {

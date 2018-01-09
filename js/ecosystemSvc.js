@@ -149,6 +149,22 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
     var allResults = {};// = $localStorage.allResults || {};
     return {
+        findServersWithServerRole : function(serverRole) {
+            var ar = [];
+            allServers.forEach(function (svr) {
+
+                if (svr.serverRoles) {
+                    for (var i=0; i< svr.serverRoles.length;i++) {
+                        var s = svr.serverRoles[i];
+                        if (s.code == serverRole.code) {
+                            ar.push(svr);
+                            break;
+                        }
+                    }
+                }
+            })
+            return ar;
+        },
         setEventConfig : function(config) {
             eventConfig = config;
         },

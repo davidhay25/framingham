@@ -517,31 +517,94 @@
 
                 <uib-tab heading="Servers">
                     <br/>
-                    <div>
-                        <button class="btn btn-link pull-right" ng-click="editServer()">New Server</button>
-                    </div>
-                    <table class="table table-bordered">
-                        <tr><th>Name</th><th>Url</th><th>Description</th><th>Contacts</th><th>Track / Scenario / Role</th><th></th></tr>
-                        <tr ng-repeat="svr in allServers">
-                            <td>{{svr.name}}</td>
-                            <td>{{svr.address}}</td>
-                            <td>{{svr.description}}</td>
-                            <td>
-                                <div ng-repeat = "person in svr.contact">
-                                    {{person.name}}
-                                    <span ng-repeat="contact in person.contact">
-                                        {{contact.type}}: {{contact.value}}
-                                    </span>
+
+                    <uib-tabset>
+                        <uib-tab heading="Connectathon">
+                            <div>
+                                <button class="btn btn-link pull-right" ng-click="editServer()">New Server</button>
+                            </div>
+                            <table class="table table-bordered">
+                                <tr><th>Name</th><th>Url</th><th>Description</th><th>Contacts</th><th>Track / Scenario / Role</th><th></th></tr>
+                                <tr ng-repeat="svr in allServers">
+                                    <td>{{svr.name}}</td>
+                                    <td>{{svr.address}}</td>
+                                    <td>{{svr.description}}</td>
+                                    <td>
+                                        <div ng-repeat = "person in svr.contact">
+                                            {{person.name}}
+                                            <span ng-repeat="contact in person.contact">
+                                                {{contact.type}}: {{contact.value}}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div ng-repeat="scenarioName in getScenariosForServer(svr) track by $index">
+                                            {{scenarioName }}
+                                        </div>
+                                    </td>
+                                    <td><button class="btn btn-link" ng-click="editServer(svr)">Edit</button> </td>
+                                </tr>
+                            </table>
+
+                        </uib-tab>
+                        <uib-tab heading="Ecosystem">
+                            <div class="banner">Locate servers by ecosystem role (rather than Scenario role)</div>
+
+                            <div class="row">
+                                <div class="col-sm-2 col-md-2">
+                                    <ul class="list-group">
+                                        <li ng-class="{'list-group-item':true}"
+                                            ng-click="selectServerRole(server)"
+                                            ng-repeat="server in eventConfig.serverRoles">
+                                            {{server.display}}
+                                        </li>
+                                    </ul>
                                 </div>
-                            </td>
-                            <td>
-                                <div ng-repeat="scenarioName in getScenariosForServer(svr) track by $index">
-                                    {{scenarioName }}
+                                <div class="col-sm-3 col-md-3">
+                                    <div ng-show="serversWithServerRole.length == 0">No servers in this role...</div>
+                                    <ul class="list-group">
+                                        <li ng-class="{'list-group-item':true}"
+                                            ng-click="selectServerWithServerRole(svr)"
+                                            ng-repeat="svr in serversWithServerRole">
+                                            {{svr.name}}
+                                        </li>
+                                    </ul>
                                 </div>
-                            </td>
-                            <td><button class="btn btn-link" ng-click="editServer(svr)">Edit</button> </td>
-                        </tr>
-                    </table>
+                                <div class="col-sm-3 col-md-3">
+                                    <table class="table table-bordered">
+                                        <tr><td>Name</td><td>{{selectedServer.name}}</td></tr>
+                                        <tr><td>Description</td><td>{{selectedServer.description}}</td></tr>
+                                        <tr><td>Url</td><td>{{selectedServer.address}}</td></tr>
+                                        <tr><td>Contact</td><td>
+                                            <div ng-repeat = "person in selectedServer.contact">
+                                                {{person.name}}
+                                                <span ng-repeat="contact in person.contact">
+                                                {{contact.type}}: {{contact.value}}
+                                            </span>
+                                            </div>
+                                        </td></tr>
+                                    </table>
+
+
+                                    <table class="table table-bordered">
+                                        <tr><th>Resource type</th><th>Capabilities</th></tr>
+                                        <tr ng-repeat="type in selectedServer.serverDetails.types">
+                                            <td>{{type.type}}</td>
+                                            <td>{{type.cap}}</td>
+                                        </tr>
+                                    </table>
+                                    <!--
+                                    <pre>{{selectedServer | json}}</pre>
+                                    -->
+                                </div>
+                            </div>
+
+
+
+                        </uib-tab>
+                    </uib-tabset>
+
+
 
                 </uib-tab>
 

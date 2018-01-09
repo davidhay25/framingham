@@ -53,6 +53,15 @@ angular.module("sampleApp")
 
             $scope.ecosystemSvc = ecosystemSvc;
 
+            $scope.selectServerRole = function(serverRole){
+                //find servers with this serverRole set
+                $scope.serversWithServerRole = ecosystemSvc.findServersWithServerRole(serverRole);
+            };
+
+            $scope.selectServerWithServerRole = function(server) {
+                $scope.selectedServer = server;
+            }
+
             $scope.selectScenarioDirect = function (scenario) {
                 $scope.selectedScenarioDirect = scenario;
             }
