@@ -7,7 +7,13 @@ var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
-var dbName = 'connectathon';
+var dbName = 'connectathon';    //default database name...
+
+
+process.on('uncaughtException', function(err) {
+    console.log('>>>>>>>>>>>>>>> Caught exception: ' + err);
+});
+
 
 
 //the default port. This can be overwritten when the server is executed or from the IDE.
@@ -78,7 +84,7 @@ if (useSSL) {
 //middleware invoked on every request...
 app.use(function (req, res, next) {
 
-    console.log('Time:', Date.now(), dbName)
+   // console.log('Time:', Date.now(), dbName)
     if (!db) {
         res.send({err:'Database could not be connected to. It may not be running...'},500)
     } else {
@@ -102,12 +108,9 @@ app.use(function (req, res, next) {
 
 
 
-        console.log(req.url,req.method,req.body)
+        //console.log(req.url,req.method,req.body)
 
     }
-
-
-
 
 })
 
@@ -123,6 +126,61 @@ app.use(session({
 
 var bodyParser = require('body-parser')
 bodyParser.json();
+
+
+function recordAccess(req,data,cb) {
+
+    var clientIp = req.headers['x-forwarded-for'] ||
+        req.connection.remoteAddress ||
+        req.socket.remoteAddress ||
+        req.connection.socket.remoteAddress;
+
+    if (db) {
+        var audit = {ip:clientIp,date:new Date().getTime()};
+        audit.data = data;
+
+        var options = {
+            method:'GET',
+            uri : "http://freegeoip.net/json/"+clientIp
+        };
+
+        request(options,function(error,response,body) {
+
+            if (body) {
+                var loc;
+                try {
+                    loc = JSON.parse(body);
+                    audit.loc = loc;
+                    db.collection("accessAudit").insert(audit, function (err, result) {
+                        if (err) {
+                            console.log('Error logging access ',audit)
+                            cb(err);
+                        } else {
+                            cb();
+                        }
+
+                    });
+                } catch (ex) {
+                    cb()
+                }
+            } else {
+                cb();
+            }
+        })
+
+    }
+}
+
+//====== access
+
+//record the access - but don't wait, or bother about an error...
+app.post('/startup',function(req,res){
+    var data = req.body;    //may be empty
+    recordAccess(req,data,function(){
+        res.json({})
+    });
+
+})
 
 //================================ clients =======================
 //get all clients
@@ -153,6 +211,7 @@ app.post('/client',function(req,res){
 //================================ servers =======================
 //get all servers
 app.get('/server',function(req,res){
+
     db.collection("server").find({}).toArray(function(err,result){
         if (err) {
             res.send(err,500)

@@ -8,6 +8,8 @@ angular.module("sampleApp")
 
             Chart.defaults.global.colors = ['#00cc00','#cc3300','#ffff99','#6E94FF']; //for the stacked bar chart...
 
+            $http.post("/startup",{})  //record access
+
             $http.get("config/admin/").then(
                 function(data) {
                     console.log(data.data)
