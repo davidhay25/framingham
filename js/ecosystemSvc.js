@@ -130,6 +130,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     var allPersons = [];
     var hashAllPersons = {};
     var eventConfig = {};
+    var serverRoleSummary;
 
     //var currentUser;
     //case insensitive sort
@@ -149,7 +150,33 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
     var allResults = {};// = $localStorage.allResults || {};
     return {
+        makeServerRoleSummary : function(){
+            serverRoleSummary = {};
+            eventConfig.serverRoles.forEach(function (r) {
+                serverRoleSummary[r.code] = {servers:[]}
+            });
+
+            //var summary = angular.copy(eventConfig.serverRoles)
+            allServers.forEach(function (svr) {
+
+                if (svr.serverRoles) {
+                    for (var i=0; i< svr.serverRoles.length;i++) {
+                        var s = svr.serverRoles[i];
+                        var code = s.code;      //this is the serverRole;
+                        serverRoleSummary[code].servers = serverRoleSummary[code].servers || [];
+                        serverRoleSummary[code].servers.push(svr)
+
+
+                    }
+                }
+            });
+            return serverRoleSummary;
+
+        },
         findServersWithServerRole : function(serverRole) {
+
+            return serverRoleSummary[serverRole.code].servers;
+
             var ar = [];
             allServers.forEach(function (svr) {
 

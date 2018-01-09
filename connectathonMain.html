@@ -548,22 +548,28 @@
 
                         </uib-tab>
                         <uib-tab heading="Ecosystem">
-                            <div class="banner">Locate servers by ecosystem role (rather than Scenario role)</div>
+                            <div class="banner">Locate servers by ecosystem role (rather than Scenario role) - Experimental</div>
 
                             <div class="row">
                                 <div class="col-sm-2 col-md-2">
                                     <ul class="list-group">
-                                        <li ng-class="{'list-group-item':true}"
+                                        <li style="cursor: pointer"
+                                            ng-class="{'list-group-item':true}"
                                             ng-click="selectServerRole(server)"
                                             ng-repeat="server in eventConfig.serverRoles">
                                             {{server.display}}
+
+                                            <span ng-show="serverRoleSummary[server.code].servers.length > 0"
+                                                  class="badge">{{serverRoleSummary[server.code].servers.length}}
+                                            </span>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="col-sm-3 col-md-3">
                                     <div ng-show="serversWithServerRole.length == 0">No servers in this role...</div>
                                     <ul class="list-group">
-                                        <li ng-class="{'list-group-item':true}"
+                                        <li  style="cursor: pointer"
+                                             ng-class="{'list-group-item':true}"
                                             ng-click="selectServerWithServerRole(svr)"
                                             ng-repeat="svr in serversWithServerRole">
                                             {{svr.name}}
@@ -571,7 +577,7 @@
                                     </ul>
                                 </div>
                                 <div class="col-sm-3 col-md-3">
-                                    <table class="table table-bordered">
+                                    <table ng-show="selectedServer" class="table table-bordered">
                                         <tr><td>Name</td><td>{{selectedServer.name}}</td></tr>
                                         <tr><td>Description</td><td>{{selectedServer.description}}</td></tr>
                                         <tr><td>Url</td><td>{{selectedServer.address}}</td></tr>
@@ -586,7 +592,7 @@
                                     </table>
 
 
-                                    <table class="table table-bordered">
+                                    <table ng-show="selectedServer" class="table table-bordered">
                                         <tr><th>Resource type</th><th>Capabilities</th></tr>
                                         <tr ng-repeat="type in selectedServer.serverDetails.types">
                                             <td>{{type.type}}</td>

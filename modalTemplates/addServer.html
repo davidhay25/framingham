@@ -69,18 +69,34 @@
                     <span class="badge" ng-show="input.serverRoleCount > 0">{{input.serverRoleCount}}</span>
                 </uib-tab-heading>
                 <br/>
-                <div ng-repeat="serverRole in eventConfig.serverRoles">
-                    <span  uib-popover={{serverRole.definition}}
-                          popover-placement="top"
-                          popover-trigger="'mouseenter'">
-                        <input type="checkbox" model="input.serverRole[serverRole.code]"
-                               ng-checked = "input.serverRole[serverRole.code]"
-                               ng-click = "input.serverRole[serverRole.code] = ! input.serverRole[serverRole.code]"
 
-                        /> {{serverRole.display}}
-                    </span>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <div ng-repeat="serverRole in eventConfig.serverRoles">
+                            <span  uib-popover={{serverRole.definition}}
+                                   popover-placement="top"
+                                   popover-trigger="'mouseenter'">
+                                <input type="checkbox" model="input.serverRole[serverRole.code]"
+                                       ng-checked = "input.serverRole[serverRole.code]"
+                                       ng-click = "input.serverRole[serverRole.code] = ! input.serverRole[serverRole.code]"
 
+                                /> {{serverRole.display}}
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <em>
+                            <p>Allows you to specify what 'ecosystem' roles your server might play (as opposed to the more
+                                specific roles within a track scenario). Mouse-over the
+                                roles to get a short explanation.</p>
+                            <p>Optional, and can safely be ignored...</p>
+                        </em>
+
+                    </div>
                 </div>
+
+
 
 
             </uib-tab>

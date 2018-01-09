@@ -43,7 +43,9 @@ angular.module("sampleApp")
                     $scope.allClients =   ecosystemSvc.getAllClients();
                     $scope.allServers = ecosystemSvc.getAllServers();
                     $scope.allPersons = ecosystemSvc.getAllPersons();
+                    $scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
 
+                    console.log($scope.serverRoleSummary)
 
 
                 }
@@ -378,7 +380,11 @@ angular.module("sampleApp")
                         }
                     }
 
-                })
+                }).result.then(
+                    function(vo) {
+                        $scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
+                    }
+                )
             };
 
             $scope.download = function(downloadThingType,track) {

@@ -11,11 +11,12 @@ var errors = 0;
 
 
 var localFileRoot = "/Users/davidha/Dropbox/development/ecosystem/artifacts/";
-var urlRoot = "http://localhost:4000/config/";
+//var urlRoot = "http://localhost:4000/config/";
+var urlRoot = "http://snapp.clinfhir.com:4000/config/";
 
-uploadArray(localFileRoot+'tracks.json',urlRoot+"track/",'tracks');
-uploadArray(localFileRoot+'scenarios.json',urlRoot+"scenario/",'scenarios');
-uploadArray(localFileRoot+'roles.json',urlRoot+"role/",'roles');
+uploadArray(localFileRoot+'tracksREF.json',urlRoot+"track/",'tracks');
+uploadArray(localFileRoot+'scenariosREF.json',urlRoot+"scenario/",'scenarios');
+uploadArray(localFileRoot+'rolesREF.json',urlRoot+"role/",'roles');
 
 function uploadArray(pathToFile,url,elementName) {
     var contents = fs.readFileSync(pathToFile,{encoding:'utf8'})
@@ -27,7 +28,7 @@ function uploadArray(pathToFile,url,elementName) {
         for (var i = 0; i < arItem.length; i++) {
             var item = arItem[i]
 
-            console.log(i,url)
+            //console.log(i,url)
             var options = {}
 
             options.body = JSON.stringify(item);
