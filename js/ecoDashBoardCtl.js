@@ -37,8 +37,11 @@ angular.module("sampleApp")
 
 
         function notResponding() {
-            $scope.notResponding = true;
-            $scope.stoppedAt = new moment().format();
+            if (! $scope.notResponding) {
+                $scope.notResponding = true;
+                $scope.stoppedAt = new moment().format();
+            }
+
         }
 
     });
