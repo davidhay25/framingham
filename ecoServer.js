@@ -170,6 +170,14 @@ function recordAccess(req,data,cb) {
     }
 }
 
+//======= heartbeat
+
+app.get('/heartbeat',function(req,res){
+    // db.collection("client").find({}).sort( { name: 1 }).toArray(function(err,result){
+   res.json([])
+});
+
+
 //====== access
 
 //record the access - but don't wait, or bother about an error...
