@@ -26,7 +26,7 @@ if (! port) {
 
 //look for command line parameters...
 process.argv.forEach(function (val, index, array) {
-    //console.log(index + ': ' + val);
+
 
     var ar = val.split('=');
     if (ar.length == 2) {
@@ -84,7 +84,7 @@ if (useSSL) {
 //middleware invoked on every request...
 app.use(function (req, res, next) {
 
-   // console.log('Time:', Date.now(), dbName)
+
     if (!db) {
         res.send({err:'Database could not be connected to. It may not be running...'},500)
     } else {
@@ -108,11 +108,9 @@ app.use(function (req, res, next) {
 
 
 
-        //console.log(req.url,req.method,req.body)
-
     }
 
-})
+});
 
 var showLog = false;         //for debugging...
 
@@ -136,7 +134,8 @@ function recordAccess(req,data,cb) {
         req.connection.socket.remoteAddress;
 
     if (db) {
-        var audit = {ip:clientIp,date:new Date().getTime()};
+        var audit = {ip:clientIp,date:new Date()};      //note date is UTC
+
         audit.data = data;
 
         var options = {
@@ -153,7 +152,7 @@ function recordAccess(req,data,cb) {
                     audit.loc = loc;
                     db.collection("accessAudit").insert(audit, function (err, result) {
                         if (err) {
-                            console.log('Error logging access ',audit)
+                            console.log('Error logging access ',audit);
                             cb(err);
                         } else {
                             cb();
@@ -322,7 +321,7 @@ app.post('/person',function(req,res){
 app.get('/config/:type',function(req,res){
 
     var type = req.params.type;
-    //console.log(type)
+
     db.collection(type).find({}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
