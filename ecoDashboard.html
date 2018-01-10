@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connectathon Dashboard</title>
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+    <script src="js/libs/moment.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+    <script>
+        angular.module("sampleApp",['ui.bootstrap']).config(function($locationProvider) {
+
+            // enable html5Mode for pushstate ('#'-less URLs)
+            $locationProvider.html5Mode(true);
+            $locationProvider.hashPrefix('!');
+        });
+        angular.module("sampleApp").constant("moment", moment);
+
+    </script>
+    <script src="js/ecoDashBoardCtl.js"></script>
+
+
+
+</head>
+<body style="padding: 8px" >
+
+
+
+<div ng-app="sampleApp" ng-controller="ecoDashboardCtrl" class="container-fluid">
+
+    <div class="banner">DashBoard</div>
+
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+
+        </div>
+        <div class="col-sm-6 col-md-6">
+            {{lastAccessed}} ({{age}} seconds)
+        </div>
+        <div class="col-sm-3 col-md-3">
+            <div ng-show="notResponding">
+                <div class="alert alert-danger" role="alert">
+                    Site is not responding! stopped at {{stoppedAt}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+
+        </div>
+        <div class="col-sm-6 col-md-6">
+
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+</body>
+</html>

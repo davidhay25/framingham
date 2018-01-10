@@ -2,7 +2,7 @@ angular.module("sampleApp")
     .controller('addServerToScenarioCtrl',
         function ($scope,ecosystemSvc,allServers,modalService, scenario) {
 
-            console.log(allServers)
+            //console.log(allServers)
             $scope.dlgAllServers = [];
             $scope.scenario = scenario;
 
@@ -49,11 +49,9 @@ angular.module("sampleApp")
                 $scope.selectedRole = role;
             };
 
-
-            $scope.addServer = function(svr){
-
-
+            $scope.addServer = function(allScenarios){
                 //make sure this combination has not already been added...
+                /* have moved this check to the service...
                 var canAdd = true;
                 scenario.servers = scenario.servers || []
                 scenario.servers.forEach(function (serverRole) {
@@ -61,13 +59,13 @@ angular.module("sampleApp")
                         canAdd = false;
                     }
                 });
+
                 if (!canAdd) {
                     modalService.showModal({},{bodyText:"This combination of server and role has already been specified for this scenario."})
                     return;
                 }
-
-
-                $scope.$close({server:$scope.selectedServer,role:$scope.selectedRole})
+*/
+                $scope.$close({server:$scope.selectedServer,role:$scope.selectedRole,allScenarios:allScenarios})
             }
         }
     );

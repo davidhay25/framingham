@@ -10,9 +10,10 @@ angular.module("sampleApp")
 
             $http.post("/startup",{})  //record access
 
+            //the name of the connectathon, the serverRoles & stuff like that...
             $http.get("config/admin/").then(
                 function(data) {
-                    console.log(data.data)
+                    //console.log(data.data)
                     if (data.data) {
                         $scope.eventConfig = data.data[0];
                         ecosystemSvc.setEventConfig(data.data[0]);
@@ -353,7 +354,30 @@ angular.module("sampleApp")
                     }
                 }).result.then(function(vo){
                     console.log(vo)
-                    ecosystemSvc.addServerToScenario(scenario,vo.server,vo.role)
+
+                    if (vo.allScenarios) {
+                        //want to add the server to all scenarios. todo ?? does this need to use $q.all ??
+
+                        ecosystemSvc.addServerToScenario($scope.selectedTrack.scenarios,vo.server,vo.role)
+/*
+                        $scope.selectedTrack.scenarios.forEach(function(scn){
+                            ecosystemSvc.addServerToScenario(scn,vo.server,vo.role).then(
+                                function(){
+
+                                },
+                                function(err) {
+                                    alert(angular.toJson(err))
+                                }
+                            )
+                        })
+                        */
+
+                    } else {
+                        ecosystemSvc.addServerToScenario([scenario],vo.server,vo.role)
+                    }
+
+
+
                 });
             };
 
@@ -415,7 +439,7 @@ angular.module("sampleApp")
                     }
                 }).result.then(function(vo){
                     console.log(vo)
-                    //ecosystemSvc.addServerToScenario(scenario,vo.server,vo.role)
+
                 });
 
             };

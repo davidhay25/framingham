@@ -618,26 +618,83 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
         },
 
-        addServerToScenario : function(scenario,server,role) {
+        addServerToScenario : function(arScenario,server,role) {
+            //add the server and role to an array of scenarios...
             var deferred = $q.defer();
 
             //create a link object to save on the server
-            var link = {active:true,id:'id'+new Date().getTime(),type:'server',serverid:server.id,scenarioid:scenario.id};
-            link.roleid = role.id;
+           // var link = {active:true,id:'id'+new Date().getTime(),type:'server',serverid:server.id,scenarioid:scenario.id};
+           // link.roleid = role.id;
 
-
-            $http.post("/link",link).then(
-                function(data){
-                    //now add the client to the cached list...
-                    scenario.servers = scenario.servers || [];
-                    scenario.servers.push({server:server,role:role,link:link});
-
-                    deferred.resolve(link)
-                }, function(err) {
-                    console.log(err);
-                    deferred.reject(err)
+            //make sure the server is not already in this scenario in the given role
+            var ar = [];    //this will contain all the scenarios where this server is not actually included
+            arScenario.forEach(function (scenario) {
+                var canAdd = true;
+                scenario.servers = scenario.servers || [];  //this is actually a serverRole - should rename at some point
+                scenario.servers.forEach(function (sr) {
+                    if (sr.server && sr.server.id == server.id) {
+                        //OK, we have the server - is it in the same role??
+                        if (sr.role && sr.role.id == role.id) {
+                            canAdd = false;
+                        }
+                    }
+                });
+                if (canAdd) {
+                    ar.push(scenario)
                 }
-            );
+            });
+
+            if (ar.length > 0) {
+                var query = [];     //an array of scenarios to be linked
+
+                ar.forEach(function (scenario) {
+                    console.log(scenario)
+                    var link = {
+                        active: true,
+                        id: 'id' + new Date().getTime(),
+                        type: 'server',
+                        serverid: server.id,
+                        scenarioid: scenario.id
+                    };
+                    link.roleid = role.id;
+
+                    scenario.servers.push({server:server,role:role,link:link});
+                    query.push(
+                        $http.post("/link", link)
+                    )
+                });
+
+                $q.all(query).then(function (data) {
+                    //success
+                    console.log(data)
+
+
+                }, function (err) {
+                    console.log(err)
+                });
+            } else {
+                //nothing to update
+                deferred.reject({msg:'There were duplicates'})
+            }
+
+
+/*
+                $http.post("/link",link).then(
+                    function(data){
+                        //now add the client to the cached list...
+
+                        scenario.servers.push({server:server,role:role,link:link});
+
+                        deferred.resolve(link)
+                    }, function(err) {
+                        console.log(err);
+                        deferred.reject(err)
+                    }
+                );
+            } else {
+                deferred.reject({msg:"Scenario already has this server in this role"})
+            }
+    */
 
             return deferred.promise;
 

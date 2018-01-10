@@ -45,11 +45,16 @@
             <div class="col-md-4 col-sm-4">
                 <div>Name: {{selectedServer.name}}</div>
                 <div>Address: {{selectedServer.address}}</div>
-
                 <div>Role: {{selectedRole.name}}</div>
 
+                <br/><br/>
+
                 <div class="pull-right" ng-show="selectedServer && selectedRole">
-                    <button class="btn btn-primary" ng-click="addServer(selectedServer)">Add to Scenario</button>
+                    <button class="btn btn-primary" ng-click="addServer()">Add to this Scenario</button>
+                </div>
+                <br/><br/>
+                <div class="pull-right" ng-show="selectedServer && selectedRole">
+                    <button class="btn btn-danger" ng-click="addServer(true)">Add to All Scenarios in track</button>
                 </div>
 
             </div>
