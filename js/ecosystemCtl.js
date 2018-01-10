@@ -33,26 +33,52 @@ angular.module("sampleApp")
 
             };
 
-            ecosystemSvc.getConnectathonResources().then(
-                function(vo) {
-                    console.log(vo)
-                    //console.log(angular.toJson(vo))
+
+            //re-load all the connectathon artifacts
+
+            $scope.refresh = function(){
+                loadData(function(){
+                    var msg = "Data has been refreshed."
+                    modalService.showModal({}, {bodyText:msg})
 
 
-                    console.log(ecoUtilitiesSvc.getObjectSize(vo));
-
-                    $scope.tracks = vo.tracks;
-
-                    $scope.allClients =   ecosystemSvc.getAllClients();
-                    $scope.allServers = ecosystemSvc.getAllServers();
-                    $scope.allPersons = ecosystemSvc.getAllPersons();
-                    $scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
-
-                    console.log($scope.serverRoleSummary)
+                    //redraw charts (will handle nulls)
+                    $scope.selectTrackResults($scope.selectedTrack);
+                    $scope.selectScenarioResults($scope.selectedScenarioSummary);
 
 
-                }
-            );
+                })
+            };
+
+            var loadData = function(cb){
+                ecosystemSvc.getConnectathonResources().then(
+                    function(vo) {
+                        console.log(vo)
+                        //console.log(angular.toJson(vo))
+
+
+                        console.log(ecoUtilitiesSvc.getObjectSize(vo));
+
+                        $scope.tracks = vo.tracks;
+
+                        $scope.allClients =   ecosystemSvc.getAllClients();
+                        $scope.allServers = ecosystemSvc.getAllServers();
+                        $scope.allPersons = ecosystemSvc.getAllPersons();
+                        $scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
+
+                        //console.log($scope.serverRoleSummary)
+                        if (cb) {
+                            cb()
+                        }
+
+                    }
+                );
+            };
+            loadData();
+
+
+
+
 
             $scope.wikiPageUrl = "http://wiki.hl7.org/index.php?title=FHIR_Connectathon_17";
 
@@ -147,108 +173,89 @@ angular.module("sampleApp")
 
             $scope.selectTrackResults = function(track) {
                 //in the results tab, select a track...
-                $scope.selectedTrackSummary = track;
-                $scope.resultsSummary = ecosystemSvc.getTrackResults(track); //get a summary object for the results for a track
+                if (track) {
+                    $scope.selectedTrackSummary = track;
+                    $scope.resultsSummary = ecosystemSvc.getTrackResults(track); //get a summary object for the results for a track
 
 
-                console.log($scope.resultsSummary)
-                //set the scenario list
+                    //console.log($scope.resultsSummary)
+                    //set the scenario list
 
-                //set the options for the stacked bar chart
-                $scope.barSeries = ['Pass', 'Fail','Partial','Note'];
-                $scope.barOptions = {scales: {
-                    yAxes: [{
-                        stacked: true,
-                        ticks: {
-                            beginAtZero:true
+                    //set the options for the stacked bar chart
+                    $scope.barSeries = ['Pass', 'Fail','Partial','Note'];
+                    $scope.barOptions = {scales: {
+                        yAxes: [{
+                            stacked: true,
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }],xAxes: [{
+                            stacked: true
+
+                        }]
+                    }};
+                    $scope.barLabels = [];
+                    var arPass=[], arFail=[],arPartial=[], arNote =[]
+                    track.scenarios.forEach(function (scenario) {
+                        $scope.barLabels.push(scenario.name)
+                        var scenarioSummary = $scope.resultsSummary.scenario[scenario.name];
+                        if (scenarioSummary) {
+                            arPass.push(scenarioSummary.pass)
+                            arFail.push(scenarioSummary.fail)
+                            arPartial.push(scenarioSummary.partial)
+                            arNote.push(scenarioSummary.note)
+                        } else {
+                            arPass.push(0)
+                            arFail.push(0)
+                            arPartial.push(0)
+                            arNote.push(0)
                         }
-                    }],xAxes: [{
-                        stacked: true
+                        console.log(scenarioSummary)
 
-                    }]
-                }};
-                $scope.barLabels = [];
-                var arPass=[], arFail=[],arPartial=[], arNote =[]
-                track.scenarios.forEach(function (scenario) {
-                    $scope.barLabels.push(scenario.name)
-                    var scenarioSummary = $scope.resultsSummary.scenario[scenario.name];
-                    if (scenarioSummary) {
-                        arPass.push(scenarioSummary.pass)
-                        arFail.push(scenarioSummary.fail)
-                        arPartial.push(scenarioSummary.partial)
-                        arNote.push(scenarioSummary.note)
-                    } else {
-                        arPass.push(0)
-                        arFail.push(0)
-                        arPartial.push(0)
-                        arNote.push(0)
-                    }
-                    console.log(scenarioSummary)
+                    });
 
-                });
-
-                //$scope.barLabels = ['Scenario1', 'Scenario2', 'Scenario3', 'Scenario4'];
-                $scope.barData = [arPass,arFail,arPartial,arNote]
-/*
-                $scope.barData = [
-                    [7, 4, 4, 5],  //pass
-                    [5, 3, 7, 5], //fail
-                    [8, 3, 3, 5]
-                ];
+                    $scope.barData = [arPass,arFail,arPartial,arNote]
+                }
 
 
-
-                angular.forEach($scope.resultsSummary.scenario,function(value,key){
-                    // $scope.chartLabels.push(key)
-
-                })
-                */
-
-/*
-                //set the chart values...
-                $scope.chartLabels = [];// ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
-                $scope.chartData = []; //[300, 500, 100];
-                $scope.chartOptions = {legend:{display:true}};
-
-                angular.forEach($scope.resultsSummary.scenario,function(value,key){
-                   // $scope.chartLabels.push(key)
-                })
-*/
             };
 
             $scope.selectScenarioResults = function(scenario) {
                 //in the results tab, select a scenario...
-                $scope.selectedScenarioSummary = scenario;
-                //set the chart values...
-                $scope.chartLabels = [];
-                $scope.chartData = [];
-                $scope.chartColors = []; //'#00cc00', '#cc3300', '#ffff99']
-                $scope.chartOptions = {legend:{display:true}};
-                console.log(summary)
+                if (scenario) {
+                    $scope.selectedScenarioSummary = scenario;
+                    //set the chart values...
+                    $scope.chartLabels = [];
+                    $scope.chartData = [];
+                    $scope.chartColors = []; //'#00cc00', '#cc3300', '#ffff99']
+                    $scope.chartOptions = {legend:{display:true}};
+                    console.log(summary)
 
-                var summary = $scope.resultsSummary.scenario[scenario.name];
-                if (summary) {
-                    if (summary.pass > 0) {
-                        $scope.chartLabels.push('pass ');// + summary.pass);
-                        $scope.chartData.push(summary.pass)
-                        $scope.chartColors.push('#00cc00')
+                    var summary = $scope.resultsSummary.scenario[scenario.name];
+                    if (summary) {
+                        if (summary.pass > 0) {
+                            $scope.chartLabels.push('pass ');// + summary.pass);
+                            $scope.chartData.push(summary.pass)
+                            $scope.chartColors.push('#00cc00')
+                        }
+                        if (summary.fail > 0) {
+                            $scope.chartLabels.push('fail ');// + summary.fail);
+                            $scope.chartData.push(summary.fail)
+                            $scope.chartColors.push('#cc3300')
+                        }
+                        if (summary.partial > 0) {
+                            $scope.chartLabels.push('partial ');// + summary.pass);
+                            $scope.chartData.push(summary.partial)
+                            $scope.chartColors.push('#ffff99')
+                        }
+                        if (summary.note > 0) {
+                            $scope.chartLabels.push('note ');// + summary.pass);
+                            $scope.chartData.push(summary.note)
+                            $scope.chartColors.push('#6E94FF')
+                        }
+
                     }
-                    if (summary.fail > 0) {
-                        $scope.chartLabels.push('fail ');// + summary.fail);
-                        $scope.chartData.push(summary.fail)
-                        $scope.chartColors.push('#cc3300')
-                    }
-                    if (summary.partial > 0) {
-                        $scope.chartLabels.push('partial ');// + summary.pass);
-                        $scope.chartData.push(summary.partial)
-                        $scope.chartColors.push('#ffff99')
-                    }
-                    if (summary.note > 0) {
-                        $scope.chartLabels.push('note ');// + summary.pass);
-                        $scope.chartData.push(summary.note)
-                        $scope.chartColors.push('#6E94FF')
-                    }
-                    
+
                 }
 
             };

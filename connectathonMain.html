@@ -141,7 +141,7 @@
                 </a>
             </div>
 
-            <div class="col-md-4 col-sm-4">
+            <div class="col-md-3 col-sm-3">
 
             </div>
 
@@ -166,6 +166,11 @@
 
 
 
+                </div>
+            </div>
+            <div class="col-md-1 col-sm-1">
+                <div class="navbar-text">
+                    <button class="btn btn-primary" ng-click="refresh()">Refresh</button>
                 </div>
             </div>
 
@@ -893,7 +898,8 @@
 
                                                 <div class="col-md-4 col-sm-4">
                                                     <ul class="list-group">
-                                                        <li ng-class="{'list-group-item':1,'listItemSelected':selectedScenarioSummary.id == scenario.id}" style="cursor: pointer"
+                                                        <li ng-class="{'list-group-item':1,'listItemSelected':selectedScenarioSummary.id == scenario.id}"
+                                                            style="cursor: pointer"
                                                             ng-repeat="scenario in selectedTrackSummary.scenarios"
                                                             ng-click="selectScenarioResults(scenario)">
                                                             {{scenario.name}}
