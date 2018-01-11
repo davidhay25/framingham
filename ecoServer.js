@@ -9,11 +9,11 @@ var fs = require('fs');
 
 var dbName = 'connectathon';    //default database name...
 
-
+/* disable as will be running under pm2, which will trap errors and give a better message...
 process.on('uncaughtException', function(err) {
     console.log('>>>>>>>>>>>>>>> Caught exception: ' + err);
 });
-
+*/
 
 
 //the default port. This can be overwritten when the server is executed or from the IDE.
@@ -43,6 +43,7 @@ process.argv.forEach(function (val, index, array) {
     }
 });
 
+var hashScenario = {};      //a hash of all the scenarios...
 
 var db;
 //http://mongodb.github.io/node-mongodb-native/3.0/quick-start/quick-start/
@@ -55,6 +56,20 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
         console.log("Connected successfully to local server, dataBase="+dbName);
         //db = client.db('connectathon');
         db = client.db(dbName);
+
+        //at server startup, read all the scenarios. We need this when creating the TestReport resource. it is neverupdated (at the moment)
+
+        db.collection("scenario").find({}).toArray(function(err,result){
+            if (err) {
+                console.log('Unable to load the scenarios!')
+            } else {
+                result.forEach(function (scenario) {
+                    hashScenario[scenario.id] = scenario;
+                })
+            }
+        })
+
+
     }
 });
 
@@ -81,9 +96,8 @@ if (useSSL) {
     console.log('server listening  on port ' + port);
 }
 
-//middleware invoked on every request...
+//check the db connection on every request - may be redundant...
 app.use(function (req, res, next) {
-
 
     if (!db) {
         res.send({err:'Database could not be connected to. It may not be running...'},500)
@@ -105,22 +119,12 @@ app.use(function (req, res, next) {
             //this is a GET...
             next()
         }
-
-
-
     }
 
 });
 
 var showLog = false;         //for debugging...
 
-//initialize the session...
-app.use(session({
-    secret: 'mySecret',
-    resave: true,
-    saveUninitialized: true,
-    cookie: { secure: false }   // secure cookins needs ssl...
-}));
 
 var bodyParser = require('body-parser')
 bodyParser.json();
@@ -179,6 +183,21 @@ app.get('/heartbeat',function(req,res){
 
 
 //====== access
+
+
+//get all access records. todo This could become an AuditEvent in the future...
+//a new record each time the app is loaded...
+app.get('/accessAudit',function(req,res){
+    //todo - need filtering options...
+    db.collection("accessAudit").find({}).toArray(function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
+
 
 //record the access - but don't wait, or bother about an error...
 app.post('/startup',function(req,res){
@@ -256,6 +275,60 @@ app.get('/result',function(req,res){
     })
 });
 
+//return the results in TestReport format
+//notes: result could have 'partial'
+// could add a 'comment' field
+//why is TestScript required?
+
+app.get('/TestReport',function(req,res){
+    db.collection("result").find({}).toArray(function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            var resultBundle = {resourceType:'Bundle',type:'searchset',entry:[]}
+            result.forEach(function (rslt) {
+
+                var tr = {resourceType:'TestResult',id:rslt.id,contained:[]};
+
+                tr.status = 'completed';
+                tr.participant = [];
+
+
+                //var tr = {resourceType:'TestResult',status:'completed',participant:[],test:[]};
+                if (rslt.text == 'partial') {
+                    tr.result = 'pass';
+                    tr['_result'] = [{extension : {url:'http.clinfhir.com/fhir/StructureDefinition/testResult',valueCode:'partial'}}]
+                } else {
+                    tr.result = rslt.text;
+                }
+                if (rslt.server) {
+                    var serverUrl = 'server/'+rslt.server.serverid;
+                    tr.participant.push({type:'server',uri:serverUrl, display:rslt.server.name})
+                }
+                if (rslt.client) {
+                    var clientUrl = 'client/'+rslt.client.clientid;
+                    tr.participant.push({type:'client',uri:clientUrl, display:rslt.client.name})
+                }
+
+                var scenario = hashScenario[rslt.scenarioid];
+                if (scenario) {
+                    tr.name = scenario.name
+                }
+
+                //now the contained testScript resource. Set it to the scenario...
+                var testScript = {id:rslt.id+'-script',resourceType:'TestScript',status:'active'};
+                testScript.url = 'scenario/'+rslt.scenarioid;
+                testScript.name = tr.name
+                tr.contained.push(testScript);
+                resultBundle.entry.push({resource:tr})
+
+
+            });
+
+            res.send(resultBundle)
+        }
+    })
+});
 
 //add a single result. This is always a put as the result can be updated
 app.put('/result',function(req,res){

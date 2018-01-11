@@ -589,10 +589,10 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             resultToSave.text = result.text;
             resultToSave.note = result.note;
             if (serverRole) {
-                resultToSave.server = {serverid:serverRole.server.id,roleid:serverRole.role.id};
+                resultToSave.server = {serverid:serverRole.server.id,roleid:serverRole.role.id,name:serverRole.server.name};
             }
             if (clientRole) {
-                resultToSave.client = {clientid:clientRole.client.id,roleid:clientRole.role.id};
+                resultToSave.client = {clientid:clientRole.client.id,roleid:clientRole.role.id,name:clientRole.client.name};
             }
 
             resultToSave.scenarioid = scenario.id;
