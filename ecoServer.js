@@ -44,7 +44,7 @@ process.argv.forEach(function (val, index, array) {
 });
 
 var hashScenario = {};      //a hash of all the scenarios...
-
+var hashTrack = {};         //a hash of all the tracks
 var db;
 //http://mongodb.github.io/node-mongodb-native/3.0/quick-start/quick-start/
 const MongoClient = require('mongodb').MongoClient;
@@ -58,6 +58,17 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
         db = client.db(dbName);
 
         //at server startup, read all the scenarios. We need this when creating the TestReport resource. it is neverupdated (at the moment)
+
+        db.collection("track").find({}).toArray(function(err,result){
+            if (err) {
+                console.log('Unable to load the tracks!')
+            } else {
+                result.forEach(function (track) {
+                    hashTrack[track.id] = track;
+                })
+            }
+        })
+
 
         db.collection("scenario").find({}).toArray(function(err,result){
             if (err) {
@@ -280,7 +291,7 @@ app.get('/result',function(req,res){
 // could add a 'comment' field
 //why is TestScript required?
 
-app.get('/TestReport',function(req,res){
+app.get('/fhir/TestReport',function(req,res){
     db.collection("result").find({}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
@@ -288,7 +299,7 @@ app.get('/TestReport',function(req,res){
             var resultBundle = {resourceType:'Bundle',type:'searchset',entry:[]}
             result.forEach(function (rslt) {
 
-                var tr = {resourceType:'TestResult',id:rslt.id,contained:[]};
+                var tr = {resourceType:'TestResult',id:rslt.id,contained:[],extension:[]};
 
                 tr.status = 'completed';
                 tr.participant = [];
@@ -301,6 +312,12 @@ app.get('/TestReport',function(req,res){
                 } else {
                     tr.result = rslt.text;
                 }
+
+                tr.issued = rslt.issued;
+                if (rslt.author) {
+                    tr.tester = rslt.author.name;
+                }
+
                 if (rslt.server) {
                     var serverUrl = 'server/'+rslt.server.serverid;
                     tr.participant.push({type:'server',uri:serverUrl, display:rslt.server.name})
@@ -310,10 +327,31 @@ app.get('/TestReport',function(req,res){
                     tr.participant.push({type:'client',uri:clientUrl, display:rslt.client.name})
                 }
 
+                tr.name = "";
+                var track = hashTrack[rslt.trackid];
+                if (track) {
+                    tr.name += track.name
+                }
+
+
                 var scenario = hashScenario[rslt.scenarioid];
                 if (scenario) {
-                    tr.name = scenario.name
+                    tr.name += ' / ' + scenario.name
                 }
+
+                //now the comment
+                if (rslt.note) {
+                    tr.extension.push({url:'http.clinfhir.com/fhir/StructureDefinition/testResultComment',valueString:rslt.note})
+                }
+
+                //and any trackers
+                if (rslt.trackers) {
+                    rslt.trackers.forEach(function (tracker) {
+                        tr.extension.push({url:'http.clinfhir.com/fhir/StructureDefinition/testResultTracker',
+                            valueUrl:tracker.url})
+                    })
+                }
+
 
                 //now the contained testScript resource. Set it to the scenario...
                 var testScript = {id:rslt.id+'-script',resourceType:'TestScript',status:'active'};
@@ -333,6 +371,7 @@ app.get('/TestReport',function(req,res){
 //add a single result. This is always a put as the result can be updated
 app.put('/result',function(req,res){
     var result = req.body;
+    result.issued = new Date();
     db.collection("result").update({id:result.id},result,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)
