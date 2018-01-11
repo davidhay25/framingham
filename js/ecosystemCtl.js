@@ -524,6 +524,9 @@ angular.module("sampleApp")
                 delete $scope.selectedScenario;
                 delete $scope.selectedRole;
                 $scope.selectedTrack = track;
+                $scope.selectedTrackReport =  ecosystemSvc.getTrackResults(track);      //summary of this track...
+
+                console.log()
 
             };
 

@@ -306,7 +306,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
         getTrackResults : function(track) {
             //get a summary object for a track
-            var summary = {total : 0, scenario : {}}
+            var summary = {total : 0, scenario : {},notes:[]}
+            summary.resultTotals = {pass:0,fail:0,partial:0,note:0}
             angular.forEach(allResults,function(value,key) {
 
                 if (value.track) {
@@ -318,16 +319,60 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                         var scenarioId = value.scenario.id;
                         summary.scenario[scenarioName] = summary.scenario[scenarioName] || {pass:0,fail:0,partial:0,note:0,total:0}
                         var item = summary.scenario[scenarioName];
-                        item[value.text]++;         //todo - shoudl change the name of 'text'
+                        item[value.text]++;         //todo - should change the name of 'text'
                         item.total ++;
+                        summary.resultTotals[value.text]++;
 
+                        if (value.note) {
+                            summary.notes.push({asserter:value.asserter,note:value.note,
+                                date:value.issued,text:value.text,scenarioName:scenarioName})
+                        }
                     }
                 } else {
                     alert("There's an invalid result with the id: "+value.id)
                 }
+            });
 
 
+            //get all the clients and servers for this track
+           // summary.allServerRoles = [];
+            //summary.allClientRoles = [];
+
+            summary.uniqueServers = [];
+            summary.uniqueClients = [];
+
+            var hashServer = {},hashClient = {};
+
+            track.scenarios.forEach(function (scenario) {
+                if (scenario.servers) {
+                   scenario.servers.forEach(function (svrRole) {
+                        hashServer[svrRole.server.id] = svrRole
+                    });
+
+                }
+
+                if (scenario.clients) {
+                    scenario.clients.forEach(function (clntRole) {
+                        hashClient[clntRole.client.id] = clntRole
+                    });
+
+                }
+            });
+
+
+            angular.forEach(hashServer,function(v,k){
+                summary.uniqueServers.push(v)
+            });
+
+            angular.forEach(hashClient,function(v,k){
+                summary.uniqueClients.push(v)
             })
+
+           // if (tra)
+
+
+            console.log(summary)
+
             return summary;
 
 
@@ -1026,6 +1071,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                         result.trackers = dataResult.trackers;
                                         result.track = hashTrack[dataResult.trackid];
                                         result.scenario = hashScenario[dataResult.scenarioid];
+                                        result.issued = dataResult.issued;
                                         if (dataResult.server) {
                                             result.server = {server: hashServer[dataResult.server.serverid],
                                                 role: hashRole[dataResult.server.roleid]};
