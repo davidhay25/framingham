@@ -871,18 +871,15 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             //urls.push({url:'artifacts/tracks.json',"name":"tracks"});
             urls.push({url:'artifacts/persons.json',"name":"persons"});
 
-
             urls.push({url:'/config/track',"name":"tracks"});
             urls.push({url:'/config/scenario',"name":"scenarios"});
             urls.push({url:'/config/role',"name":"roles"});
-
 
             urls.push({url:'/client',"name":"clients"});
             urls.push({url:'/server',"name":"servers"});
             urls.push({url:'/result',"name":"results"});
             urls.push({url:'/person',"name":"persons"});
 
-            //urls.push({url:'artifacts/servers.json',"name":"servers"});
             var vo = {}
 
             var queries = []
@@ -910,10 +907,11 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                     allPersons = vo.persons;    //scoped to service
                     ciSort(allPersons,'name');
+
                     hashAllPersons = {};
                     allPersons.forEach(function(p){
                         hashAllPersons[p.id] = p;
-                    })
+                    });
 
                     var hashServer = {};//vo.servers;
                     vo.servers.forEach(function (server) {

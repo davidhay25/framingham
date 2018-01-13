@@ -30,33 +30,49 @@
 
 <div ng-app="sampleApp" ng-controller="ecoDashboardCtrl" class="container-fluid">
 
-    <div class="banner">DashBoard</div>
+    <uib-tabset>
+        <uib-tab heading="Access">
+            <table class="table">
+                <tr ng-repeat="line in accessAudit">
+                    <td>{{line.date}}</td>
+                    <td>{{line.country}}</td>
+                    <td>{{line.region}}</td>
+                </tr>
+            </table>
+        </uib-tab>
+        <uib-tab heading="stuff">
+            <div class="banner">DashBoard</div>
 
-    <div class="row">
-        <div class="col-sm-3 col-md-3">
-            <input type="text" ng-model="delay"/>
-        </div>
-        <div class="col-sm-6 col-md-6">
-            {{lastAccessed}} ({{age}} seconds)
-        </div>
-        <div class="col-sm-3 col-md-3">
-            <div ng-show="notResponding">
-                <div class="alert alert-danger" role="alert">
-                    Site is not responding! stopped at {{stoppedAt}}
+            <div class="row">
+                <div class="col-sm-3 col-md-3">
+                    <input type="text" ng-model="delay"/>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    {{lastAccessed}} ({{age}} seconds)
+                </div>
+                <div class="col-sm-3 col-md-3">
+                    <div ng-show="notResponding">
+                        <div class="alert alert-danger" role="alert">
+                            Site is not responding! stopped at {{stoppedAt}}
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
 
-    <div class="row">
-        <div class="col-sm-3 col-md-3">
+            <div class="row">
+                <div class="col-sm-3 col-md-3">
 
-        </div>
-        <div class="col-sm-6 col-md-6">
+                </div>
+                <div class="col-sm-6 col-md-6">
 
-        </div>
-    </div>
+                </div>
+            </div>
+
+
+        </uib-tab>
+    </uib-tabset>
+
 
 
 

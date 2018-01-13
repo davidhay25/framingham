@@ -5,6 +5,18 @@ angular.module("sampleApp")
 
 
 
+
+
+        $scope.getAccess = function() {
+            $http.get('accessAudit').then(
+                function(data) {
+                    $scope.accessAudit = data.data;
+                }
+            )
+        };
+        $scope.getAccess();
+
+
         $scope.changeInterval = function(){
             $interval.cancel(checkSite);
 

@@ -165,6 +165,9 @@ function recordAccess(req,data,cb) {
                 try {
                     loc = JSON.parse(body);
                     audit.loc = loc;
+                    audit.country = loc.country_name;   //to make querying simpler
+                    audit.region = loc.region_name;     //to make querying simpler
+
                     db.collection("accessAudit").insert(audit, function (err, result) {
                         if (err) {
                             console.log('Error logging access ',audit);
@@ -184,13 +187,6 @@ function recordAccess(req,data,cb) {
 
     }
 }
-
-//======= heartbeat
-
-app.get('/heartbeat',function(req,res){
-    // db.collection("client").find({}).sort( { name: 1 }).toArray(function(err,result){
-   res.json([])
-});
 
 
 //====== access
@@ -406,8 +402,6 @@ app.post('/link',function(req,res){
         }
     })
 });
-
-
 
 //============================= persons ==============
 //get all people

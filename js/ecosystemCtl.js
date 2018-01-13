@@ -8,6 +8,7 @@ angular.module("sampleApp")
 
             Chart.defaults.global.colors = ['#00cc00','#cc3300','#ffff99','#6E94FF']; //for the stacked bar chart...
 
+
             $http.post("/startup",{})  //record access
 
             //the name of the connectathon, the serverRoles & stuff like that...
@@ -16,6 +17,13 @@ angular.module("sampleApp")
                     //console.log(data.data)
                     if (data.data) {
                         $scope.eventConfig = data.data[0];
+
+                        if ($scope.eventConfig.navBarStyle) {
+                            $scope.navBarStyle = $scope.eventConfig.navBarStyle;
+                        }
+
+
+
                         ecosystemSvc.setEventConfig(data.data[0]);
                     }
                 }
