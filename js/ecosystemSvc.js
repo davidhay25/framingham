@@ -245,7 +245,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         getPersonSummary : function(person,tracks) {
             var personid = person.id;
             var summary = {results:[],clients:[],servers:[],scenarios:[],person:person};
-
+            summary.primaryTrack = person.primaryTrack;
             //get all the results for this person
             angular.forEach(allResults,function (v,k) {
 
@@ -920,11 +920,18 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     });
                     ciSort(allServers,'name');
                     var hashClient = {};//vo.servers;
+
                     vo.clients.forEach(function (client) {
                         client.contact =[]
                         if (client.contactid) {
                             client.contactid.forEach(function (personid) {
-                                client.contact.push(hashAllPersons[personid])
+                                if (hashAllPersons[personid]) {
+                                    client.contact.push(hashAllPersons[personid])
+                                } else {
+                                    console.log("client "+ client.id + " has a contact with the id " + personid + " that can't be found.")
+                                }
+
+
                             })
 
                         }

@@ -38,6 +38,17 @@
             </div>
         </div>
 
+        <br/>
+
+        <div class="row">
+            <div class="col-md-2 col-sm-2">
+                Primary track
+            </div>
+            <div class="col-md-5 col-sm-5">
+               <select ng-model="input.primaryTrack" class="form-control"
+                       ng-options = "track.name for track in tracks"></select>
+            </div>
+        </div>
 
         <br/>
 
