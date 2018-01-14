@@ -138,7 +138,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         ar.sort(function(a,b){
             var n1 = a[eleName], n2=b[eleName];
             if (n1 && n2) {
-                if (n1.toLowerCase() > n2.toLowerCase()) {
+                if (n1.toLowerCase().trim() > n2.toLowerCase().trim()) {
                     return 1
                 } else {
                     return -1
@@ -146,7 +146,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             } else {return 0}
         })
 
-    }
+    };
 
     var allResults = {};// = $localStorage.allResults || {};
     return {
@@ -907,6 +907,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                     allPersons = vo.persons;    //scoped to service
                     ciSort(allPersons,'name');
+
+                    console.log(allPersons)
 
                     hashAllPersons = {};
                     allPersons.forEach(function(p){

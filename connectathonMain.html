@@ -567,20 +567,22 @@
 -->
                     <div class="row">
                         <div class="col-sm-5 col-md-5">
-                            <table class="table table-bordered">
-                                <tr><th>Name</th><th>Organization</th><th>Contacts</th><th>
-                                    <button class="btn btn-link pull-right" ng-click="editPerson()">New Person</button></th></tr>
-                                <tr ng-repeat="person in allPersons">
-                                    <td><button class="btn btn-link" ng-click="selectPerson(person)">{{person.name}}</button> </td>
-                                    <td>{{person.organization}}</td>
-                                    <td>
-                                        <div ng-repeat="contact in person.contact">
-                                            {{contact.type}}: {{contact.value}}
-                                        </div>
-                                    </td>
-                                    <td><button class="btn btn-link" ng-click="editPerson(person)">Edit</button> </td>
-                                </tr>
-                            </table>
+                            <div class="trackScroll">
+                                <table class="table table-bordered">
+                                    <tr><th>Name</th><th>Organization</th><th>Contacts</th><th>
+                                        <button class="btn btn-link pull-right" ng-click="editPerson()">New Person</button></th></tr>
+                                    <tr ng-repeat="person in allPersons">
+                                        <td><button class="btn btn-link" ng-click="selectPerson(person)">{{person.name}}</button> </td>
+                                        <td>{{person.organization}}</td>
+                                        <td>
+                                            <div ng-repeat="contact in person.contact">
+                                                {{contact.type}}: {{contact.value}}
+                                            </div>
+                                        </td>
+                                        <td><button class="btn btn-link" ng-click="editPerson(person)">Edit</button> </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                         <div class="col-sm-7 col-md-7" ng-show="personSummary">
 
