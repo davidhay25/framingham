@@ -271,9 +271,8 @@
 
                                             <div class="row">
                                                 <div class="col-sm-4 col-md-4">
-                                                    <ul class="list-group">
-                                                        <li ng-class="{'list-group-item':1}"
-                                                            style="cursor: pointer"
+                                                    <ul>
+                                                        <li style="cursor: pointer"
                                                             ng-repeat="person in selectedTrack.persons track by $index"
                                                             ng-click="input.selectedTrackPerson = person">
                                                             {{person.name}}
@@ -292,12 +291,53 @@
                                                         </div>
                                                     </div>
 
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-sm-2 col-md-2">
+                                            <strong>Watchers (Tracks of Interest)</strong>
+                                        </div>
+                                        <div class="col-sm-10 col-md-10">
+
+                                            <div ng-show="selectedTrack.persons.length==0">
+                                                No Watchers registered so far.
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-4 col-md-4">
+                                                    <ul>
+                                                        <li
+                                                            style="cursor: pointer"
+                                                            ng-repeat="person in selectedTrack.toi track by $index"
+                                                            ng-click="input.selectedTrackTOIPerson = person">
+                                                            {{person.name}}
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+                                                <div class="col-sm-8 col-md-8">
+                                                    {{input.selectedTrackTOIPerson.name}}
+                                                    <div class="row" ng-repeat="contact in input.selectedTrackTOIPerson.contact">
+                                                        <div class="col-sm-4 col-md-4">
+                                                            <strong>{{contact.type}}</strong>
+                                                        </div>
+                                                        <div class="col-sm-8 col-md-8">
+                                                            {{contact.value}}
+                                                        </div>
+                                                    </div>
+
 
                                                 </div>
                                             </div>
 
                                         </div>
                                     </div>
+
 
 
                                     <div class="row">
@@ -566,7 +606,7 @@
                     </div>
 -->
                     <div class="row">
-                        <div class="col-sm-5 col-md-5">
+                        <div class="col-sm-6 col-md-6">
                             <div class="trackScroll">
                                 <table class="table table-bordered">
                                     <tr><th>Name</th><th>Organization</th><th>Contacts</th><th>
@@ -584,7 +624,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="col-sm-7 col-md-7" ng-show="personSummary">
+                        <div class="col-sm-6 col-md-6" ng-show="personSummary">
 
 
                             <div class="banner">{{personSummary.person.name}}</div>
@@ -592,6 +632,18 @@
                             <h4>Primary Track</h4>
                             <div ng-hide="personSummary.primaryTrack">No primary track selected.</div>
                             <div ng-show="personSummary.primaryTrack">{{personSummary.primaryTrack.name}}</div>
+
+                            <h4>Tracks of interest</h4>
+                            <div ng-hide="personSummary.toi.length > 0">No Tracks of Interest selected.</div>
+                            <div ng-show="personSummary.toi.length > 0">
+                                <ul>
+                                    <li ng-repeat="track in personSummary.toi">
+                                        {{track.name}}
+                                    </li>
+                                </ul>
+
+
+                            </div>
 
                             <h4>Clients</h4>
                             <div ng-show="personSummary.clients.length == 0">No clients for this user.</div>

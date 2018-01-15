@@ -119,6 +119,7 @@ angular.module("sampleApp")
                         }
                     }
                 }).result.then(function(vo){
+                    $scope.selectPerson(person);
                     console.log(vo)
 
                     //ecosystemSvc.addScenarioResult(track,scenario,client,server,vo)
@@ -540,13 +541,27 @@ angular.module("sampleApp")
 
                 //add the interested people to this track...
                 $scope.selectedTrack.persons = []
+                $scope.selectedTrack.toi = []
                 $scope.allPersons.forEach(function (person) {
                     if (person.primaryTrack) {
                         if (person.primaryTrack.id == $scope.selectedTrack.id) {
                             $scope.selectedTrack.persons.push(person);
                         }
                     }
+                    if (person.toi) {
+                        person.toi.forEach(function (trck) {
+                            if (trck.id == $scope.selectedTrack.id) {
+                                $scope.selectedTrack.toi.push(person);
+                            }
+                        })
+                    }
+
+
                 });
+
+                //and those with this as a Track Of Interest
+
+
 
 
                 console.log()

@@ -13,6 +13,8 @@ angular.module("sampleApp")
             });
 
             var inputPerson;
+            $scope.tracksOfInterest = [];
+
             if (person) {
                 //this is an update
                 inputPerson = person;
@@ -36,12 +38,28 @@ angular.module("sampleApp")
                         }
                     }
                 }
+
+                if (person.toi) {
+                    person.toi.forEach(function (track) {
+                        $scope.tracksOfInterest.push(track)
+                    })
+                }
+
                 $scope.saveText = "Update Person";
                 $scope.titleText = "Edit existing person";
             } else {
                 inputPerson = {id:'id'+new Date().getTime(),contact:[]};
             }
 
+
+            $scope.addTOI = function(track) {
+                $scope.tracksOfInterest.push(track);
+                delete $scope.input.newTOI;
+            }
+
+            $scope.removeTOI = function(inx) {
+                $scope.tracksOfInterest.splice(inx,1)
+            }
 
             $scope.updatePerson = function(){
 
@@ -55,6 +73,13 @@ angular.module("sampleApp")
                     inputPerson.primaryTrack = {id:$scope.input.primaryTrack.id,name:$scope.input.primaryTrack.name}
                 } else {
                     delete inputPerson.primaryTrack;
+                }
+
+                if ($scope.tracksOfInterest.length > 0) {
+                    inputPerson.toi = [];
+                    $scope.tracksOfInterest.forEach(function (track) {
+                        inputPerson.toi.push({id:track.id,name:track.name})
+                    })
                 }
 
 

@@ -44,9 +44,37 @@
             <div class="col-md-2 col-sm-2">
                 Primary track
             </div>
-            <div class="col-md-5 col-sm-5">
+            <div class="col-md-7 col-sm-7">
                <select ng-model="input.primaryTrack" class="form-control"
-                       ng-options = "track.name for track in tracks"></select>
+                       ng-options = 'track as track.name for track in tracks'></select>
+            </div>
+        </div>
+
+        <br/>
+        <div class="row">
+            <div class="col-md-2 col-sm-2">
+                Tracks of Interest
+            </div>
+            <div class="col-md-7 col-sm-7">
+                <div class="row" ng-repeat="toi in tracksOfInterest">
+                    <div class="col-sm-10 col-md-10">
+                        {{toi.name}}
+                    </div>
+                    <div class="col-sm-2 col-md-2">
+                        <i class="clickable glyphicon glyphicon-remove-sign"
+                           title="Remove track" ng-click="removeTOI($index)">
+                        </i>
+                    </div>
+                </div>
+
+
+
+                <select ng-show = "input.newTOI" ng-model="input.interestTrack" class="form-control"
+                        ng-change = "addTOI(input.interestTrack)"
+                        ng-options = 'track as track.name for track in tracks'></select>
+
+                <button ng-hide="input.newTOI" class="btn btn-link pull-right" ng-click="input.newTOI = ! input.newTIO">Add</button>
+
             </div>
         </div>
 

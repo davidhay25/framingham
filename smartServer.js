@@ -20,8 +20,9 @@ var sslOptions = {
 };
 
 
-https.createServer(sslOptions, app).listen(8443)
 
+
+https.createServer(sslOptions, app).listen(8443)
 
 var showLog = false;         //for debugging...
 
@@ -43,18 +44,6 @@ var port = process.env.port;
 if (! port) {
     port=8443;
 }
-
-/*
-
-var configDEP = {
-    baseUrl : "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImkiOiIxIiwiZSI6InNtYXJ0LVByYWN0aXRpb25lci03MTAzMjcwMiJ9/fhir",
-    callback : 'http://localhost:3000/callback',
-    clientId : 'd90584cc-3b0e-40db-8543-536df45a84f4',
-    secret: 'a07NAYD7lnhfBh1b9614dPp_lZxyK5Hf7ImS8GJ2XnbD8SE-ZzAqJhyKykL7359ip0AG5bLC172_M5mhWxuRig',
-    clientIdConfig: "https://launch.smarthealthit.org/.well-known/openid-configuration"
-};
-
-*/
 
 //to serve up the static web pages - particularly the login page if no page is specified...
 app.use('/', express.static(__dirname,{index:'/smartLogin.html'}));

@@ -246,6 +246,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             var personid = person.id;
             var summary = {results:[],clients:[],servers:[],scenarios:[],person:person};
             summary.primaryTrack = person.primaryTrack;
+            summary.toi = person.toi;
             //get all the results for this person
             angular.forEach(allResults,function (v,k) {
 
