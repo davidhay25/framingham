@@ -85,9 +85,9 @@ angular.module("sampleApp")
 
                 ecosystemSvc.updatePerson(inputPerson).then(
                     function(data) {
-                        $scope.$close()
+                        $scope.$close(data)
                     }, function(err) {
-                        alert('Error saving person: '+ angular.toJson(err))
+                        alert('Error saving person: '+ angular.toJson(err));
                         $scope.$dismiss()
                     }
                 )

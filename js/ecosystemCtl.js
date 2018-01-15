@@ -119,8 +119,9 @@ angular.module("sampleApp")
                         }
                     }
                 }).result.then(function(vo){
-                    $scope.selectPerson(person);
                     console.log(vo)
+                    $scope.selectPerson(vo);
+
 
                     //ecosystemSvc.addScenarioResult(track,scenario,client,server,vo)
                 });
