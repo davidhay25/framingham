@@ -85,10 +85,11 @@ angular.module("sampleApp")
             loadData();
 
 
-
-
-
             $scope.wikiPageUrl = "http://wiki.hl7.org/index.php?title=FHIR_Connectathon_17";
+
+            $scope.makeEventReport = function() {
+                $scope.eventReport = ecosystemSvc.makeEventReport($scope.tracks)
+            };
 
             $scope.ecosystemSvc = ecosystemSvc;
 

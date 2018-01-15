@@ -131,6 +131,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     var hashAllPersons = {};
     var eventConfig = {};
     var serverRoleSummary;
+    var allResults = {};// = $localStorage.allResults || {};
 
     //var currentUser;
     //case insensitive sort
@@ -148,7 +149,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
     };
 
-    var allResults = {};// = $localStorage.allResults || {};
+
     return {
         makeServerRoleSummary : function(){
             serverRoleSummary = {};
@@ -302,6 +303,60 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
 
             return summary;
+
+        },
+        makeEventReport : function(tracks){
+            //make a report for the whole event...
+
+            //registrations by track...
+            var report = {tracks:[],totalWatchers : 0, totalPersons:0, totalResults:0}
+            var hashTrack = {}
+            tracks.forEach(function (trck) {
+                hashTrack[trck.id] = {persons:0,watchers:0,name:trck.name,results:{total:0}}
+            });
+            allPersons.forEach(function (person) {
+                if (person.primaryTrack) {
+                    var t = hashTrack[person.primaryTrack.id]
+                    if (t) {
+                        t.persons++;
+                        report.totalPersons++
+                    } else {
+                        console.log('Track id ' + person.primaryTrack.id + ' missing.')
+                    }
+                }
+
+                if (person.toi) {
+                    person.toi.forEach(function(trk){
+                        var t = hashTrack[trk.id];
+                        if (t) {
+                            t.watchers ++;
+                            report.totalWatchers ++
+                        } else {
+                            console.log('Track id ' + trk.id + ' missing.')
+                        }
+                    })
+                }
+            });
+
+            //examine all the results
+            angular.forEach(allResults,function (v,k) {
+                //console.log(v,k)
+                var t = hashTrack[v.track.id];
+                if (t) {
+                    t.results.total++;
+                    report.totalResults++
+                } else {
+                    console.log('Track id ' + v.track.id + ' missing.')
+                }
+            });
+
+
+            angular.forEach(hashTrack,function(k,v) {
+                console.log(k,v)
+                report.tracks.push({name:hashTrack[v].name,persons:k.persons,watchers:k.watchers,results:k.results})
+            });
+
+            return report;
 
         },
 

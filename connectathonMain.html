@@ -493,8 +493,12 @@
                                     <br/>
                                     <div class="row">
                                         <div class="col-md-6 col-sm-6">
-                                            <div>There are {{selectedTrackReport.uniqueServers.length}} unique Servers associated
-                                                with scenarios in this track. These are: </div>
+                                            <div>There are {{selectedTrack.persons.length}} participants
+                                            and {{selectedTrack.toi.length}} watchers.</div>
+
+                                                <div>There are {{selectedTrackReport.uniqueServers.length}} unique Servers associated
+                                                with scenarios in this track.
+                                                    <span ng-show="selectedTrackReport.uniqueServers.length"> These are: </span></div>
                                             <br/>
                                             <ul class="list-unstyled" style="margin-left: 70px">
                                                 <li ng-repeat="serverRole in selectedTrackReport.uniqueServers">
@@ -502,7 +506,8 @@
                                                 </li>
                                             </ul>
                                             <div>There are {{selectedTrackReport.uniqueClients.length}} unique Clients associated
-                                                with scenarios in this track. These are: </div>
+                                                with scenarios in this track.
+                                                <span ng-show="selectedTrackReport.uniqueClients.length"> These are: </span></div>
                                             <br/>
                                             <ul class="list-unstyled" style="margin-left: 70px">
                                                 <li ng-repeat="clientRole in selectedTrackReport.uniqueClients">
@@ -512,25 +517,31 @@
 
 
                                             <br/>
-                                            <div>There
-                                                <span ng-show="selectedTrackReport.total == 1">was 1 test report</span>
-                                                <span ng-show="selectedTrackReport.total >1">were {{selectedTrackReport.total}} test results</span>
-                                                <span ng-show="selectedTrackReport.total ==0">are no test results</span>
-                                                reported. The test results broke down as follows:</div>
+                                            <div ng-show="selectedTrackReport.total ==0">There are no test results yet.</div>
 
-                                            <br/>
-                                            <div style="margin-left: 100px">
-                                                <table>
-                                                    <tr>
-                                                        <th>Result</th><th>Count</th><th>%</th>
-                                                    </tr>
-                                                    <tr ng-repeat = "(k,v) in selectedTrackReport.resultTotals">
-                                                        <td width="80px">{{k}}</td>
-                                                        <td width="60px">{{v}}</td>
-                                                        <td width="60px">{{(v/selectedTrackReport.total)*100 | number:0}}%</td>
-                                                    </tr>
-                                                </table>
+                                            <div ng-show="selectedTrackReport.total >0">
+                                                <div>There
+                                                    <span ng-show="selectedTrackReport.total == 1">was 1 test report</span>
+                                                    <span ng-show="selectedTrackReport.total >1">were {{selectedTrackReport.total}} test results</span>
+
+                                                    reported. The test results broke down as follows:</div>
+
+                                                <br/>
+
+                                                <div style="margin-left: 100px">
+                                                    <table>
+                                                        <tr>
+                                                            <th>Result</th><th>Count</th><th>%</th>
+                                                        </tr>
+                                                        <tr ng-repeat = "(k,v) in selectedTrackReport.resultTotals">
+                                                            <td width="80px">{{k}}</td>
+                                                            <td width="60px">{{v}}</td>
+                                                            <td width="60px">{{(v/selectedTrackReport.total)*100 | number:0}}%</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
                                             </div>
+
                                         </div>
                                         <div class="col-md-6 col-sm-6">
                                             <strong>Result notes</strong>
@@ -1228,6 +1239,37 @@
 
 -->
                 </uib-tab>
+
+
+                <uib-tab heading="Participation report" select="makeEventReport()">
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                            <table class="table table-bordered">
+                                <tr><th>Track</th><th>Persons</th><th>%</th><th>Watchers</th><th>%</th>
+                                    <th>Results</th><th>%</th></tr>
+                                <tr ng-repeat="track in eventReport.tracks">
+                                    <td>{{track.name}}</td>
+                                    <td width="70px"><span ng-show="track.persons">{{track.persons}}</span></td>
+                                    <td width="70px"><span ng-show="track.persons">{{(track.persons/eventReport.totalPersons)*100 | number:0}}%</span></td>
+                                    <td width="70px"><span ng-show="track.watchers">{{track.watchers}}</span></td>
+                                    <td width="70px"><span ng-show="track.watchers">{{(track.watchers/eventReport.totalWatchers)*100 | number:0}}%</span></td>
+                                    <td width="70px"><span ng-show="track.results.total">{{track.results.total}}</span></td>
+                                    <td width="70px"><span ng-show="track.results.total">{{(track.results.total/eventReport.totalResults)*100 | number:0}}%</span></td>
+                                </tr>
+                                <tr><th></th><th>{{eventReport.totalPersons}}</th><th></th><th>{{eventReport.totalWatchers}}</th><th></th>
+                                    <th></th><th>{{eventReport.totalResults}}</th></tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+
+                        </div>
+                    </div>
+
+
+
+                </uib-tab>
+
 
                 <uib-tab heading="Documentation">
                     <br/>
