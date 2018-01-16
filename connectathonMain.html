@@ -777,7 +777,17 @@
                                 <tr ng-repeat="svr in allServers">
                                     <td>{{svr.name}}</td>
                                     <td>{{svr.address}}</td>
-                                    <td>{{svr.description}}</td>
+                                    <td>{{svr.description}}
+                                    <div ng-repeat="hook in svr.allHooks.services"
+                                         uib-popover="{{hook.description}}"
+                                         popover-placement="top"
+                                         popover-append-to-body = true
+                                         popover-trigger="'mouseenter'">
+                                        hook:{{hook.hook}} ({{hook.id}})
+                                    </div>
+
+
+                                    </td>
                                     <td>
                                         <div ng-repeat = "person in svr.contact">
                                             {{person.name}}

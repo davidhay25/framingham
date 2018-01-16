@@ -13,10 +13,12 @@ angular.module("sampleApp")
             if (existingServer) {
                 //this is an edit
                 serverExists = true;
-                $scope.saveText = "Update server";
+                $scope.saveText = "Update server";//+ existingServer.name;
                 $scope.input.name = existingServer.name;
                 $scope.input.description = existingServer.description ;
                 $scope.input.address = existingServer.address ;
+                $scope.allHooks = existingServer.allHooks;
+                $scope.SMART = existingServer.SMART;
 
                 if (existingServer.contact) {
                     $scope.input.contact = existingServer.contact[0];
@@ -48,6 +50,28 @@ angular.module("sampleApp")
 
             $scope.allPersons = ecosystemSvc.getAllPersons();//[]
 
+            $scope.loadHooks = function() {
+                //check for any CDS hooks
+
+                var url = 'proxyfhir/'+  addSlash($scope.input.address) + 'cds-services';
+                $http.get(url).then(
+                    function(data){
+                        $scope.allHooks = data.data;
+                    },
+                    function(err) {
+                        modalService.showModal({},{bodyText:'There was no valid response to the call '+url})
+                    }
+                )
+            };
+
+
+            function addSlash(url) {
+                if (url.substr(-1) !== '/') {
+                    url += '/';
+                }
+                return url;
+            }
+
             $scope.checkServerExists = function() {
 
 
@@ -59,10 +83,15 @@ angular.module("sampleApp")
                 $scope.waiting = true;
                 $http.get(url).then(
                     function(data) {
-                        modalService.showModal({},{bodyText:"The CapabilityStatement was returned, so this server can be addded!"});
+                        modalService.showModal({},{bodyText:"The CapabilityStatement was returned, so we can update the server specific information"});
                         serverExists = true;
-                        console.log(data.data);
+                        //console.log(data.data);
                         var cs = data.data;
+                        $scope.SMART = {}
+                        getSMARTEndpoints($scope.SMART,cs);
+                        //console.log(SMART)
+
+
                         //extract key data from the CapabilityStatement
                         $scope.serverDetails = {types:[]};
 
@@ -91,7 +120,7 @@ angular.module("sampleApp")
 
                     },
                     function(err) {
-                        modalService.showModal({},{bodyText:"There was no CapabilityStatement returned from "+url+". Are you sure address is correct?"});
+                        modalService.showModal({},{bodyText:"There was no CapabilityStatement returned from "+url+". Are you sure the address is correct?"});
                     }
                 ).finally(function () {
                     $scope.waiting = false;
@@ -149,6 +178,14 @@ angular.module("sampleApp")
                         server.serverDetails = $scope.serverDetails;
                     }
 
+                    if ($scope.allHooks) {
+                        server.allHooks = $scope.allHooks;
+                    }
+
+                    if ($scope.SMART){
+                        server.SMART = $scope.SMART;
+                    }
+
                     ecosystemSvc.updateServer(server,isNewServer).then(
                         function(data) {
                             $scope.$close()
@@ -164,5 +201,40 @@ angular.module("sampleApp")
 
 
             }
+
+
+            var getSMARTEndpoints = function(config,capstmt) {
+                var smartUrl = "http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris";
+                try {
+                    var extensions = capstmt.rest[0].security.extension;
+                    extensions.forEach(function(ext) {
+                        if (ext.url == smartUrl) {
+                            ext.extension.forEach(function(child){
+                                switch (child.url) {
+                                    case 'authorize' :
+                                        config.authorize = child.valueUri;
+                                        break;
+                                    case 'token' :
+                                        config.token = child.valueUri;
+                                        break;
+                                    case 'register' :
+                                        config.register = child.valueUri;
+                                        break;
+
+
+                                }
+                            })
+                        }
+                    })
+
+
+                } catch(ex) {
+                    return ex
+                }
+
+
+
+            }
+
     }
 );

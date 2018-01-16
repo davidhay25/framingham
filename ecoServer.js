@@ -213,6 +213,33 @@ app.post('/startup',function(req,res){
         res.json({})
     });
 
+});
+
+
+//proxy
+
+app.get('/proxyfhir/*',function(req,res) {
+
+    var fhirQuery = req.originalUrl.substr(11); //strip off /orionfhir
+    var options = {
+        method: 'GET',
+        uri: fhirQuery,
+        encoding : null
+    };
+
+    request(options, function (error, response, body) {
+        if (error) {
+            console.log('error:',error)
+            var err = error || body;
+            res.send(err,500)
+        } else if (response && response.statusCode !== 200) {
+            console.log(response.statusCode)
+            res.send(body,response.statusCode);//,'binary')
+        } else {
+            res.send(body);//,'binary')
+
+        }
+    })
 })
 
 //================================ clients =======================

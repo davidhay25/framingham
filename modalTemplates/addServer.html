@@ -39,7 +39,7 @@
                     </div>
 
                     <div class="col-md-4 col-sm-4">
-                        <button class="btn btn-primary" ng-click="checkServerExists()">Check </button>
+                        <button class="btn btn-link" ng-click="checkServerExists()">Check CapabilityStatement</button>
                         <div class="pull-right" ng-show="waiting">
                             <img src="css/ajax_loader_blue_32.gif"/>
                         </div>
@@ -100,6 +100,49 @@
 
 
             </uib-tab>
+
+            <uib-tab ng-show="input.address">
+                <uib-tab-heading>
+                    CDS-Hooks
+                    <span class="badge" ng-show="allHooks.services.length > 0">{{allHooks.services.length}}</span>
+                </uib-tab-heading>
+                <br/>
+
+
+                <table class="table table-bordered">
+                    <!--
+                    <tr><th>Id</th><th>Name</th><th>Hook</th><th>Description</th></tr>
+                    -->
+                    <tr ng-repeat="hook in allHooks.services">
+                        <td>
+                            <pre>{{hook | json}}</pre>
+                        </td>
+                        <!--
+                        <td>{{hook.id}}</td>
+                        <td>{{hook.name}}</td>
+                        <td>{{hook.hook}}</td>
+                        <td>{{hook.description}}</td>
+                        <td>
+                            <pre>{{hook | json}}</pre>
+                        </td>
+-->
+                    </tr>
+                </table>
+                <button class="btn btn-link" ng-click="loadHooks()">Check for hooks</button>
+            </uib-tab>
+
+
+
+            <uib-tab>
+                <uib-tab-heading>
+                    Security
+                    <span class="badge" ng-show="SMART">SM</span>
+                </uib-tab-heading>
+                <br/>
+
+                <pre>{{SMART | json}}</pre>
+            </uib-tab>
+
         </uib-tabset>
 
 

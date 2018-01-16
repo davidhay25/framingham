@@ -434,7 +434,7 @@ angular.module("sampleApp")
             $scope.editServer = function(svr) {
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addServer.html',
-                    //size: 'lg',
+                    size: 'lg',
                     controller: 'addServerCtrl',
                     resolve : {
                         existingServer: function () {          //the default config
