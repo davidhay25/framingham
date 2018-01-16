@@ -621,10 +621,16 @@
                     <div class="row">
                         <div class="col-sm-6 col-md-6">
                             <div class="trackScroll">
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6">
+                                        <input class="form-control" ng-model="input.personNameFilter"
+                                               placeholder="Enter string to filter list by (name & org)"/>
+                                    </div>
+                                </div>
                                 <table class="table table-bordered">
                                     <tr><th>Name</th><th>Organization</th><th>Primary track</th><th>
                                         <button class="btn btn-link pull-right" ng-click="editPerson()">New Person</button></th></tr>
-                                    <tr ng-repeat="person in filteredAllPersons">
+                                    <tr ng-repeat="person in allPersons" ng-show="canShowPerson(person,input.personNameFilter)">
                                         <td><button class="btn btn-link" ng-click="selectPerson(person)">{{person.name}}</button> </td>
                                         <td>{{person.organization}}</td>
                                         <td>

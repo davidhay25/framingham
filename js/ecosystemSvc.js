@@ -967,7 +967,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     allPersons = vo.persons;    //scoped to service
                     ciSort(allPersons,'name');
 
-                    console.log(allPersons)
+                    //console.log(allPersons)
 
                     hashAllPersons = {};
                     allPersons.forEach(function(p){
