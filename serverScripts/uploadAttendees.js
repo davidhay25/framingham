@@ -6,7 +6,7 @@ var upload = false;
 var errors = 0;
 
 
-var fileName = "/Users/davidha/Dropbox/development/ecosystem/artifacts/attendees.txt";
+var fileName = "/Users/davidha/Dropbox/development/ecosystem/artifacts/attendees-II.txt";
 //var urlRoot = "http://localhost:4000/config/";
 var urlRoot = "http://snapp.clinfhir.com:4000/config/";
 

@@ -118,6 +118,8 @@ angular.module("sampleApp")
 
             $scope.addServer = function(){
 
+                serverExists = true;       //temp to allow save without server
+
                 if (serverExists) {     //is there a FHIR server at the configured Url?
 
 
@@ -127,7 +129,6 @@ angular.module("sampleApp")
                         server.id = existingServer.id;
                         isNewServer = false;
                     }
-
 
                     server.name = $scope.input.name;
                     server.description = $scope.input.description;

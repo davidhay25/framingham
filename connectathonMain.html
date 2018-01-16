@@ -620,15 +620,13 @@
                         <div class="col-sm-6 col-md-6">
                             <div class="trackScroll">
                                 <table class="table table-bordered">
-                                    <tr><th>Name</th><th>Organization</th><th>Contacts</th><th>
+                                    <tr><th>Name</th><th>Organization</th><th>Primary track</th><th>
                                         <button class="btn btn-link pull-right" ng-click="editPerson()">New Person</button></th></tr>
                                     <tr ng-repeat="person in allPersons">
                                         <td><button class="btn btn-link" ng-click="selectPerson(person)">{{person.name}}</button> </td>
                                         <td>{{person.organization}}</td>
                                         <td>
-                                            <div ng-repeat="contact in person.contact">
-                                                {{contact.type}}: {{contact.value}}
-                                            </div>
+                                           {{person.primaryTrack.name}}
                                         </td>
                                         <td><button class="btn btn-link" ng-click="editPerson(person)">Edit</button> </td>
                                     </tr>
@@ -639,6 +637,11 @@
 
 
                             <div class="banner">{{personSummary.person.name}}</div>
+
+                            <h4>Contacts</h4>
+                            <div ng-repeat="contact in personSummary.person.contact">
+                                {{contact.type}}: {{contact.value}}
+                            </div>
 
                             <h4>Primary Track</h4>
                             <div ng-hide="personSummary.primaryTrack">No primary track selected.</div>
@@ -963,7 +966,7 @@
 
                                 </uib-tab>
 
-                                <uib-tab heading="Scenario Direct">
+                                <uib-tab heading="Comment against Scenario (Direct)">
                                     <br/>
                                     <p class="banner">This allows a result to be recorded directly against a scenario</p>
                                     <div class="row">
