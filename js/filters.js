@@ -4,6 +4,20 @@
 
 
 angular.module("sampleApp")
+    .filter('showUrlMaxLength', function() {
+        return function(s,l) {
+            if (s) {
+                if (s.length > l-3) {
+                    return s.substr(0,l-3)+'...'
+                } else {
+                    return s
+                }
+            }
+
+
+
+        }
+    })
 
     .filter('manualText',['builderSvc',function(builderSvc){
         return function(resource) {

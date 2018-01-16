@@ -41,6 +41,15 @@ angular.module("sampleApp")
 
             };
 
+            $scope.showHooksSummary = function(svr){
+                if (svr.allHooks && svr.allHooks.services) {
+                    var disp = ""
+                    svr.allHooks.services.forEach(function(hook){
+                        disp += "<div><strong>"+hook.name+": </strong>"+hook.description+"</div>"
+                    })
+                    return disp;
+                }
+            }
 
             //re-load all the connectathon artifacts
 
