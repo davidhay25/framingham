@@ -177,7 +177,9 @@
             </div>
             <div class="col-md-1 col-sm-1">
                 <div class="navbar-text">
+
                     <button class="btn btn-primary" ng-click="refresh()">Refresh</button>
+
                 </div>
             </div>
 
@@ -622,7 +624,7 @@
                                 <table class="table table-bordered">
                                     <tr><th>Name</th><th>Organization</th><th>Primary track</th><th>
                                         <button class="btn btn-link pull-right" ng-click="editPerson()">New Person</button></th></tr>
-                                    <tr ng-repeat="person in allPersons">
+                                    <tr ng-repeat="person in filteredAllPersons">
                                         <td><button class="btn btn-link" ng-click="selectPerson(person)">{{person.name}}</button> </td>
                                         <td>{{person.organization}}</td>
                                         <td>

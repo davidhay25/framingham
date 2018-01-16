@@ -69,9 +69,10 @@ angular.module("sampleApp")
 
                         $scope.tracks = vo.tracks;
 
-                        $scope.allClients =   ecosystemSvc.getAllClients();
+                        $scope.allClients =  ecosystemSvc.getAllClients();
                         $scope.allServers = ecosystemSvc.getAllServers();
                         $scope.allPersons = ecosystemSvc.getAllPersons();
+                        $scope.filteredAllPersons = angular.copy($scope.allPersons)
                         $scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
 
                         //console.log($scope.serverRoleSummary)

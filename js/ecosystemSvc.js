@@ -961,6 +961,9 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             $q.all(queries).then(
                 function(data) {
 
+                    allClients.length = 0;
+                    allServers.length = 0;
+
                     allPersons = vo.persons;    //scoped to service
                     ciSort(allPersons,'name');
 
