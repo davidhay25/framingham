@@ -29,7 +29,7 @@
                     </div>
 
                     <div class="col-md-6 col-sm-6">
-                        <textarea class="form-control" placeholder="A required description of the server" ng-model = "input.description"></textarea>
+                        <textarea class="form-control" placeholder="An optional description of the server" ng-model = "input.description"></textarea>
                     </div>
                 </div>
                 <br/>
@@ -55,7 +55,8 @@
                     <div class="col-md-5 col-sm-5">
                         <input type="text" ng-model="input.contact"
                                typeahead-on-select = "contactSelected($item, $model, $label, $event)"
-                               uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control">
+                               uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control"/>
+                        <div><em>Contact is required, and must be one of the users from the people tab</em></div>
 
                     </div>
                 </div>
@@ -151,7 +152,7 @@
 
             </div>
             <div class="col-md-6 col-sm-6">
-                <button ng-show="input.name && selectedPerson && input.description"
+                <button ng-show="input.name && selectedPerson"
                         class="btn btn-primary pull-right" ng-click="addServer()">{{saveText}}</button>
             </div>
         </div>

@@ -17,16 +17,16 @@ angular.module("sampleApp")
                 $scope.input.description = existingClient.description ;
 
                 if (existingClient.contact) {
-                    $scope.contact = existingClient.contact[0];
+                    //$scope.contact = existingClient.contact[0];
                     $scope.selectedPerson = existingClient.contact[0];
                 } else {
-                    $scope.contact = ecosystemSvc.getCurrentUser();
+                    //$scope.contact = ecosystemSvc.getCurrentUser();
                     $scope.selectedPerson = ecosystemSvc.getCurrentUser();
                 }
 
             } else {
                 //this is new...
-                $scope.contact = ecosystemSvc.getCurrentUser();
+                //$scope.contact = ecosystemSvc.getCurrentUser();
                 $scope.selectedPerson = ecosystemSvc.getCurrentUser();
             }
 

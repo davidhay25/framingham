@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CDS Hooks client</title>
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+    <script>
+        angular.module("sampleApp",['ui.bootstrap']).config(function($locationProvider) {
+
+            // enable html5Mode for pushstate ('#'-less URLs)
+            $locationProvider.html5Mode(true);
+            $locationProvider.hashPrefix('!');
+        });
+       // angular.module("sampleApp").constant("moment", moment);
+
+    </script>
+    <script src="js/hooksCtl.js"></script>
+    <script src="js/modalDialogSvc.js"></script>
+
+
+</head>
+<body style="padding: 8px" >
+
+
+
+<div ng-app="sampleApp" ng-controller="hooksCtrl" class="container-fluid">
+
+
+    <div class="row">
+        <div class="col-sm-2 col-md-2">
+            <ul class="list-group">
+                <li ng-class="{'list-group-item':1}" ng-repeat="svr in lstServers"
+                    ng-click="selectServer(svr)"
+                    style="cursor: pointer">
+                    {{svr.name}}
+                </li>
+            </ul>
+
+        </div>
+        <div class="col-sm-2 col-md-2">
+            <ul class="list-group">
+                <li ng-class="{'list-group-item':1}" ng-repeat="hook in selectedServer.allHooks.services"
+                    ng-click="selectHook(hook)"
+                    style="cursor: pointer">
+                    {{hook.name}}
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-sm-3 col-md-3">
+            <pre>{{selectedHook | json}}</pre>
+
+            <button class="btn btn-primary" ng-click="invoke()">Invoke</button>
+        </div>
+
+        <div class="col-sm-3 col-md-3">
+            <div class="row">
+                <div class="col-sm-4 col-md-4">
+                    Patient Id
+                </div>
+                <div class="col-sm-4 col-md-4">
+                    <input class="form-control" ng-model="input.patientid"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 col-md-4">
+                    Practitioner Id
+                </div>
+                <div class="col-sm-4 col-md-4">
+                    <input class="form-control" ng-model="input.practitionerid"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <hr/>
+    <div>{{url}}</div>
+    <div class="row">
+        <div class="col-md-6 col-sm-6">
+            <pre>{{request | json}}</pre>
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <pre>{{response | json}}</pre>
+
+        </div>
+    </div>
+
+
+
+
+</div>
+
+</body>
+</html>

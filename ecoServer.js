@@ -7,6 +7,8 @@ var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";     //allow self signed certificates
+
 var dbName = 'connectathon';    //default database name...
 
 /* disable as will be running under pm2, which will trap errors and give a better message...
@@ -87,6 +89,7 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
 
 var app = express();
 app.use(bodyParser.json())
+
 
 
 useSSL = false;
@@ -205,21 +208,18 @@ app.get('/accessAudit',function(req,res){
     })
 });
 
-
 //record the access - but don't wait, or bother about an error...
 app.post('/startup',function(req,res){
     var data = req.body;    //may be empty
     recordAccess(req,data,function(){
         res.json({})
     });
-
 });
 
 
 //proxy
 
 app.get('/proxyfhir/*',function(req,res) {
-
     var fhirQuery = req.originalUrl.substr(11); //strip off /orionfhir
     var options = {
         method: 'GET',
@@ -237,10 +237,39 @@ app.get('/proxyfhir/*',function(req,res) {
             res.send(body,response.statusCode);//,'binary')
         } else {
             res.send(body);//,'binary')
+        }
+    })
+});
+
+app.post('/proxyfhir/*',function(req,res) {
+    var fhirQuery = req.originalUrl.substr(11); //strip off /orionfhir
+    var payload = req.body;
+
+    var options = {
+        method: 'POST',
+        uri: fhirQuery,
+        body:JSON.stringify(payload),
+        headers: {'content-type':'application/json'},
+        encoding : null
+    };
+
+    request(options, function (error, response, body) {
+        if (error) {
+            console.log('error:',error)
+            var err = error || body;
+            res.send(err,500)
+        } else if (response && response.statusCode !== 200) {
+            console.log(response.statusCode)
+
+            res.send(body,response.statusCode);//,'binary')
+        } else {
+            //console.log(body.toString())
+           // res.send(body,response.statusCode);
+            res.send(body);//,'binary')
 
         }
     })
-})
+});
 
 //================================ clients =======================
 //get all clients
