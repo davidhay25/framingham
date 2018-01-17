@@ -17,16 +17,16 @@ angular.module("sampleApp")
                 $scope.input.description = existingClient.description ;
 
                 if (existingClient.contact) {
-                    //$scope.contact = existingClient.contact[0];
+                    $scope.input.contact = existingClient.contact[0];     //this is model in teh selection box
                     $scope.selectedPerson = existingClient.contact[0];
                 } else {
-                    //$scope.contact = ecosystemSvc.getCurrentUser();
+                    $scope.input.contact = ecosystemSvc.getCurrentUser();
                     $scope.selectedPerson = ecosystemSvc.getCurrentUser();
                 }
 
             } else {
                 //this is new...
-                //$scope.contact = ecosystemSvc.getCurrentUser();
+                $scope.input.contact = ecosystemSvc.getCurrentUser();
                 $scope.selectedPerson = ecosystemSvc.getCurrentUser();
             }
 
@@ -34,6 +34,12 @@ angular.module("sampleApp")
             $scope.contactSelected = function(item){
                 $scope.selectedPerson = item;
             };
+
+            $scope.checkContactSelection = function() {
+                if (! $scope.input.contact) {
+                    modalService.showModal({},{bodyText:"It looks like you haven't selected a person. You can't save unless there is an actual person selected as a contact for this client. "})
+                }
+            }
 
 
             $scope.checkName = function() {
@@ -54,6 +60,11 @@ angular.module("sampleApp")
             };
 
             $scope.addClient = function(){
+
+                if (! $scope.selectedPerson) {
+                    modalService.showModal({},{bodyText:"It looks like you haven't selected a contact person. You can't save unless there is an actual person selected as a contact for this client. "})
+                    return;
+                }
 
 
                 var isNewClient = true;

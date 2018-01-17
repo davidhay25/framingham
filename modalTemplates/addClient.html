@@ -37,8 +37,11 @@
                 Contact Person
             </div>
             <div class="col-md-5 col-sm-5">
-                <input type="text" ng-model="contact"
+                <input type="text" ng-model="input.contact"
                        typeahead-on-select = "contactSelected($item, $model, $label, $event)"
+
+                       typeahead-editable = 'false'
+
                        uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control"/>
                 <div><em>Contact person is required, and must be a selection from the users from the people tab</em></div>
 
@@ -52,7 +55,7 @@
 
             </div>
             <div class="col-md-6 col-sm-6">
-                <button ng-show="input.name && selectedPerson && canAdd" class="btn btn-primary pull-right" ng-click="addClient()">{{saveText}}</button>
+                <button ng-show="input.name  && canAdd" class="btn btn-primary pull-right" ng-click="addClient()">{{saveText}}</button>
             </div>
         </div>
     </div>
@@ -60,7 +63,9 @@
     <div class="modal-header">
         <div class="row">
             <div class="col-md-12 col-sm-12">
-                <em>Add the details (name and description) for a new client. After this the client can be added to any number of scenarios.</em>
+                <em>Add the details (name and description) for a new client. After this the client can be added to any number of scenarios.
+                    <span style="color:red">The client name and Contact Person are required.</span></em>
+                </em>
 
             </div>
 

@@ -44,6 +44,12 @@ angular.module("sampleApp")
                 $scope.selectedPerson = ecosystemSvc.getCurrentUser();
             }
 
+            $scope.checkContactSelectionDEP = function() {
+                if (! $scope.input.contact) {
+                    modalService.showModal({},{bodyText:"It looks like you haven't selected a person. You can't save unless there is an actual person selected as a contact for this server. "})
+                }
+            }
+
             $scope.contactSelected = function(item){
                 $scope.selectedPerson = item;
             };
@@ -150,6 +156,12 @@ angular.module("sampleApp")
                 serverExists = true;       //temp to allow save without server
 
                 if (serverExists) {     //is there a FHIR server at the configured Url?
+
+
+                    if (! $scope.selectedPerson) {
+                        modalService.showModal({},{bodyText:"It looks like you haven't selected a contact person. You can't save unless there is an actual person selected as a contact for this server. "})
+                        return;
+                    }
 
 
                     var isNewServer = true;
