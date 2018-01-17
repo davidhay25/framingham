@@ -34,13 +34,13 @@
 
         <div class="row">
             <div class="col-md-2 col-sm-2">
-                Contact
+                Contact Person
             </div>
             <div class="col-md-5 col-sm-5">
                 <input type="text" ng-model="contact"
                        typeahead-on-select = "contactSelected($item, $model, $label, $event)"
                        uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control"/>
-                <div><em>Contact is required, and must be one of the users from the people tab</em></div>
+                <div><em>Contact person is required, and must be a selection from the users from the people tab</em></div>
 
             </div>
         </div>
