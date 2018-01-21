@@ -11,6 +11,12 @@ angular.module("sampleApp")
             $scope.input.patientid = 206368;        //on publoic hapi
             var dataServer = "http://fhirtest.uhn.ca/baseDstu3/";
 
+            $http.get(dataServer + "Patient/"+$scope.input.patientid).then(
+                function(data) {
+                    $scope.currentPatient = data.data;
+                }
+            );
+
             //var dataServer = "http://snapp.clinfhir.com:8081/baseDstu3/";   //clinfhir stu3 server
             //var dataServer = "http://localhost:8080/baseDstu3/";        //local server
             $scope.dataServer = dataServer;
@@ -40,10 +46,18 @@ angular.module("sampleApp")
                     function(patient) {
                         if (patient) {
                             $scope.input.patientid = patient.id;
+                            $scope.currentPatient = patient;
                         }
                     }
                 )
             };
+
+            $scope.showPatient = function() {
+                if ($scope.currentPatient) {
+                    var msg = "<pre>"+ angular.toJson($scope.currentPatient,2) + "</pre>"
+                    return msg;
+                }
+            }
 
             $scope.selectPractitioner = function() {
                 $uibModal.open({

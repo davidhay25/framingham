@@ -4,8 +4,12 @@ angular.module("sampleApp")
         $scope.resourceType = resourceType;
 
         $scope.selectPatient = function(patient) {
-            $scope.$close(patient);
+            $scope.currentPerson = patient;
+
+           // $scope.$close($scope.currentPatient);
         };
+
+
 
         $scope.searchForPatient = function(name) {
             $scope.nomatch=false;   //if there were no matching patients

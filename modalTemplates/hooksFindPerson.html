@@ -17,15 +17,13 @@
                 <div class="pull-right">
                     <img ng-show='waiting' src="css/ajax_loader_blue_32.gif"/>
                     <button class="btn btn-link" ng-hide="showLog" ng-click="cancel()">Cancel</button>
-                    <button class="btn btn-primary" ng-show="allowClose" ng-click="$close(currentPatient)">Close</button>
+                    <button class="btn btn-primary" ng-show="currentPerson" ng-click="$close(currentPerson)">Select {{resourceType}}</button>
                 </div>
 
             </div>
         </div>
     </div>
     <div class="modal-body">
-
-
             <div class="row">
                 <div class="col-md-10 col-sm-10">
                     <input type="text" ng-model="input.searchPatientName" class="form-control" autoFocus
@@ -42,14 +40,24 @@
                 <div uib-alert class="alert-warning" ng-show="nomatch">
                     Sorry, there were no {{resourceType}}s matching that name
                 </div>
-                <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="item in matchingPersonList">
 
-                        <div style="cursor:pointer" ng-click="selectPatient(item.patient)">
-                            {{item.display}} ({{item.patient.id}})
-                        </div>
-                    </li>
-                </ul>
+                <div class="row">
+                    <div class="col-sm-6 col-md-6">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="item in matchingPersonList">
+
+                                <div style="cursor:pointer" ng-click="selectPatient(item.patient)">
+                                    {{item.display}} ({{item.patient.id}})
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <pre ng-show="currentPerson">{{currentPerson | json}}</pre>
+                    </div>
+                </div>
+
 
             </div>
 

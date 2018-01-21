@@ -17,6 +17,7 @@ angular.module("sampleApp")
 
             if (person) {
                 //this is an update
+                $scope.person = person;
                 inputPerson = person;
                 $scope.input.name = person.name;
                 $scope.input.organization = person.organization;

@@ -53,6 +53,19 @@ angular.module("sampleApp")
 
             //re-load all the connectathon artifacts
 
+            $scope.getSvrDescription = function(svr) {
+                var desc = svr.description;
+                if (desc) {
+                    if (desc.length > 50) {
+                        desc = desc.substr(0,47)+ '...'
+                    }
+                    return desc;
+                } else {
+                    return ""
+                }
+
+            }
+
             $scope.refresh = function(){
                 loadData(function(){
                     var msg = "Data has been refreshed."

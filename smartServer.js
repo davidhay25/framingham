@@ -20,8 +20,6 @@ var sslOptions = {
 };
 
 
-
-
 https.createServer(sslOptions, app).listen(8443)
 
 var showLog = false;         //for debugging...

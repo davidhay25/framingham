@@ -18,6 +18,7 @@ angular.module("sampleApp")
                 $scope.input.description = existingServer.description ;
                 $scope.input.address = existingServer.address ;
                 $scope.allHooks = existingServer.allHooks;
+                $scope.fhirVersion = existingServer.fhirVersion;
                 $scope.SMART = existingServer.SMART;
 
                 if (existingServer.contact) {
@@ -93,7 +94,10 @@ angular.module("sampleApp")
                         serverExists = true;
                         //console.log(data.data);
                         var cs = data.data;
-                        $scope.SMART = {}
+                        $scope.SMART = {};
+                        $scope.fhirVersion = cs.fhirVersion;
+
+
                         getSMARTEndpoints($scope.SMART,cs);
                         //console.log(SMART)
 
@@ -175,6 +179,7 @@ angular.module("sampleApp")
                     server.description = $scope.input.description;
                     server.address = $scope.input.address;
                     server.contact = [$scope.selectedPerson];
+                    server.fhirVersion = $scope.fhirVersion;
 
                     //now the ecosystem roles
                     server.serverRoles = []

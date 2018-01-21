@@ -205,7 +205,7 @@
                                 <ul class="list-group">
                                     <li ng-class="{'list-group-item':1,'listItemSelected':selectedTrack.id == track.id}"
                                         style="cursor: pointer"
-                                        ng-repeat="track in tracks"
+                                        ng-repeat="track in tracks | orderBy: 'name' "
                                         ng-click="selectTrack(track)">
                                         {{track.name}}
                                     </li>
@@ -740,7 +740,9 @@
                         <button class="btn btn-link pull-right" ng-click="editClient()">New Client</button>
                     </div>
                     <table class="table table-bordered">
-                        <tr><th>Name</th><th>Description</th><th>Contacts</th><th>Track / Scenario / Role</th><th></th><th></th></tr>
+                        <tr><th>Name</th><th>Description</th><th>Contacts</th><th>Track / Scenario / Role (from Testing)
+
+                        </th><th></th><th></th></tr>
                         <tr ng-repeat="clnt in allClients">
                             <td>{{clnt.name}}</td>
                             <td>{{clnt.description}}</td>
@@ -783,8 +785,8 @@
                                 <button class="btn btn-link pull-right" ng-click="editServer()">New Server</button>
                             </div>
                             <table class="table table-bordered">
-                                <tr><th>Name</th><th>Url</th><th>Description</th><th>Contacts</th>
-                                    <th>Track / Scenario / Role</th>
+                                <tr><th>Name</th><th>Url</th><th>Version</th><th>Description</th><th>Contacts</th>
+                                    <th>Track / Scenario / Role (from Testing)</th>
                                     <th  uib-popover="CDS=CDS hooks, SM = SMART, mouseover badge for details"
                                          popover-placement="top"
                                          popover-append-to-body = true
@@ -793,7 +795,17 @@
                                 <tr ng-repeat="svr in allServers">
                                     <td>{{svr.name}}</td>
                                     <td>{{svr.address | showUrlMaxLength : 50}}</td>
-                                    <td width="25%">{{svr.description}}
+                                    <td>{{svr.fhirVersion}}</td>
+                                    <td>
+                                        <div uib-popover="{{svr.description}}"
+                                             popover-placement="right"
+                                             popover-append-to-body = true
+                                             popover-trigger="'mouseenter'">
+
+                                            {{getSvrDescription(svr)}}
+
+                                        </div>
+
                                         <!--
                                     <div ng-repeat="hook in svr.allHooks.services"
                                          uib-popover="{{hook.description}}"

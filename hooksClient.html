@@ -124,7 +124,10 @@
                     Patient Id
                 </div>
                 <div class="col-sm-4 col-md-4">
-                    <input class="form-control" ng-model="input.patientid"/>
+                    <input class="form-control" ng-model="input.patientid"
+                           uib-popover-html=showPatient()
+                           popover-placement="bottom"
+                           popover-trigger="'mouseenter'"/>
                 </div>
                 <div class="col-sm-4 col-md-4">
                     <button class="btn btn-link" ng-click="selectPatient()">Find Patient</button>
