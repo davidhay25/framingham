@@ -70,9 +70,9 @@
 
 
 
-    {"id":"s10-1","name":"Consumer access via OAuth", "roleIds":["r10-1","r10-2","r10-3","r10-4","r10-5","r10-6"]},
-    {"id":"s10-2","name":"Consumer initiated 'on behalf of'", "roleIds":["r10-1","r10-2","r10-3","r10-4","r10-5","r10-6"]},
-    {"id":"s10-3","name":"Consent with Privacy labels", "roleIds":["r10-1","r10-2","r10-3","r10-4","r10-5","r10-6"]},
+    {"id":"s10-1","name":"Consumer access via OAuth", "roleIds":["r10-1","r10-2","r10-3","r10-4","r10-5","r10-6"],"description":"A consumer, such as a medicare beneficiary, wishes to authorize the sharing of their health information from a Data Provider, such as CMS, with a consumer controlled app of their choice. The Data Provider wishes to capture audit information to be able to report a complete accounting of disclosure for the consumer"},
+    {"id":"s10-2","name":"Consumer initiated 'on behalf of'", "roleIds":["r10-1","r10-2","r10-3","r10-4","r10-5","r10-6"],"description":"A consumer, such as a patient being treated by a Provider that belongs to a Hospital, wishes to authorize the Hospital to share their health information with other providers attributed to them in the Hospital. Data is shared, on-behalf of the consumer, among the authorized providers at the network without the consumer necessarily receiving a copy of the record themselves. The Hospital wishes to capture audit information to be able to report a complete accounting of disclosure for the consumer."},
+    {"id":"s10-3","name":"Consent with Privacy labels", "roleIds":["r10-1","r10-2","r10-3","r10-4","r10-5","r10-6"],"description":""},
 
     {"id":"s11-1","name":"Physician to Patient", "roleIds":["r11-1","r11-2","r11-3","r11-4"]},
     {"id":"s11-2","name":"Patient request for data", "roleIds":["r11-1","r11-2","r11-3","r11-4"]},

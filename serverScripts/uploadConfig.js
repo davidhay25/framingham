@@ -14,7 +14,7 @@ var localFileRoot = "/Users/davidha/Dropbox/development/ecosystem/artifacts/";
 //var urlRoot = "http://localhost:4000/config/";
 //var urlRoot = "http://snapp.clinfhir.com:4004/config/";      //COF
 //var urlRoot = "http://snapp.clinfhir.com:4000/config/";
- var urlRoot = "http://snapp.clinfhir.com:4001/config/";
+var urlRoot = "http://snapp.clinfhir.com:4001/config/";
 
 uploadArray(localFileRoot+'tracksREF.json',urlRoot+"track/",'tracks');
 uploadArray(localFileRoot+'scenariosREF.json',urlRoot+"scenario/",'scenarios');
@@ -41,11 +41,11 @@ function uploadArray(pathToFile,url,elementName) {
 
             console.log(response.statusCode)
             if (response.statusCode !== 200 && response.statusCode !== 201) {
-                console.log('--------------->   error uploading '+ url)
+                console.log('--------------->   error uploading '+ url + " "+ i)
                 console.log(response.body.toString())
                 //return false
             } else {
-                console.log('uploaded '+ url)
+                console.log('uploaded '+ url+ " "+ i)
                 ///return true;
             }
 

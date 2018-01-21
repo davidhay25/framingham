@@ -46,6 +46,11 @@
 
         */
 
+        .trackBorder {
+            margin-bottom:8px;
+            margin-top : 2px
+        }
+
         .markdown-editor {
             border: 1px solid #ccc;
             border-radius: 2px;
@@ -235,6 +240,7 @@
                                     </div>
                                     <br/>
                                     <div class="row">
+                                        <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
                                             <strong>Track Leads</strong>
                                         </div>
@@ -251,6 +257,7 @@
                                     </div>
                                     <br/>
                                     <div class="row">
+                                        <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
                                             <strong>Wiki Page</strong>
                                         </div>
@@ -262,6 +269,7 @@
 
 
                                     <div class="row">
+                                        <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
                                             <strong>Registered Participants</strong>
                                         </div>
@@ -272,6 +280,7 @@
                                             </div>
 
                                             <div class="row">
+
                                                 <div class="col-sm-4 col-md-4">
                                                     <ul>
                                                         <li style="cursor: pointer"
@@ -301,6 +310,7 @@
 
 
                                     <div class="row">
+                                        <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
                                             <strong>Watchers (Tracks of Interest)</strong>
                                         </div>
@@ -341,45 +351,13 @@
                                     </div>
 
 
-
                                     <div class="row">
-                                        <div class="col-sm-2 col-md-2">
-                                            <strong>Roles</strong>
-                                        </div>
-                                        <div class="col-sm-10 col-md-10">
-
-                                            <div class="row">
-                                                <div class="col-sm-4 col-md-4">
-                                                    <ul class="list-group">
-                                                        <li ng-class="{'list-group-item':1,'listItemSelected':selectedRole.id == role.id}"
-                                                            style="cursor: pointer"
-                                                            ng-repeat="role in selectedTrack.roles track by $index"
-                                                            ng-click="selectRole(role)">
-                                                            {{role.name}}
-                                                        </li>
-                                                    </ul>
-
-                                                </div>
-                                                <div class="col-sm-8 col-md-8">
-                                                    <p ng-bind-html="selectedRole.description"></p>
-
-                                                    <div ng-show="selectedRole.role == 'client'">
-                                                        This role acts as a Client in a Client/Server test
-                                                    </div>
-                                                    <div ng-show="selectedRole.role == 'server'">
-                                                        This role acts as a Server in a Client/Server test
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
+                                        <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
                                             <strong>Scenarios</strong>
                                         </div>
                                         <div class="col-sm-10 col-md-10">
+
                                             <div class="row">
 
                                                 <div class="col-sm-4 col-md-4">
@@ -452,10 +430,10 @@
                                                     <hr style="height: 8px"/>
 
                                                     <div class="row">
-                                                        <div class="col-sm-3 col-md-3">
-                                                            Configured Clients
+                                                        <div class="col-sm-4 col-md-4">
+                                                            Currently configured Clients
                                                         </div>
-                                                        <div class="col-sm-9 col-md-9">
+                                                        <div class="col-sm-8 col-md-8">
 
                                                             <ul>
                                                                 <li ng-repeat="clientRole in selectedScenario.clients">
@@ -470,10 +448,10 @@
                                                     </div>
 
                                                     <div class="row">
-                                                        <div class="col-sm-3 col-md-3">
-                                                            Configured Servers
+                                                        <div class="col-sm-4 col-md-4">
+                                                            Currently configured Servers
                                                         </div>
-                                                        <div class="col-sm-9 col-md-9">
+                                                        <div class="col-sm-8 col-md-8">
                                                             <ul >
                                                                 <li ng-repeat="serverRole in selectedScenario.servers">
                                                                     {{serverRole.server.name}} ({{serverRole.role.name}})
@@ -488,6 +466,42 @@
                                             </div>
                                         </div>
                                     </div>
+
+
+                                    <div class="row">
+                                        <hr class="trackBorder"/>
+                                        <div class="col-sm-2 col-md-2">
+                                            <strong>Roles</strong>
+                                        </div>
+                                        <div class="col-sm-10 col-md-10">
+
+                                            <div class="row">
+                                                <div class="col-sm-4 col-md-4">
+                                                    <ul class="list-group">
+                                                        <li ng-class="{'list-group-item':1,'listItemSelected':selectedRole.id == role.id}"
+                                                            style="cursor: pointer"
+                                                            ng-repeat="role in selectedTrack.roles track by $index"
+                                                            ng-click="selectRole(role)">
+                                                            {{role.name}}
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+                                                <div class="col-sm-8 col-md-8">
+                                                    <p ng-bind-html="selectedRole.description"></p>
+
+                                                    <div ng-show="selectedRole.role == 'client'">
+                                                        This role acts as a Client in a Client/Server test
+                                                    </div>
+                                                    <div ng-show="selectedRole.role == 'server'">
+                                                        This role acts as a Server in a Client/Server test
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
 
 
                                 </uib-tab>
@@ -1308,7 +1322,7 @@
                             <table class="table table-bordered">
                                 <tr><th>Track</th><th>Primary</th><th>%</th><th>Watchers</th><th>%</th>
                                     <th>Results</th><th>%</th></tr>
-                                <tr ng-repeat="track in eventReport.tracks">
+                                <tr ng-repeat="track in eventReport.tracks | orderBy: 'name' ">
                                     <td>{{track.name}}</td>
                                     <td width="70px"><span ng-show="track.persons">{{track.persons}}</span></td>
                                     <td width="70px"><span ng-show="track.persons">{{(track.persons/eventReport.totalPersons)*100 | number:0}}%</span></td>
