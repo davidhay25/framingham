@@ -4,11 +4,11 @@ angular.module("sampleApp")
 
             $scope.input = {}
             //$scope.input.patientid = 7268;        //on publoic hapi
-            $scope.input.patientid = 68052;     //on local server
+            //$scope.input.patientid = 206368;     //on local server
             //68052 on local server - http://localhost:8080/baseDstu3/
 
             //default to hapi
-            $scope.input.patientid = 7268;        //on publoic hapi
+            $scope.input.patientid = 206368;        //on publoic hapi
             var dataServer = "http://fhirtest.uhn.ca/baseDstu3/";
 
             //var dataServer = "http://snapp.clinfhir.com:8081/baseDstu3/";   //clinfhir stu3 server
@@ -74,7 +74,7 @@ angular.module("sampleApp")
                 payload.hook = $scope.selectedHook.hook;
                 payload.hookInstance = uuidv4(); //"decb68d5-c076-4f72-b1f2-be9f895e0249";
                 payload.user = 'Practitioner/213';
-                //payload.fhirServer = dataServer;
+                payload.fhirServer = dataServer;
                 payload.patient = "Patient/"+$scope.input.patientid;
 
                 var arQuery = []
@@ -99,6 +99,15 @@ angular.module("sampleApp")
                                     payload.prefetch[k]=entry;
                                 }
                             }, function(err) {
+                                var modalOptions = {
+                                    //closeButtonText: "No, I changed my mind",
+                                    headerText: "Error prefetching: " + url,
+                                    //actionButtonText: 'Ok',
+                                    bodyText: angular.toJson(err)
+                                };
+
+                                modalService.showModal({}, modalOptions)
+
                                 console.log(err)
                             }
                         ))
@@ -124,36 +133,31 @@ angular.module("sampleApp")
                 delete $scope.request;
                 delete $scope.response;
                 delete $scope.url;
-
+                delete $scope.errorMsg;
 
                 var url = $scope.selectedServer.address;
                 if (url.substr(-1,1) !== '/') {url += '/'}
 
                 url += 'cds-services/' + $scope.selectedHook.id;
-              /*  var payload = {};
-                payload.hook = $scope.selectedHook.hook;
-                payload.hookInstance = "decb68d5-c076-4f72-b1f2-be9f895e0249";
-                payload.user = 'Practitioner/213';
-                payload.fhirServer = dataServer;
-                payload.patient = "Patient/7268";
-
-
-
-                payload.prefetch = {patientToGreet:$scope.patientEntry}
-*/
                 $scope.url = url;
 
                 $scope.request = payload;
-                var proxyUrl = 'proxyfhir/'+url
+                var proxyUrl = 'proxyfhir/'+url;
+                $scope.waiting = true;
                 $http.post(proxyUrl,payload).then(
                     function(data) {
                         console.log(data)
                         $scope.response = data.data;
                     },
                     function(err) {
-                        $scope.response = err;
+                        $scope.errorMsg = err.data;
+
+                        //console.log($scope.errorMsg);
+                        //$scope.response = err;
                     }
-                )
+                ).finally(function(){
+                    $scope.waiting = false;
+                })
 
             };
 

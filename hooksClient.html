@@ -7,9 +7,11 @@
     <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <script src="js/libs/angular-sanitize.js"></script>
+
 
     <script>
-        angular.module("sampleApp",['ui.bootstrap']).config(function($locationProvider) {
+        angular.module("sampleApp",['ui.bootstrap','ngSanitize']).config(function($locationProvider) {
 
             // enable html5Mode for pushstate ('#'-less URLs)
             $locationProvider.html5Mode(true);
@@ -49,6 +51,9 @@
 
             </div>
             <div class="col-md-1 col-sm-1">
+                <div class="navbar-text">
+                    <img ng-show='waiting' src="css/ajax_loader_blue_32.gif"/>
+                </div>
 
             </div>
 
@@ -90,7 +95,7 @@
                 <h4>Hook definition</h4>
                 <pre>{{selectedHook | json}}</pre>
 
-                <button ng-show = "selectedHook" class="btn btn-primary" ng-click="invoke()">Invoke</button>
+                <button ng-show = "selectedHook" class="btn btn-primary" ng-click="invoke()">Invoke Service</button>
 
             </div>
 
@@ -153,6 +158,11 @@
             <pre>{{request | json}}</pre>
         </div>
         <div class="col-md-6 col-sm-6">
+
+            <p ng-bind-html="errorMsg"></p>
+
+
+
             <pre>{{response | json}}</pre>
 
         </div>

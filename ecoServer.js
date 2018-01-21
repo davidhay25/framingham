@@ -259,8 +259,10 @@ app.post('/proxyfhir/*',function(req,res) {
             var err = error || body;
             res.send(err,500)
         } else if (response && response.statusCode !== 200) {
-            console.log(response.statusCode)
-
+            console.log('---------------');
+            console.log(response.statusCode);
+            console.log(body.toString());
+            console.log('---------------');
             res.send(body,response.statusCode);//,'binary')
         } else {
             //console.log(body.toString())

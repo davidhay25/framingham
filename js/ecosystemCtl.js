@@ -98,14 +98,19 @@ angular.module("sampleApp")
             $scope.canShowPerson = function(person,filter) {
 
                 var name = person.name;
-                var org = person.organization;
-                var regex = new RegExp(filter, "i");
+                if (name) {
+                    var org = person.organization;
+                    var regex = new RegExp(filter, "i");
 
-                if (name.search(regex) >-1 || org.search(regex) >-1) {
-                    return true;
+                    if (name.search(regex) >-1 || org.search(regex) >-1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 } else {
                     return false;
                 }
+
 
             };
 
