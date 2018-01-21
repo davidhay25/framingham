@@ -217,7 +217,7 @@ app.post('/startup',function(req,res){
 });
 
 
-//proxy
+//========= proxy endpoints. Used by the connectathon UI to query a server, and by CDS-hooks function =======
 
 app.get('/proxyfhir/*',function(req,res) {
     var fhirQuery = req.originalUrl.substr(11); //strip off /orionfhir
@@ -270,6 +270,11 @@ app.post('/proxyfhir/*',function(req,res) {
         }
     })
 });
+
+
+
+
+
 
 //================================ clients =======================
 //get all clients
@@ -485,7 +490,7 @@ app.post('/person',function(req,res){
     })
 });
 
-//=============== config items tracks, scnarios, roles
+//=============== config items tracks, scenarios, roles
 
 
 app.get('/config/:type',function(req,res){
@@ -513,6 +518,9 @@ app.post('/config/:type',function(req,res){
         }
     })
 });
+
+
+
 
 
 //to serve up the static web pages - particularly the login page if no page is specified...

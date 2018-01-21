@@ -39,7 +39,8 @@
                     </div>
 
                     <div class="col-md-4 col-sm-4">
-                        <button class="btn btn-link" ng-click="checkServerExists()">Check CapabilityStatement</button>
+                        <button class="btn btn-link" ng-show="input.name"
+                                ng-click="checkServerExists()">Check CapabilityStatement</button>
                         <div class="pull-right" ng-show="waiting">
                             <img src="css/ajax_loader_blue_32.gif"/>
                         </div>

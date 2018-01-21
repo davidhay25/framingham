@@ -15,6 +15,7 @@ angular.module("sampleApp")
                 $scope.saveText = "Update client";
                 $scope.input.name = existingClient.name;
                 $scope.input.description = existingClient.description ;
+                $scope.input.url = existingClient.url ;
 
                 if (existingClient.contact) {
                     $scope.input.contact = existingClient.contact[0];     //this is model in teh selection box
@@ -48,14 +49,18 @@ angular.module("sampleApp")
                     return true;
                 }
 
-                $scope.canAdd = true
-                var allClients = ecosystemSvc.getAllClients();
-                allClients.forEach(function (clnt) {
-                    if (clnt.name && (clnt.name.toLowerCase() == $scope.input.name.toLowerCase())) {
-                        modalService.showModal({},{bodyText:"This client name has already been used. Please use another one."});
-                        $scope.canAdd = false;
-                    }
-                });
+                if ($scope.input.name) {
+                    $scope.canAdd = true
+                    var allClients = ecosystemSvc.getAllClients();
+                    allClients.forEach(function (clnt) {
+                        if (clnt.name && (clnt.name.toLowerCase() == $scope.input.name.toLowerCase())) {
+                            modalService.showModal({},{bodyText:"This client name has already been used. Please use another one."});
+                            $scope.canAdd = false;
+                        }
+                    });
+                }
+
+
                 //return canAdd;
             };
 
@@ -77,7 +82,12 @@ angular.module("sampleApp")
 
                 client.name = $scope.input.name;
                 client.description = $scope.input.description;
-                client.contact = [$scope.selectedPerson]
+                client.contact = [$scope.selectedPerson];
+
+                if ( $scope.input.url) {
+                    client.url = $scope.input.url;
+                }
+
                 ecosystemSvc.updateClient(client,isNewClient).then(
                     function(data) {
                         $scope.$close()

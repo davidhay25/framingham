@@ -20,20 +20,49 @@
     </script>
     <script src="js/hooksCtl.js"></script>
     <script src="js/modalDialogSvc.js"></script>
+    <script src="js/hooksFindPersonCtrl.js"></script>
+    <script src="js/filters.js"></script>
 
 
 </head>
-<body style="padding: 8px" >
+<body style="padding: 8px;padding-top: 80px" >
 
 
 
 <div ng-app="sampleApp" ng-controller="hooksCtrl" class="container-fluid">
 
+    <nav class="navbar navbar-default navbar-fixed-top" ng-style="navBarStyle" role="navigation">
+
+        <div class="container-fluid row">
+            <div class="col-md-6 col-sm-6">
+                <a class="navbar-brand" href="#">
+
+                    CDS-hooks, generic client
+                </a>
+            </div>
+
+            <div class="col-md-3 col-sm-3">
+
+            </div>
+
+            <div class="col-md-2 col-sm-2">
+
+            </div>
+            <div class="col-md-1 col-sm-1">
+
+            </div>
+
+
+
+        </div>
+    </nav>
+
 
     <div class="row">
         <div class="col-sm-2 col-md-2">
+            <h4>CDS Hooks servers</h4>
             <ul class="list-group">
-                <li ng-class="{'list-group-item':1}" ng-repeat="svr in lstServers"
+                <li ng-class="{'list-group-item':1,'listItemSelected':svr.id ==selectedServer.id }" ng-repeat="svr in lstServers"
                     ng-click="selectServer(svr)"
                     style="cursor: pointer">
                     {{svr.name}}
@@ -42,22 +71,49 @@
 
         </div>
         <div class="col-sm-2 col-md-2">
-            <ul class="list-group">
-                <li ng-class="{'list-group-item':1}" ng-repeat="hook in selectedServer.allHooks.services"
-                    ng-click="selectHook(hook)"
-                    style="cursor: pointer">
-                    {{hook.name}}
-                </li>
-            </ul>
+            <div ng-show="selectedServer">
+                <h4>Individual hooks</h4>
+                <ul class="list-group">
+                    <li ng-class="{'list-group-item':1,'listItemSelected':hook.id ==selectedHook.id }"
+                        ng-repeat="hook in selectedServer.allHooks.services"
+                        ng-click="selectHook(hook)"
+                        style="cursor: pointer">
+                        {{hook.name}}
+                    </li>
+                </ul>
+            </div>
+
         </div>
 
-        <div class="col-sm-3 col-md-3">
-            <pre>{{selectedHook | json}}</pre>
+        <div class="col-sm-4 col-md-4">
+            <div ng-show="selectedHook">
+                <h4>Hook definition</h4>
+                <pre>{{selectedHook | json}}</pre>
 
-            <button class="btn btn-primary" ng-click="invoke()">Invoke</button>
+                <button ng-show = "selectedHook" class="btn btn-primary" ng-click="invoke()">Invoke</button>
+
+            </div>
+
         </div>
 
-        <div class="col-sm-3 col-md-3">
+        <div class="col-sm-4 col-md-4">
+            <h4>Client properties</h4>
+            <div class="row">
+                <div class="col-sm-4 col-md-4">
+                    Data Server Url
+                </div>
+                <div class="col-sm-8 col-md-8">
+                    <select ng-model="input.newDataServer" class="form-control"
+                            ng-change="selectDataServer(input.newDataServer)"
+                        ng-options="svr.name for svr in allServers"></select>
+
+                    <input class="form-control" disabled="disabled" ng-model="dataServer"/>
+                </div>
+            </div>
+
+
+
+
             <div class="row">
                 <div class="col-sm-4 col-md-4">
                     Patient Id
@@ -65,6 +121,12 @@
                 <div class="col-sm-4 col-md-4">
                     <input class="form-control" ng-model="input.patientid"/>
                 </div>
+                <div class="col-sm-4 col-md-4">
+                    <button class="btn btn-link" ng-click="selectPatient()">Find Patient</button>
+                </div>
+
+
+
             </div>
             <div class="row">
                 <div class="col-sm-4 col-md-4">
@@ -73,6 +135,9 @@
                 <div class="col-sm-4 col-md-4">
                     <input class="form-control" ng-model="input.practitionerid"/>
                 </div>
+                <div class="col-sm-4 col-md-4">
+                    <button class="btn btn-link" ng-click="selectPractitioner()">Find Practitioner</button>
+                </div>
             </div>
         </div>
 
@@ -80,8 +145,10 @@
 
 
     <hr/>
-    <div>{{url}}</div>
-    <div class="row">
+
+
+    <div class="row" ng-show="request">
+          <div><strong>Url: </strong>{{url}}</div>
         <div class="col-md-6 col-sm-6">
             <pre>{{request | json}}</pre>
         </div>
