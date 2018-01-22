@@ -681,8 +681,6 @@
                                         {{track.name}}
                                     </li>
                                 </ul>
-
-
                             </div>
 
                             <h4>Clients</h4>
@@ -1350,7 +1348,7 @@
                                 <tr><th>Track</th><th>Primary</th><th>%</th><th>Watchers</th><th>%</th>
                                     <th>Results</th><th>%</th></tr>
                                 <tr ng-repeat="track in eventReport.tracks | orderBy: 'name' ">
-                                    <td>{{track.name}}</td>
+                                    <td><div class="clickable" ng-click="input.partTrack = track">{{track.name}}</div></td>
                                     <td width="70px"><span ng-show="track.persons">{{track.persons}}</span></td>
                                     <td width="70px"><span ng-show="track.persons">{{(track.persons/eventReport.totalPersons)*100 | number:0}}%</span></td>
                                     <td width="70px"><span ng-show="track.watchers">{{track.watchers}}</span></td>
@@ -1363,6 +1361,23 @@
                             </table>
                         </div>
                         <div class="col-md-6 col-sm-6">
+
+
+
+                            <h4>Primary Participants</h4>
+                            <ul>
+                                <li ng-repeat="person in input.partTrack.personsList">
+                                    {{person.name}}
+                                </li>
+                            </ul>
+
+                            <h4>Watchers</h4>
+                            <ul>
+                                <li ng-repeat="person in input.partTrack.watchersList">
+                                    {{person.name}}
+                                </li>
+                            </ul>
+
 
                         </div>
                     </div>

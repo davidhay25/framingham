@@ -328,14 +328,15 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             var report = {tracks:[],totalWatchers : 0, totalPersons:0, totalResults:0}
             var hashTrack = {}
             tracks.forEach(function (trck) {
-                hashTrack[trck.id] = {persons:0,watchers:0,name:trck.name,results:{total:0}}
+                hashTrack[trck.id] = {persons:0,watchers:0,name:trck.name,results:{total:0},personsList:[],watchersList:[]}
             });
             allPersons.forEach(function (person) {
                 if (person.primaryTrack) {
                     var t = hashTrack[person.primaryTrack.id]
                     if (t) {
                         t.persons++;
-                        report.totalPersons++
+                        report.totalPersons++;
+                        t.personsList.push(person)
                     } else {
                         console.log('Track id ' + person.primaryTrack.id + ' missing.')
                     }
@@ -346,7 +347,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                         var t = hashTrack[trk.id];
                         if (t) {
                             t.watchers ++;
-                            report.totalWatchers ++
+                            report.totalWatchers ++;
+                            t.watchersList.push(person)
                         } else {
                             console.log('Track id ' + trk.id + ' missing.')
                         }
@@ -369,7 +371,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
             angular.forEach(hashTrack,function(k,v) {
 
-                report.tracks.push({name:hashTrack[v].name,persons:k.persons,watchers:k.watchers,results:k.results})
+                report.tracks.push({name:hashTrack[v].name,persons:k.persons,watchers:k.watchers,results:k.results,
+                    watchersList:k.watchersList,personsList:k.personsList})
             });
 
             return report;
