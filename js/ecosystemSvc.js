@@ -133,7 +133,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     var serverRoleSummary;
     var allResults = {};// = $localStorage.allResults || {};
 
-    //var currentUser;
     //case insensitive sort
     var ciSort = function(ar,eleName) {
         ar.sort(function(a,b){
@@ -151,6 +150,20 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
 
     return {
+        deleteResult : function(rslt) {
+            var deferred = $q.defer();
+            //this will set the status of the result (based on the id) to 'deleted'
+            $http.delete("/result/"+rslt.id).then(
+                function(){
+                    delete allResults[rslt.key]
+                    deferred.resolve()
+                }, function(err) {
+                    alert('error deleting result '+angular.toJson(err))
+                    deferred.reject()
+                }
+            )
+            return deferred.promise;
+        },
         makeServerRoleSummary : function(){
             serverRoleSummary = {};
             eventConfig.serverRoles.forEach(function (r) {
@@ -663,6 +676,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 result.type = 'direct';     //direct against the scenario
             }
 
+            result.key = key;       //in case we delete it...
 
             //add the participants to the result. In this somple case there is one client and one server
             //todo - leave this for now - consider multi participant in v2...
@@ -683,6 +697,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             result.track.resultTotals[result.text]++;
 
             allResults[key] = result;
+
 
             var resultToSave = {};
             resultToSave.id = result.id;
@@ -1136,48 +1151,72 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                         result.note = dataResult.note;
                                         result.trackers = dataResult.trackers;
                                         result.track = hashTrack[dataResult.trackid];
+                                        if (!result.track) {
+                                            alert("error processing track in result# " + dataResult.id);
+                                        }
                                         result.scenario = hashScenario[dataResult.scenarioid];
-                                        result.issued = dataResult.issued;
-                                        if (dataResult.server) {
-                                            result.server = {server: hashServer[dataResult.server.serverid],
-                                                role: hashRole[dataResult.server.roleid]};
-                                        }
-                                        if (dataResult.client) {
-                                            result.client = {client: hashClient[dataResult.client.clientid],
-                                                role: hashRole[dataResult.client.roleid]}
+                                        if (!result.scenario) {
+                                            alert("error processing scenario in result# " + dataResult.id);
                                         }
 
-                                        if (dataResult.asserterid) {
-                                            result.asserter = hashAllPersons[dataResult.asserterid];
-                                        }
+                                        //this is just an error check - should become redundant...
+                                        if (result.track && result.scenario) {
 
-                                        //note that the full author is saved. ?should this be the same for the asserter?
-                                        if (dataResult.author) {
-                                            result.author = hashAllPersons[dataResult.author.id];
-                                        }
+                                            result.issued = dataResult.issued;
+                                            if (dataResult.server) {
+                                                result.server = {server: hashServer[dataResult.server.serverid],
+                                                    role: hashRole[dataResult.server.roleid]};
+
+                                                if (!result.server.server || ! result.server.role) {
+                                                    alert("Error processing server in result# " + dataResult.id);
+                                                    delete result.server;
+                                                }
+
+                                            }
+                                            if (dataResult.client) {
+                                                result.client = {client: hashClient[dataResult.client.clientid],
+                                                    role: hashRole[dataResult.client.roleid]}
+
+                                                if (!result.client.client || ! result.client.role) {
+                                                    alert("Error processing client in result# " + dataResult.id);
+                                                    delete result.client;
+                                                }
+                                            }
+
+                                            if (dataResult.asserterid) {
+                                                result.asserter = hashAllPersons[dataResult.asserterid];
+                                            }
+
+                                            //note that the full author is saved. ?should this be the same for the asserter?
+                                            if (dataResult.author) {
+                                                result.author = hashAllPersons[dataResult.author.id];
+                                            }
 
 
-                                        var key;
-                                        if (dataResult.type == 'cs') {
-                                            key = result.scenario.id + "|" + result.client.client.id + '|' + result.client.role.id +
-                                                "|" + result.server.server.id + '|' + result.server.role.id;
+                                            var key;
+                                            if (dataResult.type == 'cs') {
+                                                key = result.scenario.id + "|" + result.client.client.id + '|' + result.client.role.id +
+                                                    "|" + result.server.server.id + '|' + result.server.role.id;
+                                            } else {
+                                                key = dataResult.id;
+                                            }
+
+
+                                            result.key = key;       //we need this for the delete...
+
+
+                                                allResults[key] = result;
+
+
+                                            //now update the track totals
+                                            if (result.track && result.track.resultTotals) {
+                                                result.track.resultTotals[result.text]++
+                                            } else {
+                                                console.log('error processing result: ',dataResult)
+                                            }
                                         } else {
-                                            key = dataResult.id;
+                                            //todo - need to alert the user...
                                         }
-
-
-
-                                        allResults[key] = result;
-
-                                        //now update the track totals
-                                        if (result.track && result.track.resultTotals) {
-                                            result.track.resultTotals[result.text]++
-                                        } else {
-                                            console.log('error processing result: ',dataResult)
-                                        }
-
-
-
 
                                     });
                                     deferred.resolve(vo);

@@ -1192,7 +1192,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    <uib-tabset>
+                                    <uib-tabset ng-show="selectedTrackSummary">
                                         <uib-tab heading="All scenarios summary">
                                             <br/>
                                             <canvas id="bar" class="chart chart-bar" chart-options="barOptions"
@@ -1259,7 +1259,7 @@
                                             <table class="table table-bordered">
                                                 <tr>
                                                     <th>Type</th><th>Scenario</th><th>Participants</th><th>Asserter</th><th>Result</th>
-                                                    <th>Note</th><th>Trackers</th>
+                                                    <th>Note</th><th>Trackers</th><th></th>
                                                 </tr>
                                                 <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(selectedTrackSummary)">
 
@@ -1286,6 +1286,13 @@
                                                         <div ng-repeat="tracker in result.trackers">
                                                             {{tracker.url}}
                                                         </div>
+                                                    </td>
+                                                    <td>
+                                                        <i class="glyphicon glyphicon-remove-sign"
+
+                                                           style="padding-top: 8px"
+                                                           title="Delete" ng-click="deleteResult(result)">
+                                                        </i>
                                                     </td>
                                                     <!--<td>{{key}}</td>-->
 

@@ -336,13 +336,29 @@ app.post('/server',function(req,res){
 //============================== results ===============
 //get all results
 app.get('/result',function(req,res){
-    db.collection("result").find({}).toArray(function(err,result){
+    db.collection("result").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
             res.send(result)
         }
     })
+});
+
+
+app.delete('/result/:id',function(req,res){
+
+    var id = req.params.id;       //the id of the result to delete
+console.log(id)
+    db.collection("result").update({id:id},{$set: {status:'deleted'}},function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            console.log(result.result)
+            res.send(result.result)
+        }
+    })
+
 });
 
 //return the results in TestReport format

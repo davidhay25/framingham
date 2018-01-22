@@ -64,7 +64,27 @@ angular.module("sampleApp")
                     return ""
                 }
 
-            }
+            };
+
+            $scope.deleteResult = function(rslt) {
+                //var text = rslt.text;
+                var modalOptions = {
+                    closeButtonText: "No, I changed my mind",
+                    headerText: "Delete result",
+                    actionButtonText: 'Yes, please remove',
+                    bodyText: 'Are you sure you wish to delete this result?'
+                };
+
+                modalService.showModal({}, modalOptions).then(
+                    function() {
+                        ecosystemSvc.deleteResult(rslt).then(
+                            function(){
+                                rslt.track.resultTotals[rslt.text]--;   //for the analysis by track
+                            }
+                        );
+                    }
+                );
+            };
 
             $scope.refresh = function(){
                 loadData(function(){

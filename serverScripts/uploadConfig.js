@@ -13,8 +13,8 @@ var errors = 0;
 var localFileRoot = "/Users/davidha/Dropbox/development/ecosystem/artifacts/";
 //var urlRoot = "http://localhost:4000/config/";
 //var urlRoot = "http://snapp.clinfhir.com:4004/config/";      //COF
-//var urlRoot = "http://snapp.clinfhir.com:4000/config/";
-var urlRoot = "http://snapp.clinfhir.com:4001/config/";
+var urlRoot = "http://snapp.clinfhir.com:4000/config/";
+//var urlRoot = "http://snapp.clinfhir.com:4001/config/";
 
 uploadArray(localFileRoot+'tracksREF.json',urlRoot+"track/",'tracks');
 uploadArray(localFileRoot+'scenariosREF.json',urlRoot+"scenario/",'scenarios');

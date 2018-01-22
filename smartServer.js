@@ -7,6 +7,8 @@ var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
+var oauthModule = require('./oauthModule.js');
+
 
 var app = express();
 app.use(bodyParser.json())
@@ -47,7 +49,6 @@ if (! port) {
 app.use('/', express.static(__dirname,{index:'/smartLogin.html'}));
 
 
-
 //after the user has logged on
 app.get('/loginDEP',function(req,res){
 
@@ -74,7 +75,7 @@ console.log(req.session);
 //When a smart profile has been selected. Receive the config to use, then
 //load the capabilityStatement from the server, and set the SMART end points in config
 app.post('/setup',function(req,res){
-    //console.log(req.body)
+
     config = req.body;      //contains all the secrets...
     req.session.config = config;
     delete req.session['serverData'];      //will return the server granted scope
@@ -96,7 +97,8 @@ app.post('/setup',function(req,res){
 
             getSMARTEndpoints(config,capStmt)
 
-            if (config.clientIdConfig) {
+            //this is getting the openId stuff. Really need to get this from the issuer in the JWT token (I think)...
+            if (1==2 && config.clientIdConfig) {
 
 
                 //how get the keys to decrypt the id token. I'm not yet sure this is the right place...
@@ -327,18 +329,47 @@ app.get('/callback', function(req, res) {
             //save the access token in the session cache. Note that this is NOT sent to the client
             var token = JSON.parse(body);
 
-            console.log(token);
+
+
+
+            if (showLog) {
+                console.log('token=', token);
+            }
 
             req.session['accessToken'] = token['access_token']
             req.session.serverData.scope = token.scope;
 
+            req.session.serverData.fullToken = token;
+            //an id token was returned
+
             if (token['id_token']) {
+
+
                 var decoded = jwt.decode(token['id_token'], {complete: true});
+
+                console.log(decoded)
+
                 req.session.serverData.idToken = decoded;
-                req.session.serverData.fullToken = token;
+
+/* temp - validation is failing
+                oauthModule.validateJWT(decoded,token['id_token']).then(
+                    function(data) {
+                        console.log('success!')
+                        res.redirect(req.session["page"]);
+                    },
+                    function(err) {
+                        console.log('fail...' + err)
+                        res.redirect(req.session["page"]);
+                    }
+                )
+                */
+                res.redirect(req.session["page"]);
+
+            } else {
+                res.redirect(req.session["page"]);
             }
 
-            res.redirect(req.session["page"]);
+
 
         } else {
             req.session.error = body;
