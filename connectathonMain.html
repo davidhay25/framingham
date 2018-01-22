@@ -786,7 +786,7 @@
 
                             </td>
                             <td>
-                                <button class="btn btn-link" ng-click="editClient(clnt)">Edit</button>
+                                <button class="btn btn-link" ng-click="editClient(clnt)">View</button>
 
 
                             </td>
@@ -796,7 +796,7 @@
 
                 </uib-tab>
 
-                <uib-tab heading="Servers">
+                <uib-tab>
                     <uib-tab-heading>
                         Servers
                         <span class="badge">{{allServers.length}}</span>
@@ -809,7 +809,7 @@
                                 <button class="btn btn-link pull-right" ng-click="editServer()">New Server</button>
                             </div>
                             <table class="table table-bordered">
-                                <tr><th>Name</th><th>Url</th><th>Version</th><th>Description</th><th>Contacts</th>
+                                <tr><th>Name</th><th>Url</th><th>FHIR Version</th><th>Description</th><th>Contacts</th>
                                     <th>Track / Scenario / Role (from Testing)</th>
                                     <th  uib-popover="CDS=CDS hooks, SM = SMART, mouseover badge for details"
                                          popover-placement="top"
@@ -818,7 +818,12 @@
                                     <th></th></tr>
                                 <tr ng-repeat="svr in allServers">
                                     <td>{{svr.name}}</td>
-                                    <td>{{svr.address | showUrlMaxLength : 50}}</td>
+                                    <td><div  uib-popover="{{svr.address}}"
+                                              popover-placement="right"
+
+                                              popover-trigger="'mouseenter'">
+                                        {{svr.address | showUrlMaxLength : 50}}
+                                    </div></td>
                                     <td>{{svr.fhirVersion}}</td>
                                     <td>
                                         <div uib-popover="{{svr.description}}"
@@ -864,7 +869,7 @@
                                         <span class="badge" ng-show="svr.SMART.authorize">SM</span>
                                     </td>
 
-                                    <td><button class="btn btn-link" ng-click="editServer(svr)">Edit</button> </td>
+                                    <td><button class="btn btn-link" ng-click="editServer(svr)">View</button> </td>
                                 </tr>
                             </table>
 
@@ -1364,22 +1369,44 @@
                         </div>
                         <div class="col-md-6 col-sm-6">
 
+                            <div ng-hide="input.partTrack">
+                                Select a Track in the table to view the participants
+                            </div>
 
+                            <div ng-show="input.partTrack">
+                                <div class="banner">{{input.partTrack.name}}</div>
+                                <h4>Primary Participants</h4>
+                                <ul>
+                                    <li ng-repeat="person in input.partTrack.personsList">
+                                        {{person.name}}
+                                    </li>
+                                </ul>
 
-                            <h4>Primary Participants</h4>
-                            <ul>
-                                <li ng-repeat="person in input.partTrack.personsList">
-                                    {{person.name}}
-                                </li>
-                            </ul>
+                                <h4>Watchers</h4>
+                                <ul>
+                                    <li ng-repeat="person in input.partTrack.watchersList">
+                                        {{person.name}}
+                                    </li>
+                                </ul>
 
-                            <h4>Watchers</h4>
-                            <ul>
-                                <li ng-repeat="person in input.partTrack.watchersList">
-                                    {{person.name}}
-                                </li>
-                            </ul>
+                                <h4>Servers (in any scenario)</h4>
+                                <ul>
+                                    <li ng-repeat="server in input.partTrack.servers">
+                                        {{server.server.name}} ({{server.role.name}})
+                                    </li>
+                                </ul>
+                                <h4>Clients (in any scenario)</h4>
+                                <ul>
+                                    <li ng-repeat="client in input.partTrack.clients">
+                                        {{client.client.name}} ({{client.role.name}})
+                                    </li>
+                                </ul>
+                            </div>
 
+   <!--                         <pre>
+                                {{input.partTrack | json}}
+                            </pre>
+-->
 
                         </div>
                     </div>

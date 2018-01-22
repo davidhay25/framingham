@@ -162,6 +162,10 @@ angular.module("sampleApp")
                 if (serverExists) {     //is there a FHIR server at the configured Url?
 
 
+
+
+
+
                     if (! $scope.selectedPerson) {
                         modalService.showModal({},{bodyText:"It looks like you haven't selected a contact person. You can't save unless there is an actual person selected as a contact for this server. "})
                         return;

@@ -21,21 +21,7 @@ angular.module("sampleApp")
             });
 
 
-            /* temp - need to allow for roles...
-            allServers.forEach(function (svr) {
-                var alreadyAdded = false;
-                if (scenario.servers) {
-                    scenario.servers.forEach(function (svr1) {
-                        if (svr1.id == svr.id) {alreadyAdded = true;}
-                    })
 
-                }
-                if (! alreadyAdded) {
-                    $scope.dlgAllServers.push(svr)
-                }
-
-            });
-*/
 
 
             //$scope.dlgAllServers = allServers;

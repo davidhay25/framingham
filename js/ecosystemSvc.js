@@ -328,8 +328,56 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             var report = {tracks:[],totalWatchers : 0, totalPersons:0, totalResults:0}
             var hashTrack = {}
             tracks.forEach(function (trck) {
-                hashTrack[trck.id] = {persons:0,watchers:0,name:trck.name,results:{total:0},personsList:[],watchersList:[]}
+                hashTrack[trck.id] = {persons:0,watchers:0,name:trck.name,results:{total:0},personsList:[],watchersList:[],servers:[],clients:[]}
+
+
+                //go through the scenarios to find the servers...
+                var hashServers = {}, hashClients={};
+                if (trck.scenarios) {
+                    trck.scenarios.forEach(function (scenario) {
+                        if (scenario.servers) {
+                            scenario.servers.forEach(function (server) {
+                                //console.log(server);
+                                try {
+                                    var key = server.server.id + '-' + server.role.id;
+                                    if (!hashServers[key] ) {
+                                        hashServers[key] = 'x';
+                                        hashTrack[trck.id].servers.push(server);
+                                    }
+                                } catch(ex){
+                                    console.log(ex)
+                                }
+
+                            })
+                        }
+
+                        if (scenario.clients) {
+                            scenario.clients.forEach(function (client) {
+                               // console.log(server);
+                                try {
+                                    var key = client.client.id + '-' + client.role.id;
+                                    if (!hashClients[key] ) {
+                                        hashClients[key] = 'x';
+                                        hashTrack[trck.id].clients.push(client);
+                                    }
+                                } catch(ex){
+                                    console.log(ex)
+                                }
+
+                            })
+                        }
+
+
+
+                    })
+                }
+
+
+
+
             });
+
+
             allPersons.forEach(function (person) {
                 if (person.primaryTrack) {
                     var t = hashTrack[person.primaryTrack.id]
@@ -369,10 +417,13 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             });
 
 
+
+
+
             angular.forEach(hashTrack,function(k,v) {
 
                 report.tracks.push({name:hashTrack[v].name,persons:k.persons,watchers:k.watchers,results:k.results,
-                    watchersList:k.watchersList,personsList:k.personsList})
+                    watchersList:k.watchersList,personsList:k.personsList,servers:k.servers,clients:k.clients})
             });
 
             return report;
