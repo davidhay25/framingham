@@ -131,7 +131,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     var hashAllPersons = {};
     var eventConfig = {};
     var serverRoleSummary;
-    var allResults = {};// = $localStorage.allResults || {};
+    var allResults = {};
 
     //case insensitive sort
     var ciSort = function(ar,eleName) {
@@ -150,6 +150,9 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
 
     return {
+        allResultsCount : function() {
+            return Object.keys(allResults).length;
+        },
         deleteResult : function(rslt) {
             var deferred = $q.defer();
             //this will set the status of the result (based on the id) to 'deleted'
@@ -365,7 +368,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
 
             angular.forEach(hashTrack,function(k,v) {
-                console.log(k,v)
+
                 report.tracks.push({name:hashTrack[v].name,persons:k.persons,watchers:k.watchers,results:k.results})
             });
 

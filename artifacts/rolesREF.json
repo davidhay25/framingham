@@ -59,14 +59,12 @@
 
     {"id":"r10-1","name":"Consumer Client",
       "role":"client","description":"A Client that is a Consumer (like a patient)"},
-    {"id":"r10-2","name":"Provider Client",
-      "role":"client","description":"A Client that is a Provider"},
-    {"id":"r10-3","name":"Auth Service","description":"","role":"server"},
-    {"id":"r10-4","name":"Resource Service",
-      "role":"server","description":"","role":"server"},
-    {"id":"r10-5","name":"End Point","description":"","role":"server"},
-    {"id":"r10-6","name":"Consent capture",
-      "role":"server","description":"","role":"server"},
+    {"id":"r10-2","name":"Data Provider via OAuth",
+      "role":"server","description":""},
+    {"id":"r10-3","name":"eCMS","description":"","role":"server"},
+    {"id":"r10-4","name":"End Point",
+      "role":"server","description":"Can apply Privacy labels"},
+
 
 
     {"id":"r11-1","name":"Source FHIR Server",
