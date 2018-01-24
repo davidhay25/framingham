@@ -22,17 +22,18 @@
             <uib-tab heading="Description">
                 <br/>
                 <div class="row">
-                    <div class="col-md-6 col-sm-6">
+                    <div class="col-md-4 col-sm-4">
                         <input type="text" class="form-control" ng-model="input.name"
                                ng-blur = "checkName()"
                                placeholder="Enter the server name. Keep it short"/>
                     </div>
 
-                    <div class="col-md-6 col-sm-6">
-                        <textarea class="form-control" placeholder="An optional description of the server" ng-model = "input.description"></textarea>
+                    <div class="col-md-8 col-sm-8">
+                        <textarea class="form-control" rows="3" placeholder="An optional description of the server" ng-model = "input.description"></textarea>
                     </div>
                 </div>
                 <br/>
+
                 <div class="row">
                     <div class="col-md-8 col-sm-8">
                         <input type="text" class="form-control" ng-model="input.address" placeholder="Enter the Url to the server FHIR root"/>
@@ -44,6 +45,17 @@
                         <div class="pull-right" ng-show="waiting">
                             <img src="css/ajax_loader_blue_32.gif"/>
                         </div>
+                    </div>
+                </div>
+
+                <br/>
+                <div class="row">
+                    <div class="col-md-8 col-sm-8">
+                        <input type="text" class="form-control" ng-model="input.UIaddress" placeholder="The Url of any User Interface the server exposes"/>
+                    </div>
+
+                    <div class="col-md-4 col-sm-4">
+
                     </div>
                 </div>
 

@@ -17,6 +17,8 @@ angular.module("sampleApp")
                 $scope.input.name = existingServer.name;
                 $scope.input.description = existingServer.description ;
                 $scope.input.address = existingServer.address ;
+                $scope.input.UIaddress = existingServer.UIaddress ;
+
                 $scope.allHooks = existingServer.allHooks;
                 $scope.fhirVersion = existingServer.fhirVersion;
                 $scope.SMART = existingServer.SMART;
@@ -182,6 +184,7 @@ angular.module("sampleApp")
                     server.name = $scope.input.name;
                     server.description = $scope.input.description;
                     server.address = $scope.input.address;
+                    server.UIaddress = $scope.input.UIaddress;
                     server.contact = [$scope.selectedPerson];
                     server.fhirVersion = $scope.fhirVersion;
 

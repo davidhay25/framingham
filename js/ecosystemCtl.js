@@ -14,7 +14,7 @@ angular.module("sampleApp")
             //the name of the connectathon, the serverRoles & stuff like that...
             $http.get("config/admin/").then(
                 function(data) {
-                    //console.log(data.data)
+
                     if (data.data) {
                         $scope.eventConfig = data.data[0];
 
@@ -103,8 +103,6 @@ angular.module("sampleApp")
             var loadData = function(cb){
                 ecosystemSvc.getConnectathonResources().then(
                     function(vo) {
-                        console.log(vo)
-                        //console.log(angular.toJson(vo))
 
 
                         console.log(ecoUtilitiesSvc.getObjectSize(vo));
@@ -117,7 +115,7 @@ angular.module("sampleApp")
                         $scope.filteredAllPersons = angular.copy($scope.allPersons)
                         $scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
 
-                        //console.log($scope.serverRoleSummary)
+
                         if (cb) {
                             cb()
                         }
@@ -182,11 +180,11 @@ angular.module("sampleApp")
                         }
                     }
                 }).result.then(function(vo){
-                    console.log(vo)
+
                     $scope.selectPerson(vo);
 
 
-                    //ecosystemSvc.addScenarioResult(track,scenario,client,server,vo)
+
                 });
             }
 
@@ -202,7 +200,7 @@ angular.module("sampleApp")
                         }
                     }
                 }).result.then(function(vo){
-                    console.log(vo)
+
 
                     //ecosystemSvc.addScenarioResult(track,scenario,client,server,vo)
                 });
@@ -244,7 +242,7 @@ angular.module("sampleApp")
 
                 var summary = ecosystemSvc.getPersonSummary(person,$scope.tracks);
                 $scope.personSummary = summary;
-                console.log(summary)
+
             };
 
             $scope.selectTrackResults = function(track) {
@@ -254,7 +252,7 @@ angular.module("sampleApp")
                     $scope.resultsSummary = ecosystemSvc.getTrackResults(track); //get a summary object for the results for a track
 
 
-                    //console.log($scope.resultsSummary)
+
                     //set the scenario list
 
                     //set the options for the stacked bar chart
@@ -286,7 +284,7 @@ angular.module("sampleApp")
                             arPartial.push(0)
                             arNote.push(0)
                         }
-                        console.log(scenarioSummary)
+
 
                     });
 
@@ -305,7 +303,7 @@ angular.module("sampleApp")
                     $scope.chartData = [];
                     $scope.chartColors = []; //'#00cc00', '#cc3300', '#ffff99']
                     $scope.chartOptions = {legend:{display:true}};
-                    console.log(summary)
+
 
                     var summary = $scope.resultsSummary.scenario[scenario.name];
                     if (summary) {
@@ -397,7 +395,7 @@ angular.module("sampleApp")
                         }
                     }
                 }).result.then(function(vo){
-                    console.log(vo)
+
 
                     ecosystemSvc.addScenarioResult(track,scenario,client,server,vo);
                     //update the results summary
@@ -408,8 +406,7 @@ angular.module("sampleApp")
             };
 
             $scope.editTestResult = function(result) {
-                console.log(result);
-               // return;
+
                 if (result.type == 'direct') {
                     //this result is directly against a scenario...
                     $scope.addTestResult(result.track,result.scenario,null,null,result)
@@ -436,7 +433,7 @@ angular.module("sampleApp")
                         }
                     }
                 }).result.then(function(vo){
-                    console.log(vo)
+
 
                     if (vo.allScenarios) {
                         //want to add the server to all scenarios. todo ?? does this need to use $q.all ??
@@ -521,7 +518,7 @@ angular.module("sampleApp")
                         }
                     }
                 }).result.then(function(vo){
-                    console.log(vo)
+
 
                 });
 
@@ -543,7 +540,7 @@ angular.module("sampleApp")
                         }
                     }
                 }).result.then(function(vo){
-                    console.log(vo)
+
                     ecosystemSvc.addClientToScenario(scenario,vo.client,vo.role)
                 });
 
@@ -628,7 +625,7 @@ angular.module("sampleApp")
 
 
 
-                console.log()
+
 
             };
 
@@ -648,7 +645,7 @@ angular.module("sampleApp")
                 if (tag) {
                     ecosystemSvc.addTag(tag,ep).then(
                         function(data) {
-                            console.log(data)
+
                         },
                         function(err) {
                             console.log(err)
@@ -670,7 +667,7 @@ angular.module("sampleApp")
 
                     $scope.csAllRoles = cs;
 
-                    //console.log(cs)
+
                 }
             );
 

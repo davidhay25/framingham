@@ -78,7 +78,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         var role = getFirstExtValue(res,extRoleUrl)
         if (role) {
             ep.role = role.valueCode;
-           // console.log(ep.role)
+
         }
 
         ep.notes = [];
@@ -337,7 +337,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     trck.scenarios.forEach(function (scenario) {
                         if (scenario.servers) {
                             scenario.servers.forEach(function (server) {
-                                //console.log(server);
+
                                 try {
                                     var key = server.server.id + '-' + server.role.id;
                                     if (!hashServers[key] ) {
@@ -353,7 +353,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                         if (scenario.clients) {
                             scenario.clients.forEach(function (client) {
-                               // console.log(server);
+
                                 try {
                                     var key = client.client.id + '-' + client.role.id;
                                     if (!hashClients[key] ) {
@@ -406,7 +406,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
             //examine all the results
             angular.forEach(allResults,function (v,k) {
-                //console.log(v,k)
+
                 var t = hashTrack[v.track.id];
                 if (t) {
                     t.results.total++;
@@ -494,10 +494,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 summary.uniqueClients.push(v)
             })
 
-           // if (tra)
 
-
-            console.log(summary)
 
             return summary;
 
@@ -821,7 +818,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 var query = [];     //an array of scenarios to be linked
 
                 ar.forEach(function (scenario) {
-                    console.log(scenario)
+
                     var link = {
                         active: true,
                         id: 'id' + new Date().getTime(),
@@ -839,7 +836,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                 $q.all(query).then(function (data) {
                     //success
-                    console.log(data)
+
 
 
                 }, function (err) {
@@ -851,23 +848,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             }
 
 
-/*
-                $http.post("/link",link).then(
-                    function(data){
-                        //now add the client to the cached list...
-
-                        scenario.servers.push({server:server,role:role,link:link});
-
-                        deferred.resolve(link)
-                    }, function(err) {
-                        console.log(err);
-                        deferred.reject(err)
-                    }
-                );
-            } else {
-                deferred.reject({msg:"Scenario already has this server in this role"})
-            }
-    */
 
             return deferred.promise;
 
@@ -1039,7 +1019,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     allPersons = vo.persons;    //scoped to service
                     ciSort(allPersons,'name');
 
-                    //console.log(allPersons)
+
 
                     hashAllPersons = {};
                     allPersons.forEach(function(p){
@@ -1404,14 +1384,14 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
             $http.post(serverIP,tran).then(
                 function(data){
-                    console.log(data)
+
                 },
                 function(err) {
                     console.log(err)
                 }
             )
 
-            console.log(tran)
+
         }
     }
 
