@@ -7,10 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0a6e7d6f-aa6e-405d-9d94-d3543d427d97" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/connectathonMain.html" afterPath="$PROJECT_DIR$/connectathonMain.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/addServerCtrl.js" afterPath="$PROJECT_DIR$/js/addServerCtrl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ecosystemCtl.js" afterPath="$PROJECT_DIR$/js/ecosystemCtl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ecosystemSvc.js" afterPath="$PROJECT_DIR$/js/ecosystemSvc.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/artifacts/rolesREF.json" afterPath="$PROJECT_DIR$/artifacts/rolesREF.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modalTemplates/addServer.html" afterPath="$PROJECT_DIR$/modalTemplates/addServer.html" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -25,7 +22,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="connectathonMain.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="connectathonMain.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/connectathonMain.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="275">
@@ -38,12 +35,34 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="addServer.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="rolesREF.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/artifacts/rolesREF.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="239">
+              <caret line="38" column="31" lean-forward="false" selection-start-line="38" selection-start-column="31" selection-end-line="38" selection-end-column="31" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="uploadConfig.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/serverScripts/uploadConfig.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="191">
+              <caret line="15" column="45" lean-forward="false" selection-start-line="15" selection-start-column="45" selection-end-line="15" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="addServer.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/modalTemplates/addServer.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
-              <caret line="53" column="152" lean-forward="false" selection-start-line="53" selection-start-column="152" selection-end-line="53" selection-end-column="152" />
-              <folding />
+            <state relative-caret-position="262">
+              <caret line="33" column="71" lean-forward="false" selection-start-line="33" selection-start-column="71" selection-end-line="33" selection-end-column="71" />
+              <folding>
+                <element signature="n#div#3;n#uib-tab#0;n#uib-tabset#0;n#div#1;n#div#0;n#!!top" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -161,15 +180,15 @@
         <option value="$PROJECT_DIR$/oauthModule.js" />
         <option value="$PROJECT_DIR$/smartServer.js" />
         <option value="$PROJECT_DIR$/ecoServer.js" />
-        <option value="$PROJECT_DIR$/artifacts/rolesREF.json" />
         <option value="$PROJECT_DIR$/artifacts/scenariosREF.json" />
         <option value="$PROJECT_DIR$/serverScripts/uploadConfig.js" />
         <option value="$PROJECT_DIR$/js/addServerToScenarioCtrl.js" />
         <option value="$PROJECT_DIR$/js/ecosystemCtl.js" />
         <option value="$PROJECT_DIR$/js/ecosystemSvc.js" />
-        <option value="$PROJECT_DIR$/modalTemplates/addServer.html" />
         <option value="$PROJECT_DIR$/js/addServerCtrl.js" />
         <option value="$PROJECT_DIR$/connectathonMain.html" />
+        <option value="$PROJECT_DIR$/artifacts/rolesREF.json" />
+        <option value="$PROJECT_DIR$/modalTemplates/addServer.html" />
       </list>
     </option>
   </component>
@@ -216,12 +235,7 @@
             <path>
               <item name="ecosystem" type="b2602c69:ProjectViewProjectNode" />
               <item name="ecosystem" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ecosystem" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ecosystem" type="462c0819:PsiDirectoryNode" />
-              <item name="modalTemplates" type="462c0819:PsiDirectoryNode" />
+              <item name="artifacts" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ecosystem" type="b2602c69:ProjectViewProjectNode" />
@@ -793,18 +807,18 @@
       <workItem from="1516085872802" duration="3656000" />
       <workItem from="1516133842150" duration="33054000" />
       <workItem from="1516239488241" duration="9582000" />
-      <workItem from="1516472707095" duration="42924000" />
+      <workItem from="1516472707095" duration="44182000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="743097000" />
+    <option name="totallyTimeSpent" value="744355000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="33" y="25" width="1323" height="788" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.07373272" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15745008" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17384844" sideWeight="0.24068323" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16738817" sideWeight="0.47639182" order="1" side_tool="false" content_ui="tabs" />
@@ -1288,14 +1302,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/artifacts/rolesREF.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="59" column="43" lean-forward="true" selection-start-line="59" selection-start-column="43" selection-end-line="59" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/artifacts/scenariosREF.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="159">
@@ -1308,14 +1314,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="174">
           <caret line="35" column="28" lean-forward="true" selection-start-line="35" selection-start-column="28" selection-end-line="35" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/serverScripts/uploadConfig.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="15" column="45" lean-forward="false" selection-start-line="15" selection-start-column="45" selection-end-line="15" selection-end-column="45" />
           <folding />
         </state>
       </provider>
@@ -1676,14 +1674,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modalTemplates/addServer.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="53" column="152" lean-forward="false" selection-start-line="53" selection-start-column="152" selection-end-line="53" selection-end-column="152" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/addServerCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="274">
@@ -1702,6 +1692,32 @@
           <folding>
             <marker date="1516770590081" expanded="true" signature="57275:57409" ph="{...}" />
             <marker date="1516770590081" expanded="true" signature="63099:63220" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/artifacts/rolesREF.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="38" column="31" lean-forward="false" selection-start-line="38" selection-start-column="31" selection-end-line="38" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/serverScripts/uploadConfig.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="15" column="45" lean-forward="false" selection-start-line="15" selection-start-column="45" selection-end-line="15" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modalTemplates/addServer.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="33" column="71" lean-forward="false" selection-start-line="33" selection-start-column="71" selection-end-line="33" selection-end-column="71" />
+          <folding>
+            <element signature="n#div#3;n#uib-tab#0;n#uib-tabset#0;n#div#1;n#div#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
