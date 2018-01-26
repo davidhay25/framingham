@@ -949,7 +949,7 @@
                             <div class="trackScroll">
                                 <ul class="list-group">
                                     <li ng-class="{'list-group-item':1,'listItemSelected':selectedTrack.id == track.id}" style="cursor: pointer"
-                                        ng-repeat="track in tracks"
+                                        ng-repeat="track in tracks  | orderBy: 'name' "
                                         ng-click="selectTrack(track)">
                                         {{track.name}}
                                     </li>

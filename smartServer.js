@@ -97,6 +97,9 @@ app.post('/setup',function(req,res){
 
             getSMARTEndpoints(config,capStmt)
 
+            res.json(config)
+            return;
+
             //this is getting the openId stuff. Really need to get this from the issuer in the JWT token (I think)...
             if (1==2 && config.clientIdConfig) {
 
@@ -152,10 +155,6 @@ app.post('/setup',function(req,res){
            // res.redirect('smartError.html')
         }
     })
-
-
-
-    //res.json({})
 
 })
 
@@ -318,7 +317,7 @@ app.get('/callback', function(req, res) {
     }
 
 
-    //perform the request...
+    //perform the request to get the auth token...
     request(options, function (error, response, body) {
         if (showLog) {
             console.log(' ----- after token call -------');
@@ -329,41 +328,39 @@ app.get('/callback', function(req, res) {
             //save the access token in the session cache. Note that this is NOT sent to the client
             var token = JSON.parse(body);
 
-
-
-
             if (showLog) {
                 console.log('token=', token);
             }
 
             req.session['accessToken'] = token['access_token']
             req.session.serverData.scope = token.scope;
-
             req.session.serverData.fullToken = token;
-            //an id token was returned
 
+            //an id token was returned
             if (token['id_token']) {
 
 
-                var decoded = jwt.decode(token['id_token'], {complete: true});
 
-                console.log(decoded)
+                var id_token = jwt.decode(token['id_token'], {complete: true});
 
-                req.session.serverData.idToken = decoded;
+                //console.log(id_token)
 
-/* temp - validation is failing
-                oauthModule.validateJWT(decoded,token['id_token']).then(
-                    function(data) {
-                        console.log('success!')
+                //req.session.serverData.idToken = id_token;
+
+                oauthModule.validateJWT(token['id_token']).then(
+                    function(id_token) {
+                        req.session.serverData.idToken = id_token;
+                        console.log('success!',id_token)
                         res.redirect(req.session["page"]);
                     },
                     function(err) {
-                        console.log('fail...' + err)
-                        res.redirect(req.session["page"]);
+                        console.log('fail...' + err);
+                        req.session.error = err
+                        res.redirect("SMARTError.html");
                     }
                 )
-                */
-                res.redirect(req.session["page"]);
+
+                //res.redirect(req.session["page"]);
 
             } else {
                 res.redirect(req.session["page"]);

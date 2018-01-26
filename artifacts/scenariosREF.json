@@ -41,10 +41,9 @@
     {"id":"s4-3","name":"SMART secured export", "roleIds":["r4-1","r4-2"]},
 
 
-    {"id":"s5-1","name":"Chronic Conditions", "roleIds":["r5-1","r5-2","r5-3","r5-4"]},
-    {"id":"s5-2","name":"Multi-Provider Care Coordination", "roleIds":["r5-1","r5-2","r5-3","r5-4"]},
-
-
+    {"id":"s5-1","name":"Retrieve Care Plan/s", "roleIds":["r5-1","r5-2","r5-3","r5-4"]},
+    {"id":"s5-2","name":"Create Care Plan from Protocol", "roleIds":["r5-1","r5-2","r5-3","r5-4"]},
+    {"id":"s5-3","name":"Request CDS 'patient-view' hook", "roleIds":["r5-1","r5-2","r5-3","r5-4"]},
 
     {"id":"s6-1","name":"Search compendium for tests", "roleIds":["r6-1","r6-2"]},
     {"id":"s6-2","name":"Add entry to compendium", "roleIds":["r6-1","r6-2"]},
@@ -52,9 +51,6 @@
 
     {"id":"s7-1","name":"Implement 1.0 spec", "roleIds":["r7-1","r7-2"]},
     {"id":"s7-2","name":"Implement infobutton", "roleIds":["r7-1","r7-2"]},
-
-
-
 
 
     {"id":"s8-1","name":"CDC Opiod Guideline", "roleIds":["r8-1","r8-2","r8-3","r8-4","r8-5","r8-6","r8-7"]},

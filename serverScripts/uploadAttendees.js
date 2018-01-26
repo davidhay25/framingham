@@ -11,6 +11,9 @@ var fileName = "/Users/davidha/Dropbox/development/ecosystem/artifacts/attendees
 var urlRoot = "http://snapp.clinfhir.com:4001/config/";
 
 
+console.log("Dont't do this now!");
+return;
+
 //var contents = fs.readFileSync(pathToFile,{encoding:'utf8'})
 
 var lineReader = require('readline').createInterface({
