@@ -1428,7 +1428,8 @@
                                 </h4>
                                 <ul>
                                     <li ng-repeat="client in input.partTrack.clients">
-                                        {{client.client.name}} ({{client.role.name}})
+                                        {{client.client.name}} ({{client.client.contact[0].name}})
+
                                     </li>
                                 </ul>
 
@@ -1438,7 +1439,7 @@
                                 </h4>
                                 <ul>
                                     <li ng-repeat="server in input.partTrack.servers">
-                                        {{server.server.name}} ({{server.role.name}})
+                                        {{server.server.name}} ({{server.server.contact[0].name}})
                                     </li>
                                 </ul>
 
