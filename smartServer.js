@@ -1,14 +1,16 @@
-
+//http://docs.smarthealthit.org/authorization/backend-services/
 
 var express = require('express');
 var request = require('request');
+
+//require('request-debug')(request);  //https://github.com/request/request-debug
+
 var session = require('express-session');
 var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
 var oauthModule = require('./oauthModule.js');
-
 
 var app = express();
 app.use(bodyParser.json())
@@ -271,6 +273,10 @@ app.get('/auth', function(req, res)  {
     }
 
     if (showLog) {console.log('authUri=',authorizationUri)};
+
+    //header
+
+
     res.redirect(authorizationUri);
 
 });
@@ -336,17 +342,26 @@ app.get('/callback', function(req, res) {
             req.session.serverData.scope = token.scope;
             req.session.serverData.fullToken = token;
 
+            req.session.serverData.config = req.session["config"];
+
+
             //an id token was returned
             if (token['id_token']) {
 
 
 
                 var id_token = jwt.decode(token['id_token'], {complete: true});
-
-                //console.log(id_token)
+                req.session.serverData['idToken'] = id_token;
+                console.log(id_token)
 
                 //req.session.serverData.idToken = id_token;
 
+               //this for DXE
+
+                res.redirect(req.session["page"]);
+
+
+/*
                 oauthModule.validateJWT(token['id_token']).then(
                     function(id_token) {
                         req.session.serverData.idToken = id_token;
@@ -359,6 +374,7 @@ app.get('/callback', function(req, res) {
                         res.redirect("SMARTError.html");
                     }
                 )
+                */
 
                 //res.redirect(req.session["page"]);
 
@@ -402,7 +418,7 @@ function checkAccessToken(req,cb) {
 app.get('/orionfhir/*',function(req,res){
 
     var fhirQuery = req.originalUrl.substr(11); //strip off /orionfhir
-
+    //var fhirQuery = req.originalUrl.substr(11); //strip off /orionfhir
     //check that the access token is still valid - refresh it if not...
     checkAccessToken(req,function(err){
         if (err) {
@@ -411,9 +427,13 @@ app.get('/orionfhir/*',function(req,res){
             return;
         }
 
+
         var access_token = req.session['accessToken'];
         var config = req.session["config"];     //retrieve the configuration from the session...
-        var url = config.baseUrl + '/' + fhirQuery;
+
+
+        var url = config.baseUrl  + fhirQuery;
+       // var url = config.baseUrl + '/' + fhirQuery;
         if (showLog) {
             console.log('url=' + url)
         }
@@ -427,6 +447,23 @@ app.get('/orionfhir/*',function(req,res){
             },
             headers: {'authorization': 'Bearer ' + access_token,'accept':'application/json+fhir'}
         };
+
+
+        //console.log(config)
+        //create the consent data
+        var consent = ',,'
+        try {
+            consent = config.context.org.code + ',' + config.context.role.code + ','+ config.context.purpose.code;
+        } catch (ex) {
+
+        }
+
+        //console.log(consent)
+        if (consent !== ',,') {
+            options.headers['X-consent'] = consent;
+        }
+
+        //console.log(options)
 
         request(options, function (error, response, body) {
             if (error) {

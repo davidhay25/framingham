@@ -106,11 +106,131 @@
             </div>
         </div>
     </nav>
-    <h3>Done. Scope granted: {{scope}}</h3>
+    <h3>Successful login.  User: {{idToken.payload.sub}}</h3>
+    <div class="row">
+        <div class="col-sm-4 col-md-4">
+            <strong>Scopes granted</strong>
+            <div>{{scope}}</div>
+        </div>
+        <div class="col-sm-4 col-md-4">
+            <strong>Context</strong>
+            <table>
+                <tr>
+                    <td>Role</td>
+                    <td>{{config.context.role.display}}</td>
+                </tr>
+                <tr>
+                    <td>Purpose</td>
+                    <td>{{config.context.purpose.display}}</td>
+                </tr>
+                <tr>
+                    <td>Organization</td>
+                    <td>{{config.context.org.display}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-sm-4 col-md-4">
+            <strong>Patient</strong>
+            <div>Id: {{sqResults.Patient.id}}</div>
+            <div>Name: <span ng-repeat="given in sqResults.Patient.name[0].given">{{given}} </span> {{sqResults.Patient.name[0].family}}</div>
 
+        </div>
+
+
+
+    </div>
+    <br/>
 
     <uib-tabset>
-        <uib-tab heading="Query">
+        <uib-tab heading="Standard Queries">
+            <br/>
+
+
+            <button ng-hide="sqComplete" class="btn btn-primary" ng-click="standardQueries('A01')">Execute</button>
+
+            <div ng-show="execSQ">Executing Standard Queries, please wait...</div>
+
+            <div class="row" ng-show="sqComplete">
+                <div class="col-sm-2 col-md-2">
+                    <ul class="list-group">
+                        <li ng-repeat="qry in config.defaultQueries" class="list-group-item"
+                            style="cursor:pointer"
+                            ng-click = "selectQueryResult(qry)">
+                            {{qry.display}}
+
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="col-sm-10 col-md-10">
+                    <uib-tabset>
+
+                        <uib-tab heading="Formatted">
+                            <uib-tab-heading>
+                                {{selectedResultsDisplay}} <span class="badge">{{selectedResults.entry.length}}</span>
+                            </uib-tab-heading>
+
+                            <div ng-show="selectedResultsDisplay=='Patient'">
+                                <pre>{{sqResults.Patient | json}}</pre>
+
+                            </div>
+
+                            <table ng-show="selectedResultsDisplay=='Conditions'" class="table">
+                                <tr><th>Name</th><th>Source</th><th>Onset</th><th>Clinical Status</th><th>Verification Status</th></tr>
+                                <tr ng-repeat = "entry in selectedResults.entry">
+                                    <td width="25%">{{entry.resource.code.text}}
+                                        </td>
+                                    <td>{{entry.resource.meta.tag[0].display}}</td>
+                                    <td>{{entry.resource.onsetDateTime}}</td>
+                                    <td>{{entry.resource.clinicalStatus}}</td>
+                                    <td>{{entry.resource.verificationStatus}}</td>
+                                </tr>
+                            </table>
+
+                            <table ng-show="selectedResultsDisplay=='Procedures'" class="table">
+                                <tr><th>Name</th><th>Source</th><th>Performed</th></tr>
+                                <tr ng-repeat = "entry in selectedResults.entry">
+                                    <td width="25%">{{entry.resource.code.text}}
+                                    </td>
+                                    <td>{{entry.resource.meta.tag[0].display}}</td>
+                                    <td>{{entry.resource.performedDateTime}}</td>
+
+
+                                </tr>
+                            </table>
+
+                            <table ng-show="selectedResultsDisplay=='Medications'" class="table">
+                                <tr><th>Name</th><th>Source</th><th>Route</th><th>Quantity</th></tr>
+                                <tr ng-repeat = "entry in selectedResults.entry">
+                                    <td width="25%">{{entry.resource.medicationReference.display}}
+                                        {{entry.resource.medicationCodeableConcept.text}}
+                                    </td>
+                                    <td>{{entry.resource.meta.tag[0].display}}</td>
+                                    <td><div ng-repeat="dose in entry.resource.dosage">
+                                        {{dose.route.coding[0].display}}
+                                    </div></td>
+                                    <td><div ng-repeat="dose in entry.resource.dosage">
+                                        {{dose.doseQuantity.value}}
+                                    </div></td>
+
+
+                                </tr>
+                            </table>
+
+
+                        </uib-tab>
+                        <uib-tab heading="Json">
+                            <pre>{{selectedResults | json}}</pre>
+                        </uib-tab>
+                    </uib-tabset>
+
+                </div>
+            </div>
+
+
+
+        </uib-tab>
+        <uib-tab heading="Ad-hoc Query">
             <br/>
 
             <div class="row">

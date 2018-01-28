@@ -65,14 +65,14 @@
     {"id":"r10-4","name":"End Point",
       "role":"server","description":"Can apply Privacy labels"},
 
-
-
     {"id":"r11-1","name":"Source FHIR Server",
       "role":"","description":""},
-    {"id":"r11-2","name":"Source EMR","description":""},
+    {"id":"r11-2","name":"Direct Trust Source","description":""},
     {"id":"r11-3","name":"Target FHIR Server",
       "role":"","description":""},
-    {"id":"r11-4","name":"Target EMR","description":""},
+    {"id":"r11-4","name":"Direct Trust target","description":""},
+    {"id":"r11-5","name":"Target EMR","description":""},
+
 
     {"id":"r12-1","name":"Public Health",
       "role":"","description":""},

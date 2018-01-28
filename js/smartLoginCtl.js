@@ -9,6 +9,14 @@ angular.module("sampleApp")
             $http.get('/artifacts/smartProfiles.json').then(
                 function (data) {
                     $scope.smartProfiles = data.data.profiles;
+                    $scope.static = data.data.static;
+
+
+                    $scope.input.role = $scope.static.roles[0];
+                    $scope.input.purpose= $scope.static.purpose[0];
+                    $scope.input.org= $scope.static.org[0];
+
+
                     //console.log($scope.smartProfiles)
                 }
             );
@@ -21,7 +29,7 @@ angular.module("sampleApp")
             $scope.selectProfile = function(profile) {
                 $scope.input.scope = profile.defaultScope;
                 $scope.input.selectedProfile = profile;
-            }
+            };
 
 
             $scope.login = function(profile) {
@@ -35,6 +43,12 @@ angular.module("sampleApp")
                 }
 
 
+                //add the role & other data to the profile
+                profile.context = {};
+
+                profile.context.role = $scope.input.role;
+                profile.context.purpose = $scope.input.purpose;
+                profile.context.org = $scope.input.org;
 
                 $scope.input.state = 'login';
                 $http.post('/setup',profile).then(

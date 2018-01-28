@@ -1,5 +1,22 @@
 {"profiles": [
   {
+    "name" : "DHP",
+    "description":"DHP Open Health Connect",
+    "fhirVersion" : "3",
+    "baseUrl" : "https://api.eu.apiconnect.ibmcloud.com/csc-healthcare-uk-csc-api-connect/dhpdev/",
+    "callback" : "https://localhost:8443/callback",
+    "clientId" : "bf2e8015-714c-45c2-af69-e2f3fd80e86c",
+    "secret": "K5hY3pB2nY4hF1dH6nB6jK1lU0sU0oA5sW8xP0oM1lC2tE7hS7",
+    "clientIdConfig": "https://launch.smarthealthit.org/.well-known/openid-configuration",
+    "defaultScope" :"openid patient/Patient.read patient/Procedure.read patient/Observation.read patient/MedicationStatement.read patient/Condition.read",
+    "defaultQueries": [
+      {"display":"Procedures","url":"Patient/{patientId}/Procedure"},
+      {"display":"Medications","url":"Patient/{patientId}/MedicationStatement"},
+      {"display":"Patient","url":"Patient/{patientId}"},
+      {"display":"Conditions","url":"Patient/{patientId}/Condition"}
+    ]
+  },
+  {
     "name" : "clinFHIR - separate server app",
     "description":"clinFHIR SMART proxy",
     "fhirVersion" : "2",
@@ -95,4 +112,27 @@
     "defaultScope" :"patient/Patient.read",
     "public" : true
   }
-]}
+],
+"static" : {
+  "roles": [
+    {"code":"PROV","display":"Healthcare Provider"},
+    {"code":"PAT","display":"Patient"},
+    {"code":"DEPEN","display":"Dependent"},
+    {"code":"POWATT","display":"Power of Attorney"}
+
+  ],
+  "purpose" : [
+    {"code":"CLINTRCH","display":"Clinical Trial"},
+    {"code":"HRESCH","display":"Healthcare Research"},
+    {"code":"PATRQT","display":"Patient Requested"},
+    {"code":"TREAT","display":"Treatment"}
+  ],
+
+  "org" : [
+    {"code":"1","display":"PCOR Comparative Effectiveness Program"},
+    {"code":"3","display":"Health Clinic Three"},
+    {"code":"2","display":"All of Us Research Program"}
+  ]
+}
+
+}
