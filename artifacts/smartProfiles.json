@@ -1,11 +1,28 @@
 {"profiles": [
   {
-    "name" : "DHP",
+    "name" : "DHP-web",
+    "description":"DHP Open Health Connect hosted in teh web",
+    "fhirVersion" : "3",
+    "baseUrl" : "https://api.eu.apiconnect.ibmcloud.com/csc-healthcare-uk-csc-api-connect/dhpdev/",
+    "callback" : "https://snapp.clinfhir.com:8443/callback",
+    "clientId" : "4ce9e1db-2ccb-43dd-88ab-b560531c365e",
+    "secret": "B6rY7pW0vI6oP3rA1dD8aU2hE0eO3gF8xT3gW3mO2nI0vW2kT8",
+    "clientIdConfig": "https://launch.smarthealthit.org/.well-known/openid-configuration",
+    "defaultScope" :"openid patient/Patient.read patient/Procedure.read patient/Observation.read patient/MedicationStatement.read patient/Condition.read",
+    "defaultQueries": [
+      {"display":"Procedures","url":"Patient/{patientId}/Procedure"},
+      {"display":"Medications","url":"Patient/{patientId}/MedicationStatement"},
+      {"display":"Patient","url":"Patient/{patientId}"},
+      {"display":"Conditions","url":"Patient/{patientId}/Condition"}
+    ]
+  },
+  {
+    "name" : "DHP-local",
     "description":"DHP Open Health Connect",
     "fhirVersion" : "3",
     "baseUrl" : "https://api.eu.apiconnect.ibmcloud.com/csc-healthcare-uk-csc-api-connect/dhpdev/",
-    "callbackOLD" : "https://localhost:8443/callback",
-    "callback" : "https://snapp.clinfhir.com:8443/callback",
+    "callback" : "https://localhost:8443/callback",
+    "callbackNew" : "https://snapp.clinfhir.com:8443/callback",
     "clientId" : "bf2e8015-714c-45c2-af69-e2f3fd80e86c",
     "secret": "K5hY3pB2nY4hF1dH6nB6jK1lU0sU0oA5sW8xP0oM1lC2tE7hS7",
     "clientIdConfig": "https://launch.smarthealthit.org/.well-known/openid-configuration",
