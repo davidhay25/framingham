@@ -253,6 +253,7 @@ app.post('/proxyfhir/*',function(req,res) {
         encoding : null
     };
 
+    console.log(fhirQuery);
     request(options, function (error, response, body) {
         if (error) {
             console.log('error:',error)
@@ -265,8 +266,7 @@ app.post('/proxyfhir/*',function(req,res) {
             console.log('---------------');
             res.send(body,response.statusCode);//,'binary')
         } else {
-            //console.log(body.toString())
-           // res.send(body,response.statusCode);
+
             res.send(body);//,'binary')
 
         }

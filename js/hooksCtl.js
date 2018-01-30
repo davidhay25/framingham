@@ -9,6 +9,10 @@ angular.module("sampleApp")
 
             //default to hapi
             $scope.input.patientid = 206368;        //on publoic hapi
+
+            $scope.input.practitionerid =  692444
+
+
             var dataServer = "http://fhirtest.uhn.ca/baseDstu3/";
 
             $http.get(dataServer + "Patient/"+$scope.input.patientid).then(
@@ -98,8 +102,10 @@ angular.module("sampleApp")
 
                         //replace the placeholders
                         v = v.replace("{{Patient.id}}",$scope.input.patientid)
+                        v = v.replace("{{User.id}}",$scope.input.practitionerid)
                         //console.log(v)
                         var url = $scope.dataServer + v;
+                        console.log(url)
                         arQuery.push($http.get(url).then(
                             function(data){
                                 var resource = data.data;
@@ -144,6 +150,7 @@ angular.module("sampleApp")
 
 
             var callService = function(payload) {
+                console.log(payload)
                 delete $scope.request;
                 delete $scope.response;
                 delete $scope.url;
@@ -165,7 +172,7 @@ angular.module("sampleApp")
                     },
                     function(err) {
                         $scope.errorMsg = err.data;
-
+alert('error ' + err.data)
                         //console.log($scope.errorMsg);
                         //$scope.response = err;
                     }
