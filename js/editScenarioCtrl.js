@@ -4,6 +4,7 @@ angular.module("sampleApp")
 
 
             scenario.scenarioTypes = scenario.scenarioTypes || []
+            scenario.links = scenario.links || []
 
             $scope.scenario = scenario;
 
@@ -13,11 +14,21 @@ angular.module("sampleApp")
             $scope.addStep = function(step){
                 $scope.scenario.steps = $scope.scenario.steps || []
                 $scope.scenario.steps.push(step);
+                delete $scope.newStep;
             };
 
             $scope.addType = function(type) {
                 scenario.scenarioTypes.push(type.name);
+            };
+
+            $scope.addLink = function(link) {
+                scenario.links.push({url:link});
+                delete $scope.input.link
+            };
+            $scope.removeLink = function(inx){
+                scenario.links.splice(inx,1)
             }
+
 
             $scope.updateScenario = function(){
                 if (! $scope.scenario.name) {

@@ -391,7 +391,7 @@
 
 
                                                 <div class="col-sm-8 col-md-8" ng-show="selectedScenario">
-
+<!--
                                                     <div>
                                                         <i class="clickable glyphicon glyphicon-edit pull-right"
                                                            title="Edit scenario" ng-click="editScenario(scenario)">
@@ -399,7 +399,7 @@
                                                     </div>
 
                                                     <hr/>
-
+-->
                                                     <p ng-bind-html="selectedScenario.description | markDown"></p>
 
 
@@ -422,6 +422,9 @@
                                                             {{selectedScenario.precondition}}
                                                         </div>
                                                     </div>
+
+
+
                                                     <div class="row"ng-show="selectedScenario.steps.length > 0">
                                                         <div class="col-sm-3 col-md-3">
                                                             Steps
@@ -434,6 +437,25 @@
                                                             </ol>
                                                         </div>
                                                     </div>
+
+                                                    <div class="row" ng-show="selectedScenario.links.length > 0">
+                                                        <div class="col-sm-3 col-md-3">
+                                                            Links
+                                                        </div>
+                                                        <div class="col-sm-9 col-md-9">
+                                                            <ul class="list-unstyled">
+                                                                <li ng-repeat="link in selectedScenario.links">
+                                                                    <a target="_blank" ng-href="{{link.url}}">
+                                                                        {{link.url}}
+                                                                    </a>
+                                                                    {{step}}
+
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+
+
                                                     <div class="row" ng-show="selectedScenario.success">
                                                         <div class="col-sm-3 col-md-3">
                                                             Success
