@@ -58,6 +58,30 @@
                     </div>
                 </div>
                 <br/>
+
+                <div class="row">
+                    <div class="col-md-3 col-sm-3">
+                        Resources used
+                    </div>
+
+
+
+                    <div class="col-md-9 col-sm-9">
+                        <ul>
+                            <li ng-repeat="type in scenario.scenarioTypes">
+                                {{type}}
+                            </li>
+                        </ul>
+                        <select ng-model="input.resource" class="form-control"
+                                ng-change="addType(input.resource)"
+                                ng-options ="type.name for type in allResourceTypes"
+                                ></select>
+                    </div>
+                </div>
+                <br/>
+
+                allResourceTypes
+
             </div>
             <div class="col-md-6 col-sm-6">
 

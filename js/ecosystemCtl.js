@@ -11,6 +11,22 @@ angular.module("sampleApp")
 
             $http.post("/startup",{})  //record access
 
+            $http.get('/artifacts/allResources.json').then(
+                function(data) {
+                    console.log(data.data)
+                    $scope.allResources = data.data;
+
+                    $scope.allResources.sort(function(a,b){
+                        if (a.name < b.name) {
+                            return -1;
+                        } else {
+                            return 1
+                        }
+                    })
+
+                }
+            )
+
             //the name of the connectathon, the serverRoles & stuff like that...
             $http.get("config/admin/").then(
                 function(data) {
@@ -41,6 +57,8 @@ angular.module("sampleApp")
                         resolve : {
                             scenario: function () {          //the default config
                                 return scenario;
+                            },allResourceTypes : function(){
+                                return $scope.allResources
                             }
                         }
                     }).result.then(function(scenario){
@@ -74,6 +92,8 @@ angular.module("sampleApp")
                     resolve : {
                         scenario: function () {          //the default config
                             return scenario;
+                        },allResourceTypes : function(){
+                            return $scope.allResources
                         }
                     }
                 }).result.then(function(editedScenario){
@@ -251,7 +271,7 @@ angular.module("sampleApp")
 
 
                 });
-            }
+            };
 
             $scope.editTrack = function(track) {
                 $uibModal.open({
