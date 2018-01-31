@@ -11,6 +11,9 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";     //allow self signed certific
 
 var dbName = 'connectathon';    //default database name...
 
+//  *************** temp for COF !!!
+var dbName = 'cof';    //default database name...
+
 /* disable as will be running under pm2, which will trap errors and give a better message...
 process.on('uncaughtException', function(err) {
     console.log('>>>>>>>>>>>>>>> Caught exception: ' + err);
@@ -538,6 +541,28 @@ app.post('/config/:type',function(req,res){
 });
 
 
+app.post('/addScenarioToTrack/:track',function(req,res){
+    var scenario = req.body;
+    var trackId = req.params.track;
+
+    //first add the scenario...
+    db.collection('scenario').update({id:scenario.id},scenario,{upsert:true},function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            db.collection('track').update({id:trackId},{$addToSet:{scenarioIds:scenario.id}},function(err,result){
+                if (err) {
+                    res.send(err,500)
+                } else {
+                    res.send(result)
+                }
+            })
+
+        }
+    })
+
+
+});
 
 
 

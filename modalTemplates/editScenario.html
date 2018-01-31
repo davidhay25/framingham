@@ -1,0 +1,131 @@
+<div>
+
+
+    <div class="modal-header">
+
+        <div class="row">
+            <div class="col-md-8 col-sm-8">
+                <h3 class="modal-title">Edit scenario</h3>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div class="pull-right">
+                    <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+
+        <br/>
+
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <div class="row">
+                    <div class="col-md-2 col-sm-2">
+                        Scenario Name
+                    </div>
+                    <div class="col-md-8 col-sm-8">
+                        <input class="form-control" ng-model="scenario.name"/>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-3 col-sm-3">
+                        Description (MD)
+                    </div>
+                    <div class="col-md-9 col-sm-9">
+                        <textarea class="form-control" ng-model="scenario.description"></textarea>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-3 col-sm-3">
+                        PreCondition
+                    </div>
+                    <div class="col-md-9 col-sm-9">
+                        <textarea class="form-control" ng-model="scenario.precondition"></textarea>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-3 col-sm-3">
+                        Success
+                    </div>
+                    <div class="col-md-9 col-sm-9">
+                        <textarea class="form-control" ng-model="scenario.success"></textarea>
+                    </div>
+                </div>
+                <br/>
+            </div>
+            <div class="col-md-6 col-sm-6">
+
+                <uib-tabset>
+                    <uib-tab heading="Action">
+                        <br/>
+                        <textarea class="form-control" rows="10" ng-model="scenario.action"></textarea>
+                        <em>Enter a description of what the scenario should do. MarkDown is enabled.</em>
+                    </uib-tab>
+
+                    <uib-tab heading="Steps">
+                        <br/>
+                        <strong>Specific steps in scenario</strong>
+
+                        <ol>
+                            <li ng-repeat="step in scenario.steps">
+                                {{step}}
+                            </li>
+                        </ol>
+
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-1 col-sm-1">
+                            </div>
+                            <div class="col-md-10 col-sm-10">
+                                <textarea class="form-control" ng-model="newStep"></textarea>
+                            </div>
+                            <div class="col-md-1 col-sm-1">
+                                <i class="clickable glyphicon glyphicon-plus-sign pull-right"
+                                   title="Add step" ng-click="addStep(newStep)">
+                                </i>
+                            </div>
+                        </div>
+                        <em>Enter the actual steps to complete the scenario</em>
+                    </uib-tab>
+                </uib-tabset>
+
+
+
+
+
+            </div>
+        </div>
+
+
+
+        <!-- precondition success -->
+
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <button class="btn btn-primary pull-right" ng-click="updateScenario()">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+
+                <a href="https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf" target="_blank">
+                    MarkDown cheat sheet
+                </a>
+                <em>(Markdown is a way to format text with bullets, headings and test formatting by putting specific characters in the text)</em>
+            </div>
+
+        </div>
+    </div>
+</div>

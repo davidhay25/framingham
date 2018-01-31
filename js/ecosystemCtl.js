@@ -29,6 +29,71 @@ angular.module("sampleApp")
                 }
             );
 
+            $scope.addScenario = function() {
+
+                var scenario = {id: 'id'+new Date().getTime()};
+
+
+                    $uibModal.open({
+                        templateUrl: 'modalTemplates/editScenario.html',
+                        size : 'lg',
+                        controller: 'editScenarioCtrl',
+                        resolve : {
+                            scenario: function () {          //the default config
+                                return scenario;
+                            }
+                        }
+                    }).result.then(function(scenario){
+
+                        var url = "/addScenarioToTrack/"+$scope.selectedTrack.id;
+
+                        $http.post(url,scenario).then(
+                            function(data) {
+                                //now, add the new scenario to the track and update
+                                $scope.selectedTrack.scenarios.push(scenario);
+
+                                //alert('scenario added to track')
+                            }, function(err) {
+                                console.log(err)
+                                alert('There was an error '+ angular.toJson(err))
+                            }
+                        )
+
+                    });
+
+
+
+
+            };
+
+            $scope.editScenario = function(scenario) {
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/editScenario.html',
+                    size : 'lg',
+                    controller: 'editScenarioCtrl',
+                    resolve : {
+                        scenario: function () {          //the default config
+                            return scenario;
+                        }
+                    }
+                }).result.then(function(editedScenario){
+                    var url = "/config/scenario";
+
+                    delete editedScenario._id;
+
+                    $http.post(url,editedScenario).then(
+                        function(data) {
+                            alert('scenario updated')
+                        }, function(err) {
+                            console.log(err)
+                            alert('err ')
+                        }
+                    )
+
+                });
+            }
+
+
             $scope.input.currentUser = ecosystemSvc.getCurrentUser();
             $scope.userSelected = function(item){
                 $scope.input.currentUser = item;

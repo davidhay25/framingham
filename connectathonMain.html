@@ -138,6 +138,7 @@
     <script src="js/ecoUtilitiesSvc.js"></script>
     <script src="js/editTrackCtrl.js"></script>
     <script src="js/filters.js"></script>
+    <script src="js/editScenarioCtrl.js"></script>
 </head>
 <body style="padding: 8px;padding-top: 80px" >
 
@@ -360,22 +361,49 @@
                                                             style="cursor: pointer"
                                                             ng-repeat="scenario in selectedTrack.scenarios track by $index"
                                                             ng-click="selectScenario(scenario)">
+
+
+                                                            <span>
+                                                                <i class="clickable glyphicon glyphicon-edit pull-right"
+                                                                   title="Edit scenario" ng-click="editScenario(scenario)">
+                                                                </i>
+                                                            </span>
                                                             {{scenario.name}}
                                                         </li>
                                                     </ul>
+
+                                                    <div>
+                                                        <div class="pull-right">
+                                                            <button class="btn btn-link" ng-click="addScenario()">
+                                                                Add a new Scenario
+                                                            </button>
+                                                        </div>
+                                                    </div>
 
                                                 </div>
 
 
                                                 <div class="col-sm-8 col-md-8" ng-show="selectedScenario">
-                                                    <p ng-bind-html="selectedScenario.description"></p>
+
+                                                    <div>
+                                                        <i class="clickable glyphicon glyphicon-edit pull-right"
+                                                           title="Edit scenario" ng-click="editScenario(scenario)">
+                                                        </i>
+                                                    </div>
+
+                                                    <hr/>
+
+                                                    <p ng-bind-html="selectedScenario.description | markDown"></p>
+
+
 
                                                     <div class="row" ng-show="selectedScenario.action">
                                                         <div class="col-sm-3 col-md-3">
                                                             Action
                                                         </div>
                                                         <div class="col-sm-9 col-md-9">
-                                                            {{selectedScenario.action}}
+                                                            <p ng-bind-html="selectedScenario.action | markDown"></p>
+                                                            <!-- {{selectedScenario.action}}-->
                                                         </div>
                                                     </div>
 
