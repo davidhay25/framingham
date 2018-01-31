@@ -149,8 +149,7 @@
         <div class="container-fluid row">
             <div class="col-md-7 col-sm-7">
                 <a class="navbar-brand" href="#">
-
-                    Connectathon Mananger: {{eventConfig.name}}
+                    ConMan: {{eventConfig.name}}
                 </a>
             </div>
 
@@ -207,6 +206,14 @@
                                         style="cursor: pointer"
                                         ng-repeat="track in tracks | orderBy: 'name' "
                                         ng-click="selectTrack(track)">
+
+                                        <span>
+                                            <i class="clickable glyphicon glyphicon-edit pull-right"
+                                               title="Edit track" ng-click="editTrack(track)">
+                                            </i>
+                                        </span>
+
+
                                         {{track.name}}
                                     </li>
                                 </ul>
@@ -220,9 +227,9 @@
                             <uib-tabset>
                                 <uib-tab heading="Description">
                                     <br/>
-                                    <!--
-                                                                <a ng-click="editTrack(selectedTrack)">Edit</a>
-                                    -->
+<!--
+                                    <a ng-click="editTrack(selectedTrack)">Edit</a>
+-->
                                     <div class="row">
                                         <div class="col-sm-2 col-md-2">
 

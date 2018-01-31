@@ -259,13 +259,22 @@ angular.module("sampleApp")
                     size: 'lg',
                     controller: 'editTrackCtrl',
                     resolve : {
-
                         track: function () {          //the default config
                             return $scope.selectedTrack;
                         }
                     }
                 }).result.then(function(vo){
+                    var url = "/config/track"
+                    var clone = angular.copy($scope.selectedTrack);
+                    delete clone._id;
+                    delete clone.scenarios;
+                    $http.post(url,clone).then(
+                        function(){
 
+                        },function(err) {
+                            alert('error: '+ angular.toJson(err))
+                        }
+                    )
 
                     //ecosystemSvc.addScenarioResult(track,scenario,client,server,vo)
                 });
