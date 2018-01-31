@@ -103,10 +103,10 @@ angular.module("sampleApp")
 
                     $http.post(url,editedScenario).then(
                         function(data) {
-                            alert('scenario updated')
+                            //alert('scenario updated')
                         }, function(err) {
                             console.log(err)
-                            alert('err ')
+                            alert('err: '+ angular.toJson(err))
                         }
                     )
 
