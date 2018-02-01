@@ -75,6 +75,33 @@
                                 ng-options ="type.name for type in allResourceTypes"></select>
                     </div>
                 </div>
+
+                <br/>
+
+                <div class="row">
+                    <div class="col-md-3 col-sm-3">
+                        Associated CF Scenario
+                    </div>
+                    <div class="col-md-9 col-sm-9">
+                        <div ng-show="library.length > 0">
+                            <input type="text" ng-model="input.currentUser"
+                                   placeholder="Select clinFHIR library scenario"
+                                   typeahead-on-select = "libraryItemSelected($item, $model, $label, $event)"
+                                   uib-typeahead="library.name for library in library | filter:{name:$viewValue} | limitTo:8" class="form-control"/>
+
+                        </div>
+                        <div ng-show="! library || library.length <= 0">
+                            <em>The Library is empty. Generally this means that it hasn't yet been downloaded from from
+                            the Server. This can take a while, so you can close and re-open this dialog if you need to.</em>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+
+
                 <br/>
 
 
@@ -85,13 +112,20 @@
             <div class="col-md-6 col-sm-6">
 
                 <uib-tabset>
-                    <uib-tab heading="Action">
+                    <uib-tab>
+                        <uib-tab-heading>
+                            Action
+                        </uib-tab-heading>
                         <br/>
                         <textarea class="form-control" rows="14" ng-model="scenario.action"></textarea>
                         <em>Enter a description of what the scenario should do. MarkDown is supported.</em>
                     </uib-tab>
 
-                    <uib-tab heading="Steps">
+                    <uib-tab>
+                        <uib-tab-heading>
+                            Steps
+                            <span class="badge">{{scenario.steps.length}}</span>
+                        </uib-tab-heading>
                         <br/>
                         <strong>Specific steps in scenario</strong>
 
@@ -107,16 +141,24 @@
                             <div class="col-md-1 col-sm-1">
                             </div>
                             <div class="col-md-10 col-sm-10">
-                                <textarea class="form-control" ng-model="newStep"></textarea>
+                                <textarea class="form-control" ng-model="input.newStep"></textarea>
                             </div>
                             <div class="col-md-1 col-sm-1">
                                 <i class="clickable glyphicon glyphicon-plus-sign pull-right"
-                                   title="Add step" ng-click="addStep(newStep)">
+                                   title="Add step" ng-click="addStep(input.newStep)">
                                 </i>
                             </div>
                         </div>
                         <em>Enter the actual steps to complete the scenario</em>
                     </uib-tab>
+
+                    <uib-tab ng-show="selectedLibrary">
+                        <uib-tab-heading>
+                            clinFHIR scenario
+                        </uib-tab-heading>
+                        <pre>{{selectedLibrary | json}}</pre>
+                    </uib-tab>
+
                 </uib-tabset>
 
 

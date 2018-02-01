@@ -1,8 +1,15 @@
 angular.module("sampleApp")
     .controller('editScenarioCtrl',
-        function ($scope,ecosystemSvc,scenario,allResourceTypes,modalService) {
+        function ($scope,ecosystemSvc,scenario,allResourceTypes,library,modalService) {
 
 
+            $scope.library = library;
+            $scope.libraryItemSelected = function(item){
+                console.log(item)
+                $scope.selectedLibrary = item;
+            };
+
+            $scope.input = {};
             scenario.scenarioTypes = scenario.scenarioTypes || []
             scenario.links = scenario.links || []
 
@@ -14,7 +21,7 @@ angular.module("sampleApp")
             $scope.addStep = function(step){
                 $scope.scenario.steps = $scope.scenario.steps || []
                 $scope.scenario.steps.push(step);
-                delete $scope.newStep;
+                delete $scope.input.newStep;
             };
 
             $scope.addType = function(type) {

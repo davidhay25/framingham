@@ -27,6 +27,42 @@ angular.module("sampleApp")
                 }
             )
 
+
+            //load the library. Hard code to hapi for now...
+            var url = 'http://fhirtest.uhn.ca/baseDstu3/DocumentReference?type=http://clinfhir.com/docs|builderDoc';
+            console.log(url)
+            ecoUtilitiesSvc.performQueryFollowingPaging(url).then(
+                function(bundle) {
+                    console.log(bundle)
+
+                    $scope.library = []
+                    bundle.entry.forEach(function(entry){
+                        var dr = entry.resource;
+                        if (dr && dr.content && dr.content[0] && dr.content[0].attachment && dr.content[0].attachment.data) {
+                            var item = {name:dr.description}
+                            try {
+                                item.bundle = angular.fromJson(atob(dr.content[0].attachment.data));
+                                //get the history (if any)
+                                if (dr.content.length > 1) {
+                                    var hx = angular.fromJson(atob(dr.content[1].attachment.data))
+                                    item.history = hx.history;
+                                }
+                                $scope.library.push(item)
+                            } catch (ex) {
+                                console.log('error loading library item: ',ex)
+                            }
+                        }
+                    });
+                    console.log($scope.library);
+                },
+                function(err) {
+                    console.log(err)
+                }
+            );
+
+
+
+
             //the name of the connectathon, the serverRoles & stuff like that...
             $http.get("config/admin/").then(
                 function(data) {
@@ -49,7 +85,6 @@ angular.module("sampleApp")
 
                 var scenario = {id: 'id'+new Date().getTime()};
 
-
                     $uibModal.open({
                         templateUrl: 'modalTemplates/editScenario.html',
                         size : 'lg',
@@ -59,6 +94,8 @@ angular.module("sampleApp")
                                 return scenario;
                             },allResourceTypes : function(){
                                 return $scope.allResources
+                            },library : function(){
+                                return $scope.library;
                             }
                         }
                     }).result.then(function(scenario){
@@ -94,6 +131,8 @@ angular.module("sampleApp")
                             return scenario;
                         },allResourceTypes : function(){
                             return $scope.allResources
+                        },library : function(){
+                            return $scope.library;
                         }
                     }
                 }).result.then(function(editedScenario){
