@@ -534,6 +534,9 @@ angular.module("sampleApp")
                     //update the results summary
                     $scope.resultsSummary = ecosystemSvc.getTrackResults(track); //get a summary object for the results for a track
 
+                    $scope.selectedTrackReport =  ecosystemSvc.getTrackResults(track);      //summary of this track...
+
+
                 });
 
             };
