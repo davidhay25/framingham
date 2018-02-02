@@ -1,4 +1,4 @@
-angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalService,$localStorage,ecoUtilitiesSvc) {
+angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalService,$localStorage,ecoUtilitiesSvc,$filter) {
 
     var serverIP = "http://localhost:8080/baseDstu3/";    //hard code to local server for now...
     var addExtension =  function(resource,url,value) {
@@ -147,6 +147,28 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         })
 
     };
+
+    //copied from builderSvc - could be in a common module
+    var objColours ={};
+    objColours.Patient = '#93FF1A';
+    objColours.Composition = '#E89D0C';
+    objColours.List = '#ff8080';
+    objColours.Observation = '#FFFFCC';
+    objColours.Practitioner = '#FFBB99';
+    objColours.MedicationStatement = '#ffb3ff';
+    objColours.CarePlan = '#FF9900';
+    objColours.Sequence = '#FF9900';
+    objColours.CareTeam = '#FFFFCC';
+    objColours.Condition = '#cc9900';
+    objColours.LogicalModel = '#ff8080';
+
+    objColours.Organization = '#FF9900';
+    objColours.ProviderRole = '#FFFFCC';
+    objColours.Location = '#cc9900';
+    objColours.HealthcareService = '#FFFFCC';
+    objColours.MedicationDispense = '#FFFFCC';
+    objColours.Composition = '#FFFFCC';
+    objColours.Medication = '#FF9900';
 
 
     return {
@@ -1395,7 +1417,257 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             )
 
 
-        }
+        },
+        makeGraph : function(bundle,centralResource,hideMe,showText) {
+            //+++++++ this is a copy from builderSvc to avoid pulling in dups. Should really be in a separate library
+            //builds the model that has all the models referenced by the indicated SD, recursively...
+            //if hideMe is true, then hide the central node and all references to it
+
+            var that = this;
+            var allReferences = [];
+           // var gAllReferences = [];
+
+
+            var allResources = {};  //all resources hash by id
+            var centralResourceNodeId;
+
+            var arNodes = [], arEdges = [];
+            var objNodes = {};
+
+            //for each entry in the bundle, find the resource that it references
+            bundle.entry.forEach(function(entry){
+                //should always be a resource.id  todo? should I check
+                var resource = entry.resource;
+                var addToGraph = true;
+
+                var url = getLinkingUrlFromId(resource);
+
+                /*
+                                    var url = resource.resourceType+'/'+resource.id;
+                                    //if this is a uuid (starts with 'urn:uuid:' then don't add the resourceType as a prefix.
+                                    //added to support importing bundles with uuids...
+                                    if (resource.id.lastIndexOf('urn:uuid:', 0) === 0) {
+                                        url = resource.id;
+                                    }
+                                    */
+
+                //add an entry to the node list for this resource...
+                var node = {id: arNodes.length +1, label: resource.resourceType, shape: 'box',url:url,cf : {resource:resource}};
+                if (resource.text) {
+                    node.title = resource.text.div;
+                    if (showText) {
+
+                        var labelText = $filter('manualText')(resource);
+                        if (labelText) {
+                            node.label += "\n"+labelText.substr(0,20);
+                        }
+
+                    }
+                }
+
+
+                //the id of the centralResource (if any)
+                if (centralResource) {
+                    if (resource.resourceType == centralResource.resourceType && resource.id == centralResource.id) {
+                        centralResourceNodeId = node.id
+
+                        if (hideMe) {
+                            //hide the node
+                            node.hidden = true;
+                            node.physics=false;
+                        }
+
+                    }
+                }
+
+
+
+
+                if (objColours[resource.resourceType]) {
+                    node.color = objColours[resource.resourceType];
+                }
+
+                //if there are implicit rules, then assume a logical model //todo - might want a url for this...
+                if (resource.implicitRules) {
+                    node.shape='ellipse';
+                    node.color = objColours['LogicalModel'];
+                    node.font = {color:'white'}
+                }
+
+                arNodes.push(node);
+                objNodes[node.url] = node;
+
+                var refs = [];
+                findReferences(refs,resource,resource.resourceType)
+
+                refs.forEach(function(ref){
+                    allReferences.push({src:node,path:ref.path,targ:ref.reference,index:ref.index})
+                   // gAllReferences.push({src:url,path:ref.path,targ:ref.reference,index:ref.index});    //all relationsin the collection
+                })
+
+            });
+
+
+            //so now we have the references, build the graph model...
+            allReferences.forEach(function(ref){
+                var targetNode = objNodes[ref.targ];
+                if (targetNode) {
+                    var label = $filter('dropFirstInPath')(ref.path);
+                    arEdges.push({id: 'e' + arEdges.length +1,from: ref.src.id, to: targetNode.id, label: label,arrows : {to:true}})
+                } else {
+                    console.log('>>>>>>> error Node Id '+ref.targ + ' is not present')
+                }
+
+            });
+
+
+            //if hideMe is set, then don't show references to the centralResource (which will have been hidden)
+            if (hideMe) {
+                arEdges.forEach(function (edge) {
+                    if (edge.from == centralResourceNodeId || edge.to == centralResourceNodeId) {
+                        edge.hidden = true;
+                        edge.physics=false;
+                    }
+
+                })
+            }
+
+            //if there's a centralResource - and not hideMe - , then only include resources with a reference to or from it...
+            if (centralResource && ! hideMe) {
+
+
+                // var centralUrl = centralResource.resourceType + "/" + centralResource.id;
+                var centralUrl = getLinkingUrlFromId(centralResource);
+
+                var allRefs = that.getSrcTargReferences(centralUrl)
+
+                var hashNodes = {};
+
+                //move through the nodes an find the references to & from the central node
+                arNodes.forEach(function (node) {
+                    var include = false;
+                    var id = node.cf.resource.id;
+                    //var url = node.cf.resource.resourceType + "/"+node.cf.resource.id;
+                    var url = getLinkingUrlFromId(node.cf.resource);
+                    if (id == centralResource.id) {
+                        include = true
+                    } else {
+                        //does the node have a reference to the central one?
+                        //iterate though the references where this is the target
+                        allRefs.targ.forEach(function(targ){
+                            if (targ.src == url) {
+                                //yes, this resource has a reference to the central one...
+                                include = true;
+                            }
+                        });
+
+                        allRefs.src.forEach(function(src){
+                            if (src.targ == url) {
+                                //yes, this resource has a reference to the central one...
+                                include = true;
+                            }
+                        })
+
+                    }
+
+                    if (! include) {
+                        //hide the node
+                        node.hidden = true;
+                        node.physics=false;
+                    } else {
+                        hashNodes[url] = true;
+                    }
+
+
+                })
+
+                //only show edges where either the source or the target in the central node
+                arEdges.forEach(function (edge) {
+                    if (edge.from == centralResourceNodeId || edge.to == centralResourceNodeId) {
+
+                    } else {
+                        edge.hidden = true;
+                        edge.physics=false;
+                    }
+
+                })
+
+            }
+
+
+
+
+
+            var nodes = new vis.DataSet(arNodes);
+            var edges = new vis.DataSet(arEdges);
+
+            // provide the data in the vis format
+            var data = {
+                nodes: nodes,
+                edges: edges
+            };
+
+            return {graphData : data, allReferences:allReferences, nodes: arNodes};
+
+            //find elements of type refernce at this level
+            function findReferences(refs,node,nodePath,index) {
+                angular.forEach(node,function(value,key){
+
+                    //if it's an object, does it have a child called 'reference'?
+
+                    if (angular.isArray(value)) {
+                        value.forEach(function(obj,inx) {
+                            //examine each element in the array
+                            if (obj) {  //somehow null's are getting into the array...
+                                var lpath = nodePath + '.' + key;
+                                if (obj.reference) {
+                                    //this is a reference!
+
+                                    refs.push({path: lpath, reference: obj.reference})
+                                } else {
+                                    //if it's not a reference, then does it have any children?
+                                    findReferences(refs,obj,lpath,inx)
+                                }
+                            }
+
+                        })
+                    } else
+
+                    if (angular.isObject(value)) {
+                        var   lpath = nodePath + '.' + key;
+                        if (value.reference) {
+                            //this is a reference!
+                            //if (showLog) {console.log('>>>>>>>>'+value.reference)}
+                            refs.push({path:lpath,reference : value.reference,index:index})
+                        } else {
+                            //if it's not a reference, then does it have any children?
+                            findReferences(refs,value,lpath)
+                        }
+                    }
+
+
+                })
+            }
+
+
+            function getLinkingUrlFromId(resource) {
+                //return the url used for referencing. If a Uuid then just return it - otherwise make a relatibe
+
+                if (resource && resource.id) {
+                    if (resource.id.lastIndexOf('urn:uuid:', 0) === 0) {
+                        return resource.id;
+                    } else {
+                        return resource.resourceType + "/" + resource.id;
+                    }
+                } else {
+                    //in theory, shouldn't happen...
+                    alert("There is a resource with no id! " + angular.toJson(resource))
+                }
+
+
+            }
+
+        },
     }
 
 });

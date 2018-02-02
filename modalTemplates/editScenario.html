@@ -1,5 +1,12 @@
 <div>
+    <style>
+        #resourceGraph {
+            width: 100%;
+            height: 280px;
+            border: 1px solid lightgray;
+        }
 
+    </style>
 
     <div class="modal-header">
 
@@ -10,6 +17,7 @@
 
             <div class="col-md-4 col-sm-4">
                 <div class="pull-right">
+                    <button class="btn btn-primary pull-right" ng-click="updateScenario()">Update</button>
                     <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
                 </div>
             </div>
@@ -84,7 +92,7 @@
                     </div>
                     <div class="col-md-9 col-sm-9">
                         <div ng-show="library.length > 0">
-                            <input type="text" ng-model="input.currentUser"
+                            <input type="text" ng-model="input.selectedLibraryItem"
                                    placeholder="Select clinFHIR library scenario"
                                    typeahead-on-select = "libraryItemSelected($item, $model, $label, $event)"
                                    uib-typeahead="library.name for library in library | filter:{name:$viewValue} | limitTo:8" class="form-control"/>
@@ -156,7 +164,16 @@
                         <uib-tab-heading>
                             clinFHIR scenario
                         </uib-tab-heading>
+                        <ol>
+                            <li ng-repeat = "hx in selectedLibrary.history" ng-click="selectHxItem(hx)" style="cursor: pointer">
+                                Item  {{$index+1}}
+                            </li>
+                        </ol>
+
+                        <div id="resourceGraph"></div>
+<!--
                         <pre>{{selectedLibrary | json}}</pre>
+                        -->
                     </uib-tab>
 
                 </uib-tabset>
@@ -168,7 +185,6 @@
             </div>
         </div>
 
-        <hr/>
         <div class="row">
             <div class="col-md-1 col-sm-1">
                 Links
@@ -212,7 +228,7 @@
         <br/>
 
         <!-- precondition success -->
-
+<!--
         <div class="row">
             <div class="col-md-6 col-sm-6">
 
@@ -223,6 +239,7 @@
         </div>
     </div>
 
+    -->
     <div class="modal-header">
         <div class="row">
             <div class="col-md-12 col-sm-12">
