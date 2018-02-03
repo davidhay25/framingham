@@ -1,17 +1,21 @@
 angular.module("sampleApp")
     .controller('editTrackCtrl',
         function ($scope,ecosystemSvc,track) {
+
+            $scope.mdOptions = {iconlibrary:'glyph'}
+
             if (track) {
                 $scope.track = track;
 
                 $scope.input = {};
                 $scope.input.description = track.description;
 
-
-                $scope.save = function(){
-                    track.description = $scope.input.description;
-                    $scope.$close()
-                }
             }
+
+            $scope.save = function(){
+                //track.description = $scope.input.description;
+                $scope.$close()
+            }
+
         }
     );

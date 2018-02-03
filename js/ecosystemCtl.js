@@ -304,12 +304,14 @@ angular.module("sampleApp")
                         }
                     }
                 }).result.then(function(vo){
-
                     $scope.selectPerson(vo);
-
-
-
                 });
+            };
+
+
+            $scope.addTrack = function(){
+                var track = {id: 'id'+new Date().getTime(),name:'New Track',roles:[],scenarioIds:[]};
+                $scope.editTrack(track);
             };
 
             $scope.editTrack = function(track) {
@@ -319,7 +321,7 @@ angular.module("sampleApp")
                     controller: 'editTrackCtrl',
                     resolve : {
                         track: function () {          //the default config
-                            return $scope.selectedTrack;
+                            return track; //$scope.selectedTrack;
                         }
                     }
                 }).result.then(function(vo){

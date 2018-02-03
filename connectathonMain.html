@@ -5,9 +5,14 @@
     <title>Connectathon</title>
     <script src="js/libs/angular.min1-5.js"></script>
     <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="css/angular-lightweight-markdown-editor.css"/>
+
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
-    <link rel="stylesheet" type="text/css" href="css/angular-lightweight-markdown-editor.css"/>
+
+
 
     <link rel="stylesheet" type="text/css" href="css/vis.min.css"/>
 
@@ -225,6 +230,14 @@
                                         {{track.name}}
                                     </li>
                                 </ul>
+
+                                <div>
+                                    <div class="pull-right">
+                                        <button class="btn btn-link" ng-click="addTrack()">
+                                            Add a new Track
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
 
 

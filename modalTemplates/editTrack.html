@@ -8,6 +8,7 @@
 
             <div class="col-md-4 col-sm-4">
                 <div class="pull-right">
+                    <button class="btn btn-primary pull-right" ng-click="save()">Save</button>
                     <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
                 </div>
             </div>
@@ -16,16 +17,26 @@
 
     <div class="modal-body">
 
-
         <div class="row">
-            <div class="col-md-12 col-sm-12">
-                <form name="form">
-                    <markdown-editor  ng-model="input.description"
-                                      text-preview="Preview"
-                                      text-provide-text="Site name"
-                                      text-provide-link="Site link"
+            <div class="col-md-3 col-sm-3">
+                Name
+            </div>
+            <div class="col-md-9 col-sm-9">
+                <input class="form-control" ng-model="track.name"/>
+            </div>
+        </div>
 
-                                      name="thearea"
+        <br/>
+        <div class="row">
+            <div class="col-md-3 col-sm-3">
+                Description
+            </div>
+            <div class="col-md-9 col-sm-9">
+
+
+                <form name="form">
+                    <markdown-editor ng-model="track.description"
+                                      rows="5"
                                       placeholder="Enter the description of this track"
                                       options="mdOptions" >
 
@@ -46,7 +57,7 @@
 
             <div class="col-md-6 col-sm-6">
 
-                <button class="btn btn-primary" ng-click="save()">Save</button>
+
             </div>
         </div>
 
