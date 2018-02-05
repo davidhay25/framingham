@@ -1,6 +1,6 @@
 angular.module("sampleApp")
     .controller('editScenarioCtrl',
-        function ($scope,ecosystemSvc,scenario,allResourceTypes,library,modalService) {
+        function ($scope,ecosystemSvc,scenario,allResourceTypes,library,$uibModal,modalService) {
 
             $scope.scenario = scenario;
             $scope.library = library;
@@ -63,6 +63,29 @@ angular.module("sampleApp")
             };
 
             $scope.addLink = function(link) {
+
+
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/addLinkToScenario.html',
+                    //size: 'lg',
+                    controller: function($scope,links){
+                        $scope.input = {};
+                        $scope.addLink = function() {
+                            links.push({url:$scope.input.linkUrl,description:$scope.input.linkDescription});
+                            $scope.$close();
+                        }
+                    },
+                    resolve : {
+                        links: function () {          //the default config
+                            return scenario.links;
+                        }
+                    }
+                }).result.then(function(vo){
+
+                })
+
+                return;
+
                 scenario.links.push({url:link});
                 delete $scope.input.link
             };
@@ -76,6 +99,12 @@ angular.module("sampleApp")
                     return;
                 }
                 $scope.$close(scenario)
+            };
+
+            $scope.makeExampleDEP = function() {
+                $scope.exampleScenario = {resourceType:'ExampleScenario',process:[{step:[]}]}
+
+
             };
 
             function cfLibraryHistorySummary(hx){

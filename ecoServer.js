@@ -72,7 +72,7 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
                     hashTrack[track.id] = track;
                 })
             }
-        })
+        });
 
 
         db.collection("scenario").find({}).toArray(function(err,result){
@@ -311,7 +311,7 @@ app.post('/client',function(req,res){
 //get all servers
 app.get('/server',function(req,res){
 
-    db.collection("server").find({}).toArray(function(err,result){
+    db.collection("server").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -352,7 +352,7 @@ app.get('/result',function(req,res){
 app.delete('/result/:id',function(req,res){
 
     var id = req.params.id;       //the id of the result to delete
-console.log(id)
+    console.log(id)
     db.collection("result").update({id:id},{$set: {status:'deleted'}},function(err,result){
         if (err) {
             res.send(err,500)
@@ -489,7 +489,7 @@ app.post('/link',function(req,res){
 //get all people
 app.get('/person',function(req,res){
     //db.collection("person").find({}).sort( { name: 1 }).collation({locale:'en',strength:2}).toArray(function(err,result){
-    db.collection("person").find({}).toArray(function(err,result){
+    db.collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -518,7 +518,7 @@ app.get('/config/:type',function(req,res){
 
     var type = req.params.type;
 
-    db.collection(type).find({}).toArray(function(err,result){
+    db.collection(type).find({status : {$ne : 'deleted' }}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -557,11 +557,8 @@ app.post('/addScenarioToTrack/:track',function(req,res){
                     res.send(result)
                 }
             })
-
         }
     })
-
-
 });
 
 

@@ -467,9 +467,13 @@
                                                             <ul class="list-unstyled">
                                                                 <li ng-repeat="link in selectedScenario.links">
                                                                     <a target="_blank" ng-href="{{link.url}}">
-                                                                        {{link.url}}
+                                                                        <span uib-popover={{link.url}}
+                                                                              popover-placement="top"
+                                                                              popover-trigger="'mouseenter'">
+                                                                            {{link.description}}
+                                                                        </span>
                                                                     </a>
-                                                                    {{step}}
+                                                                   <!-- {{step}}-->
 
                                                                 </li>
                                                             </ul>
@@ -498,9 +502,9 @@
 
                                                         </div>
                                                     </div>
-
+<!--
                                                     <hr style="height: 8px"/>
-
+<!--
                                                     <div class="row">
                                                         <div class="col-sm-4 col-md-4">
                                                             Currently configured Clients
@@ -533,7 +537,7 @@
 
                                                         </div>
                                                     </div>
-
+-->
                                                 </div>
                                             </div>
                                         </div>

@@ -26,7 +26,11 @@
 
     <div class="modal-body">
 
-        <br/>
+
+
+
+                <br/>
+
 
         <div class="row">
             <div class="col-md-6 col-sm-6">
@@ -41,7 +45,7 @@
                 <br/>
                 <div class="row">
                     <div class="col-md-3 col-sm-3">
-                        Description (MD)
+                        Description (MarkD)
                     </div>
                     <div class="col-md-9 col-sm-9">
                         <textarea class="form-control" ng-model="scenario.description"></textarea>
@@ -69,6 +73,62 @@
 
                 <div class="row">
                     <div class="col-md-3 col-sm-3">
+                        Links
+                    </div>
+
+                    <div class="col-md-9 col-sm-9">
+
+
+                                <ul class="list-unstyled">
+                                    <li ng-repeat="link in scenario.links">
+                                        <div class="row">
+                                            <div class="col-md-10 col-sm-10">
+
+                                                <div uib-popover={{link.url}}
+                                                     popover-placement="top"
+                                                     popover-trigger="'mouseenter'">{{link.description}}</div>
+                                            </div>
+                                            <div class="col-md-1 col-sm-1">
+                                                <i class="clickable glyphicon glyphicon-remove-sign pull-right"
+                                                   ng-click="removeLink($index)">
+                                                </i>
+                                            </div>
+                                        </div>
+
+
+                                    </li>
+
+
+
+                                </ul>
+
+
+
+
+
+
+
+
+                        <div class="row">
+                            <div class="col-sm-10 col-md-10">
+                            </div>
+                            <div class="col-sm-1 col-md-1">
+                                <i class="clickable glyphicon glyphicon-plus-sign pull-right"
+                                   title="Add link" ng-click="addLink(input.link)">
+                                </i>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <br/>
+
+
+
+                <div class="row">
+                    <div class="col-md-3 col-sm-3">
                         Resources used
                     </div>
 
@@ -80,7 +140,7 @@
                         </ul>
                         <select ng-model="input.resource" class="form-control"
                                 ng-change="addType(input.resource)"
-                                ng-options ="type.name for type in allResourceTypes"></select>
+                                ng-options = "type.name for type in allResourceTypes"></select>
                     </div>
                 </div>
 
@@ -185,61 +245,18 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-1 col-sm-1">
-                Links
-            </div>
-
-            <div class="col-md-10 col-sm-10">
-                <ul class="list-unstyled">
-                    <li ng-repeat="link in scenario.links">
-                        <div class="row">
-                            <div class="col-md-11 col-sm-11">
-                                {{link.url}}
-                            </div>
-                            <div class="col-md-1 col-sm-1">
-                                <i class="clickable glyphicon glyphicon-remove-sign pull-right"
-                                   title="Add link" ng-click="removeLink($index)">
-                                </i>
-                            </div>
-                        </div>
 
 
-                    </li>
-                </ul>
-
-
-                <div class="row">
-                    <div class="col-sm-11 col-md-11">
-                        <input class="form-control" ng-model="input.link"
-                               placeholder="Full url (including http://.. to the link"/>
-                    </div>
-                    <div class="col-sm-1 col-md-1">
-                        <i class="clickable glyphicon glyphicon-plus-sign pull-right"
-                           title="Add link" ng-click="addLink(input.link)">
-                        </i>
-                    </div>
-                </div>
-
-
-
-            </div>
-        </div>
         <br/>
 
-        <!-- precondition success -->
-<!--
-        <div class="row">
-            <div class="col-md-6 col-sm-6">
 
-            </div>
-            <div class="col-md-6 col-sm-6">
-                <button class="btn btn-primary pull-right" ng-click="updateScenario()">Update</button>
-            </div>
-        </div>
+
+
+
+
+
     </div>
 
-    -->
     <div class="modal-header">
         <div class="row">
             <div class="col-md-12 col-sm-12">

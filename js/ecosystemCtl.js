@@ -210,10 +210,13 @@ angular.module("sampleApp")
                 );
             };
 
-            $scope.refresh = function(){
+            $scope.refresh = function(hideMessage){
                 loadData(function(){
-                    var msg = "Data has been refreshed."
-                    modalService.showModal({}, {bodyText:msg})
+                    if (!hideMessage) {
+                        var msg = "Data has been refreshed."
+                        modalService.showModal({}, {bodyText:msg})
+                    }
+
 
 
                     //redraw charts (will handle nulls)
@@ -251,13 +254,12 @@ angular.module("sampleApp")
 
 
             $scope.canShowPerson = function(person,filter) {
-
                 var name = person.name;
                 if (name) {
                     var org = person.organization;
                     var regex = new RegExp(filter, "i");
 
-                    if (name.search(regex) >-1 || org.search(regex) >-1) {
+                    if ((name && name.search(regex) >-1) || (org && org.search(regex) >-1)) {
                         return true;
                     } else {
                         return false;
@@ -265,8 +267,6 @@ angular.module("sampleApp")
                 } else {
                     return false;
                 }
-
-
             };
 
             $scope.wikiPageUrl = "http://wiki.hl7.org/index.php?title=FHIR_Connectathon_17";
@@ -284,11 +284,11 @@ angular.module("sampleApp")
 
             $scope.selectServerWithServerRole = function(server) {
                 $scope.selectedServer = server;
-            }
+            };
 
             $scope.selectScenarioDirect = function (scenario) {
                 $scope.selectedScenarioDirect = scenario;
-            }
+            };
 
             $scope.editPerson = function(person) {
                 $uibModal.open({
@@ -311,10 +311,10 @@ angular.module("sampleApp")
 
             $scope.addTrack = function(){
                 var track = {id: 'id'+new Date().getTime(),name:'New Track',roles:[],scenarioIds:[]};
-                $scope.editTrack(track);
+                $scope.editTrack(track,true);
             };
 
-            $scope.editTrack = function(track) {
+            $scope.editTrack = function(track,isNew) {
                 $uibModal.open({
                     templateUrl: 'modalTemplates/editTrack.html',
                     size: 'lg',
@@ -322,24 +322,34 @@ angular.module("sampleApp")
                     resolve : {
                         track: function () {          //the default config
                             return track; //$scope.selectedTrack;
+                        },
+                        allPersons : function() {
+                            return $scope.allPersons;
                         }
                     }
                 }).result.then(function(vo){
-                    var url = "/config/track"
-                    var clone = angular.copy($scope.selectedTrack);
+                    var url = "/config/track";
+                    var clone = angular.copy(vo.track);
                     delete clone._id;
                     delete clone.scenarios;
+                    delete clone.leads;
                     $http.post(url,clone).then(
                         function(){
+                            if (isNew) {
+                                $scope.refresh()
+                            }
+
+                            if (clone.status == 'deleted') {
+                                $scope.refresh();
+                            }
 
                         },function(err) {
                             alert('error: '+ angular.toJson(err))
                         }
                     )
 
-                    //ecosystemSvc.addScenarioResult(track,scenario,client,server,vo)
                 });
-            }
+            };
 
 
             $scope.removeServerFromScenario = function (scenario,server) {

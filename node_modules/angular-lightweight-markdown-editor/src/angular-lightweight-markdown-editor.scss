@@ -1,0 +1,93 @@
+$main-background: #f8f8f8;
+$editor-background: #fff;
+
+@import "fonts.scss";
+
+markdown-editor {
+    display: block;
+}
+
+.markdown-editor {
+    &__actions {
+        display: flex;
+        list-style-type: none;
+        margin: 0;
+        padding: 4px;
+
+        > li {
+            display: block;
+            margin: 0;
+            color: #666;
+            cursor: pointer;
+            box-shadow: 0px 0.5px 0.5px rgba(0,0,0,0.4);
+            user-select: none;
+            height: 20px;
+            width: 20px;
+            padding: 5px;
+            line-height: 20px;
+            text-align: center;
+            background: rgba(255,255,255,0.6);
+
+            &:hover {
+                box-shadow: 0px 0px 0.5px rgba(0,0,0,0.4), inset 0px 0px 1px rgba(0,0,0,0.2);
+            }
+
+            &:active {
+                background: rgba(255,255,255,0.8);
+            }
+
+            &.enabled {
+                background: rgba(255,255,255,0.6);
+            }
+
+            &.separator {
+                box-shadow: none;
+                background: none;
+                width: 10px;
+            }
+
+            &.preview {
+                width: auto;
+                font-size: 12px;
+                text-transform: uppercase;
+                font-family: sans-serif;
+            }
+
+            i::before {
+                line-height: 20px;
+                font-size: 12px;
+            }
+        }
+    }
+
+    &__editorarea {
+        display: flex;
+
+        & > div {
+            width: 50%;
+            box-sizing: border-box;
+
+            &.nopreview {
+                width: 100%;
+            }
+        }
+
+        &__preview {
+            padding: 20px;
+        }
+
+        textarea {
+            padding: 4px;
+            width: 100%;
+            min-height: 200px;
+            border: none;
+            background: $editor-background;
+            resize: vertical;
+            font-size: 14px;
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}

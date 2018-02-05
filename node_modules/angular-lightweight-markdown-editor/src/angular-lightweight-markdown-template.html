@@ -1,0 +1,35 @@
+<div class="markdown-editor">
+    <ul class="markdown-editor__actions">
+        <li
+            ng-repeat="control in markdownEditorCtrl.options.controls track by $index"
+            ng-click="markdownEditorCtrl.action(control)"
+            ng-class="{separator: control == 'separator'}"
+            ng-if="control != 'preview'"
+            >
+            <i
+                ng-if="control != 'separator'"
+                class="{{markdownEditorCtrl.icons[control]}}"
+                ></i>
+        </li>
+        <li
+            ng-if="markdownEditorCtrl.options.controls.indexOf('preview') > -1"
+            ng-click="markdownEditorCtrl.preview = !markdownEditorCtrl.preview"
+            ng-show="markdownEditorCtrl.showdownEnabled"
+            ng-class="{enabled: markdownEditorCtrl.preview}"
+            class="preview"
+            >
+            {{markdownEditorCtrl.translations.textPreview}}
+        </li>
+    </ul>
+    <div class="markdown-editor__editorarea">
+        <div ng-class="{nopreview: !markdownEditorCtrl.preview}">
+            <textarea ng-model="markdownEditorCtrl.ngModel"></textarea>
+        </div>
+        <div
+            class="markdown-editor__editorarea__preview"
+            ng-if="markdownEditorCtrl.showdownEnabled"
+            ng-show="markdownEditorCtrl.preview"
+            ng-bind-html="markdownEditorCtrl.getHTML()">
+        </div>
+    </div>
+</div>
