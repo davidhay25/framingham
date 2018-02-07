@@ -25,7 +25,7 @@ angular.module("sampleApp")
                     })
 
                 }
-            )
+            );
 
 
             //load the library. Hard code to hapi for now...
@@ -60,22 +60,16 @@ angular.module("sampleApp")
                 }
             );
 
-
-
-
             //the name of the connectathon, the serverRoles & stuff like that...
             $http.get("config/admin/").then(
                 function(data) {
-
                     if (data.data) {
                         $scope.eventConfig = data.data[0];
-
-                        if ($scope.eventConfig.navBarStyle) {
-                            $scope.navBarStyle = $scope.eventConfig.navBarStyle;
+                        if ($scope.eventConfig) {
+                            if ($scope.eventConfig.navBarStyle) {
+                                $scope.navBarStyle = $scope.eventConfig.navBarStyle;
+                            }
                         }
-
-
-
                         ecosystemSvc.setEventConfig(data.data[0]);
                     }
                 }

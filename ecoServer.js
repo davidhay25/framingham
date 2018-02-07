@@ -74,7 +74,6 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
             }
         });
 
-
         db.collection("scenario").find({}).toArray(function(err,result){
             if (err) {
                 console.log('Unable to load the scenarios!')
@@ -84,8 +83,6 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
                 })
             }
         })
-
-
     }
 });
 
@@ -561,6 +558,20 @@ app.post('/addScenarioToTrack/:track',function(req,res){
     })
 });
 
+
+//this is just testing espruino stuff...
+app.post('/espruino',function(req,res){
+    var client = req.body;
+    console.log(client)
+    db.collection("espruino").insert(client,{upsert:true},function(err,result){
+        // db.collection("client").insert(req.body,function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
 
 
 //to serve up the static web pages - particularly the login page if no page is specified...
