@@ -561,9 +561,10 @@ app.post('/addScenarioToTrack/:track',function(req,res){
 
 //this is just testing espruino stuff...
 app.post('/espruino',function(req,res){
-    var client = req.body;
-    console.log(client)
-    db.collection("espruino").insert(client,{upsert:true},function(err,result){
+    var data = req.body;
+    data.date = new Date();
+    console.log(data)
+    db.collection("espruino").insert(data,function(err,result){
         // db.collection("client").insert(req.body,function(err,result){
         if (err) {
             res.send(err,500)
