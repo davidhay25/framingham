@@ -666,7 +666,7 @@ app.post('/addScenarioToTrack/:track',function(req,res){
         if (err) {
             res.send(err,500)
         } else {
-            db.collection('track').update({id:trackId},{$addToSet:{scenarioIds:scenario.id}},function(err,result){
+            req.selectedDbCon.collection('track').update({id:trackId},{$addToSet:{scenarioIds:scenario.id}},function(err,result){
                 if (err) {
                     res.send(err,500)
                 } else {
@@ -677,7 +677,7 @@ app.post('/addScenarioToTrack/:track',function(req,res){
     })
 });
 
-
+/*
 //this is just testing espruino stuff...
 app.post('/espruino',function(req,res){
     var data = req.body;
@@ -693,7 +693,7 @@ app.post('/espruino',function(req,res){
     })
 });
 
-
+*/
 //to serve up the static web pages - particularly the login page if no page is specified...
 app.use('/', express.static(__dirname,{index:'/connectathonMain.html'}));
 

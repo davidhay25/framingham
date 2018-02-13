@@ -170,10 +170,6 @@ angular.module("sampleApp")
                                 //now, add the new scenario to the track and update
                                 $scope.selectedTrack.scenarios.push(scenario);
 
-
-
-
-
                                 //alert('scenario added to track')
                             }, function(err) {
                                 console.log(err)
