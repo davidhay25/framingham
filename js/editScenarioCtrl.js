@@ -4,7 +4,17 @@ angular.module("sampleApp")
 
             $scope.scenario = scenario;
             $scope.library = library;
-            $scope.input = {};
+            $scope.input = {roles:{}};
+
+            if (scenario && scenario.roleIds) {
+                scenario.roleIds.forEach(function (id) {
+                    console.log(id)
+                    $scope.input.roles[id] = true;
+                })
+            }
+
+            $scope.allRoles = ecosystemSvc.getAllRoles();
+            console.log($scope.allRoles)
 
             if (scenario && library && scenario.cfScenario) {
                 for (var i=0; i<library.length;i++) {
@@ -98,6 +108,15 @@ angular.module("sampleApp")
                     alert("The scenario name is required.")
                     return;
                 }
+
+                scenario.roleIds = [];
+                $scope.allRoles.forEach(function (role) {
+                    if ($scope.input.roles[role.id]) {
+                        scenario.roleIds.push(role.id)
+                    }
+                })
+
+
                 $scope.$close(scenario)
             };
 

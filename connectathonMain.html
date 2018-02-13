@@ -26,7 +26,7 @@
     <script src="js/libs/angular-chart.js"></script>
 
     <script>
-        angular.module("sampleApp",['ui.bootstrap','ngSanitize','ngStorage','chart.js',"angular-lightweight-markdown-editor"]).
+        angular.module("sampleApp",[,'ui.checkbox','ui.bootstrap','ngSanitize','ngStorage','chart.js',"angular-lightweight-markdown-editor"]).
         config(function($locationProvider) {
             $locationProvider.hashPrefix('!');
         });
@@ -147,7 +147,8 @@
     <script src="js/editTrackCtrl.js"></script>
     <script src="js/filters.js"></script>
     <script src="js/editScenarioCtrl.js"></script>
-
+    <script src="js/loginCtrl.js"></script>
+    <script src="js/libs/angular-bootstrap-checkbox.js"></script>
     <script src="js/libs/vis.min.js"></script>
 
 </head>
@@ -168,8 +169,8 @@
                 <div class="navbar-text">
                     <div class="row">
                         <div class="col-md-10 col-sm-10">
-                            <input type="text" ng-model="input.currentUser"
-                                   placeholder="Enter current user"
+                            <input type="text" readonly="readonly" ng-model="input.currentUser"
+                                   placeholder="No current user"
                                    typeahead-on-select = "userSelected($item, $model, $label, $event)"
                                    uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control"/>
 
@@ -178,6 +179,10 @@
                             <i class="glyphicon glyphicon-remove-sign"
                                ng-show = "input.currentUser"
                                style="padding-top: 8px"
+                               uib-popover="Log out"
+                               popover-placement="right"
+
+                               popover-trigger="'mouseenter'"
                                title="Clear user" ng-click="clearUser()">
                             </i>
                         </div>
@@ -186,7 +191,7 @@
                 </div>
             </div>
             <div class="col-md-2 col-sm-2">
-                <div class="navbar-text">
+                <div class="navbar-text pull-right">
                     <div class="pull-right">
                         <div ng-show="library">*</div>
                     </div>
@@ -194,8 +199,6 @@
 
                 </div>
             </div>
-
-
 
         </div>
     </nav>

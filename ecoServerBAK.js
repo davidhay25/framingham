@@ -8,18 +8,19 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var hashDataBases = {};         //hash for all connected databases
 
-//the known databases (or events)
-var dbKeys = [];
-dbKeys.push({key:'cof',display:'Clinicians On Fhir'});
-dbKeys.push({key:'connectathon',display:'Technical connectathon, New Orleans Jan 2018'});
-
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";     //allow self signed certificates
-useSSL = false;
 
-
+var dbName = 'connectathon';    //default database name...
 
 //  *************** temp for COF !!!
 var dbName = 'cof';    //default database name...
+
+/* disable as will be running under pm2, which will trap errors and give a better message...
+process.on('uncaughtException', function(err) {
+    console.log('>>>>>>>>>>>>>>> Caught exception: ' + err);
+});
+*/
+
 
 //the default port. This can be overwritten when the server is executed or from the IDE.
 var port = process.env.port;
@@ -27,7 +28,7 @@ if (! port) {
     port=4000; //8443;
 }
 
-/*
+
 
 //look for command line parameters...
 process.argv.forEach(function (val, index, array) {
@@ -48,15 +49,17 @@ process.argv.forEach(function (val, index, array) {
     }
 });
 
-*/
 var hashScenario = {};      //a hash of all the scenarios...
 var hashTrack = {};         //a hash of all the tracks
-//var db;
+var db;
+
 
 //http://mongodb.github.io/node-mongodb-native/3.0/quick-start/quick-start/
 const MongoClient = require('mongodb').MongoClient;
 
-//connect to the server and populate the list of databases (each db is a connectathon event)
+
+
+
 MongoClient.connect('mongodb://localhost:27017', function(err, client) {
     if(err) {
         console.log(err);
@@ -64,23 +67,15 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
     } else {
         console.log("Connected successfully to local server, dataBase="+dbName);
         //db = client.db('connectathon');
-       // db = client.db(dbName);
-
-        //all the different databases on this server...
-        dbKeys.forEach(function(item){
-            hashDataBases[item.key] = client.db(item.key);
-        })
+        db = client.db(dbName);
 
 
-        //hashDataBases['connectathon'] = client.db('connectathon');
+        hashDataBases['cof'] = client.db('cof');
+        hashDataBases['connectathon'] = client.db('connectathon');
 
-        //console.log(hashDataBases);
+        console.log(hashDataBases);
 
         //at server startup, read all the scenarios. We need this when creating the TestReport resource. it is neverupdated (at the moment)
-
-        /* todo - move this to another place
-
-        TODO DON'T DELETE UNTIL THAT HAS BEEN DONE
 
         db.collection("track").find({}).toArray(function(err,result){
             if (err) {
@@ -101,23 +96,16 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
                 })
             }
         })
-
-
-        */
-
     }
 });
+
 
 var app = express();
 app.use(bodyParser.json())
 
-//initialize the session...
-app.use(session({
-    secret: 'conManRules-OK?',
-    resave: true,
-    saveUninitialized: true,
-    cookie: { secure: false }   // secure cookins needs ssl...
-}));
+
+
+useSSL = false;
 
 if (useSSL) {
     //https://aghassi.github.io/ssl-using-express-4/
@@ -128,7 +116,7 @@ if (useSSL) {
         passphrase:'ne11ieh@y'
     };
     https.createServer(sslOptions, app).listen(8443)
-    console.log('server listening via TLS on port 8443');
+    console.log('server listening via TLS on port ' + port);
 } else {
     var http = require('http');
     http.createServer(app).listen(port)
@@ -138,34 +126,6 @@ if (useSSL) {
 //check the db connection on every request - may be redundant...
 app.use(function (req, res, next) {
 
-    //allow html and js files to be returned - todo - these files should all be in a 'public' folder -
-    var url = req.url;
-    if (url.indexOf('.html') > -1 || url.indexOf('.js') > -1 ||
-        url.indexOf('.css') > -1 || url.indexOf('/public/') > -1 || url.indexOf('/artifacts/') > -1|| url.indexOf('/fonts/') > -1){
-
-        next();
-
-    } else {
-        var config = req.session['config'];         //the configuration for this user
-
-        if (config && config.key) {
-            //there is a config and a key - this user
-            var db = hashDataBases[config.key];     //the database connection
-            if (db) {
-                req.selectedDbCon = db;
-                next()
-            } else {
-                res.status(404).send({msg:'Invalid database key:'+config.key})
-            }
-        } else {
-            //if there's no config, that means the user hasn't logged in...
-            res.send(dbKeys,401)    //return a list of the known events (keys)
-        }
-    }
-
-
-
-/*
     if (!db) {
         res.send({err:'Database could not be connected to. It may not be running...'},500)
     } else {
@@ -188,19 +148,14 @@ app.use(function (req, res, next) {
         }
     }
 
-    */
-
 });
-
-app.get('/public/logout',function(req,res){
-    res.json(dbKeys);
-})
 
 var showLog = false;         //for debugging...
 
 
 var bodyParser = require('body-parser')
 bodyParser.json();
+
 
 function recordAccess(req,data,cb) {
 
@@ -209,7 +164,7 @@ function recordAccess(req,data,cb) {
         req.socket.remoteAddress ||
         req.connection.socket.remoteAddress;
 
-    if (req.selectedDbCon) {
+    if (db) {
         var audit = {ip:clientIp,date:new Date()};      //note date is UTC
 
         audit.data = data;
@@ -229,7 +184,7 @@ function recordAccess(req,data,cb) {
                     audit.country = loc.country_name;   //to make querying simpler
                     audit.region = loc.region_name;     //to make querying simpler
 
-                    req.selectedDbCon.collection("accessAudit").insert(audit, function (err, result) {
+                    db.collection("accessAudit").insert(audit, function (err, result) {
                         if (err) {
                             console.log('Error logging access ',audit);
                             cb(err);
@@ -252,80 +207,12 @@ function recordAccess(req,data,cb) {
 
 //====== access
 
-//return all the users for a given database. Used when logging in to an event
-app.get('/public/getUsers/:key',function(req,res){
-    var key = req.params.key;
-    if (hashDataBases[key]) {
-        //we have established a connection to the given database
-        hashDataBases[key].collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
-            if (err) {
-                res.send(err,500)
-            } else {
-                req.session['config'] = {key:key};      //record the database key in the session
-                res.send(result)
-            }
-        })
-
-    } else {
-        //this is an unknown database
-        res.send({msg:'unknown database:'+key},404)
-    }
-});
-
-function getDbConnectionDEP(req) {
-    //return the database connection object based on the current user session
-    var config = req.session['config'];
-    if (config) {
-        return hashDataBases[config.key]
-    }
-}
-
-
-//login to an event
-app.post('/public/login',function(req,res){
-
-    var body = req.body;
-    console.log(body);
-    if (body) {
-        //the userid and database key were sent in - ie the client is wanting to initialize the session from browser storage
-        session['config'] = body;
-
-
-    }
-    /*else {
-        var config = session['config'];
-        if (!config) {
-            res.send({msg:'Session has not been initialized'},404)
-        } else {
-            //
-            var body = req.body;
-            var userId = body.userId;
-            var pw = body.password;
-            var key = config.key;
-            //find the user
-
-            var user = hashDataBases[key].collection("person").findOne({id:userId});
-            if (! user) {
-                res.send(err, 500)
-            } else {
-                session['config'] = {key: key};      //record the database key in the session
-                res.send(user)
-
-            }
-        }
-    }*/
-
-
-
-
-});
-
 
 //get all access records. todo This could become an AuditEvent in the future...
 //a new record each time the app is loaded...
 app.get('/accessAudit',function(req,res){
     //todo - need filtering options...
-    req.selectedDbCon.collection("accessAudit").find({}).toArray(function(err,result){
+    db.collection("accessAudit").find({}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -399,11 +286,16 @@ app.post('/proxyfhir/*',function(req,res) {
     })
 });
 
+
+
+
+
+
 //================================ clients =======================
 //get all clients
 app.get('/client',function(req,res){
     // db.collection("client").find({}).sort( { name: 1 }).toArray(function(err,result){
-    req.selectedDbCon.collection("client").find({}).toArray(function(err,result){
+    db.collection("client").find({}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -415,7 +307,7 @@ app.get('/client',function(req,res){
 //add/update a single client
 app.post('/client',function(req,res){
     var client = req.body
-    req.selectedDbCon.collection("client").update({id:client.id},client,{upsert:true},function(err,result){
+    db.collection("client").update({id:client.id},client,{upsert:true},function(err,result){
    // db.collection("client").insert(req.body,function(err,result){
         if (err) {
             res.send(err,500)
@@ -429,7 +321,7 @@ app.post('/client',function(req,res){
 //get all servers
 app.get('/server',function(req,res){
 
-    req.selectedDbCon.collection("server").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
+    db.collection("server").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -442,7 +334,7 @@ app.get('/server',function(req,res){
 app.post('/server',function(req,res){
 
     var server = req.body;
-    req.selectedDbCon.collection("server").update({id:server.id},server,{upsert:true},function(err,result){
+    db.collection("server").update({id:server.id},server,{upsert:true},function(err,result){
 
    // db.collection("server").insert(req.body,function(err,result){
         if (err) {
@@ -457,7 +349,7 @@ app.post('/server',function(req,res){
 //============================== results ===============
 //get all results
 app.get('/result',function(req,res){
-    req.selectedDbCon.collection("result").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
+    db.collection("result").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -471,7 +363,7 @@ app.delete('/result/:id',function(req,res){
 
     var id = req.params.id;       //the id of the result to delete
     console.log(id)
-    req.selectedDbCon.collection("result").update({id:id},{$set: {status:'deleted'}},function(err,result){
+    db.collection("result").update({id:id},{$set: {status:'deleted'}},function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -488,7 +380,7 @@ app.delete('/result/:id',function(req,res){
 //why is TestScript required?
 
 app.get('/fhir/TestReport',function(req,res){
-    req.selectedDbCon.collection("result").find({}).toArray(function(err,result){
+    db.collection("result").find({}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -568,7 +460,7 @@ app.get('/fhir/TestReport',function(req,res){
 app.put('/result',function(req,res){
     var result = req.body;
     result.issued = new Date();
-    req.selectedDbCon.collection("result").update({id:result.id},result,{upsert:true},function(err,result){
+    db.collection("result").update({id:result.id},result,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -580,7 +472,7 @@ app.put('/result',function(req,res){
 //============================= links ==============
 //get all links
 app.get('/link',function(req,res){
-    req.selectedDbCon.collection("link").find({active:true}).toArray(function(err,result){
+    db.collection("link").find({active:true}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -593,7 +485,7 @@ app.get('/link',function(req,res){
 app.post('/link',function(req,res){
     var link = req.body;
     delete link._id;
-    req.selectedDbCon.collection("link").update({id:link.id},link,{upsert:true},function(err,result){
+    db.collection("link").update({id:link.id},link,{upsert:true},function(err,result){
     //db.collection("link").insert(req.body,function(err,result){
         if (err) {
             res.status(500).send(err)
@@ -607,7 +499,7 @@ app.post('/link',function(req,res){
 //get all people
 app.get('/person',function(req,res){
     //db.collection("person").find({}).sort( { name: 1 }).collation({locale:'en',strength:2}).toArray(function(err,result){
-    req.selectedDbCon.collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
+    db.collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -620,7 +512,7 @@ app.get('/person',function(req,res){
 app.post('/person',function(req,res){
     var person = req.body;
     delete person._id;
-    req.selectedDbCon.collection("person").update({id:person.id},person,{upsert:true},function(err,result){
+    db.collection("person").update({id:person.id},person,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -631,9 +523,12 @@ app.post('/person',function(req,res){
 
 //=============== config items tracks, scenarios, roles
 
+
 app.get('/config/:type',function(req,res){
+
     var type = req.params.type;
-    req.selectedDbCon.collection(type).find({status : {$ne : 'deleted' }}).toArray(function(err,result){
+
+    db.collection(type).find({status : {$ne : 'deleted' }}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -642,27 +537,26 @@ app.get('/config/:type',function(req,res){
     })
 });
 
-
-//todo - the uploaded won;t work no more....
 app.post('/config/:type',function(req,res){
     var item = req.body;
     var type = req.params.type;
-    req.selectedDbCon.collection(type).update({id:item.id},item,{upsert:true},function(err,result){
+
+    db.collection(type).update({id:item.id},item,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)
         } else {
             res.send(result)
         }
     })
-
 });
+
 
 app.post('/addScenarioToTrack/:track',function(req,res){
     var scenario = req.body;
     var trackId = req.params.track;
 
     //first add the scenario...
-    req.selectedDbCon.collection('scenario').update({id:scenario.id},scenario,{upsert:true},function(err,result){
+    db.collection('scenario').update({id:scenario.id},scenario,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)
         } else {

@@ -1,0 +1,78 @@
+<div>
+
+
+    <div class="modal-header">
+
+        <div class="row">
+            <div class="col-md-8 col-sm-8">
+                <h3 class="modal-title">Login</h3>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div class="pull-right">
+                    <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-2 col-sm-2">
+                Event
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <select class="form-control" ng-model='input.item' ng-options="item as item.display for item in keys"
+                    ng-change = "dbSelected(input.item)">
+
+                </select>
+            </div>
+        </div>
+        <br/>
+
+        <div class="row" ng-show="item && !newPerson">
+            <div class="col-md-2 col-sm-2">
+                <span ng-hide="input.newPerson">Existing User</span>
+                <span ng-show="input.newPerson">New User</span>
+            </div>
+
+            <div class="col-md-8 col-sm-8">
+                <input type="text" ng-model="input.person" ng-hide="input.newPerson"
+                       placeholder="Enter part of the name, I will auto-complete..."
+                       typeahead-on-select = "personSelected($item, $model, $label, $event)"
+                       typeahead-editable = 'false'
+                       uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control"/>
+
+                <div ng-show="input.newPerson">
+                    <input class="form-control" placeholder="Enter new persons name" type="text" ng-model="input.newPersonName"/>
+                </div>
+
+                <div>
+                    <button class="btn btn-link pull-right" ng-click="addPerson(true)" ng-hide="input.newPerson">
+                        Add new person
+                    </button>
+                    <button class="btn btn-link pull-right" ng-click="addPerson(false)" ng-show="input.newPerson">
+                        Select existing person
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+        <br/>
+
+    </div>
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+
+                <button ng-show="person || (input.newPersonName )" class="btn btn-primary pull-right"
+                        ng-click="login()">Login</button>
+
+            </div>
+
+        </div>
+    </div>
+</div>

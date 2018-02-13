@@ -4,9 +4,11 @@ angular.module("sampleApp")
 
             $scope.currentUser = ecosystemSvc.getCurrentUser();
             $scope.allPersons = allPersons;
-            $scope.input = {};
+            $scope.input = {roles:{}};
             $scope.clone = {};
 
+
+            console.log($scope.allRoles)
             //$scope.mdOptions = {iconlibrary:'glyph'}
 
             $scope.canSave = true;
@@ -14,7 +16,7 @@ angular.module("sampleApp")
             if (track) {
                 $scope.clone = angular.copy(track)
                 $scope.track = track;
-                if (track.leadIds && track.leadIds.length > 0) {
+                if (track.leadIds && track.leadIds.length > 0 && $scope.currentUser) {
                     if (track.leadIds[0] !== $scope.currentUser.id) {
                         $scope.canSave = false;
                     }

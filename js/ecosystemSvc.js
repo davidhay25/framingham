@@ -128,6 +128,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     var allServers = [];
     var allClients = [];
     var allPersons = [];
+    var allRoles = [];
     var hashAllPersons = {};
     var eventConfig = {};
     var serverRoleSummary;
@@ -172,6 +173,9 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
 
     return {
+        getAllRoles : function() {
+            return allRoles;
+        },
         allResultsCount : function() {
             return Object.keys(allResults).length;
         },
@@ -240,15 +244,31 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         getEventConfig : function() {
             return eventConfig;
         },
-        setCurrentUser : function(user) {
+        setCurrentUserAndDb : function(vo){
+            if (vo) {
+                $localStorage.ecoCurrentUserAndDb = vo;
+            } else {
+                delete $localStorage.ecoCurrentUserAndDb;
+            }
+
+        },
+        setCurrentUserDEP : function(user) {
             $localStorage.ecoCurrentUser = user;
-            //currentUser = user
         },
         getCurrentUser : function () {
-            return $localStorage.ecoCurrentUser;
+            if ($localStorage.ecoCurrentUserAndDb) {
+                return $localStorage.ecoCurrentUserAndDb.person;
+            }
         },
+        getCurrentUserAndDb : function () {
+            //if ($localStorage.ecoCurrentUserAndDb) {
+                return $localStorage.ecoCurrentUserAndDb;
+            //}
+
+        },
+
         clearCurrentUser : function(){
-            delete $localStorage.ecoCurrentUser;
+            delete $localStorage.ecoCurrentUserAndDb;
         },
         updatePerson : function(person) {
             var deferred = $q.defer();
@@ -284,6 +304,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             return deferred.promise;
         },
 
+        //get the summary for a single person
         getPersonSummary : function(person,tracks) {
             var personid = person.id;
             var summary = {results:[],clients:[],servers:[],scenarios:[],person:person};
@@ -998,6 +1019,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         getConnectathonResources : function() {
             //get scenarios
             var deferred = $q.defer();
+
             var urls = []
             //urls.push({url:'artifacts/scenarios.json?_dummy='+new Date(),"name":"scenarios"});
             //urls.push({url:'artifacts/roles.json',"name":"roles"});
@@ -1038,9 +1060,10 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             $q.all(queries).then(
                 function(data) {
 
+                    //all scoped to the service...
                     allClients.length = 0;
                     allServers.length = 0;
-
+                    allRoles.length = 0;
                     allPersons = vo.persons;    //scoped to service
                     ciSort(allPersons,'name');
 
@@ -1100,9 +1123,11 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     });
 
                     //link scenarios to tracks
-
-
                     var hashRole = {};
+
+
+                    allRoles = vo.roles;
+                    console.log(allRoles,vo.roles)
                     vo.roles.forEach(function (role) {
                         hashRole[role.id] = role
                     });
@@ -1114,8 +1139,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                     vo.tracks.forEach(function (track) {
                         track.scenarios = track.scenarios || [];
-                        track.roles = track.roles || [];
-                        track.leads = track.leads || [];
+                        track.roles = []; //track.roles || [];
+                        track.leads = []; // track.leads || [];
                         if (track.leadIds) {
                             track.leadIds.forEach(function (id) {
                                 var person = hashPerson[id];
@@ -1138,9 +1163,11 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                             var role = hashRole[id];
                                             if (role) {
                                                 scenario.roles.push(role);
+
                                                 if (track.roles.indexOf(role) == -1) {
                                                     track.roles.push(role);
                                                 }
+
                                             } else {
                                                 console.log(" role id:" + id + " missing from track: "+ track.id +  " scenario id: "+ scenario.id )
                                             }
@@ -1348,7 +1375,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             );
             return deferred.promise
         },
-        getAllRoles : function(){
+
+        getAllRolesDEP : function(){
 
             //return a codesystem resource with the role definitions
             var deferred = $q.defer();

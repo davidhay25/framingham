@@ -8,7 +8,6 @@ angular.module("sampleApp")
 
             Chart.defaults.global.colors = ['#00cc00','#cc3300','#ffff99','#6E94FF']; //for the stacked bar chart...
 
-
             $http.post("/startup",{})  //record access
 
             $http.get('/artifacts/allResources.json').then(
@@ -24,10 +23,12 @@ angular.module("sampleApp")
                         }
                     })
 
+                },function(err) {
+                    console.log(err)
                 }
             );
 
-
+/*
             //load the library. Hard code to hapi for now...
             var url = 'http://fhirtest.uhn.ca/baseDstu3/DocumentReference?type=http://clinfhir.com/docs|builderDoc';
             console.log(url)
@@ -60,6 +61,64 @@ angular.module("sampleApp")
                 }
             );
 
+            */
+
+
+            //get the current user and db (if any)
+            var currentState = ecosystemSvc.getCurrentUserAndDb();
+            console.log(currentState)
+            if (currentState) {
+                //so there's already a current user & db set in the browser cache. Set the server session & init
+
+            } else {
+                //so no details in the browser cache - time to login
+                $http.get('/public/logout').then(       //retrieves the current connectathon events...
+                    function(data) {
+                        console.log(data.data)
+                        login({data:data.data});
+                    }
+                );
+            }
+
+            //login is called when there is no configured user. the call GET config/admin/ will return a list of connectathon events...
+            function login(err){
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/login.html',
+                    controller: 'loginCtrl',
+                    resolve : {
+                        keys: function(){
+                            //
+                            return err.data;
+                        }
+                    }
+                }).result.then(function(vo){
+                    //the person has logged in and selected a database. The database key is set in the session on teh server
+                   if (vo.newPerson) {
+                       ecosystemSvc.updatePerson(vo.newPerson).then(
+                           function(data) {
+                               ecosystemSvc.setCurrentUserAndDb({event:vo.event,person:vo.newPerson});
+                               $scope.input.currentUser = vo.newPerson;
+                               loadData();
+                           }, function(err) {
+                               alert('Error saving person: '+ angular.toJson(err));
+                           }
+                       )
+
+                   } else {
+                       var person = vo.person;
+                       ecosystemSvc.setCurrentUserAndDb(vo);
+                       $scope.input.currentUser = person;
+                       var db = vo.item;
+                       loadData();
+                   }
+
+
+
+                });
+
+            }
+
+
             //the name of the connectathon, the serverRoles & stuff like that...
             $http.get("config/admin/").then(
                 function(data) {
@@ -71,9 +130,21 @@ angular.module("sampleApp")
                             }
                         }
                         ecosystemSvc.setEventConfig(data.data[0]);
+                        loadData();
+
                     }
+                },
+                function(err) {
+                    if (err.status = 410) {
+                        //this means the user has not logged in
+
+                       login(err)
+                    }
+                    console.log(err)
                 }
             );
+
+
 
             $scope.addScenario = function() {
 
@@ -93,13 +164,15 @@ angular.module("sampleApp")
                             }
                         }
                     }).result.then(function(scenario){
-
                         var url = "/addScenarioToTrack/"+$scope.selectedTrack.id;
-
                         $http.post(url,scenario).then(
                             function(data) {
                                 //now, add the new scenario to the track and update
                                 $scope.selectedTrack.scenarios.push(scenario);
+
+
+
+
 
                                 //alert('scenario added to track')
                             }, function(err) {
@@ -109,10 +182,6 @@ angular.module("sampleApp")
                         )
 
                     });
-
-
-
-
             };
 
             $scope.editScenario = function(scenario) {
@@ -137,6 +206,22 @@ angular.module("sampleApp")
                     $http.post(url,editedScenario).then(
                         function(data) {
                             //alert('scenario updated')
+
+                            //update all roles for the track - just for the display...
+                            updateRolesListInTrack($scope.selectedTrack);
+                            /*
+                            var hashRoles = {}
+                            $scope.selectedTrack.roles.length = 0;
+                            $scope.selectedTrack.scenarios.forEach(function (sc) {
+                                sc.roles.forEach(function (role) {
+                                    if (! hashRoles[role.id]) {
+                                        hashRoles[role.id] = role;
+                                        $scope.selectedTrack.roles.push(role)
+                                    }
+                                })
+                            })
+                            */
+
                         }, function(err) {
                             console.log(err)
                             alert('err: '+ angular.toJson(err))
@@ -144,11 +229,26 @@ angular.module("sampleApp")
                     )
 
                 });
+            };
+
+
+            //update the roles associated with a track, based on the scenario/roles link...
+            function updateRolesListInTrack(track) {
+                var hashRoles = {}
+                $scope.selectedTrack.roles.length = 0;
+                $scope.selectedTrack.scenarios.forEach(function (sc) {
+                    sc.roles.forEach(function (role) {
+                        if (! hashRoles[role.id]) {
+                            hashRoles[role.id] = role;
+                            $scope.selectedTrack.roles.push(role)
+                        }
+                    })
+                })
             }
 
 
             $scope.input.currentUser = ecosystemSvc.getCurrentUser();
-            $scope.userSelected = function(item){
+            $scope.userSelectedDEP = function(item){
                 $scope.input.currentUser = item;
                 ecosystemSvc.setCurrentUser(item)
             };
@@ -156,6 +256,16 @@ angular.module("sampleApp")
             $scope.clearUser = function(){
                 ecosystemSvc.clearCurrentUser();
                 delete $scope.input.currentUser
+
+                $http.get('/public/logout').then(
+                    function(data) {
+                        console.log(data.data)
+                        login({data:data.data});
+                    }
+                );
+
+                //
+
 
             };
 
@@ -244,7 +354,7 @@ angular.module("sampleApp")
                     }
                 );
             };
-            loadData();
+            //loadData();
 
 
             $scope.canShowPerson = function(person,filter) {
@@ -306,6 +416,7 @@ angular.module("sampleApp")
             $scope.addTrack = function(){
                 var track = {id: 'id'+new Date().getTime(),name:'New Track',roles:[],scenarioIds:[]};
                 $scope.editTrack(track,true);
+
             };
 
             $scope.editTrack = function(track,isNew) {
@@ -381,6 +492,10 @@ angular.module("sampleApp")
 
                 var summary = ecosystemSvc.getPersonSummary(person,$scope.tracks);
                 $scope.personSummary = summary;
+                $scope.input.currentUser = person;
+
+
+
 
             };
 
@@ -781,7 +896,7 @@ angular.module("sampleApp")
             };
 
             //========  previous functions =========
-
+/*
             $scope.addTag = function(ep) {
                 var tag = $window.prompt("enter tag")
                 if (tag) {
@@ -848,5 +963,7 @@ angular.module("sampleApp")
 
                 modalService.showModal({}, modalOptions);
             }
+
+            */
 
     });

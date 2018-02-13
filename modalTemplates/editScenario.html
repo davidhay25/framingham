@@ -220,6 +220,27 @@
                         <em>Enter the actual steps to complete the scenario</em>
                     </uib-tab>
 
+
+                    <uib-tab>
+                        <uib-tab-heading>
+                            Roles
+                            <!--<span class="badge">{{scenario.steps.length}}</span>-->
+                        </uib-tab-heading>
+                        <br/>
+                        <div ng-repeat = "role in allRoles">
+                            <div class="row">
+                                <div class="col-md-2 col-sm-2">
+                                    <checkbox ng-model="input.roles[role.id]"></checkbox>
+                                </div>
+                                <div class="col-md-10 col-sm-10">
+                                    {{role.name}}
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </uib-tab>
+
                     <uib-tab ng-show="selectedLibrary">
                         <uib-tab-heading>
                             clinFHIR scenario
