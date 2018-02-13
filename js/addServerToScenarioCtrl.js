@@ -11,18 +11,16 @@ angular.module("sampleApp")
 
             //only include roles that have no role (server, client) or where the role.role !== client
             $scope.roles = [];
-            scenario.roles.forEach(function (role) {
-                if (role.role && role.role == 'client') {
-                    //ignore
-                } else {
-                    $scope.roles.push(role)
-                }
+            if (scenario.roles) {
+                scenario.roles.forEach(function (role) {
+                    if (role.role && role.role == 'client') {
+                        //ignore
+                    } else {
+                        $scope.roles.push(role)
+                    }
 
-            });
-
-
-
-
+                });
+            }
 
             //$scope.dlgAllServers = allServers;
             $scope.dlgScenario = scenario;

@@ -24,7 +24,7 @@ var dbName = 'cof';    //default database name...
 //the default port. This can be overwritten when the server is executed or from the IDE.
 var port = process.env.port;
 if (! port) {
-    port=4000; //8443;
+    port=80; //8443;
 }
 
 /*
@@ -140,7 +140,8 @@ app.use(function (req, res, next) {
 
     //allow html and js files to be returned - todo - these files should all be in a 'public' folder -
     var url = req.url;
-    if (url.indexOf('.html') > -1 || url.indexOf('.js') > -1 ||
+    //console.log(url)
+    if (url.indexOf('.html') > -1 || url.indexOf('.js') > -1 || url == '/' ||
         url.indexOf('.css') > -1 || url.indexOf('/public/') > -1 || url.indexOf('/artifacts/') > -1|| url.indexOf('/fonts/') > -1){
 
         next();
