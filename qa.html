@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <base href="/" />
+    <meta charset="UTF-8">
+    <script src="js/libs/jquery-1.9.0.min.js"></script>
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/vis.min.css"/>
+
+    <script src="js/libs/moment.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+    <link rel="stylesheet" type="text/css" href="css/jsTreeStyle.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jsTreeThemes/proton/style.css"/>
+
+    <script src="js/libs/angular-sanitize.js"></script>
+
+    <script>
+        angular.module("sampleApp",['ui.bootstrap']).config(function($locationProvider) {
+
+            // enable html5Mode for pushstate ('#'-less URLs)  -- ,'ngStorage'
+            $locationProvider.html5Mode(true);
+            $locationProvider.hashPrefix('!');
+        });
+        angular.module("sampleApp").constant("moment", moment);
+
+    </script>
+
+
+    <script src="js/patientCtl.js"></script>
+    <script src="js/modalDialogSvc.js"></script>
+
+
+    <script src="js/filters.js"></script>
+
+    <script src="js/libs/vis.min.js"></script>
+
+
+
+        <title>ValueSet by resource</title>
+
+</head>
+
+
+<body style="padding-top: 80px">
+
+<div ng-app="sampleApp" ng-controller="qaCtrl" class="container-fluid">
+
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+        <div class="container-fluid">
+            <div class="col-md-3 col-sm-3">
+                <span class="navbar-brand" href="#">
+                    View ValueSet
+                </span>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+
+            </div>
+
+
+            <div class="col-md-1 col-sm-1">
+
+                <form class="navbar-form navbar-left">
+                    <img ng-show="waiting" src="css/ajax_loader_blue_32.gif"/>
+                </form>
+
+            </div>
+
+            <div class="col-md-1 col-sm-1">
+                <div class="navbar-text">
+
+                </div>
+            </div>
+
+
+            <div class="col-md-3 col-sm-3">
+
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+            <strong>Salary</strong>
+        </div>
+        <div class="col-sm-2 col-md-2">
+            <input type="number" min=0 class="form-control" ng-model="input.salary" ng-blur="update(input.salary)"/>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+            <strong>Salary</strong>
+        </div>
+        <div class="col-sm-2 col-md-2">
+            <input type="number" min=0 class="form-control" ng-model="input.salary" ng-blur="update(input.salary)"/>
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+</html>
