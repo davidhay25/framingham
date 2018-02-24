@@ -17,9 +17,10 @@
     <link rel="stylesheet" type="text/css" href="css/jsTreeThemes/proton/style.css"/>
 
     <script src="js/libs/angular-sanitize.js"></script>
+    <script src="js/libs/ngStorage.min.js"></script>
 
     <script>
-        angular.module("sampleApp",['ui.bootstrap']).config(function($locationProvider) {
+        angular.module("sampleApp",['ui.bootstrap','ngStorage']).config(function($locationProvider) {
 
             // enable html5Mode for pushstate ('#'-less URLs)  -- ,'ngStorage'
             $locationProvider.html5Mode(true);
@@ -30,15 +31,12 @@
     </script>
 
 
-    <script src="js/patientCtl.js"></script>
+    <script src="js/qaCtrl.js"></script>
+
     <script src="js/modalDialogSvc.js"></script>
 
 
     <script src="js/filters.js"></script>
-
-    <script src="js/libs/vis.min.js"></script>
-
-
 
         <title>ValueSet by resource</title>
 
@@ -55,7 +53,7 @@
         <div class="container-fluid">
             <div class="col-md-3 col-sm-3">
                 <span class="navbar-brand" href="#">
-                    View ValueSet
+                    ValueSet Ballot commenter
                 </span>
             </div>
 
@@ -66,42 +64,128 @@
 
             <div class="col-md-1 col-sm-1">
 
-                <form class="navbar-form navbar-left">
-                    <img ng-show="waiting" src="css/ajax_loader_blue_32.gif"/>
-                </form>
+
 
             </div>
 
-            <div class="col-md-1 col-sm-1">
+            <div class="col-md-3 col-sm-3">
                 <div class="navbar-text">
-
+                    <input class="form-control" placeholder="Enter your name here" type="text" ng-model="userName" ng-blur="setUserName(userName)"/>
                 </div>
             </div>
 
 
-            <div class="col-md-3 col-sm-3">
-
+            <div class="col-md-1 col-sm-1">
+                <form class="navbar-form navbar-left">
+                    <img ng-show="waiting" src="css/ajax_loader_blue_32.gif"/>
+                </form>
             </div>
         </div>
     </nav>
 
 
+
     <div class="row">
         <div class="col-sm-3 col-md-3">
-            <strong>Salary</strong>
-        </div>
-        <div class="col-sm-2 col-md-2">
-            <input type="number" min=0 class="form-control" ng-model="input.salary" ng-blur="update(input.salary)"/>
+            <strong>Resource Type: </strong> <select ng-model = 'input.resource' ng-change="selectResource(input.resource.name)" class="form-control"
+                    ng-options = 'resource.name for resource in allResources'></select>
         </div>
     </div>
-
-
+    <br/>
     <div class="row">
         <div class="col-sm-3 col-md-3">
-            <strong>Salary</strong>
+            <div ng-hide="allVS">
+                Please select a Resource Type above. I will then retrieve all the ValueSets referenced by that
+                type for you to review.
+            </div>
+
+            <ul class="list-group" >
+                <li ng-class="{'list-group-item':1,'listItemSelected':selectedVS && selectedVS.url == vs.url}"
+                    ng-repeat="vs in allVS" ng-click="selectVS(vs)">
+                    {{vs.bindingName}}
+                    <div><em>{{vs.description}}</em></div>
+                    <ul>
+                        <li ng-repeat="path in vs.path">
+                            {{path}}
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </div>
-        <div class="col-sm-2 col-md-2">
-            <input type="number" min=0 class="form-control" ng-model="input.salary" ng-blur="update(input.salary)"/>
+        <div class="col-sm-9 col-md-9">
+            <div ng-show=" allVS && !selectedVS">
+                Please select a ValueSet from the list to the left. Then, you will be able to display the contents of
+                the ValueSet in this pane - either the complete list or filtered by some string (this uses the $expand
+                terminology operation.
+
+                <br/>
+                <div><em>(Note that the list also has the paths in the resource where that ValueSet is bound.)</em></div>
+            </div>
+
+            <uib-tabset ng-show="selectedVS">
+                <uib-tab heading="Contents">
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input ng-model="input.expand" class="form-control" placeholder="Enter filter for expansion"/>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-primary" ng-click="expand(input.expand)">Expand</button>
+                        </div>
+                        <div class="col-md-4">
+                            <h4>Reviewer comments</h4>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div ng-show = "selectedVS && ! expandedVS">
+                            Please enter a filter (or leave blank) then click the 'Expand' button to view the ValueSet
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <table class="table table-bordered">
+                                <tr ng-repeat="concept in expandedVS.expansion.contains">
+                                    <td>{{concept.code}}</td>
+                                    <td>{{concept.display}}</td>
+                                    <td>{{concept.system}}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="col-sm-6 col-md-6">
+
+                            <div class="row">
+                                <div class="col-sm-9 col-md-9">
+                                    <textarea class="form-control" ng-model="input.comment" placeholder="Enter new comment"></textarea>
+                                </div>
+                                <div class="col-sm-3 col-md-3">
+                                    <button class="btn btn-danger" ng-click="addComment(input.comment)">Post Comment</button>
+                                </div>
+                            </div>
+                            <br/>
+
+                            <table class="table">
+                                <tr><th>Date</th><th>Reviewer</th><th>Comment</th></tr>
+                                <tr ng-repeat="comment in comments">
+                                    <td>{{comment.date | date}}</td>
+                                    <td>{{comment.reviewer}}</td>
+                                    <td>{{comment.text}}</td>
+
+                                </tr>
+                            </table>
+
+
+
+                        </div>
+                    </div>
+
+
+                </uib-tab>
+
+                <uib-tab heading="Json">
+                    <pre>{{selectedVS | json}}</pre>
+                </uib-tab>
+            </uib-tabset>
+
         </div>
     </div>
 

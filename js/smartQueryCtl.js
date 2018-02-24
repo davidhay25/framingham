@@ -25,7 +25,7 @@ angular.module("sampleApp")
                     alert('Unable to retrieve server scope' )
 
                 }
-            )
+            );
 
 
             $scope.standardQueries = function(patientId){
@@ -68,7 +68,7 @@ angular.module("sampleApp")
                 $scope.selectedResults = $scope.sqResults[qry.display]
                 $scope.selectedResultsDisplay = qry.display;    //todo shoudl track type in config
 
-            }
+            };
 
             $scope.executeQuery = function(srch) {
                 $scope.waiting = true;

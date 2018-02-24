@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+//http://pm2.keymetrics.io/docs/usage/pm2-doc-single-page/#allow-pm2-to-bind-applications-on-ports-80-443-without-root
 
 var express = require('express');
 var request = require('request');
@@ -7,6 +8,8 @@ var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var hashDataBases = {};         //hash for all connected databases
+
+var qaModule = require('qaModule');
 
 //the known databases (or events)
 var dbKeys = [];
@@ -53,6 +56,9 @@ var hashScenario = {};      //a hash of all the scenarios...
 var hashTrack = {};         //a hash of all the tracks
 //var db;
 
+var app = express();
+app.use(bodyParser.json())
+
 //http://mongodb.github.io/node-mongodb-native/3.0/quick-start/quick-start/
 const MongoClient = require('mongodb').MongoClient;
 
@@ -65,6 +71,9 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
         console.log("Connected successfully to local server, dataBase="+dbName);
         //db = client.db('connectathon');
        // db = client.db(dbName);
+
+        //initialize the qa module
+        qaModule.setup(client.db('qa'),app)
 
         //all the different databases on this server...
         dbKeys.forEach(function(item){
@@ -108,8 +117,10 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
     }
 });
 
-var app = express();
-app.use(bodyParser.json())
+
+
+
+
 
 //initialize the session...
 app.use(session({
@@ -138,17 +149,17 @@ if (useSSL) {
 //check the db connection on every request - may be redundant...
 app.use(function (req, res, next) {
 
-    //allow html and js files to be returned - todo - these files should all be in a 'public' folder -
+    //allow html and js files to be returned - todo - these files should all be in a 'public' folder - or something better
     var url = req.url;
     //console.log(url)
     if (url.indexOf('.html') > -1 || url.indexOf('.js') > -1 || url == '/' ||
-        url.indexOf('.css') > -1 || url.indexOf('/public/') > -1 || url.indexOf('/artifacts/') > -1|| url.indexOf('/fonts/') > -1){
+        url.indexOf('.css') > -1 || url.indexOf('.gif') > -1 ||url.indexOf('/public/') > -1 ||
+        url.indexOf('/artifacts/') > -1 || url.indexOf('/fonts/') > -1 || url.indexOf('/qa') > -1 ){
 
         next();
 
     } else {
         var config = req.session['config'];         //the configuration for this user
-
         if (config && config.key) {
             //there is a config and a key - this user
             var db = hashDataBases[config.key];     //the database connection
@@ -367,7 +378,29 @@ app.get('/proxyfhir/*',function(req,res) {
         }
     })
 });
+/*
+app.get('/orionfhir/*',function(req,res) {
+    var fhirQuery = req.originalUrl.substr(11); //strip off /orionfhir
+    var options = {
+        method: 'GET',
+        uri: fhirQuery,
+        encoding : null
+    };
 
+    request(options, function (error, response, body) {
+        if (error) {
+            console.log('error:',error)
+            var err = error || body;
+            res.send(err,500)
+        } else if (response && response.statusCode !== 200) {
+            console.log(response.statusCode)
+            res.send(body,response.statusCode);//,'binary')
+        } else {
+            res.send(body);//,'binary')
+        }
+    })
+});
+*/
 app.post('/proxyfhir/*',function(req,res) {
     var fhirQuery = req.originalUrl.substr(11); //strip off /orionfhir
     var payload = req.body;

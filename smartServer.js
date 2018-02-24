@@ -26,7 +26,7 @@ var sslOptions = {
 
 https.createServer(sslOptions, app).listen(8443)
 
-var showLog = false;         //for debugging...
+var showLog = true;         //for debugging...
 
 //initialize the session...
 app.use(session({
@@ -81,6 +81,7 @@ console.log(req.session);
 app.post('/setup',function(req,res){
 
     config = req.body;      //contains all the secrets...
+    console.log(config)
     req.session.config = config;
     delete req.session['serverData'];      //will return the server granted scope
 
@@ -250,7 +251,7 @@ app.get('/auth', function(req, res)  {
     if (showLog) {console.log('requested scope=' + req.query.scope)}
 
     req.session["scope"] = req.query.scope || 'launch/patient';
-    req.session["config"] = config;     //todo - think about multi-user...
+    //req.session["config"] = config;     //todo - think about multi-user...
     req.session["page"] = "smartQuery.html";
 
     //generate the uri to re-direct the browser to. This will be the login page for the system
@@ -429,13 +430,12 @@ app.get('/orionfhir/*',function(req,res){
             return;
         }
 
-
         var access_token = req.session['accessToken'];
         var config = req.session["config"];     //retrieve the configuration from the session...
 
 
-        var url = config.baseUrl  + fhirQuery;
-       // var url = config.baseUrl + '/' + fhirQuery;
+        //var url = config.baseUrl  + fhirQuery;
+        var url = config.baseUrl + '/' + fhirQuery;
         if (showLog) {
             console.log('url=' + url)
         }
