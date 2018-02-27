@@ -4,6 +4,12 @@ angular.module("sampleApp")
 
             $scope.input = {};
 
+
+            $http.get('artifacts/allResources.json').then(function(data){
+
+            });
+
+
             $http.get('artifacts/allResources.json').then(function(data){
                 //console.log(data)
                 $scope.allResources = data.data;
