@@ -264,6 +264,25 @@
                                             <!--{{selectedTrack.description}}-->
                                         </div>
                                     </div>
+
+
+                                    <br/>
+                                    <div class="row" ng-show="selectedTrack.endPoints.length > 0">
+                                        <hr class="trackBorder"/>
+                                        <div class="col-sm-2 col-md-2">
+                                            <strong>End Points</strong>
+                                        </div>
+                                        <div class="col-sm-10 col-md-10">
+                                            <table class="table">
+                                                <tr><th>Url</th><th>Description</th></tr>
+                                                <tr ng-repeat="ep in selectedTrack.endPoints">
+                                                    <td>{{ep.url}}</td>
+                                                    <td>{{ep.description}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+
                                     <br/>
                                     <div class="row">
                                         <hr class="trackBorder"/>

@@ -8,6 +8,7 @@ angular.module("sampleApp")
         function ($scope,$http,$q) {
 
             $scope.input = {}
+            $scope.input.patientId = 'A01';
 
             //retrieve the scope information...
             $http.get('/serverdata').then(
@@ -19,6 +20,7 @@ angular.module("sampleApp")
                     $scope.fullToken = data.data.fullToken;
                     $scope.config = data.data.config;
 
+                    console.log($scope.config)
 
                 },function(err) {
                     console.log(err)

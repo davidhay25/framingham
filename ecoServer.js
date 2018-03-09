@@ -15,6 +15,7 @@ var qaModule = require('qaModule');
 var dbKeys = [];
 dbKeys.push({key:'cof',display:'Clinicians On Fhir'});
 dbKeys.push({key:'connectathon',display:'Technical connectathon, New Orleans Jan 2018'});
+dbKeys.push({key:'mihin',display:'MiHIN connectathon, June 2018'});
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";     //allow self signed certificates
 useSSL = false;

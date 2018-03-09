@@ -9,6 +9,7 @@
     "secret": "B6rY7pW0vI6oP3rA1dD8aU2hE0eO3gF8xT3gW3mO2nI0vW2kT8",
     "clientIdConfig": "https://launch.smarthealthit.org/.well-known/openid-configuration",
     "defaultScope" :"openid patient/Patient.read patient/Procedure.read patient/Observation.read patient/MedicationStatement.read patient/Condition.read",
+    "defaultQueriesDisplay":"Query the server for Procedures, Medications and Conditions for the patient 'A01'",
     "defaultQueries": [
       {"display":"Procedures","url":"Patient/{patientId}/Procedure"},
       {"display":"Medications","url":"Patient/{patientId}/MedicationStatement"},
@@ -55,7 +56,8 @@
     "clientId" : "d90584cc-3b0e-40db-8543-536df45a84f4",
     "secret": "a07NAYD7lnhfBh1b9614dPp_lZxyK5Hf7ImS8GJ2XnbD8SE-ZzAqJhyKykL7359ip0AG5bLC172_M5mhWxuRig",
     "clientIdConfig": "https://launch.smarthealthit.org/.well-known/openid-configuration",
-    "defaultScope" :"openid profile patient/*.*"
+    "defaultScope" :"openid profile patient/*.*",
+    "defaultQueriesDisplay":"Query the server for Procedures, Medications and Conditions for the patient 'A01'"
   },
   {
     "name" : "SmartHealthIT - invalid clientId",

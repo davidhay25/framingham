@@ -14,7 +14,7 @@ angular.module("sampleApp")
             $scope.canSave = true;
 
             if (track) {
-                $scope.clone = angular.copy(track)
+               // $scope.clone = angular.copy(track)
                 $scope.track = track;
                 if (track.leadIds && track.leadIds.length > 0 && $scope.currentUser) {
                     if (track.leadIds[0] !== $scope.currentUser.id) {
@@ -32,6 +32,17 @@ angular.module("sampleApp")
                 $scope.input.description = track.description;
             }
 
+
+            $scope.addEndPoint = function(url,description) {
+                console.log(url,description)
+                $scope.track.endPoints = $scope.track.endPoints || []
+                $scope.track.endPoints.push({url:url,description:description})
+            };
+
+            $scope.removeEndPoint = function(inx) {
+                $scope.track.endPoints.splice(inx,1)
+            };
+
             $scope.personSelected = function(person){
                 console.log(person)
                 $scope.track.leads = $scope.track.leads || [];
@@ -43,15 +54,16 @@ angular.module("sampleApp")
             $scope.save = function(){
 
                 if ($scope.input.trackLead) {
-                    track.leadIds = track.leadIds || [];
-                    track.leadIds[0] = $scope.input.trackLead.id;
+                    $scope.track.leadIds = $scope.track.leadIds || [];
+                    $scope.track.leadIds[0] = $scope.input.trackLead.id;
                 }
-                //track.description = $scope.input.description;
-                track.url = $scope.clone.url;
-                $scope.$close({track:track,lead:$scope.input.trackLead})
-            }
 
-            $scope.deleteScenario = function(){
+                //track.url = $scope.clone.url;
+
+                $scope.$close({track:$scope.track,lead:$scope.input.trackLead})
+            };
+
+            $scope.deleteTrack = function(){
                 var modalOptions = {
                     closeButtonText: "No, I changed my mind",
                     headerText: "Remove track",

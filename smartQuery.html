@@ -131,12 +131,23 @@
         </div>
         <div class="col-sm-4 col-md-4">
             <strong>Patient</strong>
-            <div>Id: {{sqResults.Patient.id}}</div>
+            <div>
+                <div class="row">
+                    <div class="col-sm-2 col-md-2">
+                        Id:
+                    </div>
+                    <div class="col-sm-4 col-md-4">
+                        <input class="form-control" ng-model="input.patientId"/>
+                    </div>
+                </div>
+<!--
+                {{sqResults.Patient.id}}
+                -->
+
+            </div>
             <div>Name: <span ng-repeat="given in sqResults.Patient.name[0].given">{{given}} </span> {{sqResults.Patient.name[0].family}}</div>
 
         </div>
-
-
 
     </div>
     <br/>
@@ -145,8 +156,11 @@
         <uib-tab heading="Standard Queries">
             <br/>
 
-
-            <button ng-hide="sqComplete" class="btn btn-primary" ng-click="standardQueries('A01')">Execute</button>
+            <div>{{config.defaultQueriesDisplay}}</div>
+            <br/>
+            <!--
+            <button ng-hide="sqComplete" class="btn btn-primary" ng-click="standardQueries('A01')">Execute</button>-->
+            <button ng-hide="sqComplete" class="btn btn-primary" ng-click="standardQueries(input.patientId)">Execute</button>
 
             <div ng-show="execSQ">Executing Standard Queries, please wait...</div>
 
