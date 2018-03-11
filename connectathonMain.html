@@ -166,29 +166,28 @@
             </div>
 
             <div class="col-md-3 col-sm-3">
+
                 <div class="navbar-text">
-                    <div class="row">
-                        <div class="col-md-10 col-sm-10">
-                            <input type="text" readonly="readonly" ng-model="input.currentUser"
-                                   placeholder="No current user"
-                                   typeahead-on-select = "userSelected($item, $model, $label, $event)"
-                                   uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control"/>
+                    <div ng-show="ecosystemSvc.getCurrentUser()">
+                        {{ecosystemSvc.getCurrentUser().name}}
+                        <span>
+                                         <i class="glyphicon glyphicon-remove-sign"
+                                            ng-show = "ecosystemSvc.getCurrentUser()"
+                                            style="padding-top: 12px; padding-left: 10px"
+                                            uib-popover="Log out"
+                                            popover-placement="right"
 
-                        </div>
-                        <div class="col-md-2 col-sm-2">
-                            <i class="glyphicon glyphicon-remove-sign"
-                               ng-show = "input.currentUser"
-                               style="padding-top: 8px"
-                               uib-popover="Log out"
-                               popover-placement="right"
-
-                               popover-trigger="'mouseenter'"
-                               title="Clear user" ng-click="clearUser()">
+                                            popover-trigger="'mouseenter'"
+                                            title="Clear user" ng-click="clearUser()">
                             </i>
-                        </div>
+                                    </span>
                     </div>
 
+                    <div ng-hide="ecosystemSvc.getCurrentUser()">
+                        <button class="btn btn-link">Login</button>
+                    </div>
                 </div>
+
             </div>
             <div class="col-md-2 col-sm-2">
                 <div class="navbar-text pull-right">

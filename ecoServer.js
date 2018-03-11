@@ -9,13 +9,14 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var hashDataBases = {};         //hash for all connected databases
 
-var qaModule = require('qaModule');
+//var qaModule = require('qaModule');
 
 //the known databases (or events)
 var dbKeys = [];
 dbKeys.push({key:'cof',display:'Clinicians On Fhir'});
 dbKeys.push({key:'connectathon',display:'Technical connectathon, New Orleans Jan 2018'});
 dbKeys.push({key:'mihin',display:'MiHIN connectathon, June 2018'});
+dbKeys.push({key:'nz',display:'NZ'});
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";     //allow self signed certificates
 useSSL = false;
@@ -74,7 +75,7 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
        // db = client.db(dbName);
 
         //initialize the qa module
-        qaModule.setup(client.db('qa'),app)
+       // qaModule.setup(client.db('qa'),app)
 
         //all the different databases on this server...
         dbKeys.forEach(function(item){
@@ -118,11 +119,6 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
     }
 });
 
-
-
-
-
-
 //initialize the session...
 app.use(session({
     secret: 'conManRules-OK?',
@@ -147,6 +143,7 @@ if (useSSL) {
     console.log('server listening  on port ' + port);
 }
 
+
 //check the db connection on every request - may be redundant...
 app.use(function (req, res, next) {
 
@@ -157,11 +154,15 @@ app.use(function (req, res, next) {
         url.indexOf('.css') > -1 || url.indexOf('.gif') > -1 ||url.indexOf('/public/') > -1 ||
         url.indexOf('/artifacts/') > -1 || url.indexOf('/fonts/') > -1 || url.indexOf('/qa') > -1 ){
 
+
         next();
 
     } else {
+        //are we in a user session?
+
         var config = req.session['config'];         //the configuration for this user
         if (config && config.key) {
+            //yep - there is a session...
             //there is a config and a key - this user
             var db = hashDataBases[config.key];     //the database connection
             if (db) {
@@ -171,8 +172,11 @@ app.use(function (req, res, next) {
                 res.status(404).send({msg:'Invalid database key:'+config.key})
             }
         } else {
+            //not in a user session...
+            next();
+            //todo - need to think about what to do with a call to /conman  and no user yet...
             //if there's no config, that means the user hasn't logged in...
-            res.send(dbKeys,401)    //return a list of the known events (keys)
+            //res.send(dbKeys,401)    //return a list of the known events (keys)
         }
     }
 
@@ -208,6 +212,13 @@ app.use(function (req, res, next) {
 app.get('/public/logout',function(req,res){
     res.json(dbKeys);
 })
+
+//called by the main page on load to find out the event selected for this user session...
+app.get('/public/currentEvent',function(req,res){
+    res.json(req.session['config']);
+});
+
+
 
 var showLog = false;         //for debugging...
 
@@ -379,29 +390,7 @@ app.get('/proxyfhir/*',function(req,res) {
         }
     })
 });
-/*
-app.get('/orionfhir/*',function(req,res) {
-    var fhirQuery = req.originalUrl.substr(11); //strip off /orionfhir
-    var options = {
-        method: 'GET',
-        uri: fhirQuery,
-        encoding : null
-    };
 
-    request(options, function (error, response, body) {
-        if (error) {
-            console.log('error:',error)
-            var err = error || body;
-            res.send(err,500)
-        } else if (response && response.statusCode !== 200) {
-            console.log(response.statusCode)
-            res.send(body,response.statusCode);//,'binary')
-        } else {
-            res.send(body);//,'binary')
-        }
-    })
-});
-*/
 app.post('/proxyfhir/*',function(req,res) {
     var fhirQuery = req.originalUrl.substr(11); //strip off /orionfhir
     var payload = req.body;
@@ -730,6 +719,60 @@ app.post('/espruino',function(req,res){
 
 */
 //to serve up the static web pages - particularly the login page if no page is specified...
+
+//when th user navigates to a page in the format conman/event/{name}
+app.get('/event/:name',function(req,res){
+    var event = req.params.name;
+
+    if (hashDataBases[event]) {
+        //this is a properly configured event. set the session to the event name (key) and load the main page.
+        //the main page can call to get the list of configured users, if not known. (not the browser cach must cache user name bu event)
+        //we have established a connection to the given database
+        hashDataBases[event].collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
+            if (err) {
+                res.send(err,500)
+            } else {
+                req.session['config'] = {key:event};      //record the database key in the session
+
+
+
+                res.redirect('/connectathonMain.html');
+                //res.send(result)
+            }
+        })
+
+    } else {
+        //this is an unknown database
+        //todo - could redirect to a page that allows selection of the event...
+        res.send({msg:'unknown connectathon event code:'+event},404)
+    }
+
+
+    console.log(req.params.name)
+
+
+
+    //res.json();
+/*
+    if (hashDataBases[key]) {
+        //we have established a connection to the given database
+        hashDataBases[key].collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
+            if (err) {
+                res.send(err,500)
+            } else {
+                req.session['config'] = {key:key};      //record the database key in the session
+                res.send(result)
+            }
+        })
+
+    } else {
+        //this is an unknown database
+        res.send({msg:'unknown database:'+key},404)
+    }
+    */
+})
+
+
 app.use('/', express.static(__dirname,{index:'/connectathonMain.html'}));
 
 

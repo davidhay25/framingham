@@ -1,23 +1,41 @@
 angular.module("sampleApp")
     .controller('loginCtrl',
-        function ($scope,$http,modalService,keys) {
+        function ($scope,$http,eventConfig) {
 
             $scope.input = {}
-            $scope.keys = keys;
+            $scope.eventConfig = eventConfig;
+            console.log(eventConfig)
 
-            console.log(keys);
+            //get all the users for this event
+            $http.get("/public/getUsers/"+eventConfig.key).then(
+                function(data) {
+                    console.log(data)
+                    $scope.allPersons = data.data;
+                    $scope.state = 'selectUser';
+                },
+                function(err) {
+                    alert(angular.toJson(err))
+                }
+            );
+
+
+           // $scope.keys = keys;
+           // $scope.state = 'selectUser';       //'selectEvent', 'selectUser','addUser'
+
+            //console.log(keys);
 
             $scope.personSelected = function(person) {
                 $scope.person = person;
             };
 
-            $scope.dbSelected = function(item) {
-                //a db has been selected - get all the users for that session
+            $scope.dbSelectedDEP = function(item) {
+                //a db (event) has been selected - get all the users for that session
                 $scope.item = item;
                 $http.get("/public/getUsers/"+item.key).then(
                     function(data) {
                         console.log(data)
                         $scope.allPersons = data.data;
+                        $scope.state = 'selectUser';
                     },
                     function(err) {
                         alert(angular.toJson(err))
@@ -28,14 +46,15 @@ angular.module("sampleApp")
 
             $scope.addPerson = function(flag){
                 $scope.input.newPerson =flag;
+                $scope.state = 'addUser';
             };
 
             $scope.login = function() {
                 if ($scope.input.newPersonName) {
                     $scope.$close({event:$scope.item,
-                        newPerson:{name:$scope.input.newPersonName,contact:[],id:'id'+new Date().getTime()}})
+                        newUser:{name:$scope.input.newPersonName,contact:[],id:'id'+new Date().getTime()}})
                 } else {
-                    $scope.$close({event:$scope.item,person:$scope.person})
+                    $scope.$close({event:$scope.item,user:$scope.person})
                 }
             }
 

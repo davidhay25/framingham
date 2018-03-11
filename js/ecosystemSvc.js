@@ -195,7 +195,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         },
         makeServerRoleSummary : function(){
             serverRoleSummary = {};
-            if (eventConfig.serverRoles) {
+            if (eventConfig && eventConfig.serverRoles) {
                 eventConfig.serverRoles.forEach(function (r) {
                     serverRoleSummary[r.code] = {servers:[]}
                 });
@@ -240,11 +240,24 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         },
         setEventConfig : function(config) {
             eventConfig = config;
+
         },
         getEventConfig : function() {
             return eventConfig;
         },
-        setCurrentUserAndDb : function(vo){
+
+        setCurrentUser : function(user) {
+            //get the key to the current event from eventConfig
+            var key = eventConfig.key;
+            $localStorage.ecoCurrentUser = $localStorage.ecoCurrentUser || {};
+
+            //save the user object...
+            $localStorage.ecoCurrentUser[key] = user
+
+
+        },
+
+        setCurrentUserAndDbDEP : function(vo){
             if (vo) {
                 $localStorage.ecoCurrentUserAndDb = vo;
             } else {
@@ -252,15 +265,20 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             }
 
         },
-        setCurrentUserDEP : function(user) {
-            $localStorage.ecoCurrentUser = user;
-        },
+
         getCurrentUser : function () {
-            if ($localStorage.ecoCurrentUserAndDb) {
-                return $localStorage.ecoCurrentUserAndDb.person;
+            if (eventConfig) {
+                var key = eventConfig.key;      //the current event...
+                if ($localStorage.ecoCurrentUser) {
+                    if ($localStorage.ecoCurrentUser[key]) {
+                        return $localStorage.ecoCurrentUser[key];// .name;
+                    }
+
+                }
             }
+
         },
-        getCurrentUserAndDb : function () {
+        getCurrentUserAndDbDEP : function () {
             //if ($localStorage.ecoCurrentUserAndDb) {
                 return $localStorage.ecoCurrentUserAndDb;
             //}
@@ -268,7 +286,19 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         },
 
         clearCurrentUser : function(){
-            delete $localStorage.ecoCurrentUserAndDb;
+
+            if ($localStorage.ecoCurrentUser) {
+                var key = eventConfig.key;      //the current event...
+                delete $localStorage.ecoCurrentUser[key];
+                /*
+                if ($localStorage.ecoCurrentUser[key]) {
+
+                    return $localStorage.ecoCurrentUser[key];// .name;
+                }
+                */
+
+            }
+            //delete $localStorage.ecoCurrentUserAndDb;
         },
         updatePerson : function(person) {
             var deferred = $q.defer();

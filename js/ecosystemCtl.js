@@ -4,17 +4,145 @@ angular.module("sampleApp")
     .controller('ecosystemCtrl',
         function ($scope,$http,modalService,ecosystemSvc,$window,$localStorage,$uibModal,ecoUtilitiesSvc) {
 
+
+            //when the page loads, there will be a server session created that establishes the event (database).
+            //the pattern to load conman for an event is conman/event/{event name}
+            //next step is to see if there is a user of that event in the browser cache. If there is not, then
+            //a login screen can be displayed.
+
+            $scope.ecosystemSvc = ecosystemSvc;
+
+            //the name of the connectathon, the serverRoles & stuff like that...
+            //we assume that the database (event) for this session is already established (this page is a redirect - not called directly...
+            $http.get("config/admin/").then(
+                function(data) {
+                    if (data.data) {
+                        $scope.eventConfig = data.data[0];
+                        console.log($scope.eventConfig)
+                        if ($scope.eventConfig) {
+                            if ($scope.eventConfig.navBarStyle) {
+                                $scope.navBarStyle = $scope.eventConfig.navBarStyle;
+                            }
+                        }
+
+                        //save the config in the service (if the page is re-loaded
+                        ecosystemSvc.setEventConfig(data.data[0]);
+                        loadData();     //can load all the data for the event ...
+
+                        //is there a user cached for this event?
+                        var user = ecosystemSvc.getCurrentUser();
+                        console.log(user)
+
+                        if (! user) {
+                            //no user - need to login
+                           login();
+                        }
+                    }
+                },
+                function(err) {
+                    if (err.status = 410) {
+                        //this means the user has not logged in
+
+                        //  login(err)
+                    }
+                    console.log(err)
+                }
+            );
+
+
+            function login() {
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/login.html',
+                    controller: 'loginCtrl',
+                    resolve : {
+                        eventConfig: function(){
+                            //
+                            return $scope.eventConfig;
+                        }
+                    }
+                }).result.then(function(vo){
+                    console.log(vo)
+                    if (vo.user) {
+                        //this was an existing user...
+                        var person = vo.person;
+                        ecosystemSvc.setCurrentUser(vo.user);
+                       // $scope.input.currentUser = vo.user;
+
+                    } else if (vo.newUser) {
+                        ecosystemSvc.updatePerson(vo.newUser).then(
+                            function(data) {
+                                ecosystemSvc.setCurrentUser(vo.newUser);
+                                //ecosystemSvc.setCurrentUserAndDb({event:vo.event,person:vo.newPerson});
+                               // $scope.input.currentUser = vo.newPerson;
+                               // loadData();
+                            }, function(err) {
+                                alert('Error saving person: '+ angular.toJson(err));
+                            }
+                        )
+
+                    }
+
+
+                    /* temp...
+                                                    if (vo.newPerson) {
+                                                        ecosystemSvc.updatePerson(vo.newPerson).then(
+                                                            function(data) {
+                                                                ecosystemSvc.setCurrentUserAndDb({event:vo.event,person:vo.newPerson});
+                                                                $scope.input.currentUser = vo.newPerson;
+                                                                loadData();
+                                                            }, function(err) {
+                                                                alert('Error saving person: '+ angular.toJson(err));
+                                                            }
+                                                        )
+
+                                                    } else {
+                                                        var person = vo.person;
+                                                        ecosystemSvc.setCurrentUserAndDb(vo);
+                                                        $scope.input.currentUser = person;
+                                                        var db = vo.item;
+                                                        loadData();
+                                                    }
+                                                    */
+
+
+
+
+
+                })
+            }
+
+
+
+           /*
+            $http.get('/public/currentEvent').then(
+                function(data) {
+                    var eventKey = data.key;
+                    //now see if there is a user for this event in the browser cache...
+
+
+
+                    console.log(data.data);
+                },
+                function(err) {
+                    //todo - ? use the current login ?? redirect to a page with all the events...
+                    alert('no event specified - use url conman/event/{event name}')
+                });
+
+
+*/
+
+            //console.log($window.)
+
             $scope.input = {};
 
             Chart.defaults.global.colors = ['#00cc00','#cc3300','#ffff99','#6E94FF']; //for the stacked bar chart...
 
             $http.post("/startup",{})  //record access
 
+            //a list of all resources... Used for the scenario definition...
             $http.get('/artifacts/allResources.json').then(
                 function(data) {
-                    console.log(data.data)
                     $scope.allResources = data.data;
-
                     $scope.allResources.sort(function(a,b){
                         if (a.name < b.name) {
                             return -1;
@@ -22,7 +150,6 @@ angular.module("sampleApp")
                             return 1
                         }
                     })
-
                 },function(err) {
                     console.log(err)
                 }
@@ -65,8 +192,10 @@ angular.module("sampleApp")
 
 
             //get the current user and db (if any)
-            var currentState = ecosystemSvc.getCurrentUserAndDb();
-            console.log(currentState)
+           // var currentState = ecosystemSvc.getCurrentUserAndDb();
+           // console.log(currentState)
+            /* temp...
+
             if (currentState) {
                 //so there's already a current user & db set in the browser cache. Set the server session & init
 
@@ -79,9 +208,9 @@ angular.module("sampleApp")
                     }
                 );
             }
-
+*/
             //login is called when there is no configured user. the call GET config/admin/ will return a list of connectathon events...
-            function login(err){
+            function loginDEP(err){
                 $uibModal.open({
                     templateUrl: 'modalTemplates/login.html',
                     controller: 'loginCtrl',
@@ -119,30 +248,6 @@ angular.module("sampleApp")
             }
 
 
-            //the name of the connectathon, the serverRoles & stuff like that...
-            $http.get("config/admin/").then(
-                function(data) {
-                    if (data.data) {
-                        $scope.eventConfig = data.data[0];
-                        if ($scope.eventConfig) {
-                            if ($scope.eventConfig.navBarStyle) {
-                                $scope.navBarStyle = $scope.eventConfig.navBarStyle;
-                            }
-                        }
-                        ecosystemSvc.setEventConfig(data.data[0]);
-                        loadData();
-
-                    }
-                },
-                function(err) {
-                    if (err.status = 410) {
-                        //this means the user has not logged in
-
-                       login(err)
-                    }
-                    console.log(err)
-                }
-            );
 
 
 
@@ -243,7 +348,9 @@ angular.module("sampleApp")
             }
 
 
-            $scope.input.currentUser = ecosystemSvc.getCurrentUser();
+            //$scope.input.currentUser = ecosystemSvc.getCurrentUser();
+
+
             $scope.userSelectedDEP = function(item){
                 $scope.input.currentUser = item;
                 ecosystemSvc.setCurrentUser(item)
@@ -251,7 +358,7 @@ angular.module("sampleApp")
 
             $scope.clearUser = function(){
                 ecosystemSvc.clearCurrentUser();
-                delete $scope.input.currentUser
+               // delete $scope.input.currentUser
 
                 $http.get('/public/logout').then(
                     function(data) {
@@ -375,7 +482,7 @@ angular.module("sampleApp")
                 $scope.eventReport = ecosystemSvc.makeEventReport($scope.tracks)
             };
 
-            $scope.ecosystemSvc = ecosystemSvc;
+
 
             $scope.selectServerRole = function(serverRole){
                 //find servers with this serverRole set
