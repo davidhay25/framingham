@@ -4,52 +4,79 @@ angular.module("sampleApp")
     .controller('ecosystemCtrl',
         function ($scope,$http,modalService,ecosystemSvc,$window,$localStorage,$uibModal,ecoUtilitiesSvc) {
 
-
-            //when the page loads, there will be a server session created that establishes the event (database).
-            //the pattern to load conman for an event is conman/event/{event name}
-            //next step is to see if there is a user of that event in the browser cache. If there is not, then
-            //a login screen can be displayed.
-
+            $http.post("/startup",{});  //record access
             $scope.ecosystemSvc = ecosystemSvc;
+            $scope.input = {};
 
-            //the name of the connectathon, the serverRoles & stuff like that...
-            //we assume that the database (event) for this session is already established (this page is a redirect - not called directly...
-            $http.get("config/admin/").then(
-                function(data) {
-                    if (data.data) {
-                        $scope.eventConfig = data.data[0];
-                        console.log($scope.eventConfig)
-                        if ($scope.eventConfig) {
-                            if ($scope.eventConfig.navBarStyle) {
-                                $scope.navBarStyle = $scope.eventConfig.navBarStyle;
+            //is there an event in the url?
+            var eventCode;
+            var url = $window.location.href;
+            var ar = url.split('?');
+            if (ar.length == 2) {
+                var search = ar[1];     //the search string - eg ?event=mihin
+                var ar1 = search.split('&');
+                ar1.forEach(function (qry) {
+                    var param = qry.split('=');
+                    if (param[0] == 'event') {
+                        eventCode = param[1]
+                        eventCode = eventCode.replace('#','');
+                    }
+                })
+            }
+
+            if (eventCode) {
+                //the url specifies an event. Set the event in the server session so all subsequent queries go to that server...
+                $http.post('/public/setEvent',{key:eventCode}).then(
+                    function (data) {
+                        //now get the event configuration from the event database (admin).
+                        $http.get("config/admin/").then(
+                            function(data) {
+                                if (data.data) {
+                                    $scope.eventConfig = data.data[0];
+
+                                    if ($scope.eventConfig) {
+                                        if ($scope.eventConfig.navBarStyle) {
+                                            $scope.navBarStyle = $scope.eventConfig.navBarStyle;
+                                        }
+                                    }
+
+                                    //save the config in the service (if the page is re-loaded
+                                    ecosystemSvc.setEventConfig(data.data[0]);
+                                    loadData();     //can load all the data for the event ...
+
+                                    //is there a user cached for this event?
+                                    var user = ecosystemSvc.getCurrentUser();
+
+
+                                    if (! user) {
+                                        //no user - need to login
+                                        login();
+                                    }
+                                }
+                            },
+                            function(err) {
+                                alert('There was an error in logging in. Please contact the event organizers.')
+                                console.log(err)
                             }
-                        }
+                        );
+                    },
+                    function(err) {
+                        //the event code wasn't recognized...
+                        var msg = "The event code '"+eventCode+ "' is not correct. Please contact the event organizers for the correct code."
+                        modalService.showModal({}, {bodyText:msg})
 
-                        //save the config in the service (if the page is re-loaded
-                        ecosystemSvc.setEventConfig(data.data[0]);
-                        loadData();     //can load all the data for the event ...
-
-                        //is there a user cached for this event?
-                        var user = ecosystemSvc.getCurrentUser();
-                        console.log(user)
-
-                        if (! user) {
-                            //no user - need to login
-                           login();
-                        }
                     }
-                },
-                function(err) {
-                    if (err.status = 410) {
-                        //this means the user has not logged in
+                )
+            } else {
+                //no event specified in the query. This will show the error div...
+            }
 
-                        //  login(err)
-                    }
-                    console.log(err)
-                }
-            );
+            $scope.loginFromNavbar = function() {
+                login()
+            };
 
 
+            //the user login functionality
             function login() {
                 $uibModal.open({
                     templateUrl: 'modalTemplates/login.html',
@@ -112,32 +139,9 @@ angular.module("sampleApp")
             }
 
 
-
-           /*
-            $http.get('/public/currentEvent').then(
-                function(data) {
-                    var eventKey = data.key;
-                    //now see if there is a user for this event in the browser cache...
-
-
-
-                    console.log(data.data);
-                },
-                function(err) {
-                    //todo - ? use the current login ?? redirect to a page with all the events...
-                    alert('no event specified - use url conman/event/{event name}')
-                });
-
-
-*/
-
-            //console.log($window.)
-
-            $scope.input = {};
-
             Chart.defaults.global.colors = ['#00cc00','#cc3300','#ffff99','#6E94FF']; //for the stacked bar chart...
 
-            $http.post("/startup",{})  //record access
+
 
             //a list of all resources... Used for the scenario definition...
             $http.get('/artifacts/allResources.json').then(
@@ -194,21 +198,7 @@ angular.module("sampleApp")
             //get the current user and db (if any)
            // var currentState = ecosystemSvc.getCurrentUserAndDb();
            // console.log(currentState)
-            /* temp...
 
-            if (currentState) {
-                //so there's already a current user & db set in the browser cache. Set the server session & init
-
-            } else {
-                //so no details in the browser cache - time to login
-                $http.get('/public/logout').then(       //retrieves the current connectathon events...
-                    function(data) {
-                        console.log(data.data)
-                        login({data:data.data});
-                    }
-                );
-            }
-*/
             //login is called when there is no configured user. the call GET config/admin/ will return a list of connectathon events...
             function loginDEP(err){
                 $uibModal.open({
@@ -246,10 +236,6 @@ angular.module("sampleApp")
                 });
 
             }
-
-
-
-
 
             $scope.addScenario = function() {
 
@@ -347,10 +333,6 @@ angular.module("sampleApp")
                 })
             }
 
-
-            //$scope.input.currentUser = ecosystemSvc.getCurrentUser();
-
-
             $scope.userSelectedDEP = function(item){
                 $scope.input.currentUser = item;
                 ecosystemSvc.setCurrentUser(item)
@@ -381,8 +363,6 @@ angular.module("sampleApp")
                     return disp;
                 }
             }
-
-            //re-load all the connectathon artifacts
 
             $scope.getSvrDescription = function(svr) {
                 var desc = svr.description;
@@ -434,6 +414,7 @@ angular.module("sampleApp")
                 })
             };
 
+            //load all the configuration & results for the current event...
             var loadData = function(cb){
                 ecosystemSvc.getConnectathonResources().then(
                     function(vo) {
@@ -457,8 +438,6 @@ angular.module("sampleApp")
                     }
                 );
             };
-            //loadData();
-
 
             $scope.canShowPerson = function(person,filter) {
                 var name = person.name;
@@ -476,13 +455,11 @@ angular.module("sampleApp")
                 }
             };
 
-            $scope.wikiPageUrl = "http://wiki.hl7.org/index.php?title=FHIR_Connectathon_17";
+            //$scope.wikiPageUrl = "http://wiki.hl7.org/index.php?title=FHIR_Connectathon_17";
 
             $scope.makeEventReport = function() {
                 $scope.eventReport = ecosystemSvc.makeEventReport($scope.tracks)
             };
-
-
 
             $scope.selectServerRole = function(serverRole){
                 //find servers with this serverRole set

@@ -161,7 +161,7 @@
         <div class="container-fluid row">
             <div class="col-md-7 col-sm-7">
                 <a class="navbar-brand" href="#">
-                    ConMan: {{eventConfig.name}}
+                    ConMan: {{eventConfig.name}} <span ng-hide="eventConfig">No event specified.</span>
                 </a>
             </div>
 
@@ -171,20 +171,19 @@
                     <div ng-show="ecosystemSvc.getCurrentUser()">
                         {{ecosystemSvc.getCurrentUser().name}}
                         <span>
-                                         <i class="glyphicon glyphicon-remove-sign"
-                                            ng-show = "ecosystemSvc.getCurrentUser()"
-                                            style="padding-top: 12px; padding-left: 10px"
-                                            uib-popover="Log out"
-                                            popover-placement="right"
-
-                                            popover-trigger="'mouseenter'"
-                                            title="Clear user" ng-click="clearUser()">
+                             <i class="glyphicon glyphicon-remove-sign"
+                                ng-show = "ecosystemSvc.getCurrentUser()"
+                                style="padding-top: 12px; padding-left: 10px"
+                                uib-popover="Log out"
+                                popover-placement="right"
+                                popover-trigger="'mouseenter'"
+                                title="Clear user" ng-click="clearUser()">
                             </i>
-                                    </span>
+                        </span>
                     </div>
 
-                    <div ng-hide="ecosystemSvc.getCurrentUser()">
-                        <button class="btn btn-link">Login</button>
+                    <div ng-hide="ecosystemSvc.getCurrentUser() || ! eventConfig">
+                        <button class="btn btn-link" ng-click="loginFromNavbar()">Login</button>
                     </div>
                 </div>
 
@@ -202,7 +201,7 @@
         </div>
     </nav>
 
-    <div class="row">
+    <div class="row" ng-show="eventConfig">
 
         <div class="col-sm-12 col-md-12">
 
@@ -255,7 +254,6 @@
 -->
                                     <div class="row">
                                         <div class="col-sm-2 col-md-2">
-
                                             <strong>Description</strong>
                                         </div>
                                         <div class="col-sm-9 col-md-9">
@@ -1622,19 +1620,18 @@
 
     </div>
 
-<!--
-    <div><a class="btn btn-warning" ng-href="/auth?page=orion.html">Login as Clinician</a></div>
-    <div><a class="btn btn-success" ng-href="/auth?page=patient.html">Login as Patient</a></div>
 
-    <div class="row">
-        <div class="col-sm-3 col-md-3">
-
-        </div>
-        <div class="col-sm-6 col-md-6">
-
-        </div>
+    <div ng-hide="eventConfig">
+        <h3>No event was specified!</h3>
+        <br/>
+        <p>You need to specify the connectathon event code that you want in the url. For example:</p>
+        <strong>
+            http://conman/connectathon.html?event=mihin18
+        </strong>
+        <br/> <br/>
+        <p>Would indicate the MiHIN 2018 Connectathon. If you don't know what the event code is, you'll
+        need to contact the connectathin organizer.</p>
     </div>
--->
 
 
 </div>

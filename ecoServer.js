@@ -12,11 +12,16 @@ var hashDataBases = {};         //hash for all connected databases
 //var qaModule = require('qaModule');
 
 //the known databases (or events)
+/*
 var dbKeys = [];
 dbKeys.push({key:'cof',display:'Clinicians On Fhir'});
 dbKeys.push({key:'connectathon',display:'Technical connectathon, New Orleans Jan 2018'});
 dbKeys.push({key:'mihin',display:'MiHIN connectathon, June 2018'});
 dbKeys.push({key:'nz',display:'NZ'});
+*/
+
+var dbKeys = require('./artifacts/events.json')
+console.log(dbKeys);
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";     //allow self signed certificates
 useSSL = false;
@@ -122,9 +127,9 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
 //initialize the session...
 app.use(session({
     secret: 'conManRules-OK?',
-    resave: true,
-    saveUninitialized: true,
-    cookie: { secure: false }   // secure cookins needs ssl...
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }   // secure cookies need ssl...
 }));
 
 if (useSSL) {
@@ -161,6 +166,7 @@ app.use(function (req, res, next) {
         //are we in a user session?
 
         var config = req.session['config'];         //the configuration for this user
+       // console.log('config',config,url);
         if (config && config.key) {
             //yep - there is a session...
             //there is a config and a key - this user
@@ -209,12 +215,12 @@ app.use(function (req, res, next) {
 
 });
 
-app.get('/public/logout',function(req,res){
+app.get('/public/logoutDEP',function(req,res){
     res.json(dbKeys);
 })
 
 //called by the main page on load to find out the event selected for this user session...
-app.get('/public/currentEvent',function(req,res){
+app.get('/public/currentEventDEP',function(req,res){
     res.json(req.session['config']);
 });
 
@@ -279,6 +285,7 @@ function recordAccess(req,data,cb) {
 //return all the users for a given database. Used when logging in to an event
 app.get('/public/getUsers/:key',function(req,res){
     var key = req.params.key;
+    console.log('/public/getUsers/:key')
     if (hashDataBases[key]) {
         //we have established a connection to the given database
         hashDataBases[key].collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
@@ -305,8 +312,22 @@ function getDbConnectionDEP(req) {
 }
 
 
+//sets the session for the specified event...
+app.post('/public/setEvent',function(req,res) {
+    var event = req.body;
+    if (hashDataBases[event.key]) {
+        req.session['config'] = {key: event.key};      //record the database key in the session
+
+       // req.session.save();
+        res.json({});
+
+    } else {
+        res.status(400).send({msg:'Invalid event key:'+event.key})
+    }
+});
+
 //login to an event
-app.post('/public/login',function(req,res){
+app.post('/public/loginDEP',function(req,res){
 
     var body = req.body;
     console.log(body);
@@ -316,28 +337,7 @@ app.post('/public/login',function(req,res){
 
 
     }
-    /*else {
-        var config = session['config'];
-        if (!config) {
-            res.send({msg:'Session has not been initialized'},404)
-        } else {
-            //
-            var body = req.body;
-            var userId = body.userId;
-            var pw = body.password;
-            var key = config.key;
-            //find the user
 
-            var user = hashDataBases[key].collection("person").findOne({id:userId});
-            if (! user) {
-                res.send(err, 500)
-            } else {
-                session['config'] = {key: key};      //record the database key in the session
-                res.send(user)
-
-            }
-        }
-    }*/
 
 
 
@@ -718,62 +718,9 @@ app.post('/espruino',function(req,res){
 });
 
 */
+
 //to serve up the static web pages - particularly the login page if no page is specified...
-
-//when th user navigates to a page in the format conman/event/{name}
-app.get('/event/:name',function(req,res){
-    var event = req.params.name;
-
-    if (hashDataBases[event]) {
-        //this is a properly configured event. set the session to the event name (key) and load the main page.
-        //the main page can call to get the list of configured users, if not known. (not the browser cach must cache user name bu event)
-        //we have established a connection to the given database
-        hashDataBases[event].collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
-            if (err) {
-                res.send(err,500)
-            } else {
-                req.session['config'] = {key:event};      //record the database key in the session
-
-
-
-                res.redirect('/connectathonMain.html');
-                //res.send(result)
-            }
-        })
-
-    } else {
-        //this is an unknown database
-        //todo - could redirect to a page that allows selection of the event...
-        res.send({msg:'unknown connectathon event code:'+event},404)
-    }
-
-
-    console.log(req.params.name)
-
-
-
-    //res.json();
-/*
-    if (hashDataBases[key]) {
-        //we have established a connection to the given database
-        hashDataBases[key].collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
-            if (err) {
-                res.send(err,500)
-            } else {
-                req.session['config'] = {key:key};      //record the database key in the session
-                res.send(result)
-            }
-        })
-
-    } else {
-        //this is an unknown database
-        res.send({msg:'unknown database:'+key},404)
-    }
-    */
-})
-
-
-app.use('/', express.static(__dirname,{index:'/connectathonMain.html'}));
+app.use('/', express.static(__dirname,{index:'/connectathon.html'}));
 
 
 
