@@ -12,16 +12,8 @@ var hashDataBases = {};         //hash for all connected databases
 //var qaModule = require('qaModule');
 
 //the known databases (or events)
-/*
-var dbKeys = [];
-dbKeys.push({key:'cof',display:'Clinicians On Fhir'});
-dbKeys.push({key:'connectathon',display:'Technical connectathon, New Orleans Jan 2018'});
-dbKeys.push({key:'mihin',display:'MiHIN connectathon, June 2018'});
-dbKeys.push({key:'nz',display:'NZ'});
-*/
-
 var dbKeys = require('./artifacts/events.json')
-console.log(dbKeys);
+
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";     //allow self signed certificates
 useSSL = false;
@@ -166,7 +158,6 @@ app.use(function (req, res, next) {
         //are we in a user session?
 
         var config = req.session['config'];         //the configuration for this user
-       // console.log('config',config,url);
         if (config && config.key) {
             //yep - there is a session...
             //there is a config and a key - this user
@@ -180,38 +171,8 @@ app.use(function (req, res, next) {
         } else {
             //not in a user session...
             next();
-            //todo - need to think about what to do with a call to /conman  and no user yet...
-            //if there's no config, that means the user hasn't logged in...
-            //res.send(dbKeys,401)    //return a list of the known events (keys)
         }
     }
-
-
-
-/*
-    if (!db) {
-        res.send({err:'Database could not be connected to. It may not be running...'},500)
-    } else {
-        //save in the audit if a PUT or a POST
-        if (req.method == 'PUT' || req.method == 'POST') {
-            var audit = {url:req.url,body:req.body,time:new Date(),method:req.method}
-            db.collection("audit").insert(audit,function(err,result){
-                if (err) {
-                    res.send({err:'Unable to insert record into the audit database...'},500)
-
-                } else {
-                    next()
-                }
-            })
-
-
-        } else {
-            //this is a GET...
-            next()
-        }
-    }
-
-    */
 
 });
 

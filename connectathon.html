@@ -304,7 +304,10 @@
                                             <strong>Wiki Page</strong>
                                         </div>
                                         <div class="col-sm-9 col-md-9">
-                                            <a target="_blank" ng-href="{{selectedTrack.url}}">{{selectedTrack.url}}</a> (Opens in a new tab)
+                                            <div ng-hide="selectedTrack.url">No Wiki page for this track.</div>
+                                            <a target="_blank" ng-show="selectedTrack.url"
+                                               ng-href="{{selectedTrack.url}}">{{selectedTrack.url}}</a> (Opens in a new tab)
+
                                         </div>
                                     </div>
                                     <br/>
