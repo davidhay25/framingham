@@ -35,10 +35,10 @@
         <div class="row">
             <div class="col-md-6 col-sm-6">
                 <div class="row">
-                    <div class="col-md-2 col-sm-2">
+                    <div class="col-md-3 col-sm-3">
                         Scenario Name
                     </div>
-                    <div class="col-md-8 col-sm-8">
+                    <div class="col-md-9 col-sm-9">
                         <input class="form-control" ng-model="scenario.name"/>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                         Description (MarkD)
                     </div>
                     <div class="col-md-9 col-sm-9">
-                        <textarea class="form-control" ng-model="scenario.description"></textarea>
+                        <textarea class="form-control" rows="6" ng-model="scenario.description"></textarea>
                     </div>
                 </div>
                 <br/>
@@ -142,7 +142,7 @@
 
                 <br/>
 
-                <div class="row">
+                <div class="row" ng-show = "1==2">
                     <div class="col-md-3 col-sm-3">
                         Associated CF Scenario
                     </div>
@@ -163,7 +163,6 @@
                     </div>
                 </div>
 
-                <br/>
 
             </div>
             <div class="col-md-6 col-sm-6">
@@ -184,12 +183,30 @@
                             <span class="badge">{{scenario.steps.length}}</span>
                         </uib-tab-heading>
                         <br/>
-                        <strong>Specific steps in scenario</strong>
+
 
                         <ol>
                             <li ng-repeat="step in scenario.steps">
 
-                                {{step}}
+                                    <div class="rounded-box">
+
+
+                                        <i class="clickable glyphicon glyphicon-remove-sign pull-right"
+                                           title="Edit scenario" ng-click="deleteStep($index)">
+                                        </i>
+                                        <i class="glyphicon glyphicon-arrow-up clickable pull-right"
+                                           ng-hide = "$index == 0"
+                                           ng-click="moveStepUp($index)"></i>
+                                        <i class="glyphicon glyphicon-arrow-down clickable pull-right"
+                                           ng-hide = "$index == (scenario.steps.length -1)"
+                                           ng-click="moveStepDn($index)"></i>
+
+                                        <div style="width: 300px">{{step}}</div>
+
+                                    </div>
+
+
+
                             </li>
                         </ol>
 
@@ -198,7 +215,7 @@
                             <div class="col-md-1 col-sm-1">
                             </div>
                             <div class="col-md-10 col-sm-10">
-                                <textarea class="form-control" ng-model="input.newStep"></textarea>
+                                <textarea class="form-control" rows="5" ng-model="input.newStep"></textarea>
                             </div>
                             <div class="col-md-1 col-sm-1">
                                 <i class="clickable glyphicon glyphicon-plus-sign pull-right"

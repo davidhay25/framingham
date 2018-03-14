@@ -61,6 +61,19 @@ angular.module("sampleApp")
 
             $scope.allResourceTypes = allResourceTypes;
 
+            $scope.deleteStep = function(inx) {
+                $scope.scenario.steps.splice(inx,1)
+            }
+
+            $scope.moveStepUp = function(inx) {
+                var steps = $scope.scenario.steps.splice(inx,1)
+                $scope.scenario.steps.splice(inx-1,0,steps[0])
+            };
+
+            $scope.moveStepDn = function(inx) {
+                var steps = $scope.scenario.steps.splice(inx,1)
+                $scope.scenario.steps.splice(inx+1,0,steps[0])
+            };
 
             $scope.addStep = function(step){
                 $scope.scenario.steps = $scope.scenario.steps || []
