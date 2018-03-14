@@ -1,4 +1,17 @@
 #!/usr/bin/env node
+
+/*
+* pre-req
+* update from repo
+* run build locally build/publish.sh
+* run transform  build/tools/xslt/ProfileToQAView.xslt against build/publish/profiles-resources.xml
+*
+*
+*
+*
+* */
+
+
 var fs = require('fs');
 
 var resourceSource = "/Users/davidha/fhir/trunk/build/source/";

@@ -475,7 +475,10 @@
                                                         <div class="col-sm-9 col-md-9">
                                                             <ol>
                                                                 <li ng-repeat="step in selectedScenario.steps">
-                                                                    {{step}}
+
+                                                                    <p ng-bind-html="step | markDown"></p>
+
+                                                                    <!--{{step}}-->
                                                                 </li>
                                                             </ol>
                                                         </div>

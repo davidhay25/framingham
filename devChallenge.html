@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+    <style>
+        .rounded-box-filled {
+            border : 1px solid #eeeeee;
+            padding : 5px;
+            margin: 0px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color:#F6F6F6;
+        }
+    </style>
+
+    <script>
+        var app = angular.module("devChallenge", []);
+
+        app.controller("devCtrl", function($scope,$http) {
+            $scope.input = {};
+            $scope.option = "";
+            //$scope.serverRoot = "https://nzlfhirsrvt7ss7ccrrakte.azurewebsites.net/";      //primary FHIR server
+            $scope.serverRoot = "http://conman.fhir.org:8080/baseDstu3/";      //backup FHIR server
+
+            $scope.getPatient = function(name) {
+                var url = $scope.serverRoot + "Patient?name="+name;
+                executeGet(url)
+            };
+
+            $scope.adHoc = function(url) {
+                executeGet($scope.serverRoot + url)
+            };
+
+            $scope.selectOption = function(option) {
+                $scope.option = option;
+                delete $scope.result;
+                delete $scope.error;
+                delete $scope.url;
+            };
+
+            function executeGet(url) {
+                $scope.url = url;
+
+                $http.get(url).then(
+                    function(data) {
+                        $scope.result = data.data;
+                    },
+                    function(err) {
+                        $scope.error = err.data;
+                    }
+                )
+            }
+        });
+
+    </script>
+
+
+</head>
+<body style="padding: 8px; padding-top:80px">
+
+<div ng-app="devChallenge" ng-controller="devCtrl">
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+        <div class="container-fluid">
+            <div class="col-md-5 col-sm-5">
+                <span class="navbar-brand" href="#">
+                    HL7 NZ Developer Challenge
+                </span>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="row">
+        <div class="col-md-2">
+
+            <ul class="list-group">
+                <li class="list-group-item" ng-click="selectOption('adHoc')">Ad Hoc query</li>
+                <li class="list-group-item" ng-click="selectOption('findPatient')">Find Patient by Name</li>
+                <li class="list-group-item" ng-click="selectOption('findAR')">Find Adverse reactions by Patient Id</li>
+            </ul>
+
+
+        </div>
+        <div class="col-md-10">
+            <div ng-show="url">
+                <div class="rounded-box-filled">{{url}}</div>
+                <br/>
+            </div>
+
+            <div ng-show="option=='findPatient'">
+                <h4>Find patient by name</h4>
+                <div class="row">
+                    <div class="col-md-5 col-sm-5">
+                        <input class="form-control" placeholder="Name to search on" ng-model="input.name"/>
+                    </div>
+                    <div class="col-md-5 col-sm-5">
+                        <button class="btn btn-primary" ng-click = "getPatient(input.name)">Get Patient</button>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-show="option=='adHoc'">
+                <h4>Ad Hoc query</h4>
+                <div class="row">
+                    <div class="col-md-10 col-sm-10">
+                        <input class="form-control" placeholder="Enter the query (without the base Url) eg Patient?name=hay" ng-model="input.adHoc"/>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <button class="btn btn-primary" ng-click = "adHoc(input.adHoc)">Get Patient</button>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-show="result">
+                <h3>Result</h3>
+                <pre>{{result | json}}</pre>
+            </div>
+
+            <div ng-show="error">
+                <h3>error</h3>
+                <pre>{{error | json}}</pre>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+</body>
+</html>

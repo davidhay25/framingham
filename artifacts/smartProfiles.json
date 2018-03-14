@@ -36,6 +36,22 @@
     ]
   },
   {
+    "name" : "BB-local",
+    "appName" : "clinfhirlocal",
+    "description":"Bluebutton 2",
+    "fhirVersion" : "3",
+    "baseUrl" : "https://sandbox.bluebutton.cms.gov/v1/fhir/",
+
+
+
+    "callback" : "https://localhost:8443/callback",
+    "clientId" : "NBc341qdwpkiAPlgI7794BoktdfjlJfdDX6o88OY",
+    "secret": "XMWW0Gv2GdrqvmK2NwsYql0BH9IsbHmzbrH7baIvZk5Uc2SxHYv2fuLR8A1N4F36GdvtZ4bVr6l1gNd1zfw6rzBixGdziBfPB7P8vEb0tdnzKwOx3dnELloK6OhKqIHB",
+    "clientIdConfig": "",
+    "defaultScope" :"patient/Patient.read "
+
+  },
+  {
     "name" : "clinFHIR - separate server app",
     "description":"clinFHIR SMART proxy",
     "fhirVersion" : "2",

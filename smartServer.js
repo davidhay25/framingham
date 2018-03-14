@@ -85,7 +85,7 @@ app.post('/setup',function(req,res){
 
     var options = {
         method: 'GET',
-        uri: config.baseUrl + "/metadata",
+        uri: config.baseUrl + "metadata",
         agentOptions: {         //allows self signed certificates to be used...
             rejectUnauthorized: false
         },
@@ -153,13 +153,11 @@ app.post('/setup',function(req,res){
             console.log('Error calling '+ options.uri)
             console.log(error,body)
             req.session.error = {err: body};
-            res.statue(500).send(req.session.error);
+            res.status(500).send(req.session.error);
 
-           // res.redirect('smartError.html')
         }
     })
-
-})
+});
 
 
 //load the capabilityStatement from the server, and set the SMART end points in config
@@ -431,9 +429,14 @@ app.get('/orionfhir/*',function(req,res){
         var access_token = req.session['accessToken'];
         var config = req.session["config"];     //retrieve the configuration from the session...
 
+        var url;
+        if (config.baseUrl[config.baseUrl.length-1] !== '/') {
+            url = config.baseUrl + '/' + fhirQuery;
+        } else {
+            url = config.baseUrl  + fhirQuery;
+        }
 
-        //var url = config.baseUrl  + fhirQuery;
-        var url = config.baseUrl + '/' + fhirQuery;
+        //var url = config.baseUrl + '/' + fhirQuery;
         if (showLog) {
             console.log('url=' + url)
         }
@@ -445,20 +448,28 @@ app.get('/orionfhir/*',function(req,res){
             agentOptions: {         //allows self signed certificates to be used...
                 rejectUnauthorized: false
             },
-            headers: {'authorization': 'Bearer ' + access_token,'accept':'application/json+fhir'}
+            headers: {'authorization': 'Bearer ' + access_token,'accept':'application/fhir+json'}
         };
+/*
+        var options = {
+            method: 'GET',
+            uri: url,
+            encoding : null,
+            agentOptions: {         //allows self signed certificates to be used...
+                rejectUnauthorized: false
+            },
+            headers: {'authorization': 'Bearer ' + access_token}
+        };
+*/
 
 
-        //console.log(config)
-        //create the consent data
+        //create the consent data - this was done for the Jan 2018 Connectathon...
         var consent = ',,'
         try {
             consent = config.context.org.code + ',' + config.context.role.code + ','+ config.context.purpose.code;
         } catch (ex) {
 
         }
-
-        //console.log(consent)
         if (consent !== ',,') {
             options.headers['X-consent'] = consent;
         }

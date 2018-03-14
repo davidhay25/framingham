@@ -103,6 +103,12 @@ angular.module("sampleApp")
                 scenario.links.splice(inx,1)
             };
 
+            $scope.removeType = function(inx){
+                scenario.scenarioTypes.splice(inx,1)
+            };
+
+
+
             $scope.updateScenario = function(){
                 if (! $scope.scenario.name) {
                     alert("The scenario name is required.")

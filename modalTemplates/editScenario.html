@@ -88,7 +88,7 @@
                                                      popover-placement="top"
                                                      popover-trigger="'mouseenter'">{{link.description}}</div>
                                             </div>
-                                            <div class="col-md-1 col-sm-1">
+                                            <div class="col-md-2 col-sm-2">
                                                 <i class="clickable glyphicon glyphicon-remove-sign pull-right"
                                                    ng-click="removeLink($index)">
                                                 </i>
@@ -97,35 +97,21 @@
 
 
                                     </li>
-
-
-
                                 </ul>
-
-
-
-
-
-
-
 
                         <div class="row">
                             <div class="col-sm-10 col-md-10">
                             </div>
-                            <div class="col-sm-1 col-md-1">
+                            <div class="col-sm-2 col-md-2">
                                 <i class="clickable glyphicon glyphicon-plus-sign pull-right"
                                    title="Add link" ng-click="addLink(input.link)">
                                 </i>
                             </div>
                         </div>
 
-
-
                     </div>
                 </div>
                 <br/>
-
-
 
                 <div class="row">
                     <div class="col-md-3 col-sm-3">
@@ -135,7 +121,17 @@
                     <div class="col-md-9 col-sm-9">
                         <ul class="list-unstyled">
                             <li ng-repeat="type in scenario.scenarioTypes">
-                                {{type}}
+                                <div class="row">
+                                    <div class="col-md-10 col-sm-10">
+                                        {{type}}
+                                    </div>
+                                    <div class="col-md-2 col-sm-2">
+                                        <i class="clickable glyphicon glyphicon-remove-sign pull-right"
+                                           ng-click="removeType($index)">
+                                        </i>
+                                    </div>
+                                </div>
+
                             </li>
                         </ul>
                         <select ng-model="input.resource" class="form-control"
@@ -167,14 +163,7 @@
                     </div>
                 </div>
 
-
-
-
                 <br/>
-
-
-
-
 
             </div>
             <div class="col-md-6 col-sm-6">
