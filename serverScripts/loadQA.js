@@ -14,12 +14,12 @@
 
 var fs = require('fs');
 
-var resourceSource = "/Users/davidha/fhir/trunk/build/source/";
-var publishRoot = "/Users/davidha/fhir/trunk/build/publish/";
+var resourceSource = "/Users/davidha/fhirbuild/build/source/";
+var publishRoot = "/Users/davidha/fhirbuild/build/publish/";
 var qaOutputRoot = "/Users/davidha/Dropbox/fhirQA2018/";        //where to place the output files...
 var resourcesList = "/Users/davidha/Dropbox/development/ecosystem/artifacts/resources.txt";     //the list of resource tyopes
 
-var saveIndividualOtherFiles = true;   //whether to generate individual 'other' files...
+var saveIndividualOtherFiles = false;   //whether to generate individual 'other' files...
 
 var arAllResourceTypes = getAllResourceTypes(resourcesList);
 
@@ -39,12 +39,12 @@ getOtherProfiles();
 
 createValueSets();      //generate the valuesets page
 
-
 createDatatypes();      //generate the datatype page
 
 //generate the 'other' files
 fs.readdir(resourceSource, function(err, list) {
     var allContent = "";        //the content for all files...
+    var cnt = 0, section = 0
     list.forEach(function (folderName) {
         var lcFolderName = folderName.toLowerCase();
 
@@ -52,12 +52,33 @@ fs.readdir(resourceSource, function(err, list) {
         var stat = fs.statSync(fileOrFolderName);
         if (! stat.isDirectory()) {     //ignore folders...
             if (fileOrFolderName.indexOf('.html') > -1) {
+
+                if (cnt == 10) {
+                    section ++
+                    var header =  "==============================================================================="
+                    header += "<h1>Section: " + section + "</h1>"
+                    header += "==============================================================================="
+
+                    allContent = header + allContent
+                    cnt = 0;
+                    console.log(section)
+
+                    var outFileName = qaOutputRoot + 'others/allContentSection'+ section + '.html';
+                    fs.writeFileSync(outFileName,allContent);
+                    allContent = ""
+
+                } else {
+                    cnt++
+                }
+
+
                 var ar = fileOrFolderName.split('/');
                 var outFileName = qaOutputRoot + 'others/'+ ar[ar.length-1];
                 var contents = fs.readFileSync(fileOrFolderName).toString();
                 allContent += "<h2>" + folderName + "</h2>"
                 allContent += getCleanBody(contents);
-                allContent += '<hr/>'
+                allContent += '<hr/>';
+
                 if (saveIndividualOtherFiles) {
                     fs.writeFileSync(outFileName,contents)
                 }
@@ -65,8 +86,20 @@ fs.readdir(resourceSource, function(err, list) {
         }
     });
 
-    outFileName = qaOutputRoot + 'others/allContentInOneFile.html'
-    fs.writeFileSync(outFileName,allContent)
+    if (allContent) {
+        section ++
+        var header =  "==============================================================================="
+        header += "<h1>Section: " + section + "</h1>"
+        header += "==============================================================================="
+
+        allContent = header + allContent
+        var outFileName = qaOutputRoot + 'others/allContentSection'+ section + '.html';
+        fs.writeFileSync(outFileName,allContent);
+    }
+
+   // outFileName = qaOutputRoot + 'others/allContentInOneFile.html'
+   // fs.writeFileSync(outFileName,allContent)
+    console.log("Total 'other' pages:"+cnt)
 
 });
 
@@ -75,7 +108,7 @@ fs.readdir(resourceSource, function(err, list) {
 
 //generate the individual Resource files
 fs.readdir(resourceSource, function(err, list) {
-   // console.log(list)
+
 
     var lstResources = []
     list.forEach(function(folderName){
@@ -97,6 +130,19 @@ fs.readdir(resourceSource, function(err, list) {
                 //list of elements
                 if (CoreProfiles[lcFolderName]) {
                     var SD = CoreProfiles[lcFolderName];
+
+
+                    for (var property in SD) {
+                        if (['description','purpose','copyright'] > -1) {
+                            html += "<h2>"+property+"</h2>";
+                            html += SD[property];
+                        }
+                    }
+
+                    html += "<h2>Description</h2>";
+                    html += SD.description;
+
+
                     html += "<h2>Elements</h2>";
                     html += "<table border='1'><tr><th>Path</th><th>Short</th><th>Definition</th><th>Comments</th></tr>";
                     SD.snapshot.element.forEach(function(ed){
@@ -117,6 +163,11 @@ fs.readdir(resourceSource, function(err, list) {
                             } else {
                                 html += "<td valign='top'></td>";
                             }
+
+
+
+
+
 
                             html += "</tr>";
                         }
@@ -148,7 +199,7 @@ fs.readdir(resourceSource, function(err, list) {
                 if (SearchParameters[type]) {
                     html += "<table border='1'>";
                     SearchParameters[type].forEach(function(sp){
-                        //console.log(sp)
+
                         html += "<tr>";
 
                         html += "<td valign='top'>"+sp.name+"</td>";
@@ -268,7 +319,7 @@ function createValueSets() {
     //now iterate through the resources. Create separate files for each wg
     for (var prop in hashCommittee) {
         var value = hashCommittee[prop]
-        //console.log(prop,v)
+
 
         var html = '<html xmlns="http://www.w3.org/TR/REC-html40"><head>';
         html += "<title>ValueSets</title>";
@@ -279,7 +330,7 @@ function createValueSets() {
         html += "<h1>Terminology</h1>";
 
         value.forEach(function(resource){
-            //console.log(resource.url)
+
             switch (resource.resourceType) {
                 case 'ValueSet' :
                     html += '<h2>ValueSet: '+ resource.name +'</h2>'
@@ -388,7 +439,7 @@ function createDatatypes() {
 function getOtherProfiles(){
     var fileName = publishRoot + "profiles-others.json"
     var json = JSON.parse(fs.readFileSync(fileName).toString());
-    //console.log(json.entry.length)
+
     json.entry.forEach(function(entry) {
         var resource = entry.resource;
         delete resource.text;
@@ -402,7 +453,7 @@ function getOtherProfiles(){
                 var baseDef = resource.baseDefinition.toLowerCase();
                 var ar = baseDef.split('/');
                 var type = ar[ar.length-1];
-                //console.log(type)
+
 
                 if (type=='vitalsigns') {
                     type = 'observation';
@@ -422,7 +473,7 @@ function getOtherProfiles(){
 
     });
 
-    //console.log(Profiles);
+
 
 }
 
@@ -430,7 +481,7 @@ function getOtherProfiles(){
 function getCoreProfiles(){
     var fileName = publishRoot + "profiles-resources.json"
     var json = JSON.parse(fs.readFileSync(fileName).toString());
-    //console.log(json)
+
     json.entry.forEach(function(entry) {
         var resource = entry.resource;
         delete resource.text;
@@ -440,7 +491,7 @@ function getCoreProfiles(){
             case 'CompartmentDefinition':
             case 'CapabilityStatement':
             //these can all be ignored....
-            //console.log(resource.name)
+
             case 'StructureDefinition':
                 var id = resource.id;
                 if (CoreProfiles[id]) {
@@ -472,14 +523,14 @@ function getCoreProfiles(){
 
     })
 
-    //console.log(CoreProfiles);
+
 
 }
 
 function getExtensionDefinitions(){
     var fileName = publishRoot + "extension-definitions.json"
     var json = JSON.parse(fs.readFileSync(fileName).toString());
-    //console.log(json)
+
     json.entry.forEach(function(entry) {
         var ed = entry.resource;
 
@@ -493,7 +544,7 @@ function getExtensionDefinitions(){
                 type = 'patient'
             }
 
-            //console.log(type)
+
 
             ExtensionDefinitions[type] = ExtensionDefinitions[type] || []
             ExtensionDefinitions[type].push(ed);
@@ -501,7 +552,7 @@ function getExtensionDefinitions(){
 
 
     })
-    //console.log('ed',ExtensionDefinitions['visionprescription']);
+
 }
 
 function getSearchParameters(){
@@ -523,20 +574,20 @@ function getSearchParameters(){
 }
 
 function getExtensionValue(arExt,inUrl) {
-    //console.log(arExt,inUrl)
+
     if (arExt) {
 
         for (var i=0; i<arExt.length; i++) {
             var ext = arExt[i]
-           // console.log(ext,inUrl)
+
             if (ext.url == inUrl) {
-                //console.log('========================')
+
                 if (ext.valueCode) {
-                    //console.log('--------------' + ext.valueCode)
+
                     return ext.valueCode;       //'cause we know that it will be a code...
                 }
                 if (ext.valueString) {
-                    //console.log('--------------' + ext.valueString)
+
                     return ext.valueString;
                 }
             }
@@ -562,8 +613,7 @@ function getCleanBody(content) {
 
 
 
-    //console.log(content)
-    //console.log('--------------------------------')
+
 
     content = removeAllCodes(content,'[%','%]')
     content = removeAllCodes(content,'<%','%>')
@@ -571,18 +621,8 @@ function getCleanBody(content) {
     content = removeAllCodes(content,'<link','/>')
 
     return content;
-    //console.log(content)
 
-    /*
-    var s = removeCode(content,'[%','%]')
-    while (s) {
-        content = s;
-        s = removeCode(content,'[%','%]')
-    }
-    console.log(content)
-*/
 
-   // console.log(removeCode(content,'[%','%]').substr(0,100))
 
 }
 
@@ -602,7 +642,7 @@ function removeCode(string, start, end) {
         //if (g ==0 ) {g = 1}    //if the start is the very start
         var g1 = string.indexOf(end,g);
         if (g1 > -1) {
-            console.log(start,end, g,g1)
+
             s = string.substr(0,g -1) + string.substr(g1+end.length)
             return s
         }
@@ -612,7 +652,7 @@ function removeCode(string, start, end) {
 
 function getAllResourceTypes(fileName) {
     var contents = fs.readFileSync(fileName).toString();
-    console.log(contents)
+
     var ar = contents.split('\n');
     return ar;
 }

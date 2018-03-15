@@ -26,6 +26,7 @@ var sslOptions = {
 
 https.createServer(sslOptions, app).listen(8443)
 
+
 var showLog = true;         //for debugging...
 
 //initialize the session...
@@ -429,6 +430,8 @@ app.get('/orionfhir/*',function(req,res){
         var access_token = req.session['accessToken'];
         var config = req.session["config"];     //retrieve the configuration from the session...
 
+        console.log('version ' + config.fhirVersion)
+
         var url;
         if (config.baseUrl[config.baseUrl.length-1] !== '/') {
             url = config.baseUrl + '/' + fhirQuery;
@@ -450,6 +453,12 @@ app.get('/orionfhir/*',function(req,res){
             },
             headers: {'authorization': 'Bearer ' + access_token,'accept':'application/fhir+json'}
         };
+
+        if (config.fhirVersion == 2) {
+            options.headers.accept = 'application/json+fhir'
+        }
+
+
 /*
         var options = {
             method: 'GET',

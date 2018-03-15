@@ -25,6 +25,15 @@
             //$scope.serverRoot = "https://nzlfhirsrvt7ss7ccrrakte.azurewebsites.net/";      //primary FHIR server
             $scope.serverRoot = "http://conman.fhir.org:8080/baseDstu3/";      //backup FHIR server
 
+
+            $scope.samples = [];
+
+
+
+            $scope.servers = [];
+            $scope.servers.push("http://conman.fhir.org:8080/baseDstu3/")
+            $scope.servers.push("https://nzlfhirsrvt7ss7ccrrakte.azurewebsites.net/")
+
             $scope.getPatient = function(name) {
                 var url = $scope.serverRoot + "Patient?name="+name;
                 executeGet(url)
@@ -32,6 +41,46 @@
 
             $scope.adHoc = function(url) {
                 executeGet($scope.serverRoot + url)
+            };
+
+            $scope.getAE = function(id) {
+                var url = $scope.serverRoot + "AdverseEvent/" + id;
+
+                executeGet(url)
+            };
+
+            $scope.findAE = function(patientId,includeReferenced) {
+                var url = $scope.serverRoot + "AdverseEvent?subject="+patientId;
+                if (includeReferenced) {
+                    url += "&_include=AdverseEvent:reaction&_include=AdverseEvent:substance";
+                }
+                executeGet(url)
+            };
+
+            $scope.updateAE = function(ae) {
+                try {
+                    var json = angular.fromJson(ae)
+                    var id = json.id;
+                    if (!id) {
+                        alert("There must be an id property");
+                        return;
+                    }
+                    var url = $scope.serverRoot + "AdverseEvent/"+id;
+                    $scope.url = url;
+                    $http.put(url,json).then(
+                        function(data){
+                            alert("The AdverseEvent: "+id + " has been updated.")
+                        },
+                        function(err) {
+                            alert(angular.toJson(err.data))
+                        }
+                    )
+
+
+                } catch(ex) {
+                    alert("Invalid Json")
+                }
+
             };
 
             $scope.selectOption = function(option) {
@@ -49,7 +98,8 @@
                         $scope.result = data.data;
                     },
                     function(err) {
-                        $scope.error = err.data;
+                        $scope.error = err;
+
                     }
                 )
             }
@@ -68,7 +118,7 @@
         <div class="container-fluid">
             <div class="col-md-5 col-sm-5">
                 <span class="navbar-brand" href="#">
-                    HL7 NZ Developer Challenge
+                    HL7 NZ Developer Challenge: Demo
                 </span>
             </div>
         </div>
@@ -77,19 +127,60 @@
 
     <div class="row">
         <div class="col-md-2">
-
+            <h3>Samples</h3>
             <ul class="list-group">
                 <li class="list-group-item" ng-click="selectOption('adHoc')">Ad Hoc query</li>
                 <li class="list-group-item" ng-click="selectOption('findPatient')">Find Patient by Name</li>
-                <li class="list-group-item" ng-click="selectOption('findAR')">Find Adverse reactions by Patient Id</li>
+                <li class="list-group-item" ng-click="selectOption('getAE')">Get Adverse events by Id</li>
+                <li class="list-group-item" ng-click="selectOption('findAE')">Find Adverse events by Patient Id</li>
+                <li class="list-group-item" ng-click="selectOption('putAE')">Update Adverse Event</li>
             </ul>
-
-
         </div>
+
         <div class="col-md-10">
+            <div class="row">
+                <div class="col-md-1">
+                    <h4>Server</h4>
+                </div>
+                <div class="col-md-4">
+                    <select ng-options = "url for url in servers" class="form-control" ng-model="serverRoot"></select>
+                </div>
+            </div>
+
             <div ng-show="url">
                 <div class="rounded-box-filled">{{url}}</div>
                 <br/>
+            </div>
+
+
+
+
+
+
+            <div ng-show="option=='getAE'">
+                <h4>Get AdverseEvent by Id</h4>
+                <div class="row">
+                    <div class="col-md-2 col-sm-2">
+                        <input class="form-control" placeholder="Enter the od" ng-model="input.id"/>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <button class="btn btn-primary" ng-click = "getAE(input.id)">Get AdverseEvent</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div ng-show="option=='putAE'">
+                <h4>Update (or create) an Adverse Event</h4>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <textarea class="form-control" ng-model="input.newAE" rows="20"></textarea>
+
+                    </div>
+                    <div class="col-md-1 col-sm-1">
+                        <button class="btn btn-primary" ng-click="updateAE(input.newAE)">Save</button>
+                    </div>
+                </div>
             </div>
 
             <div ng-show="option=='findPatient'">
@@ -112,6 +203,21 @@
                     </div>
                     <div class="col-md-2 col-sm-2">
                         <button class="btn btn-primary" ng-click = "adHoc(input.adHoc)">Get Patient</button>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-show="option=='findAE'">
+                <h4>Find Adverse Events with a patient Id</h4>
+                <div class="row">
+                    <div class="col-md-2 col-sm-2">
+                        <input class="form-control" placeholder="Enter the patient id" ng-model="input.id"/>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        Include all references resources <input type="checkbox" ng-model="input.include">
+                    </div>
+                    <div class="col-md-5 col-sm-5">
+                        <button class="btn btn-primary" ng-click = "findAE(input.id,input.include)">Get Patient</button>
                     </div>
                 </div>
             </div>

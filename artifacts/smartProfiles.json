@@ -41,14 +41,19 @@
     "description":"Bluebutton 2",
     "fhirVersion" : "3",
     "baseUrl" : "https://sandbox.bluebutton.cms.gov/v1/fhir/",
-
-
+    "login":{
+      "username":"BBUser29999",
+      "password":"PW29999!"
+    },
 
     "callback" : "https://localhost:8443/callback",
     "clientId" : "NBc341qdwpkiAPlgI7794BoktdfjlJfdDX6o88OY",
     "secret": "XMWW0Gv2GdrqvmK2NwsYql0BH9IsbHmzbrH7baIvZk5Uc2SxHYv2fuLR8A1N4F36GdvtZ4bVr6l1gNd1zfw6rzBixGdziBfPB7P8vEb0tdnzKwOx3dnELloK6OhKqIHB",
     "clientIdConfig": "",
-    "defaultScope" :"patient/Patient.read "
+    "defaultScope" :"patient/Patient.read ",
+    "documentation":[
+      {"name":"Developer Guide","url":"https://bluebutton.cms.gov/developers/"}
+    ]
 
   },
   {
@@ -67,7 +72,7 @@
     "name" : "SmartHealthIT - successful",
     "description":"Calls the SMART sandbox provider standalone, with a practitioner on scope",
     "fhirVersion" : "3",
-    "baseUrl" : "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImkiOiIxIiwiZSI6InNtYXJ0LVByYWN0aXRpb25lci03MTAzMjcwMiJ9/fhir",
+    "baseUrl" : "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImkiOiIxIiwiZSI6InNtYXJ0LVByYWN0aXRpb25lci03MTAzMjcwMiJ9/fhir/",
     "callback" : "https://localhost:8443/callback",
     "clientId" : "d90584cc-3b0e-40db-8543-536df45a84f4",
     "secret": "a07NAYD7lnhfBh1b9614dPp_lZxyK5Hf7ImS8GJ2XnbD8SE-ZzAqJhyKykL7359ip0AG5bLC172_M5mhWxuRig",
@@ -87,16 +92,20 @@
     "defaultScope" :"openid profile patient/*.*"
   },
   {
-    "name" : "Cerner",
+    "name" : "Cerner (local)",
     "description":"The Cerner sandbox",
     "fhirVersion" : "2",
-    "baseUrl" : "https://fhir-myrecord.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca",
-    "callback" : "http://localhost:3000/callback",
+    "baseUrl" : "https://fhir-myrecord.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/",
+    "callback" : "https://localhost:8443/callback",
     "clientId" : "67b6bf53-d37e-4854-8d34-e2904cf523e1",
     "secret": "",
     "clientIdConfig": "",
     "defaultScope" :"patient/Patient.read",
     "public" : true,
+    "documentation": [
+      {"url":"https://code.cerner.com/developer/smart-on-fhir/apps"}
+    ],
+
     "resources" : [
       "https://groups.google.com/forum/m/#!forum/cerner-fhir-developers"
     ]
