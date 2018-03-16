@@ -1,6 +1,6 @@
 angular.module("sampleApp")
     .controller('editScenarioCtrl',
-        function ($scope,ecosystemSvc,scenario,allResourceTypes,library,$uibModal,modalService) {
+        function ($scope,ecosystemSvc,scenario,allResourceTypes,library,$uibModal) {
 
             $scope.scenario = scenario;
             $scope.library = library;
@@ -14,6 +14,21 @@ angular.module("sampleApp")
             }
 
             $scope.allRoles = ecosystemSvc.getAllRoles();
+
+            $scope.addNewRole = function(name,description) {
+                ecosystemSvc.addNewRole(name,description).then(
+                    function(role){
+                        //so the role has been added - link it to the current scenario
+                        scenario.roleIds = scenario.roleIds || []
+                        scenario.roleIds.push(role.id);
+                        $scope.input.roles[role.id] = true;
+                    },
+                    function(err) {
+                        alert(err)
+                    }
+                )
+            };
+
             console.log($scope.allRoles)
 
             if (scenario && library && scenario.cfScenario) {
@@ -121,6 +136,23 @@ angular.module("sampleApp")
             };
 
 
+            $scope.updateScenarioRoles = function(){
+
+
+                $scope.scenario.roleIds = [];
+                $scope.scenario.roles = [];                //the role objects are only linked to the scenario in the app - not the db
+                $scope.allRoles.forEach(function (role) {
+                    if ($scope.input.roles[role.id]) {
+                        $scope.scenario.roleIds.push(role.id);
+                        $scope.scenario.roles.push(role)
+                    }
+                });
+
+
+
+
+                //alert($scope.scenario.roleIds.length)
+            };
 
             $scope.updateScenario = function(){
                 if (! $scope.scenario.name) {
@@ -129,12 +161,13 @@ angular.module("sampleApp")
                 }
 
                 scenario.roleIds = [];
+                scenario.roles = [];                //the role objects are only linked to the scenario in the app - not the db
                 $scope.allRoles.forEach(function (role) {
                     if ($scope.input.roles[role.id]) {
                         scenario.roleIds.push(role.id)
+                        scenario.roles.push(role)
                     }
-                })
-
+                });
 
                 $scope.$close(scenario)
             };

@@ -22,17 +22,14 @@
         app.controller("devCtrl", function($scope,$http) {
             $scope.input = {};
             $scope.option = "";
-            //$scope.serverRoot = "https://nzlfhirsrvt7ss7ccrrakte.azurewebsites.net/";      //primary FHIR server
-            $scope.serverRoot = "http://conman.fhir.org:8080/baseDstu3/";      //backup FHIR server
-
 
             $scope.samples = [];
-
-
 
             $scope.servers = [];
             $scope.servers.push("http://conman.fhir.org:8080/baseDstu3/")
             $scope.servers.push("https://nzlfhirsrvt7ss7ccrrakte.azurewebsites.net/")
+            $scope.serverRoot = "http://conman.fhir.org:8080/baseDstu3/";      //backup FHIR server
+
 
             $scope.getPatient = function(name) {
                 var url = $scope.serverRoot + "Patient?name="+name;
@@ -123,7 +120,6 @@
             </div>
         </div>
     </nav>
-
 
     <div class="row">
         <div class="col-md-2">

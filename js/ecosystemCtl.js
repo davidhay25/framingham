@@ -288,14 +288,19 @@ angular.module("sampleApp")
                 }).result.then(function(editedScenario){
                     var url = "/config/scenario";
 
-                    delete editedScenario._id;
+                    var clone = angular.copy(editedScenario);
 
-                    $http.post(url,editedScenario).then(
+                    delete clone._id;
+                    delete clone.roles;        //don't want the role objects in the db...
+                    $http.post(url,clone).then(
                         function(data) {
                             //alert('scenario updated')
 
                             //update all roles for the track - just for the display...
-                            updateRolesListInTrack($scope.selectedTrack);
+                            //updateRolesListInTrack($scope.selectedTrack);
+                            ecosystemSvc.updateTrackRoles($scope.selectedTrack)
+
+
                             /*
                             var hashRoles = {}
                             $scope.selectedTrack.roles.length = 0;
@@ -320,7 +325,7 @@ angular.module("sampleApp")
 
 
             //update the roles associated with a track, based on the scenario/roles link...
-            function updateRolesListInTrack(track) {
+            function updateRolesListInTrackDEP(track) {
                 var hashRoles = {}
                 $scope.selectedTrack.roles.length = 0;
                 $scope.selectedTrack.scenarios.forEach(function (sc) {

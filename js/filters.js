@@ -78,9 +78,10 @@ angular.module("sampleApp")
     }])
     .filter('markDown', function() {
         return function(text) {
-            var converter = new showdown.Converter(),
-
-                html  = converter.makeHtml(text);
+            //https://github.com/showdownjs/showdown/wiki/Showdown-Options
+            var options = {tables: true, strikethrough: true};
+            var converter = new showdown.Converter(options),
+            html  = converter.makeHtml(text);
 
             return html;
         }

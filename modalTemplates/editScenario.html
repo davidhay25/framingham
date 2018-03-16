@@ -48,16 +48,17 @@
                         Description (MarkD)
                     </div>
                     <div class="col-md-9 col-sm-9">
-                        <textarea class="form-control" rows="6" ng-model="scenario.description"></textarea>
+                        <textarea class="form-control" rows="12" ng-model="scenario.description"></textarea>
                     </div>
                 </div>
                 <br/>
+                <!--
                 <div class="row">
                     <div class="col-md-3 col-sm-3">
                         PreCondition
                     </div>
                     <div class="col-md-9 col-sm-9">
-                        <textarea class="form-control" ng-model="scenario.precondition"></textarea>
+
                     </div>
                 </div>
                 <br/>
@@ -66,10 +67,11 @@
                         Success
                     </div>
                     <div class="col-md-9 col-sm-9">
-                        <textarea class="form-control" ng-model="scenario.success"></textarea>
+
                     </div>
                 </div>
                 <br/>
+                -->
 
                 <div class="row">
                     <div class="col-md-3 col-sm-3">
@@ -168,6 +170,10 @@
             <div class="col-md-6 col-sm-6">
 
                 <uib-tabset>
+                    <uib-tab heading="Pre">
+                        <h4>Pre Conditions</h4>
+                        <textarea class="form-control" ng-model="scenario.precondition"></textarea>
+                    </uib-tab>
                     <uib-tab>
                         <uib-tab-heading>
                             Action
@@ -227,16 +233,21 @@
                     </uib-tab>
 
 
+                    <uib-tab heading="Success">
+                        <h4>Success</h4>
+                        <textarea class="form-control" ng-model="scenario.success"></textarea>
+                    </uib-tab>
+
                     <uib-tab>
                         <uib-tab-heading>
                             Roles
-                            <!--<span class="badge">{{scenario.steps.length}}</span>-->
+                            <span class="badge">{{scenario.roleIds.length}}</span>
                         </uib-tab-heading>
                         <br/>
                         <div ng-repeat = "role in allRoles">
                             <div class="row">
                                 <div class="col-md-2 col-sm-2">
-                                    <checkbox ng-model="input.roles[role.id]"></checkbox>
+                                    <checkbox ng-model="input.roles[role.id]" ng-change="updateScenarioRoles()"></checkbox>
                                 </div>
                                 <div class="col-md-10 col-sm-10">
                                     {{role.name}}
@@ -244,6 +255,25 @@
                             </div>
 
                         </div>
+
+                        <hr/>
+                        <div class="row">
+
+                            <div class="col-sm-6 col-md-6">
+                                <input class="form-control" ng-model="input.newRoleName" placeholder="New role name"/>
+                            </div>
+                            <!--
+                            <div class="col-sm-6 col-md-6">
+                                <input class="form-control" ng-model="input.newRoleDescription" placeholder="Description"/>
+                            </div>
+                            -->
+                            <div class="col-sm-1 col-md-1">
+                                <button class="btn btn-link"
+                                        ng-click="addNewRole(input.newRoleName,input.newRoleName)">Add</button>
+                            </div>
+                        </div>
+
+
 
                     </uib-tab>
 

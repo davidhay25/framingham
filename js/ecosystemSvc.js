@@ -173,6 +173,35 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
 
     return {
+        updateTrackRoles : function(track) {
+            var hash = {};      //hash of the roles in the track...
+            track.roles = track.roles || []
+            track.roles.length = 0;
+            track.scenarios.forEach(function(scenario){
+                scenario.roles.forEach(function(role){
+                    if (!hash[role.id]) {
+                        hash[role.id] = role;
+                        track.roles.push(role)
+                    }
+                })
+            })
+
+        },
+        addNewRole : function(roleName,roleDescription) {
+            var deferred = $q.defer();
+            var role = {name:roleName,description:roleDescription, id:'role-'+new Date().getTime()}
+
+            $http.post("/config/role",role).then(
+                function(data){
+                    allRoles.push(role);
+                    deferred.resolve(role)
+                }, function(err) {
+                    console.log(err);
+                    deferred.reject(err)
+                }
+            );
+            return deferred.promise;
+        },
         getAllRoles : function() {
             return allRoles;
         },
@@ -1186,7 +1215,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                             track.scenarioIds.forEach(function (id) {
                                 var scenario = hashScenario[id];
                                 if (scenario) {
-                                    scenario.roles = scenario.roles || [];
+                                    //scenario.roles = scenario.roles || [];
+                                    scenario.roles = [];    //don't really want to store the role objects in the db...
                                     track.scenarios.push(scenario);
                                     if (scenario.roleIds) {
                                         scenario.roleIds.forEach(function (id) {
