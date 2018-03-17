@@ -90,37 +90,7 @@
 
             </uib-tab>
         </uib-tabset>
-<!--
-        <div class="row">
-            <div class="col-md-2 col-sm-2">
-                Description
-            </div>
-            <div class="col-md-12 col-sm-12">
 
-
-
-
-            </div>
-
-
-    </div>
-        -->
-
-        <div class="row">
-            <div class="col-md-6 col-sm-6">
-
-
-
-
-            </div>
-
-            <div class="col-md-6 col-sm-6">
-
-
-            </div>
-        </div>
-
-        <br/>
     </div>
 
 
@@ -130,7 +100,7 @@
                 <em ng-hide="canSave">
                     Only the track lead can make changes. (As indicated by the current user in the navbar)
                 </em>
-                <div ng-show="canSave">
+                <div ng-show="canSave && ! isNew">
                     <button class="btn btn-danger pull-right" ng-click="deleteTrack()">Delete</button>
                 </div>
 

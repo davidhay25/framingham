@@ -55,11 +55,11 @@ fs.readdir(resourceSource, function(err, list) {
 
                 if (cnt == 10) {
                     section ++
-                    var header =  "==============================================================================="
+                    var header =  "<html><head></head><body>"
                     header += "<h1>Section: " + section + "</h1>"
-                    header += "==============================================================================="
+                    //header += "==============================================================================="
 
-                    allContent = header + allContent
+                    allContent = header + allContent + "</body></html>"
                     cnt = 0;
                     console.log(section)
 

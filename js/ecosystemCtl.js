@@ -68,6 +68,7 @@ angular.module("sampleApp")
                     }
                 )
             } else {
+                $scope.noEventCode = true;
                 //no event specified in the query. This will show the error div...
             }
 
@@ -515,6 +516,9 @@ angular.module("sampleApp")
                         },
                         allPersons : function() {
                             return $scope.allPersons;
+                        },
+                        isNew : function() {
+                            return isNew
                         }
                     }
                 }).result.then(function(vo){

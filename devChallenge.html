@@ -62,6 +62,9 @@
                         alert("There must be an id property");
                         return;
                     }
+
+
+
                     var url = $scope.serverRoot + "AdverseEvent/"+id;
                     $scope.url = url;
                     $http.put(url,json).then(

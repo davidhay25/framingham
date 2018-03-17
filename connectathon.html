@@ -448,7 +448,7 @@
 
                                                             <div class="row" ng-show="selectedScenario.precondition">
                                                                 <div class="col-sm-3 col-md-3">
-                                                                    Precondition
+                                                                    <strong>Precondition</strong>
                                                                 </div>
                                                                 <div class="col-sm-9 col-md-9">
                                                                     {{selectedScenario.precondition}}
@@ -457,7 +457,7 @@
 
                                                             <div class="row"ng-show="selectedScenario.steps.length > 0">
                                                                 <div class="col-sm-3 col-md-3">
-                                                                    Steps
+                                                                    <strong>Steps</strong>
                                                                 </div>
                                                                 <div class="col-sm-9 col-md-9">
                                                                     <ol>
@@ -473,7 +473,7 @@
 
                                                             <div class="row" ng-show="selectedScenario.links.length > 0">
                                                                 <div class="col-sm-3 col-md-3">
-                                                                    Links
+                                                                    <strong>Links</strong>
                                                                 </div>
                                                                 <div class="col-sm-9 col-md-9">
                                                                     <ul class="list-unstyled">
@@ -494,7 +494,7 @@
 
                                                             <div class="row" ng-show="selectedScenario.success">
                                                                 <div class="col-sm-3 col-md-3">
-                                                                    Success
+                                                                    <strong>Success</strong>
                                                                 </div>
                                                                 <div class="col-sm-9 col-md-9">
                                                                     {{selectedScenario.success}}
@@ -502,7 +502,7 @@
                                                             </div>
                                                             <div class="row" ng-show="selectedScenario.bonus.length > 0">
                                                                 <div class="col-sm-3 col-md-3">
-                                                                    Bonus
+                                                                    <strong>Bonus</strong>
                                                                 </div>
                                                                 <div class="col-sm-9 col-md-9">
                                                                     <ul class="list-unstyled">
@@ -1589,7 +1589,7 @@
     </div>
 
 
-    <div ng-hide="eventConfig">
+    <div ng-show="noEventCode">
         <h3>No event was specified!</h3>
         <br/>
         <p>You need to specify the connectathon event code that you want in the url. For example:</p>

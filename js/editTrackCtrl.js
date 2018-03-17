@@ -1,11 +1,12 @@
 angular.module("sampleApp")
     .controller('editTrackCtrl',
-        function ($scope,ecosystemSvc,track,allPersons,modalService) {
+        function ($scope,ecosystemSvc,track,allPersons,modalService,isNew) {
 
             $scope.currentUser = ecosystemSvc.getCurrentUser();
             $scope.allPersons = allPersons;
             $scope.input = {roles:{}};
-            $scope.clone = {};
+           // $scope.clone = {};
+            $scope.isNew = isNew;
 
 
             console.log($scope.allRoles)
@@ -13,7 +14,7 @@ angular.module("sampleApp")
 
             $scope.canSave = true;
 
-            if (track) {
+            if (track) {        //should always be true as the 'addTrack' sets a base track {id: name: roles: scenarioIds: };
                // $scope.clone = angular.copy(track)
                 $scope.track = track;
                 if (track.leadIds && track.leadIds.length > 0 && $scope.currentUser) {
