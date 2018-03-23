@@ -137,8 +137,6 @@ angular.module("sampleApp")
 
 
             $scope.updateScenarioRoles = function(){
-
-
                 $scope.scenario.roleIds = [];
                 $scope.scenario.roles = [];                //the role objects are only linked to the scenario in the app - not the db
                 $scope.allRoles.forEach(function (role) {
@@ -147,11 +145,6 @@ angular.module("sampleApp")
                         $scope.scenario.roles.push(role)
                     }
                 });
-
-
-
-
-                //alert($scope.scenario.roleIds.length)
             };
 
             $scope.updateScenario = function(){

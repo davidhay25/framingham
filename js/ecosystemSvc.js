@@ -172,7 +172,74 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     objColours.Medication = '#FF9900';
 
 
+    //logical models (like Dosage). Might extend to complex datatypes for expanding logical models later on...
+    var typeChildren = {}
+    $http.get("artifacts/typeChildren.json").then(
+        function(data) {
+            typeChildren = data.data;
+        }
+    );
+
+    var pathsCache = {};    //cache for paths by type - ?save in browser cache
+
     return {
+        getAllPathsForType: function (typeName,explode) {
+            console.log(typeName);
+            var deferred = $q.defer();
+            //return all the possible paths for a base type...
+            //derived from logicalmodelsvc
+
+            if ( pathsCache[typeName]) {
+                console.log('hit');
+                deferred.resolve(pathsCache[typeName])
+
+            } else {
+                var url = "http://hl7.org/fhir/StructureDefinition/" + typeName;
+
+                ecoUtilitiesSvc.findConformanceResourceByUri(url).then(
+                    function (SD) {
+                        if (SD && SD.snapshot && SD.snapshot.element) {
+                            var lst = [], hash={}, dtDef = {};
+                            SD.snapshot.element.forEach(function (ed) {
+                                var path = ed.path;
+
+                                var ar = path.split('.');
+                                ar.splice(0,1);
+                                path = ar.join('.')
+
+                                lst.push(path)
+                                hash[path] = ed;
+                                if (ed.type && explode) {
+                                    //see if this is a FHIR logical model (like dosage). If so, add the child nodes
+                                    //may want to do this for codeableconcept and others as well...
+                                    var typ = ed.type[0].code;
+                                    if (typeChildren[typ]) {
+                                        typeChildren[typ].forEach(function(child){
+                                            lst.push(path + "." + child.name)
+                                            hash[path] = ed;
+                                        })
+                                    }
+                                }
+
+
+                            });
+
+                            var vo = {list:lst,hash:hash,dtDef:typeChildren};
+                            pathsCache[typeName] = vo;
+                            deferred.resolve(vo);
+                        }
+
+                    }, function (err) {
+                        alert("error with query: " + url + "\n" + angular.toJson(err));
+                        deferred.reject();
+                    }
+                );
+
+            }
+
+            return deferred.promise;
+
+        },
         updateTrackRoles : function(track) {
             var hash = {};      //hash of the roles in the track...
             track.roles = track.roles || []

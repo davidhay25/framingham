@@ -128,8 +128,8 @@
 
     <script src="js/libs/showdown.min.js"></script>
     <script src="js/libs/angular-lightweight-markdown-editor.min.js"></script>
-
     <script src="js/ecosystemCtl.js"></script>
+
     <script src="js/ecosystemSvc.js"></script>
     <script src="js/modalDialogSvc.js"></script>
     <script src="js/addServerToScenarioCtrl.js"></script>
@@ -144,8 +144,11 @@
     <script src="js/filters.js"></script>
     <script src="js/editScenarioCtrl.js"></script>
     <script src="js/loginCtrl.js"></script>
+    <script src="js/cofCtrl.js"></script>
+    <script src="js/lmCheckfCtrl.js"></script>
     <script src="js/libs/angular-bootstrap-checkbox.js"></script>
     <script src="js/libs/vis.min.js"></script>
+    <script src="js/modellerFilters.js"></script>
 
 </head>
 <body style="padding: 8px;padding-top: 80px" >
@@ -1010,6 +1013,10 @@
 
                 </uib-tab>
 
+
+
+
+
                 <uib-tab heading="Testing">
                     <br/>
 
@@ -1174,6 +1181,24 @@
                                             </div>
                                         </div>
 
+                                    </div>
+
+                                </uib-tab>
+
+
+                                <uib-tab heading="Clinical">
+                                    <br/>
+                                    <div ng-controller="cofCtrl">
+                                        <ng-include src="'includes/cof.html'"></ng-include>
+                                    </div>
+
+                                </uib-tab>
+
+
+                                <uib-tab heading="Logical Model">
+                                    <br/>
+                                    <div ng-controller="lmCheckCtrl">
+                                        <ng-include src="'includes/lmCheck.html'"></ng-include>
                                     </div>
 
                                 </uib-tab>

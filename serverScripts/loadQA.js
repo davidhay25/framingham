@@ -470,10 +470,7 @@ function getOtherProfiles(){
 
         }
 
-
     });
-
-
 
 }
 

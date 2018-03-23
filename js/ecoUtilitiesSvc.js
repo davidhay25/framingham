@@ -3,6 +3,31 @@ angular.module("sampleApp").service('ecoUtilitiesSvc', function($q,$http,modalSe
 
     return {
 
+        findConformanceResourceByUri : function(url,serverUrl,typeOfConformanceResource) {
+            //find a StructureDefinition based on its Uri. ie we query the registry to find the required SD
+            //copied from rbServices
+            var deferred = $q.defer();
+
+            typeOfConformanceResource = typeOfConformanceResource || 'StructureDefinition';
+            serverUrl = serverUrl || "http://fhirtest.uhn.ca/baseDstu3/";       //todo - need a better solution than this...
+            var qry = serverUrl  + typeOfConformanceResource + "?url=" + url;
+
+            $http.get(qry).then(
+                function(data){
+                    var bundle = data.data;
+                    if (bundle && bundle.entry && bundle.entry.length > 0) {
+                        //return the first on if more than one...
+                        deferred.resolve(bundle.entry[0].resource);
+                    } else {
+                        deferred.reject({msg:"No matching profile ("+url+") found on "+serverUrl  + typeOfConformanceResource +" (but not a server error - just not present)"})
+                    }
+                },function(err){
+                    deferred.reject({msg:"Server error retrieving profile:" +url + " : " + angular.toJson(err)})
+                }
+            );
+            return deferred.promise;
+        },
+
         getObjectSize : function(obj) {
             //http://www.russwurm.com/uncategorized/calculate-memory-size-of-javascript-object/
 
@@ -33,8 +58,6 @@ angular.module("sampleApp").service('ecoUtilitiesSvc', function($q,$http,modalSe
 
             return roughSizeOfObject(obj)
         },
-
-
 
         generateHash : function(){
             var hash = "";
