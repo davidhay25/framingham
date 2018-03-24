@@ -1,21 +1,47 @@
 <div>
-    
-    <table class="table table-bordered">
-        <tr><th>Field</th><th>Mult.</th><th>DataType</th><th>Sample Value</th></tr>
-        <tr ng-repeat="row in table">
+    <style>
+        .glyphiconBig {
+            font-size: 20px;
+        }
+    </style>
 
+    <table class="table table-bordered">
+        <tr><th></th><th>Field</th><th>Mult.</th><th>DataType</th><th>Sample Value</th></tr>
+        <tr ng-repeat="row in table" ng-hide="row.isHidden">
+            <td>
+
+                <i ng-hide="row.childrenHidden || row.isLeaf" class="clickable glyphiconBig glyphicon glyphicon-collapse-up"
+                   title="Edit sample" ng-click="hideChildren(row)">
+                </i>
+
+                <i ng-show="row.childrenHidden" class="clickable glyphicon glyphiconBig glyphicon-collapse-down"
+                   title="Edit sample" ng-click="showChildren(row)">
+                </i>
+
+            </td>
             <td>
                 <div ng-style="{'padding-left': ((row.path | pathindent) -10)*1.5 +'px'}"
                      uib-popover={{row.definition}}
                      popover-placement="top"
                      popover-trigger="'mouseenter'">{{row.path | lastInPath}}</div>
+
+                <i ng-show="row.isMultiple" class="clickable glyphicon glyphicon-plus-sign pull-right"
+                   title="Edit sample" ng-click="duplicate(row)">
+                </i>
             </td>
             <td>{{row.mult}}</td>
             <td>
                 {{row.referenceDisplay}}
-                <span ng-hide="row.referenceDisplay">{{row.dt}}</span>
+                <span ng-hide="row.referenceDisplay">
+                    <span uib-popover={{row.binding.url}}
+                           popover-placement="top"
+                           popover-trigger="'mouseenter'">
+                        {{row.dt}}
+                    </span>
+
+                </span>
                 <span>
-                    <i class="clickable glyphicon glyphicon-edit pull-right"
+                    <i ng-show="row.isCoded" class="clickable glyphicon glyphicon-edit pull-right"
                        title="Edit sample" ng-click="editSample($index)">
                     </i>
                 </span>
@@ -27,4 +53,9 @@
             </td>
         </tr>
     </table>
+
+    <vs-viewer trigger="showVSViewerDialog" term-server="termServer"
+                concept-selected="conceptSelected"></vs-viewer>
+
+
 </div>
