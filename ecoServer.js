@@ -533,7 +533,6 @@ app.get('/fhir/TestReport',function(req,res){
                     })
                 }
 
-
                 //now the contained testScript resource. Set it to the scenario...
                 var testScript = {id:rslt.id+'-script',resourceType:'TestScript',status:'active'};
                 testScript.url = 'scenario/'+rslt.scenarioid;
@@ -613,6 +612,41 @@ app.post('/person',function(req,res){
         }
     })
 });
+
+//add/update a lmCheck (Logical Model) result
+app.put('/lmCheck',function(req,res){
+    var result = req.body;
+    result.issued = new Date();
+    req.selectedDbCon.collection("lmCheck").update({id:result.id},result,{upsert:true},function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
+
+
+app.get('/lmCheck/:userid/:scenarioid',function(req,res) {
+
+    var userid = req.params.userid;
+    var scenarioid = req.params.scenarioid;
+    //console.log(userid,scenarioid)
+
+    req.selectedDbCon.collection("lmCheck").find({userid:userid,scenarioid:scenarioid}).toArray(function (err, result) {
+        if (err) {
+            res.send(err,500)
+        } else {
+            if (result.length > 0) {
+                res.send(result[0])
+            } else {
+                res.send({})
+            }
+
+        }
+    })
+});
+
 
 //=============== config items tracks, scenarios, roles
 

@@ -5,6 +5,51 @@
         }
     </style>
 
+
+    <div class="row" ng-show="selectedTrack">
+        <div class="col-sm-3 col-md-3">
+            <select class="form-control" ng-model="input.scenario"
+                    ng-change="lmCheckSelectScenario(input.scenario)"
+                    ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
+
+<!--
+
+<select class="form-control" ng-model="input.role"
+                                                ng-options="role.display for role in static.roles"></select>
+
+            <ul class="list-group">
+                <li ng-class="{'list-group-item':1,'listItemSelected':cofScenario.id == scenario.id}"
+                    style="cursor: pointer"
+                    ng-repeat="scenario in selectedTrack.scenarios"
+                    ng-click="lmCheckSelectScenario(scenario)">
+                    {{scenario.name}}
+                </li>
+            </ul>
+            -->
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <p ng-bind-html="lmScenario.description | markDown"></p>
+        </div>
+
+        <div class="col-sm-3 col-md-3">
+            <div class="pull-right">
+                <button class="btn btn-danger" ng-click="saveExample()">Save</button>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="pull-right">
+                <button ng-show="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing" ng-click="hideAllWithoutSample()">Hide without sample</button>
+                <button ng-hide="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing" ng-click="showAll()">Show all</button>
+
+            </div>
+
+
+
+        </div>
+    </div>
+
+<!--
     <div class="row">
         <div class="col-sm-6 col-md-6">
 
@@ -14,7 +59,7 @@
             <button ng-hide="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing" ng-click="showAll()">Show all</button>
         </div>
     </div>
-
+-->
     <table class="table table-bordered">
         <tr><th></th><th>Field</th><th>Mult.</th><th>DataType</th><th>Sample Value</th></tr>
         <tr ng-repeat="row in table" ng-hide="row.isHidden">

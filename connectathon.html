@@ -819,7 +819,7 @@
                 <uib-tab>
                     <uib-tab-heading>
                         Clients
-                        <span class="badge">{{allClients.length}}</span>
+                        <span class="badge" ng-show="allClients.length > 0">{{allClients.length}}</span>
                     </uib-tab-heading>
                     <br/>
                     <div>
@@ -865,7 +865,7 @@
                 <uib-tab>
                     <uib-tab-heading>
                         Servers
-                        <span class="badge">{{allServers.length}}</span>
+                        <span class="badge" ng-show="allServers.length > 0">{{allServers.length}}</span>
                     </uib-tab-heading>
                     <br/>
 
@@ -1217,7 +1217,7 @@
                 <uib-tab>
                     <uib-tab-heading>
                         Test Results
-                        <span class="badge">{{ecosystemSvc.allResultsCount()}}</span>
+                        <span class="badge" ng-show="ecosystemSvc.allResultsCount() > 0">{{ecosystemSvc.allResultsCount()}}</span>
                     </uib-tab-heading>
                     <br/>
 

@@ -1,6 +1,12 @@
 angular.module("sampleApp")
     .controller('editScenarioCtrl',
-        function ($scope,ecosystemSvc,scenario,allResourceTypes,library,$uibModal) {
+        function ($scope,ecosystemSvc,scenario,allResourceTypes,library,$uibModal,isNew) {
+
+
+            $scope.saveText = 'Update';
+            if (isNew) {
+                $scope.saveText = 'Add';
+            }
 
             $scope.scenario = scenario;
             $scope.library = library;

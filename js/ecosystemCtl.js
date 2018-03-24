@@ -239,37 +239,38 @@ angular.module("sampleApp")
             }
 
             $scope.addScenario = function() {
-
                 var scenario = {id: 'id'+new Date().getTime()};
 
-                    $uibModal.open({
-                        templateUrl: 'modalTemplates/editScenario.html',
-                        size : 'lg',
-                        controller: 'editScenarioCtrl',
-                        resolve : {
-                            scenario: function () {          //the default config
-                                return scenario;
-                            },allResourceTypes : function(){
-                                return $scope.allResources
-                            },library : function(){
-                                return $scope.library;
-                            }
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/editScenario.html',
+                    size : 'lg',
+                    controller: 'editScenarioCtrl',
+                    resolve : {
+                        scenario: function () {          //the default config
+                            return scenario;
+                        },allResourceTypes : function(){
+                            return $scope.allResources
+                        },library : function(){
+                            return $scope.library;
+                        }, isNew : function(){
+                            return true
                         }
-                    }).result.then(function(scenario){
-                        var url = "/addScenarioToTrack/"+$scope.selectedTrack.id;
-                        $http.post(url,scenario).then(
-                            function(data) {
-                                //now, add the new scenario to the track and update
-                                $scope.selectedTrack.scenarios.push(scenario);
+                    }
+                }).result.then(function(scenario){
+                    var url = "/addScenarioToTrack/"+$scope.selectedTrack.id;
+                    $http.post(url,scenario).then(
+                        function(data) {
+                            //now, add the new scenario to the track and update
+                            $scope.selectedTrack.scenarios.push(scenario);
 
-                                //alert('scenario added to track')
-                            }, function(err) {
-                                console.log(err)
-                                alert('There was an error '+ angular.toJson(err))
-                            }
-                        )
+                            //alert('scenario added to track')
+                        }, function(err) {
+                            console.log(err)
+                            alert('There was an error '+ angular.toJson(err))
+                        }
+                    )
 
-                    });
+                });
             };
 
             $scope.editScenario = function(scenario) {
@@ -284,6 +285,8 @@ angular.module("sampleApp")
                             return $scope.allResources
                         },library : function(){
                             return $scope.library;
+                        }, isNew : function(){
+                            return false
                         }
                     }
                 }).result.then(function(editedScenario){

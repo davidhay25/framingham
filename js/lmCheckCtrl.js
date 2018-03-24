@@ -5,6 +5,9 @@ angular.module("sampleApp")
 
             $scope.input = {sample:{}};
 
+            $scope.user = ecosystemSvc.getCurrentUser();
+            console.log($scope.user);
+
             if (!String.prototype.startsWith) {
                 String.prototype.startsWith = function(search, pos) {
                     return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
@@ -17,12 +20,59 @@ angular.module("sampleApp")
             $scope.showVSViewerDialog = {};
 
 
-            //retrieve the SD for the model...
-            $http.get(url).then(
-                function(data){
-                    $scope.SD = data.data;
-                    $scope.table = makeTableArray($scope.SD)
-                });
+
+            $scope.saveExample = function () {
+
+                var user = ecosystemSvc.getCurrentUser();
+                if (user) {
+                    var saveObject = {};
+                    saveObject.userid = user.id;
+                    saveObject.scenarioid = $scope.lmScenario.id;
+                    saveObject.table = $scope.table;
+                    saveObject.sample = $scope.input.sample;    //this has display only. Will need another array for structured...
+
+                    console.log(saveObject);
+
+                    $http.put("/lmCheck",saveObject).then(
+                        function(){
+                            alert('Updated.')
+                        }, function(err) {
+                            alert('error saving result '+angular.toJson(err))
+                        }
+                    )
+                }
+            };
+
+
+            $scope.lmCheckSelectScenario = function(scenario) {
+                //console.log(scenario)
+                $scope.lmScenario = scenario;
+
+                //retrieve any existing example by this user for this scenario..
+                var user = ecosystemSvc.getCurrentUser();
+                if (user) {
+                    var url = '/lmCheck/'+user.id + "/"+$scope.lmScenario.id;
+
+                    $http.get(url).then(
+                        function(data) {
+                            console.log(data.data)
+                            var vo = data.data;
+                            if (vo) {
+                                //yep - this user has started a sample for this scenario...
+                                $scope.table = vo.table ;
+                                $scope.input.sample = vo.sample;
+                            }
+
+                        }
+                    )
+                }
+
+
+
+
+
+
+            };
 
 
             $scope.hideWOSampleDisplay = true;
@@ -195,6 +245,14 @@ angular.module("sampleApp")
             };*/
 
             $scope.$watch('selectedTrack',function(track,olfV){
+
+                //retrieve the SD for the model...
+                $http.get(url).then(
+                    function(data){
+                        $scope.SD = data.data;
+                        $scope.table = makeTableArray($scope.SD)
+                    });
+
                 if (track && track.scenarios) {
                     //ensure that all the paths for all the resources in all scenarios are in the cache
                     track.scenarios.forEach(function(trck){
