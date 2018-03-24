@@ -6,12 +6,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0a6e7d6f-aa6e-405d-9d94-d3543d427d97" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/directive/vsViewer/vsViewer.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/directive/vsViewer/vsViewer.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/js/lmCheckfCtrl.js" afterPath="$PROJECT_DIR$/js/lmCheckCtrl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/connectathon.html" afterPath="$PROJECT_DIR$/connectathon.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/includes/lmCheck.html" afterPath="$PROJECT_DIR$/includes/lmCheck.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/lmCheckCtrl.js" afterPath="$PROJECT_DIR$/js/lmCheckCtrl.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -25,12 +21,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="lmCheckCtrl.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="lmCheckCtrl.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/lmCheckCtrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="505">
-              <caret line="110" column="36" lean-forward="false" selection-start-line="110" selection-start-column="36" selection-end-line="110" selection-end-column="36" />
-              <folding />
+            <state relative-caret-position="343">
+              <caret line="52" column="18" lean-forward="false" selection-start-line="52" selection-start-column="18" selection-end-line="52" selection-end-column="18" />
+              <folding>
+                <element signature="e#2394#2770#0" expanded="false" />
+                <element signature="e#2927#3305#0" expanded="false" />
+                <element signature="e#3391#4257#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -417,11 +417,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lmCheck.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lmCheck.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/includes/lmCheck.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="24" lean-forward="false" selection-start-line="3" selection-start-column="24" selection-end-line="3" selection-end-column="24" />
+            <state relative-caret-position="180">
+              <caret line="12" column="48" lean-forward="false" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -466,9 +466,9 @@
       <find>$q</find>
       <find>config</find>
       <find>trigger</find>
-      <find>duplicate</find>
       <find>popover</find>
       <find>showVSBrowserDialog</find>
+      <find>duplicate</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -536,8 +536,8 @@
         <option value="$PROJECT_DIR$/connectathon.html" />
         <option value="$PROJECT_DIR$/directive/vsViewer/vsViewer.html" />
         <option value="$PROJECT_DIR$/directive/vsViewer/vsViewer.js" />
-        <option value="$PROJECT_DIR$/js/lmCheckCtrl.js" />
         <option value="$PROJECT_DIR$/includes/lmCheck.html" />
+        <option value="$PROJECT_DIR$/js/lmCheckCtrl.js" />
       </list>
     </option>
   </component>
@@ -1193,12 +1193,12 @@
       <workItem from="1520444461936" duration="26976000" />
       <workItem from="1520811467644" duration="14268000" />
       <workItem from="1521053768612" duration="38008000" />
-      <workItem from="1521579255364" duration="32810000" />
+      <workItem from="1521579255364" duration="34427000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1037332000" />
+    <option name="totallyTimeSpent" value="1038949000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="28" y="176" width="1360" height="776" extended-state="0" />
@@ -2395,19 +2395,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/lmCheckCtrl.js">
+    <entry file="file://$PROJECT_DIR$/includes/lmCheck.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="505">
-          <caret line="110" column="36" lean-forward="false" selection-start-line="110" selection-start-column="36" selection-end-line="110" selection-end-column="36" />
+        <state relative-caret-position="180">
+          <caret line="12" column="48" lean-forward="false" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="48" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/includes/lmCheck.html">
+    <entry file="file://$PROJECT_DIR$/js/lmCheckCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="24" lean-forward="false" selection-start-line="3" selection-start-column="24" selection-end-line="3" selection-end-column="24" />
-          <folding />
+        <state relative-caret-position="343">
+          <caret line="52" column="18" lean-forward="false" selection-start-line="52" selection-start-column="18" selection-end-line="52" selection-end-column="18" />
+          <folding>
+            <element signature="e#2394#2770#0" expanded="false" />
+            <element signature="e#2927#3305#0" expanded="false" />
+            <element signature="e#3391#4257#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

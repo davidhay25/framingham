@@ -24,6 +24,43 @@ angular.module("sampleApp")
                     $scope.table = makeTableArray($scope.SD)
                 });
 
+
+            $scope.hideWOSampleDisplay = true;
+            $scope.hideAllWithoutSample = function() {
+                var visibleRows = []
+                $scope.hideWOSampleDisplay = false
+                $scope.table.forEach(function(row){
+                    if (! $scope.input.sample[row.id]) {
+                        row.isHidden = true;
+                    } else {
+                        visibleRows.push(row.path);
+                    }
+                });
+
+                //for each visible row, step up the hierarchy. makinf sure that the parents are visible
+                visibleRows.forEach(function(path){
+                    var ar = path.split('.')
+                    while (ar.length > 0) {
+                        var np = ar.join('.')
+                        console.log(np)
+                        $scope.table.forEach(function(row){
+                            if (row.path == np) {
+                                row.isHidden = false
+                            }
+                        });
+                        ar.pop()
+                    }
+                })
+            };
+
+            $scope.showAll = function() {
+                $scope.hideWOSampleDisplay = true
+                $scope.table.forEach(function(row){
+                    row.isHidden = false;
+                })
+            };
+
+
             //hide children based on the path... todo - ?hide based on parent/child? more complicated...
             $scope.hideChildren = function(item) {
                 var path = item.path;       //path to duplicate (along with children)

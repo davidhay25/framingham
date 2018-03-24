@@ -5,6 +5,16 @@
         }
     </style>
 
+    <div class="row">
+        <div class="col-sm-6 col-md-6">
+
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <button ng-show="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing" ng-click="hideAllWithoutSample()">Hide without sample</button>
+            <button ng-hide="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing" ng-click="showAll()">Show all</button>
+        </div>
+    </div>
+
     <table class="table table-bordered">
         <tr><th></th><th>Field</th><th>Mult.</th><th>DataType</th><th>Sample Value</th></tr>
         <tr ng-repeat="row in table" ng-hide="row.isHidden">
