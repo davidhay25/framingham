@@ -8,6 +8,8 @@ angular.module("sampleApp")
            // $scope.clone = {};
             $scope.isNew = isNew;
 
+            $scope.input.termServer = "https://ontoserver.csiro.au/stu3-latest/";
+            $scope.input.confServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
 
             console.log($scope.allRoles)
             //$scope.mdOptions = {iconlibrary:'glyph'}
@@ -31,6 +33,9 @@ angular.module("sampleApp")
                 }
 
                 $scope.input.description = track.description;
+                $scope.input.termServer = track.termServer;
+                $scope.input.confServer = track.confServer;
+                $scope.input.LM = track.LM;
             }
 
 
@@ -61,6 +66,9 @@ angular.module("sampleApp")
 
                 //track.url = $scope.clone.url;
 
+                $scope.track.termServer = $scope.input.termServer;
+                $scope.track.confServer = $scope.input.confServer ;
+                $scope.track.LM = $scope.input.LM ;
                 $scope.$close({track:$scope.track,lead:$scope.input.trackLead})
             };
 

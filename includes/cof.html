@@ -1,19 +1,28 @@
 <div>
     <div class="row" ng-show="selectedTrack">
         <div class="col-sm-3 col-md-3">
-            <ul class="list-group">
+
+            <select class="form-control" ng-model="input.scenario"
+                    ng-change="cofSelectScenario(input.scenario)"
+                    ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
+
+
+           <!-- <ul class="list-group">
+
+
+
                 <li ng-class="{'list-group-item':1,'listItemSelected':cofScenario.id == scenario.id}"
                     style="cursor: pointer"
                     ng-repeat="scenario in selectedTrack.scenarios"
                     ng-click="cofSelectScenario(scenario)">
                     {{scenario.name}}
                 </li>
-            </ul>
+            </ul> -->
         </div>
-        <div class="col-sm-3 col-md-3">
+        <div class="col-sm-7 col-md-7">
             <p ng-bind-html="cofScenario.description | markDown"></p>
         </div>
-        <div class="col-sm-3 col-md-3">
+        <div class="col-sm-2 col-md-2">
             <strong>Resource types used</strong>
             <ul>
                 <li ng-repeat="type in cofScenario.scenarioTypes" ng-click="selectCofType(type)"
@@ -23,82 +32,83 @@
             </ul>
 
         </div>
-        <div class="col-sm-3 col-md-3">
-            <!--
-            <div>{{cofScenario}}</div>
-            -->
-        </div>
+
     </div>
 
-    <table class="table table-bordered">
-        <tr><th>Element</th><th>Example</th><th>Type</th><th>Path</th><th></th><th>Card.</th><th>DataType</th><th>Notes</th><th></th></tr>
-        <tr ng-repeat="row in cofScenario.rows">
-            <td>{{row.dataItem}}</td>
-            <td>{{row.example}}</td>
-            <td>{{row.resourceType}}</td>
-            <td>{{row.path}}</td>
-            <td>
-                <i class="glyphicon glyphicon-question-sign" ng-click="x()"
-                   uib-popover-html=showEDSummary(row.resourceType,row.path)
-                   popover-placement="top"
-                   popover-trigger="'mouseenter'"
-                ></i>
-            </td>
-            <td>{{row.mult}}</td>
-            <td>{{row.dataType}}</td>
-            <td>{{row.notes}}</td>
-            <td>
-                <i class="glyphicon glyphicon-remove-sign" ng-click="deleteRow($index)"></i>
-            </td>
 
-        </tr>
-
-        <tr ng-show="cofType && allPaths">
-            <td><input type="text" class="form-control" ng-model="input.dataItem"/> </td>
-            <td><input type="text" class="form-control" ng-model="input.example"/> </td>
-            <td>{{cofType}}</td>
-            <td><select class="form-control" ng-model="input.path"
-                    ng-options="path for path in allPaths" ng-change="selectPath(input.path)"></select>
-            </td>
-            <td>
-                <i class="glyphicon glyphicon-question-sign" ng-click="x()"
-                   uib-popover-html=showEDSummary(cofType,input.path)
-                   popover-placement="top"
-                   popover-trigger="'mouseenter'"
-                ></i>
-            </td>
-            <td>
-                {{selectedPathElement.min}}..{{selectedPathElement.max}}
-            </td>
-
-            <td>
-                <div ng-show="rowType">
-                    {{rowType}}
-                </div>
-                <div ng-show="rowTypeOptions">
-                    <select class="form-control" ng-model="input.rowType"
-                            ng-options="type for type in rowTypeOptions" ></select>
-                </div>
-            </td>
-            <td><textarea class="form-control" ng-model="input.rowNotes"></textarea> </td>
-            <td>
-                <i class="glyphicon glyphicon-plus-sign" ng-click="addRow()"></i>
-            </td>
-
-        </tr>
-
-
-    </table>
-<!--
     <div class="row">
-        <div class="col-sm-6 col-md-6">
+        <div class="col-sm-4 col-md-4">
+            <div style="border: solid; border-color: lightgray; border-width: 1px; height: 400px">
+                Graph here
+            </div>
 
         </div>
-        <div class="col-sm-6 col-md-6">
-            <pre>{{selectedPathElement | json}}</pre>
+        <div class="col-sm-8 col-md-8">
+
+            <table class="table table-bordered">
+                <tr><th>Element</th><th>Example</th><th>Type</th><th>Path</th><th></th><th>Card.</th><th>DataType</th><th>Notes</th><th></th></tr>
+                <tr ng-repeat="row in cofScenario.rows">
+                    <td>{{row.dataItem}}</td>
+                    <td>{{row.example}}</td>
+                    <td>{{row.resourceType}}</td>
+                    <td>{{row.path}}</td>
+                    <td>
+                        <i class="glyphicon glyphicon-question-sign" ng-click="x()"
+                           uib-popover-html=showEDSummary(row.resourceType,row.path)
+                           popover-placement="top"
+                           popover-trigger="'mouseenter'"
+                        ></i>
+                    </td>
+                    <td>{{row.mult}}</td>
+                    <td>{{row.dataType}}</td>
+                    <td>{{row.notes}}</td>
+                    <td>
+                        <i class="glyphicon glyphicon-remove-sign" ng-click="deleteRow($index)"></i>
+                    </td>
+
+                </tr>
+
+                <tr ng-show="cofType && allPaths">
+                    <td><input type="text" class="form-control" ng-model="input.dataItem"/> </td>
+                    <td><input type="text" class="form-control" ng-model="input.example"/> </td>
+                    <td>{{cofType}}</td>
+                    <td><select class="form-control" ng-model="input.path"
+                                ng-options="path for path in allPaths" ng-change="selectPath(input.path)"></select>
+                    </td>
+                    <td>
+                        <i class="glyphicon glyphicon-question-sign" ng-click="x()"
+                           uib-popover-html=showEDSummary(cofType,input.path)
+                           popover-placement="top"
+                           popover-trigger="'mouseenter'"
+                        ></i>
+                    </td>
+                    <td>
+                        {{selectedPathElement.min}}..{{selectedPathElement.max}}
+                    </td>
+
+                    <td>
+                        <div ng-show="rowType">
+                            {{rowType}}
+                        </div>
+                        <div ng-show="rowTypeOptions">
+                            <select class="form-control" ng-model="input.rowType"
+                                    ng-options="type for type in rowTypeOptions" ></select>
+                        </div>
+                    </td>
+                    <td><textarea class="form-control" ng-model="input.rowNotes"></textarea> </td>
+                    <td>
+                        <i class="glyphicon glyphicon-plus-sign" ng-click="addRow()"></i>
+                    </td>
+
+                </tr>
+
+
+            </table>
+
+
+
         </div>
     </div>
-    -->
 
 
 </div>

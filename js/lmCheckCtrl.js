@@ -14,12 +14,16 @@ angular.module("sampleApp")
                 };
             }
 
-            var url = 'http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/ARForm-1';  //todo testing
 
+            $scope.$on('elastic:resize', function(event, element, oldHeight, newHeight) {
+              //  console.log(event)
+            });
+
+            //var url = 'http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/ARForm-1';  //todo testing
+
+            //will be a default if not specified in the track...
             $scope.termServer = "https://ontoserver.csiro.au/stu3-latest/"; //for the vs viewer directive...
             $scope.showVSViewerDialog = {};
-
-
 
             $scope.saveExample = function () {
 
@@ -30,6 +34,8 @@ angular.module("sampleApp")
                     saveObject.scenarioid = $scope.lmScenario.id;
                     saveObject.table = $scope.table;
                     saveObject.sample = $scope.input.sample;    //this has display only. Will need another array for structured...
+                    saveObject.notes = $scope.input.notes;
+
 
                     console.log(saveObject);
 
@@ -45,33 +51,31 @@ angular.module("sampleApp")
 
 
             $scope.lmCheckSelectScenario = function(scenario) {
-                //console.log(scenario)
                 $scope.lmScenario = scenario;
 
                 //retrieve any existing example by this user for this scenario..
                 var user = ecosystemSvc.getCurrentUser();
-                if (user) {
+                if (user && user.id) {
                     var url = '/lmCheck/'+user.id + "/"+$scope.lmScenario.id;
 
                     $http.get(url).then(
                         function(data) {
                             console.log(data.data)
                             var vo = data.data;
-                            if (vo) {
+                            if (vo && vo.table && vo.sample) {
                                 //yep - this user has started a sample for this scenario...
                                 $scope.table = vo.table ;
                                 $scope.input.sample = vo.sample;
+                                $scope.input.notes = vo.notes;
+                            } else {
+                                //no, make sure the table is empty of samples, and based on the LM...
+                                $scope.input.sample = {};
+                                $scope.input.notes = {};
+                                $scope.table = makeTableArray($scope.SD);
                             }
-
                         }
                     )
                 }
-
-
-
-
-
-
             };
 
 
@@ -203,6 +207,17 @@ angular.module("sampleApp")
                             item.referenceDisplay = '--> ' + type;
                         }
 
+                        if (ed.mapping) {
+                            ed.mapping.forEach(function(map){
+                                if (map.identity == 'fhir' && map.map) {
+                                    var ar = map.map.split('|');
+                                    item.fhirMapping = {map:ar[0],notes:ar[1]};
+                                }
+                            })
+                        }
+                        console.log(ed.mapping,item);
+
+
                         ar.push(item)
                     }
                 });
@@ -227,34 +242,35 @@ angular.module("sampleApp")
             }
 
 
-            /* $scope.showValueSet = function(uri,type) {
-
-
-                //treat the reference as lookup in the repo...
-                GetDataFromServer.getValueSet(uri).then(
-                    function(vs) {
-
-                        $scope.showVSBrowserDialog.open(vs);
-
-                    }, function(err) {
-                        alert(err)
-                    }
-                ).finally (function(){
-                    $scope.showWaiting = false;
-                });
-            };*/
-
             $scope.$watch('selectedTrack',function(track,olfV){
 
-                //retrieve the SD for the model...
-                $http.get(url).then(
-                    function(data){
-                        $scope.SD = data.data;
-                        $scope.table = makeTableArray($scope.SD)
-                    });
 
                 if (track && track.scenarios) {
                     //ensure that all the paths for all the resources in all scenarios are in the cache
+                    //retrieve the SD for the model...
+
+                    if (track.termServer) {
+                        $scope.termServer = track.termServer;
+                    }
+
+                    delete $scope.table;
+                    delete $scope.input.sample;
+                    delete $scope.lmScenario;
+                    delete $scope.input.notes;
+
+
+                    var url = track.LM;  //'http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/ARForm-1';  //todo testing
+                    if (url) {
+                        $http.get(url).then(
+                            function(data){
+                                $scope.SD = data.data;
+                                $scope.table = makeTableArray($scope.SD)
+                            });
+
+                    }
+
+
+
                     track.scenarios.forEach(function(trck){
                         if (trck.scenarioTypes) {
                             trck.scenarioTypes.forEach(function(type){

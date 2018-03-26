@@ -12,26 +12,12 @@
                     ng-change="lmCheckSelectScenario(input.scenario)"
                     ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
 
-<!--
-
-<select class="form-control" ng-model="input.role"
-                                                ng-options="role.display for role in static.roles"></select>
-
-            <ul class="list-group">
-                <li ng-class="{'list-group-item':1,'listItemSelected':cofScenario.id == scenario.id}"
-                    style="cursor: pointer"
-                    ng-repeat="scenario in selectedTrack.scenarios"
-                    ng-click="lmCheckSelectScenario(scenario)">
-                    {{scenario.name}}
-                </li>
-            </ul>
-            -->
         </div>
-        <div class="col-sm-6 col-md-6">
+        <div class="col-sm-7 col-md-7">
             <p ng-bind-html="lmScenario.description | markDown"></p>
         </div>
 
-        <div class="col-sm-3 col-md-3">
+        <div class="col-sm-2 col-md-2">
             <div class="pull-right">
                 <button class="btn btn-danger" ng-click="saveExample()">Save</button>
             </div>
@@ -39,8 +25,10 @@
             <div class="clearfix"></div>
 
             <div class="pull-right">
-                <button ng-show="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing" ng-click="hideAllWithoutSample()">Hide without sample</button>
-                <button ng-hide="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing" ng-click="showAll()">Show all</button>
+                <button ng-show="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing"
+                        ng-click="hideAllWithoutSample()">Hide without data</button>
+                <button ng-hide="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing"
+                        ng-click="showAll()">Show all</button>
 
             </div>
 
@@ -49,19 +37,8 @@
         </div>
     </div>
 
-<!--
-    <div class="row">
-        <div class="col-sm-6 col-md-6">
-
-        </div>
-        <div class="col-sm-6 col-md-6">
-            <button ng-show="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing" ng-click="hideAllWithoutSample()">Hide without sample</button>
-            <button ng-hide="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing" ng-click="showAll()">Show all</button>
-        </div>
-    </div>
--->
-    <table class="table table-bordered">
-        <tr><th></th><th>Field</th><th>Mult.</th><th>DataType</th><th>Sample Value</th></tr>
+    <table class="table table-bordered" ng-show="lmScenario">
+        <tr><th></th><th>Field</th><th>Mult.</th><th>DataType</th><th>Sample Value</th><th>Notes</th></tr>
         <tr ng-repeat="row in table" ng-hide="row.isHidden">
             <td>
 
@@ -75,17 +52,20 @@
 
             </td>
             <td>
+                <i ng-show="row.isMultiple" class="clickable glyphicon glyphicon-plus-sign pull-right"
+                   title="Edit sample" ng-click="duplicate(row)">
+                </i>
                 <div ng-style="{'padding-left': ((row.path | pathindent) -10)*1.5 +'px'}"
                      uib-popover={{row.definition}}
                      popover-placement="top"
                      popover-trigger="'mouseenter'">{{row.path | lastInPath}}</div>
 
-                <i ng-show="row.isMultiple" class="clickable glyphicon glyphicon-plus-sign pull-right"
-                   title="Edit sample" ng-click="duplicate(row)">
-                </i>
+
             </td>
             <td>{{row.mult}}</td>
             <td>
+                <div><em>{{row.fhirMapping.map}}</em></div>
+
                 {{row.referenceDisplay}}
                 <span ng-hide="row.referenceDisplay">
                     <span uib-popover={{row.binding.url}}
@@ -101,10 +81,14 @@
                     </i>
                 </span>
             </td>
-            <td width="50%">
+            <td width="25%">
                 <div ng-hide="row.dt == 'Reference'">
-                    <input class="form-control" ng-model="input.sample[row.id]">
+                    <!--<input class="form-control" ng-model="input.sample[row.id]">-->
+                    <textarea msd-elastic class="form-control" ng-model="input.sample[row.id]" rows="1"></textarea>
                 </div>
+            </td>
+            <td width="25%">
+                <textarea msd-elastic class="form-control" ng-model="input.notes[row.id]" rows="1"></textarea>
             </td>
         </tr>
     </table>

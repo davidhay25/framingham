@@ -90,12 +90,21 @@
 
             </uib-tab>
             <uib-tab heading='Track configuration'>
+                <br/>
                 <div class="row">
                     <div class="col-sm-3 col-md-3">
                         Terminology Server
                     </div>
                     <div class="col-sm-9 col-md-9">
-
+                        <input class="form-control" ng-model="input.termServer"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 col-md-3">
+                        Conformance Server
+                    </div>
+                    <div class="col-sm-9 col-md-9">
+                        <input class="form-control" ng-model="input.confServer"/>
                     </div>
                 </div>
                 <div class="row">
@@ -103,7 +112,7 @@
                         Logical Model
                     </div>
                     <div class="col-sm-9 col-md-9">
-
+                        <input class="form-control" ng-model="input.LM"/>
                     </div>
                 </div>
             </uib-tab>
