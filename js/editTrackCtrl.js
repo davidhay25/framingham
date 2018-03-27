@@ -19,6 +19,7 @@ angular.module("sampleApp")
             if (track) {        //should always be true as the 'addTrack' sets a base track {id: name: roles: scenarioIds: };
                // $scope.clone = angular.copy(track)
                 $scope.track = track;
+                track.trackType = track.trackType || 'technical' ;      //default to technical
                 if (track.leadIds && track.leadIds.length > 0 && $scope.currentUser) {
                     if (track.leadIds[0] !== $scope.currentUser.id) {
                         $scope.canSave = false;

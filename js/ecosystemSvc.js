@@ -1236,6 +1236,9 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                     var hashTrack = {};
                     vo.tracks.forEach(function (track) {
+
+                        track.trackType = track.trackType || 'technical' ;      //default to technical
+
                         track.resultTotals = {'pass':0,'fail':0,'partial':0,'note':0}
                         hashTrack[track.id] = track
 

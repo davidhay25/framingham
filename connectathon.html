@@ -264,6 +264,18 @@
 
 
                                     <br/>
+
+                                    <div class="row">
+                                        <hr class="trackBorder"/>
+                                        <div class="col-sm-2 col-md-2">
+                                            <strong>Track type</strong>
+                                        </div>
+                                        <div class="col-sm-9 col-md-9">
+                                            {{selectedTrack.trackType}}
+                                        </div>
+                                    </div>
+                                    <br/>
+
                                     <div class="row" ng-show="selectedTrack.endPoints.length > 0">
                                         <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
@@ -281,6 +293,10 @@
                                     </div>
 
                                     <br/>
+
+
+
+
                                     <div class="row">
                                         <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
@@ -817,7 +833,7 @@
 
                 </uib-tab>
 
-                <uib-tab>
+                <uib-tab ng-show="selectedTrack.trackType == 'technical'">
                     <uib-tab-heading>
                         Clients
                         <span class="badge" ng-show="allClients.length > 0">{{allClients.length}}</span>
@@ -863,7 +879,7 @@
 
                 </uib-tab>
 
-                <uib-tab>
+                <uib-tab  ng-show="selectedTrack.trackType == 'technical'">
                     <uib-tab-heading>
                         Servers
                         <span class="badge" ng-show="allServers.length > 0">{{allServers.length}}</span>
@@ -1014,11 +1030,7 @@
 
                 </uib-tab>
 
-
-
-
-
-                <uib-tab heading="Technical Testing">
+                <uib-tab heading="Technical Testing" ng-show="selectedTrack.trackType == 'technical'">
                     <br/>
 
                     <div class="row">
@@ -1190,7 +1202,7 @@
 
                     </div>
                 </uib-tab>
-                <uib-tab heading="Clinical Testing">
+                <uib-tab heading="Clinical Testing" ng-show="selectedTrack.trackType == 'clinical'">
                     <br/>
                     <uib-tabset>
                         <uib-tab ng-show="selectedTrack.LM" heading="Logical Model">
@@ -1200,7 +1212,7 @@
                             </div>
 
                         </uib-tab>
-                        
+
                         <uib-tab heading="Scenario Based">
                             <br/>
 
@@ -1218,7 +1230,7 @@
                 </uib-tab>
 
 
-                <uib-tab>
+                <uib-tab ng-show="selectedTrack.trackType == 'technical'">
                     <uib-tab-heading>
                         Test Results
                         <span class="badge" ng-show="ecosystemSvc.allResultsCount() > 0">{{ecosystemSvc.allResultsCount()}}</span>

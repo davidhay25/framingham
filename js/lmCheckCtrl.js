@@ -153,7 +153,7 @@ angular.module("sampleApp")
                 var clone = angular.copy($scope.table);
                 clone.forEach(function(row){
                     if (row.path.startsWith(path) && row.isOriginal) {
-                        row.id = new Date().getTime() + Math.random(1000)
+                        row.id = 'id' + new Date().getTime() + Math.floor(Math.random()*1000)
                         delete row.isOriginal;
                         $scope.table.splice(inx,0,row);
                         inx++;
@@ -187,7 +187,7 @@ angular.module("sampleApp")
                     if (ed.type) {
                         var item = {path: $filter('dropFirstInPath')(ed.path) };
                         item.isOriginal = true;         //to avoid exponential growth when copying...
-                        item.id = inx-1;
+                        item.id = 'id' + (inx-1);
                         item.dt = ed.type[0].code;
                         if (item.dt == 'code' || item.dt == 'Coding' || item.dt == 'CodeableConcept') {
                             item.isCoded = true;
