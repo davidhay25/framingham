@@ -183,6 +183,9 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     var pathsCache = {};    //cache for paths by type - ?save in browser cache
 
     return {
+        getPersonWithId : function(id) {
+            return hashAllPersons[id]
+        },
         getAllPathsForType: function (typeName,explode) {
             console.log(typeName);
             var deferred = $q.defer();

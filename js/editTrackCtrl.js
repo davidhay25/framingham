@@ -41,9 +41,12 @@ angular.module("sampleApp")
 
 
             $scope.addEndPoint = function(url,description) {
-                console.log(url,description)
+                //console.log(url,description)
                 $scope.track.endPoints = $scope.track.endPoints || []
                 $scope.track.endPoints.push({url:url,description:description})
+
+                delete $scope.input.epUrl;
+                delete $scope.input.epDescription;
             };
 
             $scope.removeEndPoint = function(inx) {

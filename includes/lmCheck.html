@@ -3,6 +3,12 @@
         .glyphiconBig {
             font-size: 20px;
         }
+
+        .scrollForm {
+            height: 600px;
+            overflow-y: scroll;
+        }
+
     </style>
 
 
@@ -25,6 +31,11 @@
             <div class="clearfix"></div>
 
             <div class="pull-right">
+
+                <button class="btn btn-link pull-right icon-spacing"
+                        ng-click="collapse()">Collapse</button>
+
+
                 <button ng-show="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing"
                         ng-click="hideAllWithoutSample()">Hide without data</button>
                 <button ng-hide="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing"
@@ -37,16 +48,17 @@
         </div>
     </div>
 
-    <table class="table table-bordered" ng-show="lmScenario">
+    <div class="scrollForm">
+        <table class="table table-bordered" ng-show="lmScenario">
         <tr><th></th><th>Field</th><th>Mult.</th><th>DataType</th><th>Sample Value</th><th>Notes</th></tr>
         <tr ng-repeat="row in table" ng-hide="row.isHidden">
             <td>
 
-                <i ng-hide="row.childrenHidden || row.isLeaf" class="clickable glyphiconBig glyphicon glyphicon-collapse-up"
+                <i ng-hide="row.childrenHidden || row.isLeaf" class="clickable glyphiconBig glyphicon glyphicon-menu-down"
                    title="Edit sample" ng-click="hideChildren(row)">
                 </i>
 
-                <i ng-show="row.childrenHidden" class="clickable glyphicon glyphiconBig glyphicon-collapse-down"
+                <i ng-show="row.childrenHidden" class="clickable glyphiconBig glyphicon glyphicon-menu-right"
                    title="Edit sample" ng-click="showChildren(row)">
                 </i>
 
@@ -93,6 +105,9 @@
             </td>
         </tr>
     </table>
+    </div>
+
+
 
     <vs-viewer trigger="showVSViewerDialog" term-server="termServer"
                 concept-selected="conceptSelected"></vs-viewer>

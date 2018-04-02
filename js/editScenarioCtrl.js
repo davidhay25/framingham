@@ -28,6 +28,8 @@ angular.module("sampleApp")
                         scenario.roleIds = scenario.roleIds || []
                         scenario.roleIds.push(role.id);
                         $scope.input.roles[role.id] = true;
+
+                        delete $scope.input.newRoleName;
                     },
                     function(err) {
                         alert(err)

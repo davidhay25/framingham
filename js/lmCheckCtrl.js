@@ -1,12 +1,17 @@
 
 angular.module("sampleApp")
     .controller('lmCheckCtrl',
-        function ($scope,ecosystemSvc,$http,$filter) {
+        function ($rootScope,$scope,ecosystemSvc,$http,$filter,modalService) {
 
             $scope.input = {sample:{}};
 
             $scope.user = ecosystemSvc.getCurrentUser();
             console.log($scope.user);
+
+            $scope.$on('logout',function(){
+                console.log ('logout');
+                delete $scope.lmScenario;
+            });
 
             if (!String.prototype.startsWith) {
                 String.prototype.startsWith = function(search, pos) {
@@ -32,12 +37,14 @@ angular.module("sampleApp")
                     var saveObject = {};
                     saveObject.userid = user.id;
                     saveObject.scenarioid = $scope.lmScenario.id;
+                    saveObject.id = user.id + "-" + $scope.lmScenario.id;
+
                     saveObject.table = $scope.table;
                     saveObject.sample = $scope.input.sample;    //this has display only. Will need another array for structured...
                     saveObject.notes = $scope.input.notes;
 
 
-                    console.log(saveObject);
+                    //console.log(saveObject);
 
                     $http.put("/lmCheck",saveObject).then(
                         function(){
@@ -47,6 +54,41 @@ angular.module("sampleApp")
                         }
                     )
                 }
+            };
+
+
+            $scope.collapse = function () {
+                //hide all the rows that are not at the top
+
+                //first create a hash of all elements that have children
+                var arHasChildren = {};
+                $scope.table.forEach(function(row) {
+                    var ar = row.path.split('.');
+                    if (ar.length == 2) {
+                        var root = ar[0]
+                        arHasChildren[root] = true;
+                    }
+                })
+
+
+                $scope.table.forEach(function(row){
+                    var ar = row.path.split('.');
+                    //console.log(row.path);
+                    if (ar.length == 1) {
+                        row.isHidden = false;
+                        var root = ar[0]
+                        if (arHasChildren[root]) {
+                            row.childrenHidden = true;
+                        }
+
+
+                    } else {
+                        row.isHidden = true;
+                    }
+
+
+
+                })
             };
 
 
@@ -67,11 +109,13 @@ angular.module("sampleApp")
                                 $scope.table = vo.table ;
                                 $scope.input.sample = vo.sample;
                                 $scope.input.notes = vo.notes;
+                                $scope.collapse();
                             } else {
                                 //no, make sure the table is empty of samples, and based on the LM...
                                 $scope.input.sample = {};
                                 $scope.input.notes = {};
                                 $scope.table = makeTableArray($scope.SD);
+                                $scope.collapse();
                             }
                         }
                     )
@@ -215,7 +259,7 @@ angular.module("sampleApp")
                                 }
                             })
                         }
-                        console.log(ed.mapping,item);
+                        //console.log(ed.mapping,item);
 
 
                         ar.push(item)
@@ -259,17 +303,19 @@ angular.module("sampleApp")
                     delete $scope.input.notes;
 
 
-                    var url = track.LM;  //'http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/ARForm-1';  //todo testing
+                    var url = track.LM;
                     if (url) {
                         $http.get(url).then(
                             function(data){
                                 $scope.SD = data.data;
                                 $scope.table = makeTableArray($scope.SD)
-                            });
+                            },
+                            function(err){
+                                modalService.showModal({}, {bodyText:"The url: "+url+" specified in the track could not be found."})
 
+                            }
+                        );
                     }
-
-
 
                     track.scenarios.forEach(function(trck){
                         if (trck.scenarioTypes) {

@@ -151,7 +151,6 @@ app.use(function (req, res, next) {
         url.indexOf('.css') > -1 || url.indexOf('.gif') > -1 ||url.indexOf('/public/') > -1 ||
         url.indexOf('/artifacts/') > -1 || url.indexOf('/fonts/') > -1 || url.indexOf('/qa') > -1 ){
 
-
         next();
 
     } else {
@@ -178,14 +177,12 @@ app.use(function (req, res, next) {
 
 app.get('/public/logoutDEP',function(req,res){
     res.json(dbKeys);
-})
+});
 
 //called by the main page on load to find out the event selected for this user session...
 app.get('/public/currentEventDEP',function(req,res){
     res.json(req.session['config']);
 });
-
-
 
 var showLog = false;         //for debugging...
 
@@ -246,7 +243,7 @@ function recordAccess(req,data,cb) {
 //return all the users for a given database. Used when logging in to an event
 app.get('/public/getUsers/:key',function(req,res){
     var key = req.params.key;
-    console.log('/public/getUsers/:key')
+   // console.log('/public/getUsers/:key')
     if (hashDataBases[key]) {
         //we have established a connection to the given database
         hashDataBases[key].collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
@@ -278,10 +275,7 @@ app.post('/public/setEvent',function(req,res) {
     var event = req.body;
     if (hashDataBases[event.key]) {
         req.session['config'] = {key: event.key};      //record the database key in the session
-
-       // req.session.save();
         res.json({});
-
     } else {
         res.status(400).send({msg:'Invalid event key:'+event.key})
     }
@@ -617,6 +611,7 @@ app.post('/person',function(req,res){
 app.put('/lmCheck',function(req,res){
     var result = req.body;
     result.issued = new Date();
+
     req.selectedDbCon.collection("lmCheck").update({id:result.id},result,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)
@@ -626,7 +621,7 @@ app.put('/lmCheck',function(req,res){
     })
 });
 
-
+//get a specicif lmCheck for a user and a scenario. Should only be 1...
 app.get('/lmCheck/:userid/:scenarioid',function(req,res) {
 
     var userid = req.params.userid;
@@ -638,11 +633,29 @@ app.get('/lmCheck/:userid/:scenarioid',function(req,res) {
             res.send(err,500)
         } else {
             if (result.length > 0) {
-                res.send(result[0])
+                res.send(result[0])     //should only be 1...
             } else {
                 res.send({})
             }
 
+        }
+    })
+});
+
+//get all the reviews for a scenario
+app.get('/lmCheck/:scenarioid',function(req,res) {
+
+    var scenarioid = req.params.scenarioid;
+
+    req.selectedDbCon.collection("lmCheck").find({scenarioid:scenarioid}).toArray(function (err, result) {
+        if (err) {
+            res.send(err,500)
+        } else {
+            if (result.length > 0) {
+                res.send(result)
+            } else {
+                res.send([])
+            }
         }
     })
 });
@@ -660,7 +673,6 @@ app.get('/config/:type',function(req,res){
         }
     })
 });
-
 
 //todo - the uploaded won;t work no more....
 app.post('/config/:type',function(req,res){

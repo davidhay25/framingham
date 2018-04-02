@@ -2,7 +2,7 @@
 
 angular.module("sampleApp")
     .controller('ecosystemCtrl',
-        function ($scope,$http,modalService,ecosystemSvc,$window,$localStorage,$uibModal,ecoUtilitiesSvc) {
+        function ($rootScope,$scope,$http,modalService,ecosystemSvc,$window,$localStorage,$uibModal,ecoUtilitiesSvc) {
 
             $http.post("/startup",{});  //record access
             $scope.ecosystemSvc = ecosystemSvc;
@@ -47,7 +47,6 @@ angular.module("sampleApp")
                                     //is there a user cached for this event?
                                     var user = ecosystemSvc.getCurrentUser();
 
-
                                     if (! user) {
                                         //no user - need to login
                                         login();
@@ -76,9 +75,16 @@ angular.module("sampleApp")
                 login()
             };
 
+            function clearSession() {
+                delete $scope.selectedTrack;
+                $scope.$broadcast('logout');
+
+            }
+
 
             //the user login functionality
             function login() {
+                clearSession();
                 $uibModal.open({
                     templateUrl: 'modalTemplates/login.html',
                     controller: 'loginCtrl',
@@ -350,14 +356,17 @@ angular.module("sampleApp")
             $scope.clearUser = function(){
                 ecosystemSvc.clearCurrentUser();
                // delete $scope.input.currentUser
+                login();
 
+
+                /*
                 $http.get('/public/logout').then(
                     function(data) {
                         console.log(data.data)
                         login({data:data.data});
                     }
                 );
-
+*/
                 //
 
 
@@ -507,6 +516,45 @@ angular.module("sampleApp")
                 $scope.editTrack(track,true);
 
             };
+
+
+            $scope.editRole = function(role) {
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/editRole.html',
+                    //size: 'lg',
+                    controller: 'editRoleCtrl',
+                    resolve: {
+                        track: function () {          //the default config
+                            return $scope.selectedTrack; //$scope.selectedTrack;
+                        },
+                        role: function () {
+                            return role;
+                        }
+                    }
+                }).result.then(function (vo) {
+                    if (vo.role) {
+                        var url = "/config/role";
+                        var clone = angular.copy(vo.role);
+                        delete clone._id;
+
+                        $http.post(url,clone).then(
+                            function(){
+
+
+                            },function(err) {
+                                alert('error: '+ angular.toJson(err))
+                            }
+                        )
+
+                    }
+
+                })
+            };
+
+
+
+
+
 
             $scope.editTrack = function(track,isNew) {
                 $uibModal.open({

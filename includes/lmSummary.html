@@ -1,0 +1,81 @@
+<div>
+    <style>
+        .glyphiconBig {
+            font-size: 20px;
+        }
+
+        .scrollForm {
+            height: 600px;
+            overflow-y: scroll;
+        }
+
+    </style>
+
+
+    <div class="row" ng-show="selectedTrack">
+        <div class="col-sm-3 col-md-3">
+            <select class="form-control" ng-model="input.scenario"
+                    ng-change="lmSummarySelectScenario(input.scenario)"
+                    ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
+
+        </div>
+        <div class="col-sm-7 col-md-7">
+            <p ng-bind-html="lmScenario.description | markDown"></p>
+        </div>
+
+        <div class="col-sm-2 col-md-2">
+
+            <div class="pull-right">
+                <button class="btn btn-primary" ng-click="refresh()">Refresh</button>
+            </div>
+            <!--
+                       <div class="clearfix"></div>
+
+                       <div class="pull-right">
+
+                           <button class="btn btn-link pull-right icon-spacing"
+                                   ng-click="collapse()">Collapse</button>
+
+
+                           <button ng-show="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing"
+                                   ng-click="hideAllWithoutSample()">Hide without data</button>
+                           <button ng-hide="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing"
+                                   ng-click="showAll()">Show all</button>
+
+                       </div>
+
+
+           -->
+        </div>
+    </div>
+
+    <br/>
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <table ng-show="lmSummary" class="table table-bordered">
+                <tr>
+                    <th>Path</th>
+                    <th ng-repeat="person in lmSummary.persons">
+                        {{person.name}}
+
+                    </th>
+                </tr>
+
+                <tr ng-repeat = 'fld in lmSummary.fields'>
+                    <td>{{fld}}</td>
+
+                    <td ng-repeat="person in lmSummary.persons">
+                        <p ng-bind-html="getNote(fld,person.id) | markDown"></p>
+                        {{getNoteX(fld,person.id)}}
+                    </td>
+
+
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
+
+
+</div>
