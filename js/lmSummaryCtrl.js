@@ -4,17 +4,14 @@ angular.module("sampleApp")
         function ($scope,ecosystemSvc,$http,$filter,modalService) {
 
 
-            function makeSummary(ar) {
-                //construct a hash of path vs id (a single id can have multiple paths)
-               //todo -
+            function makeSummary(arReview) {
+                //construct a hash of path vs id (a single id can have multiple paths).
+                //
 
                 var lmSummary = {fields:[],persons:[],data:{}}
-              // var summary = []
-
-
                 //construct summary array for display table
                 var hash = {};
-                ar.forEach(function(rpt){
+                arReview.forEach(function(rpt){
                     //first, a hash of paths for Ids...
                     var hashId = {};
                     rpt.table.forEach(function(row){
@@ -25,9 +22,8 @@ angular.module("sampleApp")
                     });
 
                     lmSummary.persons.push(ecosystemSvc.getPersonWithId(rpt.userid))
-                    //now, the summary for each user...
-                   // var item = {}
-                   // item.person = ecosystemSvc.getPersonWithId(rpt.userid)
+
+                    //now, the summary of notes/path for each user...
                     angular.forEach(rpt.notes,function(v,k){        //notes is an object keyed by id...
                         console.log(v,k)
                         var path = hashId[k];
@@ -41,30 +37,31 @@ angular.module("sampleApp")
                         } else {
                             lmSummary.data[key] = v;
                         }
-
-
                     });
-                    //lmSummary.push(item);
 
+                    //and finally the overall comment
+                    if (rpt.reviewComment) {
+                        var key = 'reviewComment-' + rpt.userid;
+                        lmSummary.data[key] = rpt.reviewComment;
+                    }
 
-
-                })
-                console.log(lmSummary)
+                });
+                //console.log(lmSummary)
                 return lmSummary;
 
             }
 
             function load(){
-                var url = '/lmCheck/'+$scope.lmSummaryScenario.id;
+                if ($scope.lmSummaryScenario) {
+                    var url = '/lmCheck/'+$scope.lmSummaryScenario.id;
 
-                //console.log(url)
-                $http.get(url).then(
-                    function(data) {
-                        console.log(data.data)
-                        $scope.lmSummary = makeSummary(data.data)
-
-                    }
-                )
+                    $http.get(url).then(
+                        function(data) {
+                            console.log(data.data)
+                            $scope.lmSummary = makeSummary(data.data)
+                        }
+                    )
+                }
             }
 
             $scope.refresh = function(){

@@ -1,11 +1,34 @@
 
 angular.module("sampleApp")
     .controller('cofCtrl',
-        function ($scope,ecosystemSvc,$http,$filter) {
+        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter) {
 
             $scope.input = {};
+            $scope.cofTypeList = [];
 
+            var elementsByType = {};        //hash of all elements for a given type
+            var profilesCache = {};          //cache for SDsss
             var allScenarios = {};
+
+            $scope.showResourceTable = {};
+
+            //select an item from the list of resources...
+            $scope.selectItem = function(item) {
+                console.log(item)
+                var type = item.type;
+                if (profilesCache[type]) {
+                    $scope.showResourceTable.open(item,profilesCache[type]);
+                } else {
+                    var url = "http://hl7.org/fhir/StructureDefinition/" + item.type;
+
+                    ecoUtilitiesSvc.findConformanceResourceByUri(url).then(
+                        function (SD) {
+                            profilesCache[type] = SD;
+                            $scope.showResourceTable.open(item,SD);
+                        }
+                    )
+                }
+            };
 
             $scope.deleteRow = function (inx) {
                 $scope.cofScenario.rows.splice(inx,1);
@@ -36,7 +59,6 @@ angular.module("sampleApp")
                 delete $scope.rowType;
 
             };
-
 
             function save() {
                 var url = "/addScenarioToTrack/"+$scope.cofScenario.id;
@@ -109,8 +131,17 @@ angular.module("sampleApp")
                 }
             };
 
+            //when the user selects a type
             $scope.selectCofType = function(type) {
+
+                var item = {type:type}
+
+                $scope.cofTypeList.push(item)
+
                 console.log(type)
+                return;
+
+
                 $scope.cofType = type;
 
                 ecosystemSvc.getAllPathsForType(type,true).then(
@@ -132,8 +163,12 @@ angular.module("sampleApp")
 
             };
 
+            //select a scenario...
             $scope.cofSelectScenario = function(scenario) {
                 delete $scope.cofType;
+                $scope.showResourceTable.open();        //will reset the table display
+                $scope.cofTypeList.length = 0;
+
                 //first, save the current scenario
                 if ($scope.cofScenario) {
                     allScenarios[$scope.cofScenario.id] = $scope.cofScenario

@@ -13,14 +13,19 @@
 
 
     <div class="row" ng-show="selectedTrack">
-        <div class="col-sm-3 col-md-3">
+        <div class="col-sm-2 col-md-2">
             <select class="form-control" ng-model="input.scenario"
                     ng-change="lmCheckSelectScenario(input.scenario)"
                     ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
 
         </div>
-        <div class="col-sm-7 col-md-7">
+        <div class="col-sm-4 col-md-4">
             <p ng-bind-html="lmScenario.description | markDown"></p>
+        </div>
+
+        <div class="col-sm-4 col-md-4">
+            <textarea msd-elastic class="form-control" ng-model="input.reviewComment" rows="2"
+                placeholder="Enter notes about overall model - eg missing elements"></textarea>
         </div>
 
         <div class="col-sm-2 col-md-2">
@@ -35,11 +40,12 @@
                 <button class="btn btn-link pull-right icon-spacing"
                         ng-click="collapse()">Collapse</button>
 
-
                 <button ng-show="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing"
                         ng-click="hideAllWithoutSample()">Hide without data</button>
                 <button ng-hide="hideWOSampleDisplay" class="btn btn-link pull-right icon-spacing"
                         ng-click="showAll()">Show all</button>
+
+
 
             </div>
 
@@ -50,7 +56,7 @@
 
     <div class="scrollForm">
         <table class="table table-bordered" ng-show="lmScenario">
-        <tr><th></th><th>Field</th><th>Mult.</th><th>DataType</th><th>Sample Value</th><th>Notes</th></tr>
+        <tr><th></th><th>Model Element</th><th>Cardinality</th><th>FHIR target</th><th>Sample Value</th><th>Notes</th></tr>
         <tr ng-repeat="row in table" ng-hide="row.isHidden">
             <td>
 
@@ -71,8 +77,6 @@
                      uib-popover={{row.definition}}
                      popover-placement="top"
                      popover-trigger="'mouseenter'">{{row.path | lastInPath}}</div>
-
-
             </td>
             <td>
                 {{row.mult}}</td>

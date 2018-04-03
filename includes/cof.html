@@ -8,9 +8,6 @@
 
 
            <!-- <ul class="list-group">
-
-
-
                 <li ng-class="{'list-group-item':1,'listItemSelected':cofScenario.id == scenario.id}"
                     style="cursor: pointer"
                     ng-repeat="scenario in selectedTrack.scenarios"
@@ -34,17 +31,33 @@
         </div>
 
     </div>
+    <hr/>
 
 
     <div class="row">
         <div class="col-sm-4 col-md-4">
-            <div style="border: solid; border-color: lightgray; border-width: 1px; height: 400px">
-                Graph here
-            </div>
+            <uib-tabset>
+                <uib-tab heading="List">
+                    <br/>
+                    <table class="table table-bordered">
+                        <tr ng-repeat="item in cofTypeList">
+                            <td><span class="clickable" ng-click="selectItem(item)"> {{item.type}}</span></td>
+                        </tr>
+                    </table>
+                </uib-tab>
+                <uib-tab heading="Graph">
+                    <div style="border: solid; border-color: lightgray; border-width: 1px; height: 400px">
+                        Graph here
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+
 
         </div>
         <div class="col-sm-8 col-md-8">
 
+            <tbl-resource trigger="showResourceTable"></tbl-resource>
+<!--
             <table class="table table-bordered">
                 <tr><th>Element</th><th>Example</th><th>Type</th><th>Path</th><th></th><th>Card.</th><th>DataType</th><th>Notes</th><th></th></tr>
                 <tr ng-repeat="row in cofScenario.rows">
@@ -105,7 +118,7 @@
 
             </table>
 
-
+-->
 
         </div>
     </div>

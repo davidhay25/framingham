@@ -30,6 +30,8 @@ angular.module("sampleApp")
             $scope.termServer = "https://ontoserver.csiro.au/stu3-latest/"; //for the vs viewer directive...
             $scope.showVSViewerDialog = {};
 
+
+
             $scope.saveExample = function () {
 
                 var user = ecosystemSvc.getCurrentUser();
@@ -38,6 +40,7 @@ angular.module("sampleApp")
                     saveObject.userid = user.id;
                     saveObject.scenarioid = $scope.lmScenario.id;
                     saveObject.id = user.id + "-" + $scope.lmScenario.id;
+                    saveObject.reviewComment = $scope.input.reviewComment;
 
                     saveObject.table = $scope.table;
                     saveObject.sample = $scope.input.sample;    //this has display only. Will need another array for structured...
@@ -93,6 +96,8 @@ angular.module("sampleApp")
 
 
             $scope.lmCheckSelectScenario = function(scenario) {
+                delete $scope.input.reviewComment;
+
                 $scope.lmScenario = scenario;
 
                 //retrieve any existing example by this user for this scenario..
@@ -109,12 +114,15 @@ angular.module("sampleApp")
                                 $scope.table = vo.table ;
                                 $scope.input.sample = vo.sample;
                                 $scope.input.notes = vo.notes;
+
+                                $scope.input.reviewComment = vo.reviewComment ;
                                 $scope.collapse();
                             } else {
                                 //no, make sure the table is empty of samples, and based on the LM...
                                 $scope.input.sample = {};
                                 $scope.input.notes = {};
                                 $scope.table = makeTableArray($scope.SD);
+
                                 $scope.collapse();
                             }
                         }
@@ -128,7 +136,7 @@ angular.module("sampleApp")
                 var visibleRows = []
                 $scope.hideWOSampleDisplay = false
                 $scope.table.forEach(function(row){
-                    if (! $scope.input.sample[row.id]) {
+                    if ((! $scope.input.sample[row.id]) && (! $scope.input.notes[row.id])   ) {
                         row.isHidden = true;
                     } else {
                         visibleRows.push(row.path);

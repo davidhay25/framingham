@@ -61,12 +61,21 @@
                     </th>
                 </tr>
 
+
+                <tr>
+                    <td>Overall Comment</td>
+                    <td ng-repeat="person in lmSummary.persons">
+                        <p ng-bind-html="lmSummary.data['reviewComment-' +person.id] | markDown"></p>
+
+                    </td>
+                </tr>
+
                 <tr ng-repeat = 'fld in lmSummary.fields'>
                     <td>{{fld}}</td>
 
                     <td ng-repeat="person in lmSummary.persons">
                         <p ng-bind-html="getNote(fld,person.id) | markDown"></p>
-                        {{getNoteX(fld,person.id)}}
+
                     </td>
 
 
