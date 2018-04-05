@@ -607,11 +607,22 @@ app.post('/person',function(req,res){
     })
 });
 
+
+//add/update a scenarioGraph (Logical Model) result
+app.put('/graph',function(req,res){
+    var result = req.body;
+    result.issued = new Date();
+
+    clinicalUpdate('graph',result,res)
+});
+
+
 //add/update a lmCheck (Logical Model) result
 app.put('/lmCheck',function(req,res){
     var result = req.body;
     result.issued = new Date();
-
+    clinicalUpdate('lmCheck',result,res)
+    /*
     req.selectedDbCon.collection("lmCheck").update({id:result.id},result,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)
@@ -619,7 +630,21 @@ app.put('/lmCheck',function(req,res){
             res.send(result)
         }
     })
+    */
 });
+
+
+function clinicalUpdate(collectionName,data,res) {
+
+    req.selectedDbCon.collection(collectionName).update({id:result.id},data,{upsert:true},function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+}
+
 
 //get a specicif lmCheck for a user and a scenario. Should only be 1...
 app.get('/lmCheck/:userid/:scenarioid',function(req,res) {

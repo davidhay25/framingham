@@ -8,7 +8,7 @@
 
     </style>
     <div class="row" ng-show="selectedTrack">
-        <div class="col-sm-3 col-md-3">
+        <div class="col-sm-2 col-md-2">
 
             <select class="form-control" ng-model="input.scenario"
                     ng-change="cofSelectScenario(input.scenario)"
@@ -19,19 +19,28 @@
             <div><strong>Scenario description</strong></div>
             <p ng-bind-html="cofScenario.description | markDown"></p>
         </div>
-        <div class="col-sm-3 col-md-3">
+        <div class="col-sm-2 col-md-2">
             <div><strong>Review Purpose</strong></div>
             <p ng-bind-html="cofScenario.reviewPurpose | markDown"></p>
         </div>
-        <div class="col-sm-3 col-md-3">
-            <strong>Resource types available</strong>
+        <div class="col-sm-4 col-md-4">
+            <uib-tabset>
+                <uib-tab heading="Core resource types">
+                    <div class="row">
+                        <div class="col-sm-3 clickable" ng-repeat="type in cofScenario.scenarioTypes">
+                            <span ng-click="selectCofType(type)"  style="cursor:pointer">{{type}}</span>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab heading="Profiles">
 
-            <div class="row">
-                <div class="col-sm-4 clickable" ng-repeat="type in cofScenario.scenarioTypes">
-                    <span ng-click="selectCofType(type)"  style="cursor:pointer">{{type}}</span>
-                </div>
-            </div>
-<!--
+                </uib-tab>
+            </uib-tabset>
+
+
+
+
+<!--  <strong>Resource types available</strong>
             <ul>
                 <li ng-repeat="type in cofScenario.scenarioTypes" ng-click="selectCofType(type)"
                     style="cursor:pointer">
@@ -40,10 +49,14 @@
             </ul>-->
 
         </div>
+        <div class="col-sm-1 col-md-1">
+            <button class="btn btn-primary" ng-click="saveGraph()">Save</button>
+        </div>
 
     </div>
     <hr/>
 
+    <button class="btn btn-link" ng-click="temp()">Test</button>
 
     <div class="row">
         <div class="col-sm-4 col-md-4">
@@ -51,7 +64,7 @@
                 <uib-tab heading="List">
                     <br/>
                     <table class="table table-bordered">
-                        <tr><th>Type</th><th>Text</th><th>References</th></tr>
+                        <tr><th>Type</th><th>Text</th><th>References</th><th></th></tr>
                         <tr ng-repeat="item in cofTypeList">
                             <td><span class="clickable" ng-click="selectItem(item)"> {{item.type}}</span></td>
                             <td><span class="clickable" ng-click="editDescription(item)"> {{item.description}}</span></td>
@@ -59,6 +72,11 @@
                                 <div ng-repeat="ref in item.references">
                                     {{ref.sourcePath}} -> {{ref.targetItem.description}}
                                 </div>
+                            </td>
+                            <td>
+                                <i class="clickable glyphicon glyphicon-remove-sign"
+                                   title="Remove resource" ng-click="removeItem($index)">
+                                </i>
                             </td>
                         </tr>
                     </table>

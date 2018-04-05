@@ -15,6 +15,58 @@ angular.module("sampleApp")
 
             $scope.showResourceTable = {};
 
+            //testing LM...
+            $scope.temp = function(){
+
+                var url = "http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/TestCondition";
+
+                var item = {id : 'id'+new Date().getTime(), type:'lm-Condition'};
+                item.description = 'LM';
+
+                $scope.cofTypeList.push(item)
+
+                $http.get(url).then(
+                    function(data){
+                        profilesCache['lm-Condition'] = data.data;
+                    }
+                )
+            };
+
+
+            $scope.saveGraph = function () {
+
+                var user = ecosystemSvc.getCurrentUser();
+                if (user) {
+                    var saveObject = {};
+                    saveObject.userid = user.id;
+                    saveObject.scenarioid = $scope.lmScenario.id;
+                    saveObject.id = user.id + "-" + $scope.lmScenario.id;
+                    saveObject.reviewComment = $scope.input.reviewComment;
+
+                    saveObject.table = $scope.table;
+                    saveObject.sample = $scope.input.sample;    //this has display only. Will need another array for structured...
+                    saveObject.notes = $scope.input.notes;
+
+
+                    //console.log(saveObject);
+
+                    $http.put("/lmCheck",saveObject).then(
+                        function(){
+                            alert('Updated.')
+                        }, function(err) {
+                            alert('error saving result '+angular.toJson(err))
+                        }
+                    )
+
+
+                }
+            };
+
+            $scope.removeItem = function(inx){
+                $scope.cofTypeList.splice(inx);
+                makeGraph();
+            };
+
             //add a reference to another resourrce
             $scope.addReference = function(row,type) {
                 //row is the functional equivalent of an Element definition...
@@ -24,9 +76,19 @@ angular.module("sampleApp")
                 //now see what instances we have that match the target type
                 var targets = [];       //potential targets
                 $scope.cofTypeList.forEach(function (item) {
-                    if (item.type == type || type == 'Resource') {
-                        targets.push(item)
+                    if (item.id !== $scope.currentItem.id) {       //don't allow self references...
+                        //core resource types...
+                        if (item.type == type || type == 'Resource') {
+                            targets.push(item)
+                        } else {
+                            //any Logical models?
+                            var ar = item.type.split('-');
+                            if (ar.length == 2 && ar[1] == type ) {
+                                targets.push(item)
+                            }
+                        }
                     }
+
 
                 });
 
@@ -36,11 +98,11 @@ angular.module("sampleApp")
                     case 0 :
                         //no resources of this type yet. KJust add one...
                         var item = addItem(type)
-                        addReference(row,item);
+                        internalAddReference(row,item);
                         break;
                     case 1 :
                         //there's only one possible target - just add it;
-                        addReference(row,targets[0]);
+                        internalAddReference(row,targets[0]);
                         break;
                     default:
                         //need to show a dialog to select which one...
@@ -88,13 +150,13 @@ angular.module("sampleApp")
                             }
                         }).result.then(function(item){
                             console.log(item)
-                            addReference(row,item);
+                            internalAddReference(row,item);
                         });
                     break;
 
                 }
 
-                function addReference(row,target) {
+                function internalAddReference(row,target) {
                     var path = row.path;
                     row.references = row.references || []
                     var reference = {id:'id-'+ new Date().getTime()};
@@ -318,7 +380,7 @@ angular.module("sampleApp")
                     }
                 })
 
-                item.description = type + " " + ctr
+                item.description = type + " " + ctr;
 
                 $scope.cofTypeList.push(item)
                 makeGraph();
@@ -371,7 +433,10 @@ angular.module("sampleApp")
                                 ecosystemSvc.getAllPathsForType(type,true)
                             })
                         }
-                    })
+                    });
+
+                    $scope.cofSelectScenario(track.scenarios[0]);
+                    $scope.input.scenario = track.scenarios[0];
 
                 }
 

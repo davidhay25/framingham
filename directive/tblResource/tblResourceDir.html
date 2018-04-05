@@ -9,7 +9,7 @@
         }
     </style>
 
-    <div class="row">
+    <div class="row" ng-show="input.type">
         <div class="col-sm-6 col-md-6">
             <h3>{{input.description}} ({{input.type}})</h3>
         </div>
@@ -26,7 +26,9 @@
 
     <div class="scrollForm">
         <table class="table table-bordered" ng-show="input">
-            <tr><th></th><th>Model Element</th><th>Cardinality</th><th>DataTypes</th><th>Flags</th><th>Sample Value</th><th>Notes</th></tr>
+            <tr><th></th><th>Model Element</th><th>Card.</th><th>DataTypes</th>
+                <!--<th>Flags</th>-->
+                <th>Sample Value</th><th>Notes</th></tr>
             <tr ng-repeat="row in input.table" ng-hide="row.isHidden">
                 <td>
 
@@ -58,13 +60,13 @@
 
 
                     <div ng-repeat="ref in row.references">
-                        ==>{{ref.targetItem.description}}
+                        ==> {{ref.targetItem.description}}
                     </div>
 
                     <div ng-repeat="type in row.type">
                         <span ng-hide="type.code == 'Reference'">
                             <span ng-show="row.type.length > 1">
-                                <input ng-model="radio[$index]" ng-value="type.code" type="checkbox"/>&nbsp;
+                                <input ng-model="radio[row.id]" ng-value="type.code" type="radio"/>&nbsp;
                             </span>
 
 
@@ -98,6 +100,7 @@
 
                 </span>
                 </td>
+                <!--
                 <td>
                     <span uib-popover='Must Support'
                           popover-placement="top"
@@ -106,8 +109,9 @@
                           popover-placement="top"
                           popover-trigger="'mouseenter'" ng-show="row.isModifier">?!</span>
                 </td>
+                -->
                 <td width="25%">
-                    <div ng-hide="row.dt == 'Reference'">
+                    <div ng-hide="row.dt == 'Reference' || row.dt=='BackboneElement'">
                         <textarea msd-elastic class="form-control" ng-model="input.sample[row.id]" rows="1"></textarea>
                     </div>
                 </td>
