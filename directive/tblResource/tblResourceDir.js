@@ -5,15 +5,22 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
         restrict: 'E',
         scope: {
             trigger: '=',
-            termServer: '='
+            termServer: '=',
+            reference : '&',
+            showvsviewerdialog : '='
         },
         templateUrl: '../directive/tblResource/tblResourceDir.html',
 
         link : function ($scope, element, attrs) {
             $scope.internalControl = $scope.trigger || {};
 
-            //$scope.input = {};
-            $scope.showVSViewerDialog = {};
+            //the user clicked teh add reference link - notify the hosting app...
+            $scope.addReference = function(row,type){
+                $scope.reference()(row,type);
+            };
+
+            $scope.radio = {};
+           // $scope.showVSViewerDialog = $scope.showVSViewerDialog || {};
             $scope.editSample = function(inx) {
                 //console.log(inx,$scope.input.sample);
                 //console.log($scope.input.sample[inx])
@@ -22,7 +29,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
 
                 if ($scope.currentItem.binding) {
-                    $scope.showVSViewerDialog.open($scope.currentItem.binding.url);
+                    $scope.showvsviewerdialog.open($scope.currentItem.binding.url);
                 }
             };
 
@@ -32,6 +39,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 $scope.input.sample[$scope.currentItem.id] = display;//angular.toJson(concept)
 
             };
+
+
 
             $scope.internalControl.open = function(item,SD) {
                 console.log(item)
@@ -45,6 +54,40 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     delete $scope.input;
                 }
 
+            };
+
+            //make a copy of an item
+            $scope.duplicate = function(item) {
+                var path = item.path;       //path to duplicate (along with children)
+
+                //find the place to start inserting. This is after the last child with a matching path
+                var inx = 0;
+                $scope.input.table.forEach(function(row,pos){
+                    if (row.path.startsWith(path)) {
+                        inx = pos;
+                    }
+                });
+                inx++;
+
+                var clone = angular.copy($scope.input.table);
+                clone.forEach(function(row){
+                    //if (row.path.startsWith(path)) {
+                    if (row.path.startsWith(path) && row.isOriginal) {
+                        row.id = 'id' + new Date().getTime() + Math.floor(Math.random()*1000)
+                        delete row.isOriginal;
+                        delete row.references;
+                        //now change the path in the row by incrementing the suffix..
+                      /*  var newPath = row.path;
+                        var ar = newPath.split('_');
+                        ar[1]++;        //we assume that the last character is a number
+                        row.path = ar.join('_');
+
+*/
+                        $scope.input.table.splice(inx,0,row);
+                        inx++;
+                    }
+
+                })
             };
 
             $scope.hideWOSampleDisplay = true;
@@ -97,11 +140,35 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             $scope.showChildren = function(item) {
                 var path = item.path;       //path to duplicate (along with children)
                 item.childrenHidden = false;
-                $scope.input.table.forEach(function(row,pos){
-                    if (row.path.startsWith(path) && (row.path.length > path.length)) {
-                        row.isHidden = false;
+                var startShow = false;
+
+                for (var i=0; i < $scope.input.table.length; i++) {
+                    var row = $scope.input.table[i];
+
+                    if (row.id == item.id) {
+                        startShow = true;
                     }
-                });
+               // }
+               // $scope.input.table.forEach(function(row,pos){
+                    if (startShow && row.id !== item.id) {
+                        //we've started the show. As soon as the paths no longer match, then exit...
+                       // if (row.path.length > path.length) {
+                            if (row.path.startsWith(path) && (row.path !== path)) {
+                                //this is a child - unhide it
+                                row.isHidden = false;
+                            } else {
+                                //past the child nodes - stop the show
+                                startShow = false;
+                                break;
+                            }
+                       // }
+
+
+                    }
+
+
+
+                }
             };
 
             //collapse down to top level elements only...
@@ -136,49 +203,72 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 })
             };
 
+            //construct the initial table from the SD...
             function makeTableArray(SD){
                 var ignore=['id','meta','implicitRules','language','text','contained','extension','modifierExtension']
                 var ar = []
                 SD.snapshot.element.forEach(function (ed,inx) {
                     if (ed.type) {
-                        var item = {path: $filter('dropFirstInPath')(ed.path) };
-                        item.isOriginal = true;         //to avoid exponential growth when copying...
-                        item.id = 'id' + (inx-1);
-                        item.dt = ed.type[0].code;
-                        if (item.dt == 'code' || item.dt == 'Coding' || item.dt == 'CodeableConcept') {
-                            item.isCoded = true;
-                        }
-                        item.definition = ed.definition;
-                        item.mult = ed.min + '..'+ed.max;
-                        if (ed.max == '*') {
-                            item.isMultiple = true;
-                        }
+                        var path = $filter('dropFirstInPath')(ed.path);     //remove the leading segment (the resource type)
 
-                        if (ed.binding && ed.binding.valueSetReference) {
-                            item.binding = {url:ed.binding.valueSetReference.reference,strength:ed.binding.strength}
-                        }
+                        var ar1 = path.split('.')
+                        if (ignore.indexOf(ar1[ar1.length-1]) == -1) {
+                            //if (ignore.indexOf(path) == -1) {
 
-                        if (item.dt == 'Reference') {
-                            var type = $filter('getLogicalID')(ed.type[0].targetProfile)
-                            item.referenceDisplay = '--> ' + type;
-                        }
+                            //path += '_0';         //add a suffix - this will be used to keep paths unique when copying..
 
-                        if (ed.mapping) {
-                            ed.mapping.forEach(function(map){
-                                if (map.identity == 'fhir' && map.map) {
-                                    var ar = map.map.split('|');
-                                    item.fhirMapping = {map:ar[0],notes:ar[1]};
-                                }
-                            })
-                        }
-                        //console.log(ed.mapping,item);
+                            //item is a ValueObject - one per ED
+                            var item = {path: path };
+                            item.isOriginal = true;         //to avoid exponential growth when copying...
+                            item.id = 'id' + (inx-1);
 
-                        if (ignore.indexOf(item.path) == -1) {
+                            item.dt = ed.type[0].code;
+                            item.type = ed.type;
+                            item.mustSupport = ed.mustSupport;
+                            item.isModifier = ed.isModifier;
+
+                            if (item.dt == 'code' || item.dt == 'Coding' || item.dt == 'CodeableConcept') {
+                                item.isCoded = true;
+                            }
+
+
+
+                            item.definition = ed.definition;
+                            item.mult = ed.min + '..'+ed.max;
+                            item.max = ed.max;
+                            if (ed.max == '*') {
+                                item.isMultiple = true;
+                            }
+
+                            if (ed.binding && ed.binding.valueSetReference) {
+                                item.binding = {url:ed.binding.valueSetReference.reference,strength:ed.binding.strength}
+                            }
+
+                            if (item.dt == 'Reference') {
+                                var type = $filter('getLogicalID')(ed.type[0].targetProfile)
+                                item.referenceDisplay = '--> ' + type;
+                            }
+
+                            if (ed.mapping) {
+                                ed.mapping.forEach(function(map){
+                                    if (map.identity == 'fhir' && map.map) {
+                                        var ar = map.map.split('|');
+                                        item.fhirMapping = {map:ar[0],notes:ar[1]};
+                                    }
+                                })
+                            }
+                            //console.log(ed.mapping,item);
+
+
                             ar.push(item);
                         }
 
 
                     }
+
+
+
+
                 });
 
                 //now determine if each item is a leaf (has no children). This is a brute force approach...
@@ -197,6 +287,12 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     }
                 });
 //console.log(ar,SD)
+
+                //now add teh initial suffix to all elements
+              //  ar.forEach(function (item) {
+                  //  item.path += '_0'
+             //   })
+
                 return ar;
             }
 

@@ -124,6 +124,9 @@
         }
     </style>
 
+    <script src="directive/vsViewer/vsViewer.js"></script>
+    <script src="directive/tblResource/tblResourceDir.js"></script>
+
     <script src="js/libs/showdown.min.js"></script>
     <script src="js/libs/angular-lightweight-markdown-editor.min.js"></script>
     <script src="js/ecosystemCtl.js"></script>
@@ -148,8 +151,7 @@
     <script src="js/libs/vis.min.js"></script>
     <script src="js/modellerFilters.js"></script>
 
-    <script src="directive/vsViewer/vsViewer.js"></script>
-    <script src="directive/tblResource/tblResourceDir.js"></script>
+
 
     <script src="js/libs/elastic.js"></script>
     <script src="js/editRoleCtrl.js"></script>
@@ -1284,14 +1286,6 @@
                 <uib-tab heading="Clinical Review" ng-show="selectedTrack.trackType == 'clinical'">
                     <br/>
                     <uib-tabset>
-                        <uib-tab ng-show="selectedTrack.LM" heading="Logical Model">
-                            <br/>
-                            <div ng-controller="lmCheckCtrl">
-                                <ng-include src="'includes/lmCheck.html'"></ng-include>
-                            </div>
-
-                        </uib-tab>
-
                         <uib-tab heading="Scenario Based">
                             <br/>
 
@@ -1300,6 +1294,15 @@
                             </div>
 
                         </uib-tab>
+                        <uib-tab ng-show="selectedTrack.LM" heading="Logical Model">
+                            <br/>
+                            <div ng-controller="lmCheckCtrl">
+                                <ng-include src="'includes/lmCheck.html'"></ng-include>
+                            </div>
+
+                        </uib-tab>
+
+
 
 
 

@@ -1,20 +1,189 @@
 
 angular.module("sampleApp")
     .controller('cofCtrl',
-        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter) {
+        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal) {
 
             $scope.input = {};
             $scope.cofTypeList = [];
 
+            var objColours = ecosystemSvc.objColours();
+
             var elementsByType = {};        //hash of all elements for a given type
             var profilesCache = {};          //cache for SDsss
             var allScenarios = {};
+            $scope.showvsviewerdialog = {};
 
             $scope.showResourceTable = {};
 
-            //select an item from the list of resources...
+            //add a reference to another resourrce
+            $scope.addReference = function(row,type) {
+                //row is the functional equivalent of an Element definition...
+                var path = row.path;        //the path in the source;
+                var type = $filter('referenceType')(type.targetProfile); //target
+
+                //now see what instances we have that match the target type
+                var targets = [];       //potential targets
+                $scope.cofTypeList.forEach(function (item) {
+                    if (item.type == type || type == 'Resource') {
+                        targets.push(item)
+                    }
+
+                });
+
+
+                console.log(type,targets);
+                switch(targets.length) {
+                    case 0 :
+                        //no resources of this type yet. KJust add one...
+                        var item = addItem(type)
+                        addReference(row,item);
+                        break;
+                    case 1 :
+                        //there's only one possible target - just add it;
+                        addReference(row,targets[0]);
+                        break;
+                    default:
+                        //need to show a dialog to select which one...
+
+
+                        $uibModal.open({
+                            templateUrl: 'modalTemplates/selectResource.html',
+                            controller: function($scope,lst,type,source) {
+                                $scope.lst = [];
+
+                                lst.forEach(function (item) {
+                                    var include = false;
+                                    if (type == 'Resource' || item.type == type) {
+                                        include = true;
+                                    }
+                                    if (item.id == source.id) {
+                                        include = false;
+                                    }
+                                    if (include) {
+                                        $scope.lst.push(item)
+                                    }
+
+
+                                });
+
+
+                                //$scope.lst = lst;
+                                $scope.type = type;
+                                $scope.source = source
+                                $scope.select=function(item){
+                                    $scope.$close(item)
+                                }
+
+                            },
+                            resolve : {
+                                lst: function(){
+                                    return $scope.cofTypeList;
+                                },
+                                type: function(){
+                                    //
+                                    return type;
+                                },source : function(){
+                                    return $scope.currentItem;
+                                }
+                            }
+                        }).result.then(function(item){
+                            console.log(item)
+                            addReference(row,item);
+                        });
+                    break;
+
+                }
+
+                function addReference(row,target) {
+                    var path = row.path;
+                    row.references = row.references || []
+                    var reference = {id:'id-'+ new Date().getTime()};
+                    $scope.currentItem.references = $scope.currentItem.references || [];
+
+                    //if the
+                    if (row.max == 1) {
+
+                        //remove any references from this path in this row...
+
+                        for (var i=0; i < row.references.length; i++) {
+                            var ref = row.references[i];
+                            if (ref.sourcePath == path) {
+                                row.references.splice(i,1);
+
+                                //now to delete this reference from the item object
+                                for (var j=0; j < $scope.currentItem.references.length; j++){
+                                    if ($scope.currentItem.references[j].id == ref.id) {
+                                        $scope.currentItem.references.splice(j,1)
+                                        break;
+                                    }
+                                }
+
+
+                                break;
+                            }
+                        }
+                        //}
+/* for now
+                        //there can only be one - remove any other references from this path...
+                        for (var i=0; i < $scope.currentItem.references.length; i++) {
+                            if ($scope.currentItem.references[i].sourcePath == path) {
+                                $scope.currentItem.references.splice(i,1);
+                                break;
+                            }
+                        }
+*/
+                        //and the same for the row...
+
+
+                    }
+
+
+                    //reference.sourceItem = $scope.currentItem;
+                    reference.sourcePath = path;
+                    reference.targetItem = target;
+                    //reference.targetType =
+                   // reference.row = row;
+
+                    row.references.push(reference);     //add the reference to the row
+                    /*
+                    //now, can copy these references to the item references so that the graph can be built...
+                    //remove the current ones...
+                    for (var i=0; i < $scope.currentItem.references.length; i++) {
+                        if ($scope.currentItem.references[i].sourcePath == path) {
+                            $scope.currentItem.references.splice(i,1);
+                            break;
+                        }
+                    }
+                    //... and add new ones...
+                    row.references.forEach(function (ref) {
+                        $scope.currentItem.references.push(ref)
+                    })
+
+                    */
+                    $scope.currentItem.references.push(reference)
+
+
+                    //add the reference to the row (which will become the instance eventually)
+                    //row.references = row.references || []
+
+
+
+                    makeGraph();
+                }
+            };
+
+            $scope.editDescription = function(item) {
+
+                var description = $window.prompt("Enter description",item.description);
+                item.description = description;
+
+            };
+
+            //select an item from the list of items. The SD will have been loaded for this type (async) into profilesCache
             $scope.selectItem = function(item) {
-                console.log(item)
+                $scope.currentItem = item;
+                console.log(item);
+
                 var type = item.type;
                 if (profilesCache[type]) {
                     $scope.showResourceTable.open(item,profilesCache[type]);
@@ -131,37 +300,42 @@ angular.module("sampleApp")
                 }
             };
 
-            //when the user selects a type
+            //when the user selects a type from the list of types in the scenario...
             $scope.selectCofType = function(type) {
+                addItem(type)
+            };
 
-                var item = {type:type}
+            //add an item with a given resource type...
+            //note that the cache update is asynchronous...
+            function addItem(type) {
+                var item = {id : 'id'+new Date().getTime(),  type:type}
+
+                //create a default description based on the number of this type in the list
+                var ctr = 1;
+                $scope.cofTypeList.forEach(function (t) {
+                    if (t.type == type){
+                        ctr++
+                    }
+                })
+
+                item.description = type + " " + ctr
 
                 $scope.cofTypeList.push(item)
-
+                makeGraph();
                 console.log(type)
-                return;
 
+                //load the profile (SD) for the type...
+                if ( ! profilesCache[type]) {
+                    var url = "http://hl7.org/fhir/StructureDefinition/" + item.type;
+                    ecoUtilitiesSvc.findConformanceResourceByUri(url).then(
+                        function (SD) {
+                            profilesCache[type] = SD;
+                        }
+                    )
+                }
 
-                $scope.cofType = type;
-
-                ecosystemSvc.getAllPathsForType(type,true).then(
-                    function(listOfPaths) {
-                        console.log(listOfPaths)
-                        $scope.allPaths = listOfPaths.list;
-
-                        $scope.allPaths.sort(function(a,b){
-                            if (a > b) { return 1} else {return -1}
-                        })
-
-                        $scope.allPathsHash = listOfPaths.hash;
-                        $scope.dtDef = listOfPaths.dtDef;       //the definitions for a path (use to get the options)...
-                    },function(err) {
-                        alert("A type of "+ type +" was selected, but I couldn't locate the profile to get the element paths")
-                    }
-                )
-
-
-            };
+                return item;
+            }
 
             //select a scenario...
             $scope.cofSelectScenario = function(scenario) {
@@ -201,6 +375,74 @@ angular.module("sampleApp")
 
                 }
 
-            })
+            });
+
+            //generate the graph object. Might want to move to a service...
+
+            $scope.fitGraph = function(){
+                $timeout(function(){$scope.graph.fit()},500)
+
+            };
+
+            function makeGraph() {
+                var arNodes = [], arEdges = [];
+
+                $scope.cofTypeList.forEach(function (item) {
+                    //console.log(item);
+                    var node = {id: item.id, label: item.type, shape: 'box',item:item};
+
+                    if ( objColours[item.type]) {
+                        node.color = objColours[item.type];
+                    }
+                    arNodes.push(node);
+
+                    // reference.sourcePath = path;
+                    //reference.targetItem = target;
+                    if (item.references) {
+                        item.references.forEach(function (ref) {
+                            var edge = {id: 'e'+arEdges.length+1,from: item.id, to: ref.targetItem.id,
+                                label: ref.sourcePath,arrows : {to:true}};
+
+                            arEdges.push(edge)
+                        })
+                    }
+                });
+
+
+                console.log(arNodes)
+
+                var nodes = new vis.DataSet(arNodes);
+                var edges = new vis.DataSet(arEdges);
+
+                // provide the data in the vis format
+                var graphData = {
+                    nodes: nodes,
+                    edges: edges
+                };
+
+                var container = document.getElementById('cofGraph');
+                var options = {
+                    physics: {
+                        enabled: true,
+                        barnesHut: {
+                            gravitationalConstant: -10000,
+                        }
+                    }
+                };
+
+                $scope.graph = new vis.Network(container, graphData, options);
+
+
+                $scope.graph.on("click", function (obj) {
+
+                    var nodeId = obj.nodes[0];  //get the first node
+                    var node = graphData.nodes.get(nodeId);
+                    var item = node.item;
+                    if (item) {
+                        $scope.selectItem(item);
+                        $scope.$digest();
+                    }
+                });
+            }
 
     });

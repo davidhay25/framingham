@@ -183,11 +183,14 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     var pathsCache = {};    //cache for paths by type - ?save in browser cache
 
     return {
+        objColours : function(){
+            return objColours;
+        },
         getPersonWithId : function(id) {
             return hashAllPersons[id]
         },
         getAllPathsForType: function (typeName,explode) {
-            console.log(typeName);
+            //console.log(typeName);
             var deferred = $q.defer();
             //return all the possible paths for a base type...
             //derived from logicalmodelsvc

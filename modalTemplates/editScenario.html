@@ -27,7 +27,6 @@
     <div class="modal-body">
         <br/>
 
-
         <div class="row">
             <div class="col-md-6 col-sm-6">
                 <div class="row">
@@ -44,7 +43,16 @@
                         Description (MarkD)
                     </div>
                     <div class="col-md-9 col-sm-9">
-                        <textarea class="form-control" rows="12" ng-model="scenario.description"></textarea>
+                        <textarea class="form-control" rows="8" ng-model="scenario.description"></textarea>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-3 col-sm-3">
+                        Review Purpose
+                    </div>
+                    <div class="col-md-9 col-sm-9">
+                        <textarea class="form-control" rows="4" ng-model="scenario.reviewPurpose"></textarea>
                     </div>
                 </div>
                 <br/>
@@ -233,6 +241,7 @@
                         <h4>Success</h4>
                         <textarea class="form-control" ng-model="scenario.success"></textarea>
                     </uib-tab>
+
 
                     <uib-tab>
                         <uib-tab-heading>

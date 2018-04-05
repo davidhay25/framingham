@@ -1,4 +1,12 @@
 <div>
+    <style>
+        #cofGraph {
+            width: 100%;
+            height: 280px;
+            border: 1px solid lightgray;
+        }
+
+    </style>
     <div class="row" ng-show="selectedTrack">
         <div class="col-sm-3 col-md-3">
 
@@ -6,27 +14,30 @@
                     ng-change="cofSelectScenario(input.scenario)"
                     ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
 
-
-           <!-- <ul class="list-group">
-                <li ng-class="{'list-group-item':1,'listItemSelected':cofScenario.id == scenario.id}"
-                    style="cursor: pointer"
-                    ng-repeat="scenario in selectedTrack.scenarios"
-                    ng-click="cofSelectScenario(scenario)">
-                    {{scenario.name}}
-                </li>
-            </ul> -->
         </div>
-        <div class="col-sm-7 col-md-7">
+        <div class="col-sm-3 col-md-3">
+            <div><strong>Scenario description</strong></div>
             <p ng-bind-html="cofScenario.description | markDown"></p>
         </div>
-        <div class="col-sm-2 col-md-2">
-            <strong>Resource types used</strong>
+        <div class="col-sm-3 col-md-3">
+            <div><strong>Review Purpose</strong></div>
+            <p ng-bind-html="cofScenario.reviewPurpose | markDown"></p>
+        </div>
+        <div class="col-sm-3 col-md-3">
+            <strong>Resource types available</strong>
+
+            <div class="row">
+                <div class="col-sm-4 clickable" ng-repeat="type in cofScenario.scenarioTypes">
+                    <span ng-click="selectCofType(type)"  style="cursor:pointer">{{type}}</span>
+                </div>
+            </div>
+<!--
             <ul>
                 <li ng-repeat="type in cofScenario.scenarioTypes" ng-click="selectCofType(type)"
                     style="cursor:pointer">
                     {{type}}
                 </li>
-            </ul>
+            </ul>-->
 
         </div>
 
@@ -40,15 +51,20 @@
                 <uib-tab heading="List">
                     <br/>
                     <table class="table table-bordered">
+                        <tr><th>Type</th><th>Text</th><th>References</th></tr>
                         <tr ng-repeat="item in cofTypeList">
                             <td><span class="clickable" ng-click="selectItem(item)"> {{item.type}}</span></td>
+                            <td><span class="clickable" ng-click="editDescription(item)"> {{item.description}}</span></td>
+                            <td>
+                                <div ng-repeat="ref in item.references">
+                                    {{ref.sourcePath}} -> {{ref.targetItem.description}}
+                                </div>
+                            </td>
                         </tr>
                     </table>
                 </uib-tab>
-                <uib-tab heading="Graph">
-                    <div style="border: solid; border-color: lightgray; border-width: 1px; height: 400px">
-                        Graph here
-                    </div>
+                <uib-tab heading="Graph" select = "fitGraph()">
+                    <div id="cofGraph"></div>
                 </uib-tab>
             </uib-tabset>
 
@@ -56,7 +72,7 @@
         </div>
         <div class="col-sm-8 col-md-8">
 
-            <tbl-resource trigger="showResourceTable"></tbl-resource>
+            <tbl-resource trigger="showResourceTable" reference="addReference"></tbl-resource>
 <!--
             <table class="table table-bordered">
                 <tr><th>Element</th><th>Example</th><th>Type</th><th>Path</th><th></th><th>Card.</th><th>DataType</th><th>Notes</th><th></th></tr>

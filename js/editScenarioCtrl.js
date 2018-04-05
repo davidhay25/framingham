@@ -106,6 +106,8 @@ angular.module("sampleApp")
 
             $scope.addType = function(type) {
                 scenario.scenarioTypes.push(type.name);
+                delete $scope.input.resource;
+
             };
 
             $scope.addLink = function(link) {
