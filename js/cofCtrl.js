@@ -39,18 +39,11 @@ angular.module("sampleApp")
                 if (user) {
                     var saveObject = {};
                     saveObject.userid = user.id;
-                    saveObject.scenarioid = $scope.lmScenario.id;
-                    saveObject.id = user.id + "-" + $scope.lmScenario.id;
-                    saveObject.reviewComment = $scope.input.reviewComment;
+                    saveObject.scenarioid = $scope.cofScenario.id;
+                    saveObject.id = user.id + "-" + $scope.cofScenario.id;
+                    saveObject.items = $scope.cofTypeList;      //all of the items (ie the resource instances
 
-                    saveObject.table = $scope.table;
-                    saveObject.sample = $scope.input.sample;    //this has display only. Will need another array for structured...
-                    saveObject.notes = $scope.input.notes;
-
-
-                    //console.log(saveObject);
-
-                    $http.put("/lmCheck",saveObject).then(
+                    $http.put("/scenarioGraph",saveObject).then(
                         function(){
                             alert('Updated.')
                         }, function(err) {
@@ -61,6 +54,24 @@ angular.module("sampleApp")
 
                 }
             };
+
+            function loadScenarioGraph() {
+                var user = ecosystemSvc.getCurrentUser();
+                if (user && user.id) {
+                    var url = '/scenarioGraph/' + user.id + "/" + $scope.cofScenario.id;
+
+                    $http.get(url).then(
+                        function (data) {
+                            console.log(data.data)
+                            var vo = data.data;
+
+                            if (vo && vo.items) {
+                                $scope.cofTypeList = vo.items;
+                            }
+                        }
+                    )
+                }
+            }
 
             $scope.removeItem = function(inx){
                 $scope.cofTypeList.splice(inx);
@@ -260,7 +271,7 @@ angular.module("sampleApp")
                     )
                 }
             };
-
+/*
             $scope.deleteRow = function (inx) {
                 $scope.cofScenario.rows.splice(inx,1);
                 save();
@@ -304,6 +315,7 @@ angular.module("sampleApp")
                 );
 
             }
+            */
 
             $scope.showEDSummary = function(type,path) {
 
@@ -362,7 +374,7 @@ angular.module("sampleApp")
                 }
             };
 
-            //when the user selects a type from the list of types in the scenario...
+            //when the user selects a new type to add from the list of types in the scenario...
             $scope.selectCofType = function(type) {
                 addItem(type)
             };
@@ -420,7 +432,9 @@ angular.module("sampleApp")
                     allScenarios[scenario.id] = scenario; //clone;
                     $scope.cofScenario = scenario;//clone
                 }
-                $scope.cofScenario.rows = $scope.cofScenario.rows || []
+                loadScenarioGraph();
+
+               // $scope.cofScenario.rows = $scope.cofScenario.rows || []
             };
 
 
@@ -437,6 +451,7 @@ angular.module("sampleApp")
 
                     $scope.cofSelectScenario(track.scenarios[0]);
                     $scope.input.scenario = track.scenarios[0];
+                    loadScenarioGraph();
 
                 }
 

@@ -609,19 +609,31 @@ app.post('/person',function(req,res){
 
 
 //add/update a scenarioGraph (Logical Model) result
-app.put('/graph',function(req,res){
+app.put('/scenarioGraph',function(req,res){
     var result = req.body;
     result.issued = new Date();
+    var collection = req.selectedDbCon.collection('scenarioGraph')
 
-    clinicalUpdate('graph',result,res)
+    clinicalUpdate(collection,result,res)
 });
 
+//get a specific scenarioGraph for a user and a scenario. Should only be 1...
+app.get('/scenarioGraph/:userid/:scenarioid',function(req,res) {
+
+    var userId = req.params.userid;
+    var scenarioId = req.params.scenarioid;
+    //console.log(userid,scenarioid)
+    var collection = req.selectedDbCon.collection('scenarioGraph')
+
+    clinicalFind(collection,userId,scenarioId,res)
+});
 
 //add/update a lmCheck (Logical Model) result
 app.put('/lmCheck',function(req,res){
     var result = req.body;
     result.issued = new Date();
-    clinicalUpdate('lmCheck',result,res)
+    var collection = req.selectedDbCon.collection('lmCheck')
+    clinicalUpdate(collection,result,res)
     /*
     req.selectedDbCon.collection("lmCheck").update({id:result.id},result,{upsert:true},function(err,result){
         if (err) {
@@ -634,9 +646,8 @@ app.put('/lmCheck',function(req,res){
 });
 
 
-function clinicalUpdate(collectionName,data,res) {
-
-    req.selectedDbCon.collection(collectionName).update({id:result.id},data,{upsert:true},function(err,result){
+function clinicalUpdate(collection,data,res) {
+    collection.update({id:data.id},data,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -649,10 +660,13 @@ function clinicalUpdate(collectionName,data,res) {
 //get a specicif lmCheck for a user and a scenario. Should only be 1...
 app.get('/lmCheck/:userid/:scenarioid',function(req,res) {
 
-    var userid = req.params.userid;
-    var scenarioid = req.params.scenarioid;
+    var userId = req.params.userid;
+    var scenarioId = req.params.scenarioid;
     //console.log(userid,scenarioid)
+    var collection = req.selectedDbCon.collection('lmCheck')
 
+    clinicalFind(collection,userId,scenarioId,res)
+    /*
     req.selectedDbCon.collection("lmCheck").find({userid:userid,scenarioid:scenarioid}).toArray(function (err, result) {
         if (err) {
             res.send(err,500)
@@ -665,7 +679,25 @@ app.get('/lmCheck/:userid/:scenarioid',function(req,res) {
 
         }
     })
+    */
 });
+
+function clinicalFind(collection,userId,scenarioId,res) {
+
+    collection.find({userid:userId,scenarioid:scenarioId}).toArray(function (err, result) {
+        if (err) {
+            res.send(err,500)
+        } else {
+            if (result.length > 0) {
+                res.send(result[0])     //should only be 1...
+            } else {
+                res.send({})
+            }
+
+        }
+    })
+}
+
 
 //get all the reviews for a scenario
 app.get('/lmCheck/:scenarioid',function(req,res) {
