@@ -21,16 +21,48 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
             $scope.radio = {};
            // $scope.showVSViewerDialog = $scope.showVSViewerDialog || {};
-            $scope.editSample = function(inx) {
+            $scope.editSample = function(row,dt) {
                 //console.log(inx,$scope.input.sample);
                 //console.log($scope.input.sample[inx])
-                var currentValue = $scope.input.sample[inx];
-                $scope.currentItem = $scope.input.table[inx];
 
+                var datatype = row.type[0].code;
+                console.log(row,dt)
+                if (row.type.length > 1) {
+                    if (! dt) {
+                        alert("Please select a datatype to use")
+                        return;
 
-                if ($scope.currentItem.binding) {
-                    $scope.showvsviewerdialog.open($scope.currentItem.binding.url);
+                    } else {
+                        datatype = dt;
+                    }
                 }
+
+
+
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/getDatatypeValue.html',
+                    size: 'lg',
+                    controller: 'getDatatypeValueCtrl',
+                    resolve : {
+                        'datatype' : function(){
+                            return datatype;
+                        },
+                        'row' : function(){
+                            return row
+                        }
+
+                    }}
+                ).result.then(function(vo) {
+                    // vo = {value: text: }
+                    //input.sample[row.id]
+                    console.log(vo)
+                    $scope.input.sample[row.id] = vo.text;
+                    row.structuredData = vo.value;
+
+
+
+                })
+
             };
 
             //called by the vsViewer when a concept is selected form an expansion...
@@ -222,7 +254,11 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                             item.isOriginal = true;         //to avoid exponential growth when copying...
                             item.id = 'id' + (inx-1);
 
-                            item.dt = ed.type[0].code;
+                            if (ed.type[0].code == 'BackboneElement') {
+                                item.isBBE = true;
+                            }
+
+                            item.dt = ed.type[0].code;      //todo - this may be redundant now...
                             item.type = ed.type;
                             item.mustSupport = ed.mustSupport;
                             item.isModifier = ed.isModifier;
@@ -245,10 +281,12 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                             }
 
                             if (item.dt == 'Reference') {
+                                item.isReference = true;
                                 var type = $filter('getLogicalID')(ed.type[0].targetProfile)
                                 item.referenceDisplay = '--> ' + type;
                             }
 
+                            //use in Logical models...
                             if (ed.mapping) {
                                 ed.mapping.forEach(function(map){
                                     if (map.identity == 'fhir' && map.map) {

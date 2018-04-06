@@ -37,7 +37,7 @@ angular.module("sampleApp")
                 )
             };
 
-            console.log($scope.allRoles)
+            //console.log($scope.allRoles)
 
             if (scenario && library && scenario.cfScenario) {
                 for (var i=0; i<library.length;i++) {
@@ -171,6 +171,10 @@ angular.module("sampleApp")
                         scenario.roles.push(role)
                     }
                 });
+
+                if (scenario.scenarioTypes) {
+                    scenario.scenarioTypes.sort();
+                }
 
                 $scope.$close(scenario)
             };

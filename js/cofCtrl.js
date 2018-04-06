@@ -22,9 +22,10 @@ angular.module("sampleApp")
 
                 var item = {id : 'id'+new Date().getTime(), type:'lm-Condition'};
                 item.description = 'LM';
+                item.url = url;     //needed for LM
 
                 $scope.cofTypeList.push(item)
-
+                makeGraph();
                 $http.get(url).then(
                     function(data){
                         profilesCache['lm-Condition'] = data.data;
@@ -55,26 +56,27 @@ angular.module("sampleApp")
                 }
             };
 
-            function loadScenarioGraph() {
+            function loadScenarioGraph(cb) {
                 var user = ecosystemSvc.getCurrentUser();
                 if (user && user.id) {
                     var url = '/scenarioGraph/' + user.id + "/" + $scope.cofScenario.id;
 
                     $http.get(url).then(
                         function (data) {
-                            console.log(data.data)
+                            //console.log(data.data)
                             var vo = data.data;
 
                             if (vo && vo.items) {
                                 $scope.cofTypeList = vo.items;
                             }
+                            if (cb) {cb()}
                         }
                     )
                 }
             }
 
             $scope.removeItem = function(inx){
-                $scope.cofTypeList.splice(inx);
+                $scope.cofTypeList.splice(inx,1);
                 makeGraph();
             };
 
@@ -258,17 +260,38 @@ angular.module("sampleApp")
                 console.log(item);
 
                 var type = item.type;
+
+
+
+
                 if (profilesCache[type]) {
                     $scope.showResourceTable.open(item,profilesCache[type]);
                 } else {
-                    var url = "http://hl7.org/fhir/StructureDefinition/" + item.type;
+                    //A LM will have a resolvable reference to the SD. A core resource won't
+                    if (item.url) {
+                        $http.get(item.url).then(
+                            function(data) {
+                                var SD = data.data;
+                                profilesCache[type] = SD;
+                                $scope.showResourceTable.open(item,SD);
+                            }
+                        )
+                    } else {
+                        //THis must be a core resource. Find it on the locally defined conformance server
+                        url = "http://hl7.org/fhir/StructureDefinition/" + item.type;
+                        ecoUtilitiesSvc.findConformanceResourceByUri(url).then(
+                            function (SD) {
+                                profilesCache[type] = SD;
+                                $scope.showResourceTable.open(item,SD);
+                            }
+                        )
+                    }
 
-                    ecoUtilitiesSvc.findConformanceResourceByUri(url).then(
-                        function (SD) {
-                            profilesCache[type] = SD;
-                            $scope.showResourceTable.open(item,SD);
-                        }
-                    )
+
+
+
+
+
                 }
             };
 /*
@@ -317,7 +340,7 @@ angular.module("sampleApp")
             }
             */
 
-            $scope.showEDSummary = function(type,path) {
+            $scope.showEDSummaryDEP = function(type,path) {
 
                 ecosystemSvc.getAllPathsForType(type,true).then(
                     function(vo) {
@@ -331,7 +354,7 @@ angular.module("sampleApp")
 
             };
 
-            $scope.selectPath = function (path) {
+            $scope.selectPathDEP = function (path) {
                 console.log(path,$scope.allPathsHash[path])
                 delete $scope.rowType;
                 delete $scope.rowTypeOptions;
@@ -451,7 +474,10 @@ angular.module("sampleApp")
 
                     $scope.cofSelectScenario(track.scenarios[0]);
                     $scope.input.scenario = track.scenarios[0];
-                    loadScenarioGraph();
+                    loadScenarioGraph(function(){
+                        makeGraph();
+                    });
+
 
                 }
 

@@ -54,8 +54,12 @@
                     {{row.mult}}</td>
                 <td>
 
-                    <i ng-show="row.isCoded" class="clickable glyphicon glyphicon-edit pull-right"
-                       title="Edit sample" ng-click="editSample($index)">
+                    <i ng-hide="row.isBBE || row.isReference" class="clickable glyphicon glyphicon-edit pull-right"
+                       uib-popover={{row.structuredData}}
+                       popover-placement="top"
+                       popover-trigger="'mouseenter'"
+
+                       ng-click="editSample(row,radio[row.id])">
                     </i>
 
 
@@ -81,13 +85,6 @@
                     </div>
 
 
-
-<!--
-
-                    <div><em>{{row.fhirMapping.map}}</em></div>
-
-                    {{row.referenceDisplay}}
--->
                     <span ng-hide="row.referenceDisplay || true">
                         <span uib-popover={{row.binding.url}}
                               popover-placement="top"
