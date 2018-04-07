@@ -2,7 +2,7 @@
     <style>
         #cofGraph {
             width: 100%;
-            height: 280px;
+            height: 400px;
             border: 1px solid lightgray;
         }
 
@@ -32,22 +32,24 @@
                         </div>
                     </div>
                 </uib-tab>
-                <uib-tab heading="Profiles">
+                <uib-tab >
+                    <uib-tab-heading>
+                        Profiles
+                        <span class="badge">{{cofScenario.lms.length}}</span>
 
+
+                    </uib-tab-heading>
+                    <div class="row">
+                        <div class="col-sm-3 clickable" ng-repeat="lm in cofScenario.lms">
+                            <span ng-click="selectLM(lm)"  style="cursor:pointer"
+                                  uib-popover={{lm.description}}
+                                  popover-placement="top"
+                                  popover-trigger="'mouseenter'">
+                                {{lm.url | getLogicalID}}</span>
+                        </div>
+                    </div>
                 </uib-tab>
             </uib-tabset>
-
-
-
-
-<!--  <strong>Resource types available</strong>
-            <ul>
-                <li ng-repeat="type in cofScenario.scenarioTypes" ng-click="selectCofType(type)"
-                    style="cursor:pointer">
-                    {{type}}
-                </li>
-            </ul>-->
-
         </div>
         <div class="col-sm-1 col-md-1">
             <button class="btn btn-primary pull-right" ng-click="saveGraph()">Save</button>
@@ -56,10 +58,8 @@
     </div>
     <hr/>
 
-    <button class="btn btn-link" ng-click="temp()">Test</button>
-
     <div class="row">
-        <div class="col-sm-4 col-md-4">
+        <div ng-class="leftPane" classDEP="col-sm-4 col-md-4">
             <uib-tabset>
                 <uib-tab heading="List">
                     <br/>
@@ -69,9 +69,17 @@
                             <td><span class="clickable" ng-click="selectItem(item)"> {{item.type}}</span></td>
                             <td><span class="clickable" ng-click="editDescription(item)"> {{item.description}}</span></td>
                             <td>
+                                <div ng-repeat="row in item.table">
+                                    <div ng-repeat="ref in row.references">
+                                        {{ref.sourcePath}} -> {{ref.targetItem.description}}
+                                    </div>
+                                </div>
+
+<!--
                                 <div ng-repeat="ref in item.references">
                                     {{ref.sourcePath}} -> {{ref.targetItem.description}}
                                 </div>
+                                -->
                             </td>
                             <td>
                                 <i class="clickable glyphicon glyphicon-remove-sign"
@@ -86,73 +94,10 @@
                 </uib-tab>
             </uib-tabset>
 
-
         </div>
-        <div class="col-sm-8 col-md-8">
+        <div ng-class="rightPane"  classDEP="col-sm-8 col-md-8">
 
-            <tbl-resource trigger="showResourceTable" reference="addReference"></tbl-resource>
-<!--
-            <table class="table table-bordered">
-                <tr><th>Element</th><th>Example</th><th>Type</th><th>Path</th><th></th><th>Card.</th><th>DataType</th><th>Notes</th><th></th></tr>
-                <tr ng-repeat="row in cofScenario.rows">
-                    <td>{{row.dataItem}}</td>
-                    <td>{{row.example}}</td>
-                    <td>{{row.resourceType}}</td>
-                    <td>{{row.path}}</td>
-                    <td>
-                        <i class="glyphicon glyphicon-question-sign" ng-click="x()"
-                           uib-popover-html=showEDSummary(row.resourceType,row.path)
-                           popover-placement="top"
-                           popover-trigger="'mouseenter'"
-                        ></i>
-                    </td>
-                    <td>{{row.mult}}</td>
-                    <td>{{row.dataType}}</td>
-                    <td>{{row.notes}}</td>
-                    <td>
-                        <i class="glyphicon glyphicon-remove-sign" ng-click="deleteRow($index)"></i>
-                    </td>
-
-                </tr>
-
-                <tr ng-show="cofType && allPaths">
-                    <td><input type="text" class="form-control" ng-model="input.dataItem"/> </td>
-                    <td><input type="text" class="form-control" ng-model="input.example"/> </td>
-                    <td>{{cofType}}</td>
-                    <td><select class="form-control" ng-model="input.path"
-                                ng-options="path for path in allPaths" ng-change="selectPath(input.path)"></select>
-                    </td>
-                    <td>
-                        <i class="glyphicon glyphicon-question-sign" ng-click="x()"
-                           uib-popover-html=showEDSummary(cofType,input.path)
-                           popover-placement="top"
-                           popover-trigger="'mouseenter'"
-                        ></i>
-                    </td>
-                    <td>
-                        {{selectedPathElement.min}}..{{selectedPathElement.max}}
-                    </td>
-
-                    <td>
-                        <div ng-show="rowType">
-                            {{rowType}}
-                        </div>
-                        <div ng-show="rowTypeOptions">
-                            <select class="form-control" ng-model="input.rowType"
-                                    ng-options="type for type in rowTypeOptions" ></select>
-                        </div>
-                    </td>
-                    <td><textarea class="form-control" ng-model="input.rowNotes"></textarea> </td>
-                    <td>
-                        <i class="glyphicon glyphicon-plus-sign" ng-click="addRow()"></i>
-                    </td>
-
-                </tr>
-
-
-            </table>
-
--->
+            <tbl-resource trigger="showResourceTable" reference="addReference" fnshownotes="setShowNotes"></tbl-resource>
 
         </div>
     </div>

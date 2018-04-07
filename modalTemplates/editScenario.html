@@ -43,7 +43,7 @@
                         Description (MarkD)
                     </div>
                     <div class="col-md-9 col-sm-9">
-                        <textarea class="form-control" rows="8" ng-model="scenario.description"></textarea>
+                        <textarea msd-elastic  class="form-control"  ng-model="scenario.description"></textarea>
                     </div>
                 </div>
                 <br/>
@@ -52,7 +52,7 @@
                         Review Purpose
                     </div>
                     <div class="col-md-9 col-sm-9">
-                        <textarea class="form-control" rows="4" ng-model="scenario.reviewPurpose"></textarea>
+                        <textarea msd-elastic class="form-control" rows="4" ng-model="scenario.reviewPurpose"></textarea>
                     </div>
                 </div>
                 <br/>
@@ -83,27 +83,23 @@
                     </div>
 
                     <div class="col-md-9 col-sm-9">
+                        <ul class="list-unstyled">
+                            <li ng-repeat="link in scenario.links">
+                                <div class="row">
+                                    <div class="col-md-10 col-sm-10">
 
-
-                                <ul class="list-unstyled">
-                                    <li ng-repeat="link in scenario.links">
-                                        <div class="row">
-                                            <div class="col-md-10 col-sm-10">
-
-                                                <div uib-popover={{link.url}}
-                                                     popover-placement="top"
-                                                     popover-trigger="'mouseenter'">{{link.description}}</div>
-                                            </div>
-                                            <div class="col-md-2 col-sm-2">
-                                                <i class="clickable glyphicon glyphicon-remove-sign pull-right"
-                                                   ng-click="removeLink($index)">
-                                                </i>
-                                            </div>
-                                        </div>
-
-
-                                    </li>
-                                </ul>
+                                        <div uib-popover={{link.url}}
+                                             popover-placement="top"
+                                             popover-trigger="'mouseenter'">{{link.description}}</div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2">
+                                        <i class="clickable glyphicon glyphicon-remove-sign pull-right"
+                                           ng-click="removeLink($index)">
+                                        </i>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
 
                         <div class="row">
                             <div class="col-sm-10 col-md-10">
@@ -147,6 +143,45 @@
                 </div>
 
                 <br/>
+
+                <div class="row">
+                    <div class="col-md-3 col-sm-3">
+                        Logical Models
+                    </div>
+
+                    <div class="col-md-9 col-sm-9">
+                        <ul class="list-unstyled">
+                            <li ng-repeat="lm in scenario.lms">
+                                <div class="row">
+                                    <div class="col-md-10 col-sm-10">
+
+                                        <div uib-popover={{lm.url}}
+                                             popover-placement="top"
+                                             popover-trigger="'mouseenter'">{{lm.description}}</div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2">
+                                        <i class="clickable glyphicon glyphicon-remove-sign pull-right"
+                                           ng-click="removeLM($index)">
+                                        </i>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="row">
+                            <div class="col-sm-10 col-md-10">
+                            </div>
+                            <div class="col-sm-2 col-md-2">
+                                <i class="clickable glyphicon glyphicon-plus-sign pull-right"
+                                   title="Add Logical Model" ng-click="addLM(input.link)">
+                                </i>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
 
                 <div class="row" ng-show = "1==2">
                     <div class="col-md-3 col-sm-3">

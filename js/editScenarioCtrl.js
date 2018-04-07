@@ -110,7 +110,7 @@ angular.module("sampleApp")
 
             };
 
-            $scope.addLink = function(link) {
+            $scope.addLink = function() {
 
 
                 $uibModal.open({
@@ -132,14 +132,37 @@ angular.module("sampleApp")
 
                 })
 
-                return;
-
-                scenario.links.push({url:link});
-                delete $scope.input.link
             };
             $scope.removeLink = function(inx){
                 scenario.links.splice(inx,1)
             };
+
+            $scope.addLM = function() {
+
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/addLMToScenario.html',
+                    controller: function($scope,lms){
+                        $scope.input = {};
+                        $scope.addLM = function() {
+                            lms.push({url:$scope.input.lmUrl,description:$scope.input.lmDescription});
+                            $scope.$close();
+                        }
+                    },
+                    resolve : {
+                        lms: function () {          //the default config
+                            scenario.lms = scenario.lms || []
+                            return scenario.lms;
+                        }
+                    }
+                }).result.then(function(vo){
+
+                })
+
+            };
+            $scope.removeLM = function(inx){
+                scenario.lms.splice(inx,1)
+            };
+
 
             $scope.removeType = function(inx){
                 scenario.scenarioTypes.splice(inx,1)

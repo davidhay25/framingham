@@ -13,26 +13,74 @@ angular.module("sampleApp")
             var allScenarios = {};
             $scope.showvsviewerdialog = {};
 
-            $scope.showResourceTable = {};
 
-            //testing LM...
-            $scope.temp = function(){
 
-                var url = "http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/TestCondition";
+            //Select a logical model rather than a core resource type
+            $scope.selectLM = function(LM){
+                var url = LM.url; //"http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/TestCondition";
 
-                var item = {id : 'id'+new Date().getTime(), type:'lm-Condition'};
-                item.description = 'LM';
-                item.url = url;     //needed for LM
-
-                $scope.cofTypeList.push(item)
-                makeGraph();
                 $http.get(url).then(
                     function(data){
-                        profilesCache['lm-Condition'] = data.data;
+                        var SD = data.data;
+                        //get the base resource. The LM must have been created by clinFHIR
+                        var extUrl = "http://clinfhir.com/fhir/StructureDefinition/baseTypeForModel"; //yes, a magic string
+                        var ext = getExtensionValue(SD,extUrl);
+                        if (ext) {
+                            var baseType = ext.valueString;
+                            var name = $filter('getLogicalID')(url) + '-'+baseType;
+
+                            var item = {id : 'id'+new Date().getTime(), type:name};
+                            item.description = 'LM';
+                            item.url = url;     //needed for LM
+                            item.baseType = baseType;
+
+                            $scope.cofTypeList.push(item)
+                            makeGraph();
+
+                            profilesCache[name] = data.data;
+                        } else {
+                            alert("I couldn't find the base type. Was this LM authored by clinFHIR, and based on a core resource type?")
+                        }
+
+
+
+
+
+                    },
+                    function() {
+                        alert('Unable to retrieve a model from '+LM.url)
                     }
                 )
             };
 
+            function getExtensionValue(resource,url) {
+                if (resource) {
+                    resource.extension = resource.extension || []
+                    resource.extension.forEach(function(ext){
+                        if (ext.url == url) {extension = ext}
+                    });
+                }
+
+                return extension;
+            }
+
+            //if showNotes is true, then the right pane is larger.
+            $scope.setShowNotes = function (show) {
+               // console.log(show)
+                if (show) {
+                    //show the notes. make the right pane larger
+                    $scope.showNotes = true;
+                    $scope.leftPane = 'col-sm-4 col-md-4';
+                    $scope.rightPane = 'col-sm-8 col-md-8';
+                } else {
+                    $scope.showNotes = false;
+                    $scope.leftPane = 'col-sm-6 col-md-6';
+                    $scope.rightPane = 'col-sm-6 col-md-6';
+                }
+            };
+            $scope.setShowNotes(true);
+
+            $scope.showResourceTable = {};
 
             $scope.saveGraph = function () {
 
@@ -76,7 +124,45 @@ angular.module("sampleApp")
             }
 
             $scope.removeItem = function(inx){
-                $scope.cofTypeList.splice(inx,1);
+                var ar = $scope.cofTypeList.splice(inx,1);
+                //makeGraph();
+                //return;
+
+                var id = ar[0].id;      //the id of the item that was removed
+                $scope.cofTypeList.forEach(function (item) {
+                    if (item.table) {
+                        item.table.forEach(function (row) {
+                            var ar = row.references;
+                            if (ar) {
+                                row.references.length = 0;
+                                ar.forEach(function (ref) {
+                                    if (ref.target.id !== id) {
+                                        row.references.push(ref)
+                                    }
+                                })
+                            }
+
+                        })
+                    }
+
+
+/*
+                    if (item.references) {
+                        var ar = item.references;
+                        item.references.length = 0;
+                        ar.forEach(function (ref) {
+                            if (ref.target.id !== id) {
+                                item.references.push(ref)
+                            }
+                        })
+                    }
+                    */
+
+                });
+
+                //now remove any references that other resources
+
+
                 makeGraph();
             };
 
@@ -124,16 +210,18 @@ angular.module("sampleApp")
                         $uibModal.open({
                             templateUrl: 'modalTemplates/selectResource.html',
                             controller: function($scope,lst,type,source) {
-                                $scope.lst = [];
-
+                                $scope.lst = lst;//[];
+/*
                                 lst.forEach(function (item) {
                                     var include = false;
                                     if (type == 'Resource' || item.type == type) {
                                         include = true;
                                     }
+
                                     if (item.id == source.id) {
                                         include = false;
                                     }
+
                                     if (include) {
                                         $scope.lst.push(item)
                                     }
@@ -141,7 +229,7 @@ angular.module("sampleApp")
 
                                 });
 
-
+*/
                                 //$scope.lst = lst;
                                 $scope.type = type;
                                 $scope.source = source
@@ -152,7 +240,8 @@ angular.module("sampleApp")
                             },
                             resolve : {
                                 lst: function(){
-                                    return $scope.cofTypeList;
+                                    return targets;
+                                   // return $scope.cofTypeList;
                                 },
                                 type: function(){
                                     //
@@ -179,7 +268,6 @@ angular.module("sampleApp")
                     if (row.max == 1) {
 
                         //remove any references from this path in this row...
-
                         for (var i=0; i < row.references.length; i++) {
                             var ref = row.references[i];
                             if (ref.sourcePath == path) {
@@ -197,17 +285,6 @@ angular.module("sampleApp")
                                 break;
                             }
                         }
-                        //}
-/* for now
-                        //there can only be one - remove any other references from this path...
-                        for (var i=0; i < $scope.currentItem.references.length; i++) {
-                            if ($scope.currentItem.references[i].sourcePath == path) {
-                                $scope.currentItem.references.splice(i,1);
-                                break;
-                            }
-                        }
-*/
-                        //and the same for the row...
 
 
                     }
@@ -406,6 +483,7 @@ angular.module("sampleApp")
             //note that the cache update is asynchronous...
             function addItem(type) {
                 var item = {id : 'id'+new Date().getTime(),  type:type}
+                item.baseType = type;
 
                 //create a default description based on the number of this type in the list
                 var ctr = 1;
@@ -497,13 +575,29 @@ angular.module("sampleApp")
                     //console.log(item);
                     var node = {id: item.id, label: item.type, shape: 'box',item:item};
 
-                    if ( objColours[item.type]) {
-                        node.color = objColours[item.type];
+                    if ( objColours[item.baseType]) {
+                        node.color = objColours[item.baseType];
                     }
+
                     arNodes.push(node);
 
                     // reference.sourcePath = path;
                     //reference.targetItem = target;
+                    if (item.table) {
+                        item.table.forEach(function (row) {
+                            if (row.references) {
+                                row.references.forEach(function (ref) {
+                                    var edge = {id: 'e'+arEdges.length+1,from: item.id, to: ref.targetItem.id,
+                                        label: ref.sourcePath,arrows : {to:true}};
+
+                                    arEdges.push(edge)
+                                })
+                            }
+                        })
+                    }
+
+
+                    /*
                     if (item.references) {
                         item.references.forEach(function (ref) {
                             var edge = {id: 'e'+arEdges.length+1,from: item.id, to: ref.targetItem.id,
@@ -512,6 +606,7 @@ angular.module("sampleApp")
                             arEdges.push(edge)
                         })
                     }
+                    */
                 });
 
 

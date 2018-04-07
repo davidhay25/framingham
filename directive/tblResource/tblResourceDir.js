@@ -7,12 +7,56 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             trigger: '=',
             termServer: '=',
             reference : '&',
+            fnshownotes : '&',
             showvsviewerdialog : '='
         },
         templateUrl: '../directive/tblResource/tblResourceDir.html',
 
         link : function ($scope, element, attrs) {
             $scope.internalControl = $scope.trigger || {};
+            $scope.showOnlyPopulated = false;       //true if only elements with data are being displayed...
+
+
+            //this function is called to display a specific resource;
+            //'item' is the 'container' element in the host app
+            //'SD' is a StructureDefinition. If can be a Logical Model. There should be no extensions.
+            $scope.internalControl.open = function(item,SD) {
+                console.log(item)
+                console.log($scope.showOnlyPopulated)
+                if (item) {
+                    $scope.input = item;
+                    $scope.input.table = $scope.input.table || makeTableArray(SD);
+                    $scope.input.sample = $scope.input.sample || {};
+                    $scope.input.notes = $scope.input.notes || {};
+
+                    //this preserves the display when called with different models...
+                    if ($scope.showOnlyPopulated) {
+                        $scope.hideAllWithoutSample()
+                    } else {
+                        $scope.collapse();
+                    }
+
+
+                } else {
+                    delete $scope.input;
+                }
+
+            };
+
+
+            $scope.showNotes = function(show) {
+                if (show) {
+                    //show the notes. Also trigger an 'event' to notify the containing app
+                    $scope.hideNotes = false;
+                    $scope.fnshownotes()(true)
+
+                } else {
+                    //hide the notes. Also trigger an 'event' to notify the containing app
+                    $scope.hideNotes = true;
+                    $scope.fnshownotes()(false)
+
+                }
+            }
 
             //the user clicked teh add reference link - notify the hosting app...
             $scope.addReference = function(row,type){
@@ -73,21 +117,6 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             };
 
 
-
-            $scope.internalControl.open = function(item,SD) {
-                console.log(item)
-                if (item) {
-                    $scope.input = item;
-                    $scope.input.table = $scope.input.table || makeTableArray(SD);
-                    $scope.input.sample = $scope.input.sample || {};
-                    $scope.input.notes = $scope.input.notes || {};
-                    $scope.collapse();
-                } else {
-                    delete $scope.input;
-                }
-
-            };
-
             //make a copy of an item
             $scope.duplicate = function(item) {
                 var path = item.path;       //path to duplicate (along with children)
@@ -122,12 +151,13 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 })
             };
 
-            $scope.hideWOSampleDisplay = true;
+            //$scope.hideWOSampleDisplay = true;
             $scope.hideAllWithoutSample = function() {
                 var visibleRows = []
-                $scope.hideWOSampleDisplay = false
+                $scope.showOnlyPopulated = true;
+                //$scope.hideWOSampleDisplay = false
                 $scope.input.table.forEach(function(row){
-                    if ((! $scope.input.sample[row.id]) && (! $scope.input.notes[row.id])   ) {
+                    if ((! $scope.input.sample[row.id]) && (! $scope.input.notes[row.id])  && (! row.references || row.references.length == 0) ) {
                         row.isHidden = true;
                     } else {
                         visibleRows.push(row.path);
@@ -151,7 +181,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             };
 
             $scope.showAll = function() {
-                $scope.hideWOSampleDisplay = true
+                $scope.showOnlyPopulated = false;
+                //$scope.hideWOSampleDisplay = true
                 $scope.input.table.forEach(function(row){
                     row.isHidden = false;
                 })
