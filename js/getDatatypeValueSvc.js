@@ -8,12 +8,14 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
 
                     case 'positiveInt' :
                         v = parseInt(value.integer,10);
+                        text = v;
                         break;
                     case 'unsignedInt' :
                         v = parseInt(value.integer,10);
+                        text = v;
                         break;
 
-                    case 'Reference':
+                    case 'ReferenceDEP':
                         v = {};
                         if (value.reference) {
                             v.reference = value.reference.url;
@@ -24,10 +26,12 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
 
                     case 'Narrative' :
                         v = {div:value.narrative.div,status:'additional'};
+                        text = v;
                         break;
                     case 'instant' :
                         //value is a Date object...
                         v = moment(value.date).format();
+                        text = v;
                         break;
                     case 'Attachment' :
                         v = {title:value.attachment.title};
@@ -43,13 +47,7 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
                             addIfNotEmpty(cr,v,'creation');
 
                         }
-
-
-                        //simpleInsert(insertPoint,info,path,insrt,dt);
-
-
-
-
+                        text = v.title;
                         break;
 
                     case 'Quantity' :
@@ -60,7 +58,7 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
                         } else {
                             v = {value:f,unit:value.quantity.unit}
                         }
-
+                        text = f + " " + v.unit;
                         break;
                     case 'Dosage' :
                         var insrt = {};
@@ -87,25 +85,30 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
 
 
                         v = insrt;
+                        text = insrt.text;
                         break;
-                    case 'extension' :
+                    case 'extensionDEP' :
 
 
                         break;
                     case 'integer' :
                         v = parseInt(value.integer,10);
+                        text = v;
                         break;
 
                     case 'decimal' :
                         v = parseFloat(value.integer)
+                        text = v;
                         break;
 
                     case 'uri' :
                         v = value.uri;
+                        text = v;
                         break;
 
                     case 'ContactPoint':
                         v = {value:value.contactpoint.value,system:value.contactpoint.system,use:value.contactpoint.use}
+                        text = v.value + " ("+ v.system + ")";
                         break;
                     case 'Identifier' :
                         v = {value:value.identifier.value,system:value.identifier.system}
@@ -114,9 +117,11 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
 
                     case 'boolean' :
                         v = value.boolean;
+                        text = v;
                         break;
                     case 'Annotation' :
                         v = {text:value.Annotation.text,time:moment().format()}
+                        text = v.text;
                         break;
 
                     case 'HumanName' :
@@ -163,6 +168,9 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
 
 
                         addIfNotEmpty(value.Address.text,insrt,'text');
+
+                        text = insrt.line[0];
+
                         v = insrt;
                         break;
 
@@ -172,8 +180,7 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
                             var end = value.period.end;
                             v = {start:start,end:end}
 
-                        } else {
-                            alert('No period data selected');   //todo - shuldn't really call alert here
+                            text = moment(v.start).format() + " to " + moment(v.end.format()) ;
                         }
 
 
@@ -182,6 +189,7 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
                     case 'date' :
                         //value is a Date object...
                         v = moment(value.date).format('YYYY-MM-DD');
+                        text = v;
                         break;
                     case 'dateTime' :
                         //value is a Date object...
@@ -190,16 +198,13 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
 
                         v = moment(value.date).format('YYYY-MM-DD');
                         if (value.time) {
+                            value.date = value.time;    //when time is selected, date is null
                             value.date.setHours(value.time.getHours());
                             value.date.setMinutes(value.time.getMinutes());
                         }
 
-
-                        console.log(value.time)
                         v = moment(value.date).format();
-
-
-
+                        text = v;
 
                         break;
 
@@ -255,11 +260,12 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
                             v = value.coding
 
                         }
-
+                        text = v;
                         break;
                 }
 
                 return {value:v,text:text};
+
 
                 function addIfNotEmpty(value,obj,prop,isArray) {
                     if (value) {

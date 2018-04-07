@@ -91,9 +91,6 @@ angular.module("sampleApp")
             }
 
 
-
-
-
             $scope.save = function() {
                 console.log($scope.input.dt);
 

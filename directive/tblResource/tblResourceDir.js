@@ -43,7 +43,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
             };
 
-
+            $scope.hideNotes = true;    //default to hiding notes
             $scope.showNotes = function(show) {
                 if (show) {
                     //show the notes. Also trigger an 'event' to notify the containing app
@@ -110,7 +110,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             };
 
             //called by the vsViewer when a concept is selected form an expansion...
-            $scope.conceptSelected = function(concept) {
+            $scope.conceptSelectedDEP = function(concept) {
                 var display = concept.display + " ("+ concept.code + " - "+ concept.system + ")";
                 $scope.input.sample[$scope.currentItem.id] = display;//angular.toJson(concept)
 
@@ -270,6 +270,11 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             function makeTableArray(SD){
                 var ignore=['id','meta','implicitRules','language','text','contained','extension','modifierExtension']
                 var ar = []
+
+                //add a text element as first one
+                var item = {path: 'text',id:'text',type:[{code:'Narrative'}],max:'1',mult:'0..1' };
+                ar.push(item);
+
                 SD.snapshot.element.forEach(function (ed,inx) {
                     if (ed.type) {
                         var path = $filter('dropFirstInPath')(ed.path);     //remove the leading segment (the resource type)

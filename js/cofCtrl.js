@@ -11,7 +11,47 @@ angular.module("sampleApp")
             var elementsByType = {};        //hash of all elements for a given type
             var profilesCache = {};          //cache for SDsss
             var allScenarios = {};
-            $scope.showvsviewerdialog = {};
+            //$scope.showvsviewerdialog = {};
+
+            $scope.fhirBasePath = "http://hl7.org/fhir/";       //root of the spec.
+            $http.get('/artifacts/allResources.json').then(
+                function(data) {
+                    $scope.allResourceTypes = data.data;
+                    $scope.allResourceTypes.sort(function(a,b) {
+                        if (a.name > b.name) {
+                            return 1
+                        } else {
+                            return -1
+                        }
+                    })
+                }
+            );
+            $scope.selectCoreType = function(){
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/selectCoreType.html',
+                    size : 'lg',
+                    controller: function($scope,lst) {
+                        $scope.lst = lst;//[];
+
+                        $scope.select=function(item){
+                            $scope.$close(item)
+                        }
+
+                    },
+                    resolve : {
+                        lst: function(){
+                            return $scope.allResourceTypes;
+                            // return $scope.cofTypeList;
+                        }
+                    }
+                }).result.then(function(item){
+                    console.log(item)
+                    addItem(item.name)
+
+                });
+            };
+
+
 
 
 
@@ -78,7 +118,7 @@ angular.module("sampleApp")
                     $scope.rightPane = 'col-sm-6 col-md-6';
                 }
             };
-            $scope.setShowNotes(true);
+            $scope.setShowNotes(false);
 
             $scope.showResourceTable = {};
 
@@ -262,7 +302,7 @@ angular.module("sampleApp")
                     var path = row.path;
                     row.references = row.references || []
                     var reference = {id:'id-'+ new Date().getTime()};
-                    $scope.currentItem.references = $scope.currentItem.references || [];
+                    //$scope.currentItem.references = $scope.currentItem.references || [];
 
                     //if the
                     if (row.max == 1) {
@@ -272,7 +312,7 @@ angular.module("sampleApp")
                             var ref = row.references[i];
                             if (ref.sourcePath == path) {
                                 row.references.splice(i,1);
-
+/*
                                 //now to delete this reference from the item object
                                 for (var j=0; j < $scope.currentItem.references.length; j++){
                                     if ($scope.currentItem.references[j].id == ref.id) {
@@ -280,7 +320,7 @@ angular.module("sampleApp")
                                         break;
                                     }
                                 }
-
+*/
 
                                 break;
                             }
@@ -312,7 +352,7 @@ angular.module("sampleApp")
                     })
 
                     */
-                    $scope.currentItem.references.push(reference)
+                    //$scope.currentItem.references.push(reference)
 
 
                     //add the reference to the row (which will become the instance eventually)
@@ -327,7 +367,10 @@ angular.module("sampleApp")
             $scope.editDescription = function(item) {
 
                 var description = $window.prompt("Enter description",item.description);
-                item.description = description;
+                if (description) {
+                    item.description = description;
+                }
+
 
             };
 
