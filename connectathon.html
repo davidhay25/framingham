@@ -146,12 +146,11 @@
     <script src="js/editScenarioCtrl.js"></script>
     <script src="js/loginCtrl.js"></script>
     <script src="js/cofCtrl.js"></script>
+    <script src="js/cofSvc.js"></script>
     <script src="js/lmCheckCtrl.js"></script>
     <script src="js/libs/angular-bootstrap-checkbox.js"></script>
     <script src="js/libs/vis.min.js"></script>
     <script src="js/modellerFilters.js"></script>
-
-
 
     <script src="js/libs/elastic.js"></script>
     <script src="js/editRoleCtrl.js"></script>
@@ -216,9 +215,6 @@
 
                 <uib-tab heading="Track Descriptions">
                     <br/>
-
-
-
                     <div class="row">
                         <div class="col-sm-2 col-md-2">
                             <div class="trackScroll">
@@ -236,6 +232,7 @@
 
 
                                         {{track.name}}
+                                        <div><em>({{track.trackType}})</em></div>
                                     </li>
                                 </ul>
 
@@ -1285,35 +1282,23 @@
 
                     </div>
                 </uib-tab>
-                <uib-tab heading="Clinical Review" ng-show="selectedTrack.trackType == 'clinical'">
+
+                <uib-tab heading="Logical Model Review" ng-show="selectedTrack.trackType == 'lmreview'">
                     <br/>
-                    <uib-tabset>
-                        <uib-tab heading="Scenario Based">
-                            <br/>
+                    <div ng-controller="lmCheckCtrl">
+                        <ng-include src="'includes/lmCheck.html'"></ng-include>
+                    </div>
+                </uib-tab>
 
-                            <div ng-controller="cofCtrl">
-                                <ng-include src="'includes/cof.html'"></ng-include>
-                            </div>
-
-                        </uib-tab>
-                        <uib-tab ng-show="selectedTrack.LM" heading="Logical Model">
-                            <br/>
-                            <div ng-controller="lmCheckCtrl">
-                                <ng-include src="'includes/lmCheck.html'"></ng-include>
-                            </div>
-
-                        </uib-tab>
-
-
-
-
-
-
-                    </uib-tabset>
+                <uib-tab heading="Scenario builder" ng-show="selectedTrack.trackType == 'scenario'">
+                    <br/>
+                    <div ng-controller="cofCtrl">
+                        <ng-include src="'includes/cof.html'"></ng-include>
+                    </div>
 
                 </uib-tab>
 
-                <uib-tab ng-show="selectedTrack.trackType == 'clinical'">
+                <uib-tab ng-show="selectedTrack.trackType == 'lmreview'">
                     <uib-tab-heading>
                         Clinical Review Results
                         <!--<span class="badge" ng-show="ecosystemSvc.allResultsCount() > 0">{{ecosystemSvc.allResultsCount()}}</span>

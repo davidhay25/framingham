@@ -112,8 +112,21 @@
 
         </div>
         <div ng-class="rightPane">
+            <uib-tabset>
+                <uib-tab heading="Table">
+                    <tbl-resource trigger="showResourceTable" reference="addReference"
+                                  resource-json="fnResourceJson"
+                                  fnshownotes="setShowNotes"></tbl-resource>
+                </uib-tab>
+                <uib-tab heading="Resource Json">
+                    <pre>{{resourceJson.resource | json}}</pre>
+                </uib-tab>
+                <uib-tab heading="Item Json">
+                    <pre>{{resourceJson.raw | json}}</pre>
+                </uib-tab>
+            </uib-tabset>
 
-            <tbl-resource trigger="showResourceTable" reference="addReference" fnshownotes="setShowNotes"></tbl-resource>
+
 
         </div>
     </div>

@@ -1,7 +1,7 @@
 
 angular.module("sampleApp")
     .controller('cofCtrl',
-        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal) {
+        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc) {
 
             $scope.input = {};
             $scope.cofTypeList = [];
@@ -52,7 +52,11 @@ angular.module("sampleApp")
             };
 
 
-
+            //when the directive is updated with structured data, this function is called with the json version of the resource...
+            $scope.fnResourceJson = function(json) {
+                $scope.resourceJson = json;
+                console.log(json)
+            };
 
 
             //Select a logical model rather than a core resource type
@@ -386,6 +390,7 @@ angular.module("sampleApp")
 
                 if (profilesCache[type]) {
                     $scope.showResourceTable.open(item,profilesCache[type]);
+                   // $scope.resourceJson = cofSvc.makeJson(item);
                 } else {
                     //A LM will have a resolvable reference to the SD. A core resource won't
                     if (item.url) {
