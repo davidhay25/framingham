@@ -4,13 +4,6 @@
 var express = require('express');
 
 
-var jsonParser       = bodyParser.json({limit:1024*1024*20, type:'application/json'});
-var urlencodedParser = bodyParser.urlencoded({ extended:true,limit:1024*1024*20,type:'application/x-www-form-urlencoding' })
-
-//https://stackoverflow.com/questions/29939852/mean-io-error-request-entity-too-large-how-to-increase-bodyparser-limit-ou
-express.use(jsonParser);
-express.use(urlencodedParser);
-
 var request = require('request');
 var session = require('express-session');
 var jwt = require('jsonwebtoken');
@@ -65,7 +58,11 @@ var hashTrack = {};         //a hash of all the tracks
 //var db;
 
 var app = express();
-app.use(bodyParser.json())
+//to serve up the static web pages - particularly the login page if no page is specified...
+//Order of app.use() is important as we need to increase the size limit for json parsing...
+app.use('/', express.static(__dirname,{index:'/connectathon.html'}));
+
+//app.use(bodyParser.json())
 
 //http://mongodb.github.io/node-mongodb-native/3.0/quick-start/quick-start/
 const MongoClient = require('mongodb').MongoClient;
@@ -184,20 +181,17 @@ app.use(function (req, res, next) {
 
 });
 
-app.get('/public/logoutDEP',function(req,res){
-    res.json(dbKeys);
-});
-
-//called by the main page on load to find out the event selected for this user session...
-app.get('/public/currentEventDEP',function(req,res){
-    res.json(req.session['config']);
-});
-
 var showLog = false;         //for debugging...
 
-
 var bodyParser = require('body-parser')
-bodyParser.json();
+var jsonParser       = bodyParser.json({limit:'50mb', type:'application/json'});
+var urlencodedParser = bodyParser.urlencoded({ extended:true,limit:'50mb',type:'application/x-www-form-urlencoding' })
+
+//https://stackoverflow.com/questions/29939852/mean-io-error-request-entity-too-large-how-to-increase-bodyparser-limit-ou
+app.use(jsonParser);
+app.use(urlencodedParser);
+
+
 
 function recordAccess(req,data,cb) {
 
@@ -792,8 +786,7 @@ app.post('/espruino',function(req,res){
 
 */
 
-//to serve up the static web pages - particularly the login page if no page is specified...
-app.use('/', express.static(__dirname,{index:'/connectathon.html'}));
+
 
 
 
