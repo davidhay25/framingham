@@ -14,6 +14,10 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
         templateUrl: '../directive/tblResource/tblResourceDir.html',
 
         link : function ($scope, element, attrs) {
+
+
+            $scope.fhirBasePath = "http://hl7.org/fhir/";       //root of the spec.
+
             $scope.internalControl = $scope.trigger || {};
             $scope.showOnlyPopulated = false;       //true if only elements with data are being displayed...
 
@@ -21,9 +25,10 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             //this function is called to display a specific resource;
             //'item' is the 'container' element in the host app
             //'SD' is a StructureDefinition. If can be a Logical Model. There should be no extensions.
-            $scope.internalControl.open = function(item,SD) {
-                console.log(item)
-                console.log($scope.showOnlyPopulated)
+            //'scenario' is the current scenario...
+            $scope.internalControl.open = function(item,SD,scenario) {
+
+                $scope.scenario = scenario;
                 if (item) {
                     $scope.input = item;
                     $scope.input.table = $scope.input.table || makeTableArray(SD);
@@ -37,9 +42,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     } else {
                         $scope.collapse();
                     }
-
-
                 } else {
+                    //clear the display...
                     delete $scope.input;
                 }
 
@@ -60,19 +64,26 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 }
             }
 
-            //the user clicked teh add reference link - notify the hosting app...
-            $scope.addReference = function(row,type){
-                $scope.reference()(row,type);
+            //the user clicked the add reference link - notify the hosting app to select the target...
+
+            $scope.addReference = function(row,type,inx){
+                $scope.reference()(row,type,function(target){
+                    //if there's a target then update the structuredData...
+                    if (target) {
+                        row.structuredData = {reference: target.type + "/"+ target.id};     //needed for building the resource
+                        checkParentHasStructuredData(row,inx)
+                        makeJson();
+                    }
+                });
             };
 
             $scope.radio = {};
-           // $scope.showVSViewerDialog = $scope.showVSViewerDialog || {};
+
             $scope.editSample = function(row,dt,inx) {
-                //console.log(inx,$scope.input.sample);
-                //console.log($scope.input.sample[inx])
+
 
                 var datatype = row.type[0].code;
-                console.log(row,dt)
+
                 if (row.type.length > 1) {
                     if (! dt) {
                         alert("Please select a datatype to use")
@@ -93,60 +104,58 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         },
                         'row' : function(){
                             return row
+                        },
+                        'scenario' : function(){
+                            return $scope.scenario;
+                        },
+                        'resourceType' : function(){
+                            return $scope.input.type;
                         }
 
                     }}
                 ).result.then(function(vo) {
-                    // vo = {value: text: }
-                    //input.sample[row.id]
-                    console.log(vo)
                     $scope.input.sample[row.id] = vo.text;
                     row.structuredData = vo.value;
                     row.sdDt = dt;      //the selected datatype
 
-                    //if not off the root, walk back up the list of elements to make sure that the parent has a structuredData element. The Json build needs this...
-                    var ar = row.path.split('.');
-                    var eleDepth = ar.length;       //the depth of the element...
-                    if (eleDepth > 1) {
-                        //this is not off the root...
-                        var parentFound = false;
-
-                        while (! parentFound) {
-                            inx --;
-
-                            var ar = $scope.input.table[inx].path.split('.');
-                            if (ar.length == eleDepth -1) {
-                                //this is the parent node. Make sure it has a structuredData value...
-                                //todo ?sheck for multiplicity
-                                $scope.input.table[inx].structuredData = []
-                                /*
-                                var elePath = row[inx].path;
-                                var arElePath = elePath.split('.')
-                                var eleName = arElePath[0];
-                                resource[eleName] = []
-
-                                structuredData
-                                */
-                                parentFound = true
-                            }
-
-
-
-                            //this is a safeguard - shouldn't really execuet this...
-                            if (inx == 0) {
-                                console.log('safety guard!');
-                                parentFound = true
-                            }
-
-                        }
-
-                    }
-
+                    checkParentHasStructuredData(row,inx); //if not off the root, walk back up the list of elements to make sure that the parent has a structuredData element. The Json build needs this...
                     makeJson ();
 
                 })
-
             };
+
+            function checkParentHasStructuredData(row,inx){
+                //if not off the root, walk back up the list of elements to make sure that the parent has a structuredData element. The Json build needs this...
+                var ar = row.path.split('.');
+                var eleDepth = ar.length;       //the depth of the element...
+                if (eleDepth > 1) {
+                    //this is not off the root...
+                    var parentFound = false;
+                    while (! parentFound) {
+                        inx --;
+
+                        //this is a safeguard - shouldn't really execute this...
+                        if (inx == -1) {
+                            console.log('safety guard!');
+                            parentFound = true
+                        } else {
+                            var ar = $scope.input.table[inx].path.split('.');
+                            if (ar.length == (eleDepth -1)) {
+                                //this is the parent node. Make sure it has a structuredData value...
+                                //todo ?sheck for multiplicity
+                                $scope.input.table[inx].structuredData = [{}]
+                                parentFound = true
+                            }
+                        }
+
+
+
+
+                    }
+
+                }
+            }
+
 
             //called by the vsViewer when a concept is selected form an expansion...
             $scope.conceptSelectedDEP = function(concept) {
@@ -154,7 +163,6 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 $scope.input.sample[$scope.currentItem.id] = display;//angular.toJson(concept)
 
             };
-
 
             //make a copy of an item
             $scope.duplicate = function(item) {
@@ -176,6 +184,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         row.id = 'id' + new Date().getTime() + Math.floor(Math.random()*1000)
                         delete row.isOriginal;
                         delete row.references;
+                        delete row.structuredData;
                         //now change the path in the row by incrementing the suffix..
                       /*  var newPath = row.path;
                         var ar = newPath.split('_');
@@ -208,7 +217,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     var ar = path.split('.')
                     while (ar.length > 0) {
                         var np = ar.join('.')
-                        console.log(np)
+
                         $scope.input.table.forEach(function(row){
                             if (row.path == np) {
                                 row.isHidden = false
@@ -290,7 +299,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
                 $scope.input.table.forEach(function(row){
                     var ar = row.path.split('.');
-                    //console.log(row.path);
+
                     if (ar.length == 1) {
                         row.isHidden = false;
                         var root = ar[0]
@@ -312,6 +321,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
                 //add a text element as first one
                 var item = {path: 'text',id:'text',type:[{code:'Narrative'}],max:'1',mult:'0..1' };
+                item.definition = "The narrative text that describes this resource to a User";
                 ar.push(item);
 
                 SD.snapshot.element.forEach(function (ed,inx) {
@@ -370,7 +380,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                                     }
                                 })
                             }
-                            //console.log(ed.mapping,item);
+
 
 
                             ar.push(item);
@@ -399,7 +409,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         item.isLeaf = true;
                     }
                 });
-//console.log(ar,SD)
+
 
 
 
@@ -408,69 +418,84 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
             function makeJson() {
 
+                try {
+                    //hide exceptions for now...
+                    var data = []
+                    //var resource = {resourceType:$scope.input.type};
+                    var resource = {resourceType: $scope.input.baseType, id: $scope.input.id};
+                    var previousEle = {};
+                    var parentElement, grandParentElement;
+                    $scope.input.table.forEach(function (row, index) {
+                        if (row.structuredData) {
+                            data.push(row);
 
-                var data = []
-                var resource = {resourceType:$scope.input.type};
-                var previousEle = {};
-                var parentElement, grandParentElement;
-                $scope.input.table.forEach(function (row,index) {
-                    if (row.structuredData) {
-                        data.push(row);
+                            var path = row.path;
+                            var ar = path.split('.');
+                            switch (ar.length) {
+                                case 1:
+                                    //this is off the root
+                                    var eleName = ar[0];
+                                    if (eleName.indexOf('[x]') > -1) {
+                                        eleName = eleName.substr(0, eleName.length - 3) + _capitalize(row.sdDt);
+                                    }
 
-                        var path = row.path;
-                        var ar = path.split('.')
-                        switch (ar.length) {
-                            case 1:
-                                //this is off the root
-                                var eleName = ar[0];
-                                if (eleName.indexOf('[x]') > -1) {
-                                    eleName = eleName.substr(0,eleName.length-3)+ row.sdDt
+                                    parentElement = row.structuredData; //because it could be a parent...
+                                    if (row.max == 1) {
+                                        resource[eleName] = parentElement;
+                                    } else {
+                                        resource[eleName] = resource[eleName] || [];
+                                        resource[eleName].push(parentElement)
+                                    }
+                                    break;
+                                case 2: {
+                                    //if the
+                                    var parentEleName = ar[0];      //the parent element name
+
+                                    //var parent = resource[parentEleName];
+
+
+                                    var eleName = ar[1];
+                                    if (eleName.indexOf('[x]') > -1) {
+                                        eleName = eleName.substr(0, eleName.length - 3) + _capitalize(row.sdDt);
+                                    }
+
+                                    // grandParentElement = {}; //because it could be a grand parent...
+                                    // grandParentElement[eleName] = row.structuredData;
+
+                                    //var node = parentElement[0];
+                                    //node[eleName] = row.structuredData;
+
+
+                                    grandParentElement = parentElement[0]; //because it could be a grand parent...
+                                    grandParentElement[eleName] = row.structuredData;
+
+                                    /*
+                                                                    if (row.max == 1) {
+                                                                        parentElement[eleName] = grandParentElement;
+                                                                    } else {
+                                                                        parentElement[eleName] =  resource[eleName] || [];
+                                                                        parentElement[eleName].push(grandParentElement)
+                                                                    }
+                                    */
+                                    break;
                                 }
-
-                                parentElement = row.structuredData; //because it could be a parent...
-                                if (row.max == 1) {
-                                    resource[eleName] = parentElement;
-                                } else {
-                                    resource[eleName] =  resource[eleName] || [];
-                                    resource[eleName].push(parentElement)
-                                }
-                                break;
-                            case 2: {
-                                //if the
-                                var parentEleName = ar[0];      //the parent element name
-
-                                //var parent = resource[parentEleName];
-
-
-
-                                var eleName = ar[1];
-                                grandParentElement = row.structuredData; //because it could be a grand parent...
-                                if (row.max == 1) {
-                                    parentElement[eleName] = grandParentElement;
-                                } else {
-                                    parentElement[eleName] =  resource[eleName] || [];
-                                    parentElement[eleName].push(grandParentElement)
-                                }
-
-                                break;
                             }
+
                         }
+                    });
 
 
-
-                    }
-                });
+                    $scope.resourceJson()({resource: resource, raw: data})
 
 
+                } catch (ex) {
+                    console.log(ex)
+                }
 
 
-
-
-
-                $scope.resourceJson()({resource:resource,raw:data})
-                //console.log(data)
-
-                //return {raw:data};
+                function _capitalize(str) {
+                    return (str.charAt(0).toUpperCase() + str.slice(1));
+                }
             }
 
 

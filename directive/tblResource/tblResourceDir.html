@@ -86,7 +86,7 @@
                         <span class="dataPresent"> ==> {{ref.targetItem.description}} </span>
                     </div>
 
-                    <div ng-repeat="type in row.type">
+                    <div ng-repeat="type in row.type"  ng-init="sectionIndex = $index">
                         <span ng-hide="type.code == 'Reference'">
                             <span ng-show="row.type.length > 1">
                                 <input ng-model="radio[row.id]" ng-value="type.code" type="radio"/>&nbsp;
@@ -96,7 +96,13 @@
 
                         </span>
                         <span ng-show="type.code == 'Reference'">
-                            --> <span class="clickable" ng-click="addReference(row,type)">{{type.targetProfile | referenceType}}</span>
+                            --> <span class="clickable" ng-click="addReference(row,type,sectionIndex)">
+                            {{type.targetProfile | referenceType}}</span>
+
+                            <a class="pull-right" target="_blank" ng-href="{{fhirBasePath}}{{type.targetProfile | referenceType | lowercase}}.html">
+                                        <i class="clickable glyphicon glyphicon-question-sign">
+                                        </i>
+                                    </a>
 
                         </span>
                     </div>

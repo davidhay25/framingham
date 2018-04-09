@@ -45,7 +45,7 @@ angular.module("sampleApp")
                         }
                     }
                 }).result.then(function(item){
-                    console.log(item)
+
                     addItem(item.name)
 
                 });
@@ -55,7 +55,7 @@ angular.module("sampleApp")
             //when the directive is updated with structured data, this function is called with the json version of the resource...
             $scope.fnResourceJson = function(json) {
                 $scope.resourceJson = json;
-                console.log(json)
+
             };
 
 
@@ -110,7 +110,7 @@ angular.module("sampleApp")
 
             //if showNotes is true, then the right pane is larger.
             $scope.setShowNotes = function (show) {
-               // console.log(show)
+
                 if (show) {
                     //show the notes. make the right pane larger
                     $scope.showNotes = true;
@@ -148,6 +148,7 @@ angular.module("sampleApp")
                 }
             };
 
+            //the scenarioGraph is the set of resources chosen by the user for this scenario...
             function loadScenarioGraph(cb) {
                 var user = ecosystemSvc.getCurrentUser();
                 if (user && user.id) {
@@ -155,7 +156,7 @@ angular.module("sampleApp")
 
                     $http.get(url).then(
                         function (data) {
-                            //console.log(data.data)
+
                             var vo = data.data;
 
                             if (vo && vo.items) {
@@ -211,7 +212,7 @@ angular.module("sampleApp")
             };
 
             //add a reference to another resourrce
-            $scope.addReference = function(row,type) {
+            $scope.cofAddReference = function(row,type,cb) {
                 //row is the functional equivalent of an Element definition...
                 var path = row.path;        //the path in the source;
                 var type = $filter('referenceType')(type.targetProfile); //target
@@ -236,16 +237,18 @@ angular.module("sampleApp")
                 });
 
 
-                console.log(type,targets);
+
                 switch(targets.length) {
                     case 0 :
                         //no resources of this type yet. KJust add one...
                         var item = addItem(type)
-                        internalAddReference(row,item);
+                        var reference = internalAddReference(row,item);
+                        if (cb) {cb(item)}
                         break;
                     case 1 :
                         //there's only one possible target - just add it;
-                        internalAddReference(row,targets[0]);
+                        var reference = internalAddReference(row,targets[0]);
+                        if (cb) {cb(targets[0])}
                         break;
                     default:
                         //need to show a dialog to select which one...
@@ -295,12 +298,16 @@ angular.module("sampleApp")
                                 }
                             }
                         }).result.then(function(item){
-                            console.log(item)
-                            internalAddReference(row,item);
+
+                            var reference = internalAddReference(row,item);
+                            if (cb) {cb(item)}
                         });
                     break;
 
                 }
+
+
+                return
 
                 function internalAddReference(row,target) {
                     var path = row.path;
@@ -308,8 +315,8 @@ angular.module("sampleApp")
                     var reference = {id:'id-'+ new Date().getTime()};
                     //$scope.currentItem.references = $scope.currentItem.references || [];
 
-                    //if the
-                    if (row.max == 1) {
+                    //?? I think we always remove any existing as the user needs to create a new row...
+                    if (1==1 ||row.max == 1) {
 
                         //remove any references from this path in this row...
                         for (var i=0; i < row.references.length; i++) {
@@ -334,38 +341,19 @@ angular.module("sampleApp")
                     }
 
 
-                    //reference.sourceItem = $scope.currentItem;
                     reference.sourcePath = path;
                     reference.targetItem = target;
-                    //reference.targetType =
-                   // reference.row = row;
 
-                    row.references.push(reference);     //add the reference to the row
-                    /*
-                    //now, can copy these references to the item references so that the graph can be built...
-                    //remove the current ones...
-                    for (var i=0; i < $scope.currentItem.references.length; i++) {
-                        if ($scope.currentItem.references[i].sourcePath == path) {
-                            $scope.currentItem.references.splice(i,1);
-                            break;
-                        }
-                    }
-                    //... and add new ones...
-                    row.references.forEach(function (ref) {
-                        $scope.currentItem.references.push(ref)
-                    })
-
-                    */
-                    //$scope.currentItem.references.push(reference)
-
-
-                    //add the reference to the row (which will become the instance eventually)
-                    //row.references = row.references || []
-
-
+                    row.references.push(reference);     //add the reference to the row, used by the graph
+                    //row.structuredData = {reference: target.type + "/"+ target.id};     //needed for building the resource
 
                     makeGraph();
+                    return reference;
                 }
+            };
+
+            $scope.removeReference = function(ref){
+                console.log(ref)
             };
 
             $scope.editDescription = function(item) {
@@ -381,15 +369,11 @@ angular.module("sampleApp")
             //select an item from the list of items. The SD will have been loaded for this type (async) into profilesCache
             $scope.selectItem = function(item) {
                 $scope.currentItem = item;
-                console.log(item);
 
                 var type = item.type;
 
-
-
-
                 if (profilesCache[type]) {
-                    $scope.showResourceTable.open(item,profilesCache[type]);
+                    $scope.showResourceTable.open(item,profilesCache[type],$scope.cofScenario);
                    // $scope.resourceJson = cofSvc.makeJson(item);
                 } else {
                     //A LM will have a resolvable reference to the SD. A core resource won't
@@ -398,7 +382,7 @@ angular.module("sampleApp")
                             function(data) {
                                 var SD = data.data;
                                 profilesCache[type] = SD;
-                                $scope.showResourceTable.open(item,SD);
+                                $scope.showResourceTable.open(item,SD,$scope.cofScenario);
                             }
                         )
                     } else {
@@ -407,7 +391,7 @@ angular.module("sampleApp")
                         ecoUtilitiesSvc.findConformanceResourceByUri(url).then(
                             function (SD) {
                                 profilesCache[type] = SD;
-                                $scope.showResourceTable.open(item,SD);
+                                $scope.showResourceTable.open(item,SD,$scope.cofScenario);
                             }
                         )
                     }
@@ -419,108 +403,7 @@ angular.module("sampleApp")
 
                 }
             };
-/*
-            $scope.deleteRow = function (inx) {
-                $scope.cofScenario.rows.splice(inx,1);
-                save();
-            };
 
-            $scope.addRow = function() {
-                var row = {};
-                row.dataItem = $scope.input.dataItem;
-                row.example = $scope.input.example;
-                row.resourceType = $scope.cofType;
-                row.path = $scope.input.path;
-                row.mult = $scope.selectedPathElement.min + '..' + $scope.selectedPathElement.max;
-                if ($scope.rowType) {
-                    row.dataType = $scope.rowType;
-                } else {
-                    row.dataType = $scope.input.rowType;
-                }
-                row.notes = $scope.input.rowNotes;
-                $scope.cofScenario.rows.push(row);
-
-                //save the updated scenario...
-                save();
-
-                $scope.input = {};
-                delete $scope.selectedPathElement;
-                delete $scope.rowTypeOptions;
-                delete $scope.rowType;
-
-            };
-
-            function save() {
-                var url = "/addScenarioToTrack/"+$scope.cofScenario.id;
-                $http.post(url,$scope.cofScenario).then(
-                    function(data) {
-                        //now, add the new scenario to the track and update
-
-                    }, function(err) {
-                        console.log(err)
-                        alert('There was an error '+ angular.toJson(err))
-                    }
-                );
-
-            }
-            */
-
-            $scope.showEDSummaryDEP = function(type,path) {
-
-                ecosystemSvc.getAllPathsForType(type,true).then(
-                    function(vo) {
-                        var ed = vo.hash[path];
-                        console.log(path,ed,vo.hash)
-                        if (ed) {
-                            return ed.definition
-                        }
-                    }
-                )
-
-            };
-
-            $scope.selectPathDEP = function (path) {
-                console.log(path,$scope.allPathsHash[path])
-                delete $scope.rowType;
-                delete $scope.rowTypeOptions;
-
-
-                $scope.selectedPathElement = $scope.allPathsHash[path]; //this is an ED
-
-
-                if ($scope.selectedPathElement) {
-                    var types = $scope.selectedPathElement.type
-                    if (types) {
-                        if (types.length == 1) {
-                            //there's only a single type...
-
-                            $scope.rowType = getRefDisplay(types[0])
-
-                        } else {
-                            $scope.rowTypeOptions = []
-                            types.forEach(function (typ) {
-                                $scope.rowTypeOptions.push(getRefDisplay(typ));
-                            })
-
-
-                        }
-                    }
-
-                }
-
-                function getRefDisplay(typ) {
-                    var code = typ.code;
-
-                    if (code == 'Reference') {
-                        return '--> '+ $filter('getLogicalID')(typ.targetProfile)
-
-                    } else {
-                        return code;
-                    }
-
-
-                }
-            };
 
             //when the user selects a new type to add from the list of types in the scenario...
             $scope.selectCofType = function(type) {
@@ -545,7 +428,7 @@ angular.module("sampleApp")
 
                 $scope.cofTypeList.push(item)
                 makeGraph();
-                console.log(type)
+
 
                 //load the profile (SD) for the type...
                 if ( ! profilesCache[type]) {
@@ -581,9 +464,9 @@ angular.module("sampleApp")
                     allScenarios[scenario.id] = scenario; //clone;
                     $scope.cofScenario = scenario;//clone
                 }
-                loadScenarioGraph();
-
-               // $scope.cofScenario.rows = $scope.cofScenario.rows || []
+                loadScenarioGraph(function(){
+                    makeGraph();
+                });
             };
 
 
@@ -620,7 +503,7 @@ angular.module("sampleApp")
                 var arNodes = [], arEdges = [];
 
                 $scope.cofTypeList.forEach(function (item) {
-                    //console.log(item);
+
                     var node = {id: item.id, label: item.type, shape: 'box',item:item};
 
                     if ( objColours[item.baseType]) {
@@ -629,8 +512,6 @@ angular.module("sampleApp")
 
                     arNodes.push(node);
 
-                    // reference.sourcePath = path;
-                    //reference.targetItem = target;
                     if (item.table) {
                         item.table.forEach(function (row) {
                             if (row.references) {
@@ -645,20 +526,11 @@ angular.module("sampleApp")
                     }
 
 
-                    /*
-                    if (item.references) {
-                        item.references.forEach(function (ref) {
-                            var edge = {id: 'e'+arEdges.length+1,from: item.id, to: ref.targetItem.id,
-                                label: ref.sourcePath,arrows : {to:true}};
 
-                            arEdges.push(edge)
-                        })
-                    }
-                    */
                 });
 
 
-                console.log(arNodes)
+
 
                 var nodes = new vis.DataSet(arNodes);
                 var edges = new vis.DataSet(arEdges);

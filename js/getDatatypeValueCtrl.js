@@ -1,9 +1,11 @@
 angular.module("sampleApp")
     .controller('getDatatypeValueCtrl',
-        function ($scope,ecosystemSvc,modalService,$http,datatype,getDatatypeValueSvc,row,$filter) {
+        function ($scope,ecosystemSvc,modalService,$http,datatype,getDatatypeValueSvc,row,$filter,scenario,resourceType) {
             $scope.datatype = datatype;
             $scope.row = row;
             $scope.input = {};
+            $scope.scenario = scenario;
+            $scope.resourceType = resourceType;
             var vsToRenderAsList = [];
             getCCToRenderAsList()
 
@@ -20,6 +22,8 @@ angular.module("sampleApp")
                 }
             } else if (datatype == 'CodeableConcept') {
                 if (row.binding && row.binding.url) {
+                    $scope.binding = row.binding;
+
                     $scope.vsUrl = row.binding.url;
                     var id = $filter('getLogicalID')($scope.vsUrl)
                     console.log(id);
@@ -27,6 +31,9 @@ angular.module("sampleApp")
                         $scope.renderCCAsList = true;
                         var url = termServer + "ValueSet/$expand?url="+row.binding.url
                         getExpandedVS(url);     //sets $scope.expandedValueSet
+                    } else {
+
+
                     }
                 }
             }

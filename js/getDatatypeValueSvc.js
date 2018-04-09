@@ -55,10 +55,12 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
 
                         if (f !== f) {      //test for Nan (http://stackoverflow.com/questions/30314447/how-do-you-test-for-nan-in-javascript)
                             alert('Must be a numeric value')        //todo - shouldn't really use alert here...
+
                         } else {
                             v = {value:f,unit:value.quantity.unit}
+                            text = f + " " + v.unit;
                         }
-                        text = f + " " + v.unit;
+
                         break;
                     case 'Dosage' :
                         var insrt = {};

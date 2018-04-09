@@ -2,6 +2,15 @@
 //http://pm2.keymetrics.io/docs/usage/pm2-doc-single-page/#allow-pm2-to-bind-applications-on-ports-80-443-without-root
 
 var express = require('express');
+
+
+var jsonParser       = bodyParser.json({limit:1024*1024*20, type:'application/json'});
+var urlencodedParser = bodyParser.urlencoded({ extended:true,limit:1024*1024*20,type:'application/x-www-form-urlencoding' })
+
+//https://stackoverflow.com/questions/29939852/mean-io-error-request-entity-too-large-how-to-increase-bodyparser-limit-ou
+express.use(jsonParser);
+express.use(urlencodedParser);
+
 var request = require('request');
 var session = require('express-session');
 var jwt = require('jsonwebtoken');
