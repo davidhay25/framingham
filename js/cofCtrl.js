@@ -153,7 +153,7 @@ angular.module("sampleApp")
             //the scenarioGraph is the set of resources chosen by the user for this scenario...
             function loadScenarioGraph(cb) {
                 var user = ecosystemSvc.getCurrentUser();
-                if (user && user.id) {
+                if (user && user.id && $scope.cofScenario) {
                     var url = '/scenarioGraph/' + user.id + "/" + $scope.cofScenario.id;
 
                     $http.get(url).then(

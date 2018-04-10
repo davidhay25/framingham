@@ -330,7 +330,7 @@
                                     <div class="row" ng-show="selectedTrack.url">
                                         <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
-                                            <strong>Wiki Page</strong>
+                                            <strong>Details Page</strong>
                                         </div>
                                         <div class="col-sm-9 col-md-9">
                                             <div ng-hide="selectedTrack.url">No Wiki page for this track.</div>
@@ -1302,7 +1302,7 @@
                     </div>
                 </uib-tab>
 
-                <uib-tab heading="Scenario Summary" ng-show="selectedTrack.trackType == 'scenario'">
+                <uib-tab heading="Summary of scenarios " ng-show="selectedTrack.trackType == 'scenario'">
                     <br/>
                     <div ng-controller="cofSummaryCtrl">
                         <ng-include src="'includes/cofSummary.html'"></ng-include>
@@ -1312,7 +1312,7 @@
 
                 <uib-tab ng-show="selectedTrack.trackType == 'lmreview'">
                     <uib-tab-heading>
-                        Clinical Review Results
+                        Summary of LM Review
                         <!--<span class="badge" ng-show="ecosystemSvc.allResultsCount() > 0">{{ecosystemSvc.allResultsCount()}}</span>
                         -->
                     </uib-tab-heading>

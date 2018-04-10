@@ -102,7 +102,7 @@ angular.module("sampleApp")
 
                 //retrieve any existing example by this user for this scenario..
                 var user = ecosystemSvc.getCurrentUser();
-                if (user && user.id) {
+                if (user && user.id && $scope.lmScenario) {
                     var url = '/lmCheck/'+user.id + "/"+$scope.lmScenario.id;
 
                     $http.get(url).then(
