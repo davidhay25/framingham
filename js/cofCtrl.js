@@ -6,7 +6,7 @@ angular.module("sampleApp")
             $scope.input = {};
             $scope.cofTypeList = [];
 
-            var objColours = ecosystemSvc.objColours();
+            var objColoursDEP = ecosystemSvc.objColours();
 
             var elementsByType = {};        //hash of all elements for a given type
             var profilesCache = {};          //cache for SDsss
@@ -26,6 +26,7 @@ angular.module("sampleApp")
                     })
                 }
             );
+
             $scope.selectCoreType = function(){
                 $uibModal.open({
                     templateUrl: 'modalTemplates/selectCoreType.html',
@@ -169,19 +170,20 @@ angular.module("sampleApp")
             }
 
             $scope.removeItem = function(inx){
-                var ar = $scope.cofTypeList.splice(inx,1);
-                //makeGraph();
-                //return;
+                var ar1 = $scope.cofTypeList.splice(inx,1);
 
-                var id = ar[0].id;      //the id of the item that was removed
+                //remove any references to the deleted resource from other resources...
+                var id = ar1[0].id;      //the id of the item that was removed
                 $scope.cofTypeList.forEach(function (item) {
                     if (item.table) {
                         item.table.forEach(function (row) {
-                            var ar = row.references;
-                            if (ar) {
+                            var ar = angular.copy(row.references);
+                            if (ar && ar.length > 0) {
+                                //if the resource has references, then remove them all and copy back the ones that aren't the deleted one...
                                 row.references.length = 0;
+
                                 ar.forEach(function (ref) {
-                                    if (ref.target.id !== id) {
+                                    if (ref.targetItem.id !== id) {
                                         row.references.push(ref)
                                     }
                                 })
@@ -352,7 +354,7 @@ angular.module("sampleApp")
                 }
             };
 
-            $scope.removeReference = function(ref){
+            $scope.removeReferenceDEP = function(ref){
                 console.log(ref)
             };
 
@@ -449,24 +451,27 @@ angular.module("sampleApp")
                 $scope.showResourceTable.open();        //will reset the table display
                 $scope.cofTypeList.length = 0;
 
-                //first, save the current scenario
-                if ($scope.cofScenario) {
-                    allScenarios[$scope.cofScenario.id] = $scope.cofScenario
+                if (scenario) {
+                    //first, save the current scenario = allScenario is scoped to the controller...
+                    if ($scope.cofScenario) {
+                        allScenarios[$scope.cofScenario.id] = $scope.cofScenario
+                    }
+
+                    //is the new scenario already have data
+                    if (allScenarios[scenario.id]) {
+                        $scope.cofScenario = allScenarios[scenario.id]
+                    } else {
+                        //don't want the main scenario object to hold the rows... - actually, I think we do...
+                        var clone = angular.copy(scenario);
+                        delete scenario._id;
+                        allScenarios[scenario.id] = scenario; //clone;
+                        $scope.cofScenario = scenario;//clone
+                    }
+                    loadScenarioGraph(function(){
+                        makeGraph();
+                    });
                 }
 
-                //is the new scenario already have data
-                if (allScenarios[scenario.id]) {
-                    $scope.cofScenario = allScenarios[scenario.id]
-                } else {
-                    //don't want the main scenario object to hold the rows... - actually, I think we do...
-                    var clone = angular.copy(scenario);
-                    delete scenario._id;
-                    allScenarios[scenario.id] = scenario; //clone;
-                    $scope.cofScenario = scenario;//clone
-                }
-                loadScenarioGraph(function(){
-                    makeGraph();
-                });
             };
 
 
@@ -500,6 +505,10 @@ angular.module("sampleApp")
             };
 
             function makeGraph() {
+
+                var vo = cofSvc.makeGraph($scope.cofTypeList);
+                var graphData = vo.graphData;
+                /*
                 var arNodes = [], arEdges = [];
 
                 $scope.cofTypeList.forEach(function (item) {
@@ -529,9 +538,6 @@ angular.module("sampleApp")
 
                 });
 
-
-
-
                 var nodes = new vis.DataSet(arNodes);
                 var edges = new vis.DataSet(arEdges);
 
@@ -540,7 +546,7 @@ angular.module("sampleApp")
                     nodes: nodes,
                     edges: edges
                 };
-
+*/
                 var container = document.getElementById('cofGraph');
                 var options = {
                     physics: {

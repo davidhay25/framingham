@@ -64,7 +64,9 @@
                     <label class="btn btn-primary" ng-model="track.trackType" uib-btn-radio="'scenario'">Scenario</label>
 
                 </div>
+                <div>{{trackTypes[track.trackType]}}</div>
             </div>
+
         </div>
         <br/>
 
@@ -81,7 +83,7 @@
                 </form>
 
             </uib-tab>
-            <uib-tab>
+            <uib-tab ng-show="track.trackType == 'technical'">
                 <uib-tab-heading>
                     EndPoints <span class="badge">{{track.endPoints.length}}</span>
                 </uib-tab-heading>
@@ -103,7 +105,7 @@
                 </table>
 
             </uib-tab>
-            <uib-tab heading='Track configuration'>
+            <uib-tab heading='Track configuration'  ng-hide="track.trackType == 'technical'">
                 <br/>
                 <div class="row">
                     <div class="col-sm-3 col-md-3">

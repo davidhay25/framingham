@@ -40,7 +40,7 @@
                 </uib-tab>
                 <uib-tab >
                     <uib-tab-heading>
-                        Profiles
+                        Logical Models
                         <span class="badge">{{cofScenario.lms.length}}</span>
 
 
@@ -84,9 +84,11 @@
                                 <td>
                                     <div ng-repeat="row in item.table">
                                         <div ng-repeat="ref in row.references">
+                                            <!--
                                             <i class="clickable glyphicon glyphicon-remove-sign"
                                                title="Remove resource" ng-click="removeReference(ref)">
                                             </i>
+                                            -->
                                             {{ref.sourcePath}} -> {{ref.targetItem.description}}
                                         </div>
                                     </div>

@@ -1,10 +1,11 @@
 angular.module("sampleApp")
     .controller('editTrackCtrl',
-        function ($scope,ecosystemSvc,track,allPersons,modalService,isNew) {
+        function ($scope,ecosystemSvc,track,allPersons,modalService,isNew,trackTypes) {
 
             $scope.currentUser = ecosystemSvc.getCurrentUser();
             $scope.allPersons = allPersons;
             $scope.input = {roles:{}};
+            $scope.trackTypes = trackTypes;
            // $scope.clone = {};
             $scope.isNew = isNew;
 

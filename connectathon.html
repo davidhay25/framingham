@@ -147,6 +147,7 @@
     <script src="js/loginCtrl.js"></script>
     <script src="js/cofCtrl.js"></script>
     <script src="js/cofSvc.js"></script>
+    <script src="js/cofSummaryCtrl.js"></script>
     <script src="js/lmCheckCtrl.js"></script>
     <script src="js/libs/angular-bootstrap-checkbox.js"></script>
     <script src="js/libs/vis.min.js"></script>
@@ -278,8 +279,9 @@
 
                                             <div class="row">
                                                 <div class="col-sm-6 col-md-6">
-                                                    <strong>Track Type</strong>
+                                                    <strong>Track Type: </strong>
                                                     {{selectedTrack.trackType}}
+                                                    <div>{{trackTypes[selectedTrack.trackType]}}</div>
                                                 </div>
                                                 <div class="col-sm-6 col-md-6">
                                                     <strong>Leads</strong>
@@ -1295,8 +1297,15 @@
                     <div ng-controller="cofCtrl">
                         <ng-include src="'includes/cof.html'"></ng-include>
                     </div>
-
                 </uib-tab>
+
+                <uib-tab heading="Scenario Summary" ng-show="selectedTrack.trackType == 'scenario'">
+                    <br/>
+                    <div ng-controller="cofSummaryCtrl">
+                        <ng-include src="'includes/cofSummary.html'"></ng-include>
+                    </div>
+                </uib-tab>
+
 
                 <uib-tab ng-show="selectedTrack.trackType == 'lmreview'">
                     <uib-tab-heading>

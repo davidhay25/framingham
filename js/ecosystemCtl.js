@@ -75,6 +75,14 @@ angular.module("sampleApp")
                 login()
             };
 
+
+            $http.get('/artifacts/trackTypes.json').then(
+                function(data) {
+                    $scope.trackTypes = data.data;
+
+                }
+            );
+
             function clearSession() {
                 delete $scope.selectedTrack;
                 $scope.$broadcast('logout');
@@ -570,6 +578,9 @@ angular.module("sampleApp")
                         },
                         isNew : function() {
                             return isNew
+                        },
+                        trackTypes : function(){
+                            return $scope.trackTypes;
                         }
                     }
                 }).result.then(function(vo){

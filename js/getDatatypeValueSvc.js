@@ -143,9 +143,10 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
 
 
                         text += addIfNotEmpty(value.HumanName.suffix,insrt,'suffix',true);
+
                         addIfNotEmpty(value.HumanName.text,insrt,'text');
 
-
+                        text = text || value.HumanName.text;
 
                         v = insrt;
                         break;

@@ -620,6 +620,27 @@ app.put('/scenarioGraph',function(req,res){
     clinicalUpdate(collection,result,res)
 });
 
+//get all the graphs for a  specific scenario
+app.get('/scenarioGraph/:scenarioid',function(req,res) {
+
+    var scenarioId = req.params.scenarioid;
+    //console.log(userid,scenarioid)
+    var collection = req.selectedDbCon.collection('scenarioGraph')
+
+    collection.find({scenarioid:scenarioId}).toArray(function (err, result) {
+        if (err) {
+            res.send(err,500)
+        } else {
+            if (result.length > 0) {
+                res.send(result)
+            } else {
+                res.send([])
+            }
+
+        }
+    })
+});
+
 //get a specific scenarioGraph for a user and a scenario. Should only be 1...
 app.get('/scenarioGraph/:userid/:scenarioid',function(req,res) {
 
@@ -630,6 +651,10 @@ app.get('/scenarioGraph/:userid/:scenarioid',function(req,res) {
 
     clinicalFind(collection,userId,scenarioId,res)
 });
+
+
+
+
 
 //add/update a lmCheck (Logical Model) result
 app.put('/lmCheck',function(req,res){
@@ -767,24 +792,6 @@ app.post('/addScenarioToTrack/:track',function(req,res){
         }
     })
 });
-
-/*
-//this is just testing espruino stuff...
-app.post('/espruino',function(req,res){
-    var data = req.body;
-    data.date = new Date();
-    console.log(data)
-    db.collection("espruino").insert(data,function(err,result){
-        // db.collection("client").insert(req.body,function(err,result){
-        if (err) {
-            res.send(err,500)
-        } else {
-            res.send(result)
-        }
-    })
-});
-
-*/
 
 
 
