@@ -3,7 +3,7 @@
     <style>
         #sumCofGraph {
             width: 100%;
-            height: 500px;
+            height: 400px;
             border: 1px solid lightgray;
         }
 
@@ -35,12 +35,15 @@
                     <div class="clickable">{{graph.user.name}}</div>
                 </li>
             </ul>
+            <p ng-bind-html="selectedGraph.scenarioNotes | markDown"></p>
         </div>
-        <div class="col-sm-5 col-md-5">
-            <h4>{{selectedGraph.user.name}}</h4>
+
+        <div class="col-sm-4 col-md-4">
+
+
             <div id="sumCofGraph"></div>
         </div>
-        <div class="col-sm-5 col-md-5">
+        <div class="col-sm-6 col-md-6">
             <uib-tabset>
                 <uib-tab heading ='All Resources'>
                     <div class="row">

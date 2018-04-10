@@ -136,6 +136,7 @@ angular.module("sampleApp")
                     saveObject.scenarioid = $scope.cofScenario.id;
                     saveObject.id = user.id + "-" + $scope.cofScenario.id;
                     saveObject.items = $scope.cofTypeList;      //all of the items (ie the resource instances
+                    saveObject.scenarioNotes = $scope.input.scenarioNotes;
 
                     $http.put("/scenarioGraph",saveObject).then(
                         function(){
@@ -162,6 +163,9 @@ angular.module("sampleApp")
 
                             if (vo && vo.items) {
                                 $scope.cofTypeList = vo.items;
+
+                                $scope.input.scenarioNotes = vo.scenarioNotes;
+
                             }
                             if (cb) {cb()}
                         }
@@ -192,23 +196,7 @@ angular.module("sampleApp")
                         })
                     }
 
-
-/*
-                    if (item.references) {
-                        var ar = item.references;
-                        item.references.length = 0;
-                        ar.forEach(function (ref) {
-                            if (ref.target.id !== id) {
-                                item.references.push(ref)
-                            }
-                        })
-                    }
-                    */
-
                 });
-
-                //now remove any references that other resources
-
 
                 makeGraph();
             };

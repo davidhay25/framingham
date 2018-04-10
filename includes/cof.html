@@ -107,6 +107,15 @@
                 <uib-tab heading="Graph" select = "fitGraph()">
                     <div id="cofGraph"></div>
                 </uib-tab>
+                <uib-tab heading="Notes on scenario">
+                    <form name="form">
+                        <markdown-editor ng-model="input.scenarioNotes"
+                                         rows="10"
+                                         placeholder="Enter any comments you have about this scenario"
+                                         options="mdOptions" >
+                        </markdown-editor>
+                    </form>
+                </uib-tab>
             </uib-tabset>
 
         </div>
