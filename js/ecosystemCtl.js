@@ -268,6 +268,8 @@ angular.module("sampleApp")
                             return $scope.library;
                         }, isNew : function(){
                             return true
+                        }, track : function(){
+                            return $scope.selectedTrack
                         }
                     }
                 }).result.then(function(scenario){
@@ -301,6 +303,8 @@ angular.module("sampleApp")
                             return $scope.library;
                         }, isNew : function(){
                             return false
+                        }, track : function(){
+                            return $scope.selectedTrack
                         }
                     }
                 }).result.then(function(editedScenario){

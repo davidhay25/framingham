@@ -56,30 +56,13 @@
                     </div>
                 </div>
                 <br/>
-                <!--
-                <div class="row">
-                    <div class="col-md-3 col-sm-3">
-                        PreCondition
-                    </div>
-                    <div class="col-md-9 col-sm-9">
-
-                    </div>
-                </div>
-                <br/>
-                <div class="row">
-                    <div class="col-md-3 col-sm-3">
-                        Success
-                    </div>
-                    <div class="col-md-9 col-sm-9">
-
-                    </div>
-                </div>
-                <br/>
-                -->
 
                 <div class="row">
                     <div class="col-md-3 col-sm-3">
-                        Links
+                        <div uib-popover="Links of general interest in this scenario"
+                             popover-placement="top"
+                             popover-trigger="'mouseenter'">Links</div>
+
                     </div>
 
                     <div class="col-md-9 col-sm-9">
@@ -115,9 +98,12 @@
                 </div>
                 <br/>
 
-                <div class="row">
+                <div class="row" ng-show="track.trackType == 'scenario'">
                     <div class="col-md-3 col-sm-3">
-                        Resources used
+                        <div uib-popover="Sample resource types that can be included in the scenario (others can be selected)"
+                             popover-placement="top"
+                             popover-trigger="'mouseenter'">Resources used</div>
+
                     </div>
 
                     <div class="col-md-9 col-sm-9">
@@ -144,9 +130,13 @@
 
                 <br/>
 
-                <div class="row">
+                <div class="row" ng-show="track.trackType == 'scenario'">
                     <div class="col-md-3 col-sm-3">
-                        Logical Models
+                        <div uib-popover="Logical Models that can be included in the scenario"
+                             popover-placement="top"
+                             popover-trigger="'mouseenter'">Logical Models</div>
+
+
                     </div>
 
                     <div class="col-md-9 col-sm-9">

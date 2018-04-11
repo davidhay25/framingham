@@ -1,6 +1,6 @@
 angular.module("sampleApp")
     .controller('editScenarioCtrl',
-        function ($scope,ecosystemSvc,scenario,allResourceTypes,library,$uibModal,isNew) {
+        function ($scope,ecosystemSvc,scenario,allResourceTypes,library,$uibModal,isNew,track) {
 
 
             $scope.saveText = 'Update';
@@ -11,6 +11,7 @@ angular.module("sampleApp")
             $scope.scenario = scenario;
             $scope.library = library;
             $scope.input = {roles:{}};
+            $scope.track = track;
 
             if (scenario && scenario.roleIds) {
                 scenario.roleIds.forEach(function (id) {
