@@ -28,6 +28,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             //'scenario' is the current scenario...
             $scope.internalControl.open = function(item,SD,scenario) {
 
+                $scope.hideNotes = true;    //default to hiding notes
+
                 $scope.scenario = scenario;
                 if (item) {
                     $scope.input = item;
@@ -35,6 +37,11 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     makeJson();
                     $scope.input.sample = $scope.input.sample || {};
                     $scope.input.notes = $scope.input.notes || {};
+
+                    //allows the caller to set the initial state of the notes display
+                    if (item.showNotes) {
+                        $scope.hideNotes = false;
+                    }
 
                     //this preserves the display when called with different models...
                     if ($scope.showOnlyPopulated) {
@@ -49,7 +56,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
             };
 
-            $scope.hideNotes = true;    //default to hiding notes
+
+
             $scope.showNotes = function(show) {
                 if (show) {
                     //show the notes. Also trigger an 'event' to notify the containing app
@@ -62,7 +70,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     $scope.fnshownotes()(false)
 
                 }
-            }
+            };
 
             //the user clicked the add reference link - notify the hosting app to select the target...
 

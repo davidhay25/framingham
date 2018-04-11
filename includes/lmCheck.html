@@ -33,6 +33,8 @@
                 <button class="btn btn-danger" ng-click="saveExample()">Save</button>
             </div>
 
+            <!--
+
             <div class="clearfix"></div>
 
             <div class="pull-right">
@@ -48,12 +50,20 @@
 
 
             </div>
+            -->
 
 
 
         </div>
     </div>
 
+
+    <tbl-resource trigger="showResourceTable" reference="addReference"
+                  resource-json="fnResourceJson"
+                  fnshownotes="setShowNotes"></tbl-resource>
+
+
+    <!--
     <div class="scrollForm">
         <table class="table table-bordered" ng-show="lmScenario">
         <tr><th></th><th>Model Element</th><th>Cardinality</th><th>FHIR target</th><th>Sample Value</th><th>Notes</th></tr>
@@ -100,7 +110,7 @@
             </td>
             <td width="25%">
                 <div ng-hide="row.dt == 'Reference'">
-                    <!--<input class="form-control" ng-model="input.sample[row.id]">-->
+
                     <textarea msd-elastic class="form-control" ng-model="input.sample[row.id]" rows="1"></textarea>
                 </div>
             </td>
@@ -111,7 +121,7 @@
     </table>
     </div>
 
-
+-->
 
     <vs-viewer trigger="showVSViewerDialog" term-server="termServer"
                 concept-selected="conceptSelected"></vs-viewer>

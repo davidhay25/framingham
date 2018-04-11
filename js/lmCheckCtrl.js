@@ -13,6 +13,13 @@ angular.module("sampleApp")
                 delete $scope.lmScenario;
             });
 
+            $scope.showResourceTable = {};      //needed for the table directive...
+            //when the directive is updated with structured data, this function is called with the json version of the resource...
+            $scope.fnResourceJson = function(json) {
+                $scope.resourceJson = json;
+                console.log($scope.item);
+            };
+
             if (!String.prototype.startsWith) {
                 String.prototype.startsWith = function(search, pos) {
                     return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
@@ -20,18 +27,32 @@ angular.module("sampleApp")
             }
 
 
-            $scope.$on('elastic:resize', function(event, element, oldHeight, newHeight) {
+            //this is called by the directive when a reference is selected.
+            $scope.addReference = function(row,type,cb) {
+                var msg = "This is a reference to a "+type+" resource. The specific elements that are important in the" +
+                    " context of this model are present as child elements of this one. You can click on the Question mark to see the resource type in the spec";
+                modalService.showModal({}, {bodyText:msg})
+
+            };
+
+            //this is called by the directive when the notes display is toggled. It can be ignored here...
+            $scope.setShowNotes = function (show) {};
+
+
+
+          //  $scope.$on('elastic:resize', function(event, element, oldHeight, newHeight) {
               //  console.log(event)
-            });
+           // });
 
             //var url = 'http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/ARForm-1';  //todo testing
 
             //will be a default if not specified in the track...
             $scope.termServer = "https://ontoserver.csiro.au/stu3-latest/"; //for the vs viewer directive...
-            $scope.showVSViewerDialog = {};
+            //$scope.showVSViewerDialog = {};
 
 
 
+            //save the current example. $scope.item is the object that the directive is updating...
             $scope.saveExample = function () {
 
                 var user = ecosystemSvc.getCurrentUser();
@@ -40,11 +61,10 @@ angular.module("sampleApp")
                     saveObject.userid = user.id;
                     saveObject.scenarioid = $scope.lmScenario.id;
                     saveObject.id = user.id + "-" + $scope.lmScenario.id;
-                    saveObject.reviewComment = $scope.input.reviewComment;
-
-                    saveObject.table = $scope.table;
-                    saveObject.sample = $scope.input.sample;    //this has display only. Will need another array for structured...
-                    saveObject.notes = $scope.input.notes;
+                    saveObject.reviewComment = $scope.item.reviewComment;
+                    saveObject.table = $scope.item.table;       //the list of rows...
+                    saveObject.sample = $scope.item.sample;    //the sample data (hash by row id)
+                    saveObject.notes = $scope.item.notes;       //notes (hash by row id)
 
 
                     //console.log(saveObject);
@@ -60,44 +80,14 @@ angular.module("sampleApp")
             };
 
 
-            $scope.collapse = function () {
-                //hide all the rows that are not at the top
-
-                //first create a hash of all elements that have children
-                var arHasChildren = {};
-                $scope.table.forEach(function(row) {
-                    var ar = row.path.split('.');
-                    if (ar.length == 2) {
-                        var root = ar[0]
-                        arHasChildren[root] = true;
-                    }
-                })
-
-
-                $scope.table.forEach(function(row){
-                    var ar = row.path.split('.');
-                    //console.log(row.path);
-                    if (ar.length == 1) {
-                        row.isHidden = false;
-                        var root = ar[0]
-                        if (arHasChildren[root]) {
-                            row.childrenHidden = true;
-                        }
-
-
-                    } else {
-                        row.isHidden = true;
-                    }
-
-
-
-                })
-            };
 
 
             $scope.lmCheckSelectScenario = function(scenario) {
-                delete $scope.input.reviewComment;
 
+
+                var type = $scope.SD.snapshot.element[0].path;
+
+                $scope.item = {type:type,showNotes:true};
                 $scope.lmScenario = scenario;
 
                 //retrieve any existing example by this user for this scenario..
@@ -111,19 +101,16 @@ angular.module("sampleApp")
                             var vo = data.data;
                             if (vo && vo.table && vo.sample) {
                                 //yep - this user has started a sample for this scenario...
-                                $scope.table = vo.table ;
-                                $scope.input.sample = vo.sample;
-                                $scope.input.notes = vo.notes;
+                              //  $scope.table = vo.table ;
 
-                                $scope.input.reviewComment = vo.reviewComment ;
-                                $scope.collapse();
+                                $scope.item.sample = vo.sample;
+                                $scope.item.notes = vo.notes;
+                                $scope.item.reviewComment = vo.reviewComment ;
+
+                                $scope.showResourceTable.open($scope.item,$scope.SD,$scope.cofScenario);
+
                             } else {
-                                //no, make sure the table is empty of samples, and based on the LM...
-                                $scope.input.sample = {};
-                                $scope.input.notes = {};
-                                $scope.table = makeTableArray($scope.SD);
-
-                                $scope.collapse();
+                                $scope.showResourceTable.open($scope.item,$scope.SD,$scope.cofScenario);
                             }
                         }
                     )
@@ -131,8 +118,8 @@ angular.module("sampleApp")
             };
 
 
-            $scope.hideWOSampleDisplay = true;
-            $scope.hideAllWithoutSample = function() {
+            //$scope.hideWOSampleDisplay = true;
+            $scope.hideAllWithoutSampleDEP = function() {
                 var visibleRows = []
                 $scope.hideWOSampleDisplay = false
                 $scope.table.forEach(function(row){
@@ -159,7 +146,7 @@ angular.module("sampleApp")
                 })
             };
 
-            $scope.showAll = function() {
+            $scope.showAllDEP = function() {
                 $scope.hideWOSampleDisplay = true
                 $scope.table.forEach(function(row){
                     row.isHidden = false;
@@ -168,7 +155,7 @@ angular.module("sampleApp")
 
 
             //hide children based on the path... todo - ?hide based on parent/child? more complicated...
-            $scope.hideChildren = function(item) {
+            $scope.hideChildrenDEP = function(item) {
                 var path = item.path;       //path to duplicate (along with children)
                 item.childrenHidden = true;
                 $scope.table.forEach(function(row,pos){
@@ -179,7 +166,7 @@ angular.module("sampleApp")
             };
 
             //show children based on the path... todo - ?hide based on parent/child? more complicated...
-            $scope.showChildren = function(item) {
+            $scope.showChildrenDEP = function(item) {
                 var path = item.path;       //path to duplicate (along with children)
                 item.childrenHidden = false;
                 $scope.table.forEach(function(row,pos){
@@ -214,7 +201,7 @@ angular.module("sampleApp")
                 })
             };
 
-            $scope.editSample = function(inx) {
+            $scope.editSampleDEP = function(inx) {
                 //console.log(inx,$scope.input.sample);
                 //console.log($scope.input.sample[inx])
                 var currentValue = $scope.input.sample[inx];
@@ -227,13 +214,13 @@ angular.module("sampleApp")
             };
 
             //called by the vsViewer when a concept is selected form an expansion...
-            $scope.conceptSelected = function(concept) {
+            $scope.conceptSelectedDEP = function(concept) {
                 var display = concept.display + " ("+ concept.code + " - "+ concept.system + ")";
                 $scope.input.sample[$scope.currentItem.id] = display;//angular.toJson(concept)
 
             };
 
-            function makeTableArray(SD){
+            function makeTableArrayDEP(SD){
                 var ar = []
                 SD.snapshot.element.forEach(function (ed,inx) {
                     if (ed.type) {
@@ -316,7 +303,6 @@ angular.module("sampleApp")
                         $http.get(url).then(
                             function(data){
                                 $scope.SD = data.data;
-                                $scope.table = makeTableArray($scope.SD)
                             },
                             function(err){
                                 modalService.showModal({}, {bodyText:"The url: "+url+" specified in the track could not be found."})
@@ -324,7 +310,7 @@ angular.module("sampleApp")
                             }
                         );
                     }
-
+/*
                     track.scenarios.forEach(function(trck){
                         if (trck.scenarioTypes) {
                             trck.scenarioTypes.forEach(function(type){
@@ -332,6 +318,7 @@ angular.module("sampleApp")
                             })
                         }
                     })
+                    */
 
                 }
 
