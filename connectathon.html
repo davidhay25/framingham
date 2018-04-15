@@ -341,6 +341,40 @@
                                     </div>
                                     <br/>
 
+                                    <div class="row" ng-show="selectedTrack.confServer || selectedTrack.termServer || selectedTrack.LM">
+                                        <hr class="trackBorder"/>
+                                        <div class="col-sm-2 col-md-2">
+                                            <strong>Configuration</strong>
+                                        </div>
+                                        <div class="col-sm-9 col-md-9">
+
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-3">
+                                                    <strong>Conformance server</strong>
+                                                </div>
+                                                <div class="col-sm-8 col-md-8">
+                                                    {{selectedTrack.confServer}}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-3">
+                                                    <strong>Terminology server</strong>
+                                                </div>
+                                                <div class="col-sm-8 col-md-8">
+                                                    {{selectedTrack.termServer}}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-3">
+                                                    <strong>Logical model</strong>
+                                                </div>
+                                                <div class="col-sm-8 col-md-8">
+                                                    {{selectedTrack.LM}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
 
                                     <div class="row">
                                         <hr class="trackBorder"/>
@@ -1126,6 +1160,7 @@
                                         ng-repeat="track in tracks  | orderBy: 'name' "
                                         ng-click="selectTrack(track)">
                                         {{track.name}}
+                                        <div><em>({{track.trackType}})</em></div>
                                     </li>
                                 </ul>
                             </div>

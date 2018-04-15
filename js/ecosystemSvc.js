@@ -134,6 +134,13 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     var serverRoleSummary;
     var allResults = {};
 
+
+    if (!String.prototype.startsWith) {
+        String.prototype.startsWith = function(search, pos) {
+            return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
+        };
+    }
+
     //case insensitive sort
     var ciSort = function(ar,eleName) {
         ar.sort(function(a,b){
@@ -181,6 +188,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     );
 
     var pathsCache = {};    //cache for paths by type - ?save in browser cache
+    //var reportedTrackWithNoConfserver  = {};      //a
 
     return {
         objColours : function(){
@@ -189,8 +197,23 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         getPersonWithId : function(id) {
             return hashAllPersons[id]
         },
-        getAllPathsForType: function (typeName,explode) {
+        getAllPathsForType: function (typeName,explode,track) {
             //console.log(typeName);
+            var that = this;
+            var confServer = "http://fhirtest.uhn.ca/baseDstu3/"; //default to HAPI...
+            if (track &&  track.confServer) {
+                confServer = track.confServer;
+
+            }/* else {
+                if (  !reportedTrackWithNoConfserver.id || reportedTrackWithNoConfserver.id == track.id) {
+                    var msg = "There is no Conformance server specified for this track. I'll use the default (HAPI-3) " +
+                        "but if there are connectivity issues (including CORS issues), you'll need to specify one that can be accessed.";
+                    modalService.showModal({},{bodyText:msg})
+                    reportedTrackWithNoConfserver = track;      //only show the warning once!
+                }
+
+            }*/
+
             var deferred = $q.defer();
             //return all the possible paths for a base type...
             //derived from logicalmodelsvc
@@ -202,7 +225,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             } else {
                 var url = "http://hl7.org/fhir/StructureDefinition/" + typeName;
 
-                ecoUtilitiesSvc.findConformanceResourceByUri(url).then(
+                ecoUtilitiesSvc.findConformanceResourceByUri(url,confServer).then(
                     function (SD) {
                         if (SD && SD.snapshot && SD.snapshot.element) {
                             var lst = [], hash={}, dtDef = {};
@@ -236,7 +259,10 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                         }
 
                     }, function (err) {
-                        alert("error with query: " + url + "\n" + angular.toJson(err));
+                        var msg = "I was unable to retrieve the conformance resource at " + url +
+                            ". Is it on-line, and accepting CORS requests?";
+                        modalService.showModal({},{bodyText:msg})
+                       // alert("error with query: " + url + "\n" + angular.toJson(err));
                         deferred.reject();
                     }
                 );

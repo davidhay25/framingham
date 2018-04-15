@@ -9,7 +9,7 @@ angular.module("sampleApp").service('ecoUtilitiesSvc', function($q,$http,modalSe
             var deferred = $q.defer();
 
             typeOfConformanceResource = typeOfConformanceResource || 'StructureDefinition';
-            serverUrl = serverUrl || "http://fhirtest.uhn.ca/baseDstu3/";       //todo - need a better solution than this...
+            serverUrl = serverUrl || "http://fhirtest.uhn.ca/baseDstu3/";
             var qry = serverUrl  + typeOfConformanceResource + "?url=" + url;
 
             $http.get(qry).then(

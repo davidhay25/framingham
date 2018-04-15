@@ -15,7 +15,6 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
         link : function ($scope, element, attrs) {
 
-
             $scope.fhirBasePath = "http://hl7.org/fhir/";       //root of the spec.
 
             $scope.internalControl = $scope.trigger || {};
@@ -26,6 +25,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             //'item' is the 'container' element in the host app
             //'SD' is a StructureDefinition. If can be a Logical Model. There should be no extensions.
             //'scenario' is the current scenario...
+
             $scope.internalControl.open = function(item,SD,scenario) {
 
                 $scope.hideNotes = true;    //default to hiding notes

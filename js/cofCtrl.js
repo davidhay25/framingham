@@ -387,10 +387,6 @@ angular.module("sampleApp")
                     }
 
 
-
-
-
-
                 }
             };
 
@@ -463,7 +459,8 @@ angular.module("sampleApp")
             };
 
 
-            $scope.$watch('selectedTrack',function(track,olfV){
+            $scope.$watch(function($scope) {return $scope.selectedTrack},function(track,olfV){
+            //$scope.$watch('selectedTrack',function(track,olfV){
                 if (track && track.scenarios) {
                     //ensure that all the paths for all the resources in all scenarios are in the cache
                     track.scenarios.forEach(function(trck){
