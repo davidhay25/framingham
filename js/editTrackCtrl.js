@@ -1,6 +1,6 @@
 angular.module("sampleApp")
     .controller('editTrackCtrl',
-        function ($scope,ecosystemSvc,track,allPersons,modalService,isNew,trackTypes) {
+        function ($scope,ecosystemSvc,track,allPersons,modalService,isNew,trackTypes,$uibModal) {
 
             $scope.currentUser = ecosystemSvc.getCurrentUser();
             $scope.allPersons = allPersons;
@@ -40,6 +40,31 @@ angular.module("sampleApp")
                 $scope.input.LM = track.LM;
             }
 
+            $scope.addLink = function() {
+
+
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/addLinkToScenario.html',
+                    //size: 'lg',
+                    controller: function($scope,links){
+                        $scope.input = {};
+                        $scope.addLink = function() {
+                            links.push({url:$scope.input.linkUrl,description:$scope.input.linkDescription});
+                            $scope.$close();
+                        }
+                    },
+                    resolve : {
+                        links: function () {          //the default config
+                            $scope.track.links = $scope.track.links || []
+                            return $scope.track.links;
+                        }
+                    }
+                })
+
+            };
+            $scope.removeLink = function(inx){
+                $scope.track.links.splice(inx,1)
+            };
 
             $scope.addEndPoint = function(url,description) {
                 //console.log(url,description)

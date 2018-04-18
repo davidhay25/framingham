@@ -9,6 +9,9 @@ var session = require('express-session');
 var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var fs = require('fs');
+
+var manageMod = require('./ecoModule');
+
 var hashDataBases = {};         //hash for all connected databases
 
 //var qaModule = require('qaModule');
@@ -62,7 +65,6 @@ var app = express();
 //Order of app.use() is important as we need to increase the size limit for json parsing...
 app.use('/', express.static(__dirname,{index:'/connectathon.html'}));
 
-//app.use(bodyParser.json())
 
 //http://mongodb.github.io/node-mongodb-native/3.0/quick-start/quick-start/
 const MongoClient = require('mongodb').MongoClient;
@@ -85,6 +87,9 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
             hashDataBases[item.key] = client.db(item.key);
         })
 
+
+        //initialize the management module
+        manageMod.setup(app,hashDataBases);
 
         //hashDataBases['connectathon'] = client.db('connectathon');
 
@@ -145,7 +150,6 @@ if (useSSL) {
     http.createServer(app).listen(port)
     console.log('server listening  on port ' + port);
 }
-
 
 //check the db connection on every request - may be redundant...
 app.use(function (req, res, next) {
@@ -684,7 +688,6 @@ function clinicalUpdate(collection,data,res) {
     })
 }
 
-
 //get a specicif lmCheck for a user and a scenario. Should only be 1...
 app.get('/lmCheck/:userid/:scenarioid',function(req,res) {
 
@@ -725,7 +728,6 @@ function clinicalFind(collection,userId,scenarioId,res) {
         }
     })
 }
-
 
 //get all the reviews for a scenario
 app.get('/lmCheck/:scenarioid',function(req,res) {
@@ -792,6 +794,8 @@ app.post('/addScenarioToTrack/:track',function(req,res){
         }
     })
 });
+
+
 
 
 

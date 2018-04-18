@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Summary</title>
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+
+    <style>
+        .trackHeader {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .trackDescription {
+            padding-left: 20px;
+        }
+        .scenarioHeader {
+            font-weight: bold;
+            font-size: 14px;
+
+        }
+        .scenarioDescription {
+            padding-left: 30px;
+        }
+    </style>
+
+</head>
+<body style="padding: 8px" >
+
+
+
+<div ng-app="sampleApp" ng-controller="summaryCtrl" class="container-fluid">
+
+    <h2>{{admin.name}}</h2>
+
+    <h3>Tracks</h3>
+
+    <div ng-repeat="track in summary.tracks">
+
+        <div class="row">
+            <div class="col-sm-4 col-md-4">
+                <div class="trackHeader">{{track.name}}</div>
+                <p class="trackDescription" ng-bind-html="track.description | markDown"></p>
+
+            </div>
+            <div class="col-sm-8 col-md-8">
+                <div ng-repeat="scenario in track.scenarios">
+                    <div class="scenarioHeader">Scenerio: {{scenario.name}}</div>
+                    <p class="scenarioDescription" ng-bind-html="scenario.description | markDown"></p>
+                </div>
+            </div>
+        </div>
+        <hr/>
+
+
+
+
+    </div>
+
+
+
+
+    <pre>{{admin | json}}</pre>
+    <pre>{{summary | json}}</pre>
+
+</div>
+
+<script src="js/libs/angular-sanitize.js"></script>
+
+
+<script src="js/libs/showdown.min.js"></script>
+
+<script>
+    angular.module("sampleApp",['ui.bootstrap','ngSanitize']).config(function($locationProvider) {
+
+        // enable html5Mode for pushstate ('#'-less URLs)
+        $locationProvider.html5Mode(true);
+        $locationProvider.hashPrefix('!');
+    });
+    // angular.module("sampleApp").constant("moment", moment);
+
+    angular.module("sampleApp")
+        .controller('summaryCtrl',
+            function ($scope,$http) {
+
+                $http.get('/config/admin/').then(
+                    function(data) {
+                        console.log(data)
+                        $scope.admin = data.data;
+                    }
+                );
+
+                $http.get('/manage/downloadConfig').then(
+                    function(data) {
+                        console.log(data)
+                        $scope.summary = data.data;
+                    }
+                )
+            }
+        )
+
+
+</script>
+
+<script src="js/filters.js"></script>
+
+</body>
+</html>
