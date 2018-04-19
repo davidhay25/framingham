@@ -26,7 +26,7 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
 
                     case 'Narrative' :
                         v = {div:value.narrative.div,status:'additional'};
-                        text = v;
+                        text = value.narrative.div;
                         break;
                     case 'instant' :
                         //value is a Date object...

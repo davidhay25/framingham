@@ -3,7 +3,6 @@
 
 var express = require('express');
 
-
 var request = require('request');
 var session = require('express-session');
 var jwt = require('jsonwebtoken');
@@ -24,7 +23,6 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";     //allow self signed certific
 useSSL = false;
 
 
-
 //  *************** temp for COF !!!
 var dbName = 'cof';    //default database name...
 
@@ -34,28 +32,7 @@ if (! port) {
     port=80; //8443;
 }
 
-/*
 
-//look for command line parameters...
-process.argv.forEach(function (val, index, array) {
-
-
-    var ar = val.split('=');
-    if (ar.length == 2) {
-        switch (ar[0]) {
-            case 'db' :
-                dbName = ar[1]
-                console.log('Setting database to '+ dbName)
-                break;
-            case 'port' :
-                port = ar[1];
-                console.log('setting port to '+port )
-                break;
-        }
-    }
-});
-
-*/
 var hashScenario = {};      //a hash of all the scenarios...
 var hashTrack = {};         //a hash of all the tracks
 //var db;
@@ -76,16 +53,37 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
         console.log('>>> Mongo server not running')
     } else {
         console.log("Connected successfully to local server, dataBase="+dbName);
-        //db = client.db('connectathon');
-       // db = client.db(dbName);
 
-        //initialize the qa module
-       // qaModule.setup(client.db('qa'),app)
+        //get the list of events from the event database
+        var eventDb =  client.db('eventDb');
+
+        eventDb.collection("event").find({}).toArray(function(err,result){
+            if (err) {
+                console.log('Unable to access the event database')
+            } else {
+                //console.log(result)
+                if (result.length == 0) {
+                    //this is the first time this has run on this server - set up the db from the json file...
+                    eventDb.collection("event").insert(dbKeys,function(err,result){
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            console.log(result)
+                        }
+                    })
+                } else {
+                    //console.log(result)
+                    dbKeys = result;
+                }
+            }
+        });
+
+
 
         //all the different databases on this server...
         dbKeys.forEach(function(item){
             hashDataBases[item.key] = client.db(item.key);
-        })
+        });
 
 
         //initialize the management module
@@ -268,13 +266,32 @@ app.get('/public/getUsers/:key',function(req,res){
     }
 });
 
-function getDbConnectionDEP(req) {
-    //return the database connection object based on the current user session
-    var config = req.session['config'];
-    if (config) {
-        return hashDataBases[config.key]
+
+
+
+// === event management
+app.get('/event/list',function(req,res){
+    res.json(dbKeys)
+});
+
+app.get('/event/detail/:key',function(req,res){
+    var key = req.params.key;
+    if (hashDataBases[key]) {
+        console.log(hashDataBases[key])
+        hashDataBases[key].collection("admin").find().toArray(function(err,result){
+            if (err) {
+                res.send(err,500)
+            } else {
+                res.send(result)
+            }
+        })
+
+    } else{
+        res.status(404)
     }
-}
+
+});
+
 
 
 //sets the session for the specified event...

@@ -35,8 +35,8 @@ angular.module("sampleApp")
                 }
 
                 $scope.input.description = track.description;
-                $scope.input.termServer = track.termServer;
-                $scope.input.confServer = track.confServer;
+                $scope.input.termServer = track.termServer || 'https://ontoserver.csiro.au/stu3-latest/';
+                $scope.input.confServer = track.confServer || 'http://fhirtest.uhn.ca/baseDstu3/';
                 $scope.input.LM = track.LM;
             }
 

@@ -1031,7 +1031,7 @@
                             <table class="table table-bordered">
                                 <tr><th>Name</th><th>Url</th><th>FHIR Version</th><th>Description</th><th>Contacts</th>
                                     <th>Track / Scenario / Role (from Testing)</th>
-                                    <th  uib-popover="CDS=CDS hooks, SM = SMART, mouseover badge for details"
+                                    <th uib-popover="CDS=CDS hooks, SMART = SMART enabled, mouseover badge for details"
                                          popover-placement="top"
                                          popover-append-to-body = true
                                          popover-trigger="'mouseenter'">Flags</th>
@@ -1092,7 +1092,7 @@
                                               popover-placement="left"
                                               popover-trigger="'mouseenter'"
                                         >CDS</span>
-                                        <span class="badge" ng-show="svr.SMART.authorize">SM</span>
+                                        <span class="badge" ng-show="svr.SMART.authorize">SMART</span>
                                     </td>
 
                                     <td><button class="btn btn-link" ng-click="editServer(svr)">View</button> </td>

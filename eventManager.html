@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Manager</title>
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+
+</head>
+<body style="padding: 8px;padding-top: 80px" >
+
+<nav class="navbar navbar-default navbar-fixed-top" ng-style="navBarStyle" role="navigation">
+
+    <div class="container-fluid row">
+        <div class="col-md-7 col-sm-7">
+            <a class="navbar-brand" href="#">
+                ConMan event manager
+            </a>
+        </div>
+
+    </div>
+</nav>
+
+<div ng-app="sampleApp" ng-controller="eventManagerCtrl" class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+            <ul class="list-group">
+                <li style="cursor: pointer" ng-click = 'showEvent(event)' class="list-group-item" ng-repeat="event in events">
+                    {{event.display}}
+                    <div><em>{{event.key}}</em></div>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-md-9">
+            <pre>{{event | json}}</pre>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<script src="js/libs/angular-sanitize.js"></script>
+
+
+<script src="js/libs/showdown.min.js"></script>
+
+<script>
+    angular.module("sampleApp",['ui.bootstrap','ngSanitize']).config(function($locationProvider) {
+
+        // enable html5Mode for pushstate ('#'-less URLs)
+        $locationProvider.html5Mode(true);
+        $locationProvider.hashPrefix('!');
+    });
+    // angular.module("sampleApp").constant("moment", moment);
+
+    angular.module("sampleApp")
+        .controller('eventManagerCtrl',
+            function ($scope,$http) {
+
+                $scope.showEvent = function(event) {
+                    $http.get('/event/detail/'+event.key).then(
+                        function(data) {
+                            console.log(data.data)
+                            $scope.event = data.data;
+                        }
+                    );
+                };
+
+                $http.get('/event/list').then(
+                    function(data) {
+                        console.log(data)
+                        $scope.events = data.data;
+                    }
+                );
+
+
+            }
+        )
+
+
+</script>
+
+<script src="js/filters.js"></script>
+
+</body>
+</html>

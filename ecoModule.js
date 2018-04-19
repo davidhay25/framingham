@@ -5,6 +5,8 @@ exports.setup = function(app,hashDataBases){
 
     //console.log(hashDataBases);
 
+
+
     //download the entire config as a JSON file.
     app.get('/manage/downloadConfig',function(req,res){
 
