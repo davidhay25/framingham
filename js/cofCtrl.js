@@ -13,6 +13,27 @@ angular.module("sampleApp")
             var allScenarios = {};
             //$scope.showvsviewerdialog = {};
 
+
+            //----- testing ----
+
+
+
+
+            $scope.getProfile = function(){
+                var item = {id : 'id'+new Date().getTime(), type:'cc-Patient'};
+                item.description = 'cc-Patient';
+                //item.url = url;     //needed for LM
+                item.baseType = 'Patient';
+
+                $scope.cofTypeList.push(item)
+                makeGraph();
+
+                profilesCache['cc-Patient'] = $scope.LM;
+            }
+
+            //==========
+
+
             $scope.fhirBasePath = "http://hl7.org/fhir/";       //root of the spec.
             $http.get('/artifacts/allResources.json').then(
                 function(data) {
@@ -363,7 +384,7 @@ angular.module("sampleApp")
                 var type = item.type;
 
                 if (profilesCache[type]) {
-                    $scope.showResourceTable.open(item,profilesCache[type],$scope.cofScenario);
+                    $scope.showResourceTable.open(item,profilesCache[type],$scope.cofScenario,$scope.selectedTrack);
                    // $scope.resourceJson = cofSvc.makeJson(item);
                 } else {
                     //A LM will have a resolvable reference to the SD. A core resource won't
@@ -372,7 +393,7 @@ angular.module("sampleApp")
                             function(data) {
                                 var SD = data.data;
                                 profilesCache[type] = SD;
-                                $scope.showResourceTable.open(item,SD,$scope.cofScenario);
+                                $scope.showResourceTable.open(item,SD,$scope.cofScenario,$scope.selectedTrack);
                             }
                         )
                     } else {
@@ -381,7 +402,7 @@ angular.module("sampleApp")
                         ecoUtilitiesSvc.findConformanceResourceByUri(url).then(
                             function (SD) {
                                 profilesCache[type] = SD;
-                                $scope.showResourceTable.open(item,SD,$scope.cofScenario);
+                                $scope.showResourceTable.open(item,SD,$scope.cofScenario,$scope.selectedTrack);
                             }
                         )
                     }
@@ -477,6 +498,18 @@ angular.module("sampleApp")
                         makeGraph();
                     });
 
+                    //testing
+                    $http.get('http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/cc-Patient').then(
+                        function(data) {
+                            var SD = data.data;
+                            cofSvc.makeLogicalModelFromSD(SD,track).then(
+                                function(LM) {
+                                    console.log(LM)
+                                    $scope.LM = LM;
+                                }
+                            )
+                        }
+                    );
 
                 }
 

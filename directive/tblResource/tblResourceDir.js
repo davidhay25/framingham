@@ -26,7 +26,14 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             //'SD' is a StructureDefinition. If can be a Logical Model. There should be no extensions.
             //'scenario' is the current scenario...
 
-            $scope.internalControl.open = function(item,SD,scenario) {
+            $scope.internalControl.open = function(item,SD,scenario,track) {
+
+                $scope.disabledDirectSample = true;
+                if (track) {
+                    if (track.allowDirectSample) {
+                        $scope.disabledDirectSample = false;
+                    }
+                }
 
                 $scope.hideNotes = true;    //default to hiding notes
 

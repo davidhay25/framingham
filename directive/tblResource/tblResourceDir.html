@@ -131,7 +131,7 @@
                 -->
                 <td width="25%">
                     <div ng-hide="row.dt == 'Reference' || row.dt=='BackboneElement'">
-                        <textarea msd-elastic class="form-control" ng-model="input.sample[row.id]" rows="1"></textarea>
+                        <textarea ng-disabled = "disabledDirectSample" msd-elastic class="form-control" ng-model="input.sample[row.id]" rows="1"></textarea>
                     </div>
                 </td>
                 <td ng-hide="hideNotes" width="25%">
