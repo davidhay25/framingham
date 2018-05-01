@@ -200,7 +200,11 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         getAllPathsForType: function (typeName,explode,track) {
             //console.log(typeName);
             var that = this;
-            var confServer = "http://fhirtest.uhn.ca/baseDstu3/"; //default to HAPI...
+
+            //st johns
+           // confServer = confServer || "http://fhirtest.uhn.ca/baseDstu3/"; //default to HAPI...
+
+            //var confServer = "http://fhirtest.uhn.ca/baseDstu3/"; //default to HAPI...
             if (track &&  track.confServer) {
                 confServer = track.confServer;
 

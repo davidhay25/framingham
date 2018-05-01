@@ -399,7 +399,10 @@ angular.module("sampleApp")
                     } else {
                         //THis must be a core resource. Find it on the locally defined conformance server
                         url = "http://hl7.org/fhir/StructureDefinition/" + item.type;
-                        ecoUtilitiesSvc.findConformanceResourceByUri(url).then(
+
+                        var confServer = $scope.selectedTrack.confServer;
+
+                        ecoUtilitiesSvc.findConformanceResourceByUri(url,confServer).then(      //in st johns...
                             function (SD) {
                                 profilesCache[type] = SD;
                                 $scope.showResourceTable.open(item,SD,$scope.cofScenario,$scope.selectedTrack);
@@ -440,7 +443,11 @@ angular.module("sampleApp")
                 //load the profile (SD) for the type...
                 if ( ! profilesCache[type]) {
                     var url = "http://hl7.org/fhir/StructureDefinition/" + item.type;
-                    ecoUtilitiesSvc.findConformanceResourceByUri(url).then(
+
+                    var confServer = $scope.selectedTrack.confServer;
+
+
+                    ecoUtilitiesSvc.findConformanceResourceByUri(url,confServer).then(      //st johns
                         function (SD) {
                             profilesCache[type] = SD;
                         }
@@ -487,7 +494,8 @@ angular.module("sampleApp")
                     track.scenarios.forEach(function(trck){
                         if (trck.scenarioTypes) {
                             trck.scenarioTypes.forEach(function(type){
-                                ecosystemSvc.getAllPathsForType(type,true)
+
+                                ecosystemSvc.getAllPathsForType(type,true,track)
                             })
                         }
                     });
@@ -497,7 +505,7 @@ angular.module("sampleApp")
                     loadScenarioGraph(function(){
                         makeGraph();
                     });
-
+/*
                     //testing
                     $http.get('http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/cc-Patient').then(
                         function(data) {
@@ -510,7 +518,7 @@ angular.module("sampleApp")
                             )
                         }
                     );
-
+*/
                 }
 
             });
