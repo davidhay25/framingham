@@ -77,7 +77,7 @@ angular.module("sampleApp")
                 function (data) {
                     if (data.data) {
                         $scope.currentUser = data.data.user;
-                        console.log( $scope.currentUser);
+                        //console.log( $scope.currentUser);
 
                         var userId = $scope.currentUser.primaryActor.resolvingIdentifier.id;
                         var userIdNs = $scope.currentUser.primaryActor.resolvingIdentifier.namespace;
@@ -86,7 +86,7 @@ angular.module("sampleApp")
                         //now we can get the lists for the currently logged in user
                         $http.get('/orion/getUserLists?userIdentifier='+$scope.userIdentifier).then(
                             function (data) {
-                                console.log(data);
+                                //console.log(data);
                                 $scope.listBundle = data.data.bundle;
                               //  $scope.input.list = $scope.lists[0];
                               //  getListContent($scope.input.list.name)
@@ -112,7 +112,7 @@ angular.module("sampleApp")
             $http.get('/orion/metadata').then(
                 function (data) {
                     if (data.data) {
-                        console.log(data.data)
+                        //console.log(data.data)
 
                     } else {
                         alert('Error getting current user')
@@ -134,7 +134,7 @@ angular.module("sampleApp")
                 $http.get('/orion/getListContents?listId='+entry.resource.id).then(
                     function (data) {
                         $scope.listContentsBundle = data.data.bundle;    //This is a bundle of Patient resources
-                        console.log($scope.listContentsBundle)
+                        //console.log($scope.listContentsBundle)
 
                         var saveRisk = false;
                         /* temp
@@ -166,7 +166,7 @@ angular.module("sampleApp")
             $scope.moment=moment;
 
             $scope.selectPatient = function(patient){
-                console.log(patient)
+                //console.log(patient)
 
                 delete $scope.risk;
                 delete $scope.rawData;
@@ -186,7 +186,7 @@ angular.module("sampleApp")
                 $scope.waiting = true;
                 $http.get('/orion/getRisk?identifier='+ fIdentifier+"&saveRisk="+false).then(
                     function (data) {
-                        console.log(data.data)
+                        //console.log(data.data)
                         $scope.docRef = data.data.docRef;
 
                         var riskCalc = data.data;
@@ -277,7 +277,7 @@ angular.module("sampleApp")
 
                 modalService.showModal({}, modalOptions).then(
                     function() {
-                        console.log('creating...')
+                        //console.log('creating...')
                         var patient = $scope.selectedPatient;
 
                         var identifier = patient.identifier[0];     //there will always be the orion identifier as the first entry...

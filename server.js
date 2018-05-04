@@ -54,7 +54,7 @@ app.use('/', express.static(__dirname,{index:'/login.html'}));
 
 //The first step in authentication. The browser will load this 'page' and receive a redirect to the login page
 app.get('/auth', function(req, res)  {
-    console.log('/auth')
+    //console.log('/auth')
     req.session["page"] = req.query.page || 'orion.html'
 
     if (showLog) {console.log('env=', environment)};
@@ -82,7 +82,7 @@ app.get('/auth', function(req, res)  {
 
 //after authentication the browser will be redirected by the auth server to this endpoint
 app.get('/callback', function(req, res) {
-    console.log('/callback')
+    //console.log('/callback')
     //If authentication was successful, the Authorization Server will return a code which can be exchanged for an
     //access token. If there is no code, then authorization failed, and a redirect to an error page is returned.
     var code = req.query.code;
@@ -194,7 +194,7 @@ app.get('/orion/getRisk',function(req,res){
             var hash = {};
             results.forEach(function (item) {
 
-                console.log(item);
+                //console.log(item);
                 if (hash[item.type]) {
                     //the response collection can have more that one bundle with the same type = observations
                     if (item.result) {
@@ -418,7 +418,7 @@ app.get('/orion/getDocument',function(req,res){
 
     var urlToDoc = req.query['url'];
     var contentType = req.query['contentType'];
-    console.log(urlToDoc,contentType)
+    //console.log(urlToDoc,contentType)
 
     var access_token = req.session['accessToken'];
     var config = req.session["config"];     //retrieve the configuration from the session...
@@ -440,7 +440,7 @@ app.get('/orion/getDocument',function(req,res){
             res.send(err,500)
         } else {
 
-            console.log('body',body)
+            //console.log('body',body)
             res.setHeader('Content-disposition', 'inline');
             res.setHeader('content-type',contentType)
             res.send(body);//,'binary')
@@ -572,7 +572,7 @@ app.get('/orion/getUserLists',function(req,res) {
 */
 
             try {
-                console.log(uri,body)
+                //console.log(uri,body)
                 var json = JSON.parse(body);
                 json.url = uri;
                 reply = JSON.stringify(json);
@@ -810,7 +810,7 @@ function getAllData(identifier,access_token,config,callback) {
             }
 
 
-            console.log('sc ' + url + " "+ response.statusCode, x.resourceType, y)
+            //console.log('sc ' + url + " "+ response.statusCode, x.resourceType, y)
             if (response && response.statusCode == 200) {
                 try {
                     var raw = JSON.parse(body)
