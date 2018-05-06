@@ -787,7 +787,7 @@ function getAllData(identifier,access_token,config,callback) {
     ],function(err,results){
 
 
-        console.log('final err',err)
+        console.log('final err from async getAllResults',err)
 
         callback(err,results)
 
@@ -822,7 +822,10 @@ function getAllData(identifier,access_token,config,callback) {
                     return;
                 }
             } else {
+                console.log('------------')
                 console.log(response.statusCode)
+                console.log(url)
+                console.log('------------')
                 cb('Status code:'+response.statusCode)
             }
         })
