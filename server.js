@@ -184,8 +184,8 @@ app.get('/orion/getRisk',function(req,res){
 
     //get all the data that we're going to need - Patient, Observation, Condition using async parallel calls...
     getAllData(identifier,access_token,config,function(err,results){
-        if (showLog) {console.log('data loaded...',err)};
-
+        if (showLog) {console.log('data loaded.',results)};
+        if (showLog) {console.log('err.',err)};
         if (err) {
             res.json(err,500);
             return;
