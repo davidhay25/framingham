@@ -714,7 +714,7 @@ app.get('/orion/getAllData',function(req,res) {
 function getAllData(identifier,access_token,config,callback) {
     var ObservationUrl = config.apiEndPoint +"/fhir/1.0/Observation?subject.identifier="+identifier;
     var PatientUrl = config.apiEndPoint + "/fhir/1.0/Patient?identifier="+identifier;
-    var ConditionUrl =  config.apiEndPoint + "/fhir/1.0/Condition?patient.identifier="+identifier + "&_count=100";
+    var ConditionUrl =  config.apiEndPoint + "/fhir/1.0/Condition?patient.identifier="+identifier;// + "&_count=100";
     var DocRefUrl = config.apiEndPoint + "/fhir/1.0/DocumentReference?patient.identifier="+identifier;
 
     var start = new Date().getTime();
@@ -809,7 +809,6 @@ function getAllData(identifier,access_token,config,callback) {
                      y = x.entry.length;
                 }
             }
-
 
             //console.log('sc ' + url + " "+ response.statusCode, x.resourceType, y)
             if (response && response.statusCode == 200) {

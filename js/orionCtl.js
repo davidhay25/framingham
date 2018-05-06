@@ -192,7 +192,6 @@ angular.module("sampleApp")
                         var riskCalc = data.data;
                         $scope.riskCalc = data.data;
 
-
                         if ($scope.riskCalc.err) {
                             alert($scope.riskCalc.err)
                         } else {

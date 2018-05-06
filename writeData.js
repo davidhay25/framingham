@@ -60,8 +60,8 @@ exports.makeObservations = function(patientIdentifier,endPoint,token,cb) {
             vo.patientRef = "Patient/"+patient.id;
             vo.date = moment().format();
             var obs = createObservation(vo)
-            console.log(vo);
-            console.log(obs)
+            //console.log(vo);
+            //console.log(obs)
 
             var url = endPoint + "/fhir/1.0/Observation" ;
             var options = {};
@@ -79,7 +79,7 @@ exports.makeObservations = function(patientIdentifier,endPoint,token,cb) {
             } else {
                // cb()
             }
-            console.log('-----------------')
+            //console.log('-----------------')
         });
 
         cb(err)
