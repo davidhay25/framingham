@@ -48,11 +48,13 @@ exports.makeObservations = function(patientIdentifier,endPoint,token,cb) {
     var body = JSON.parse(response.body);
     console.log('demog',body);
 
-
     if (body.entry && body.entry.length > 0) {  //Strictly, there should only be 1...
         var patient = body.entry[0].resource;
         //now we can create the Observations...
         var age = 4;        //how long ago to make the observations
+
+
+        var err = [];        //
 
         observations.forEach(function (vo) {
             vo.patientRef = "Patient/"+patient.id;
@@ -71,13 +73,17 @@ exports.makeObservations = function(patientIdentifier,endPoint,token,cb) {
             console.log(response.statusCode)
             if (response.statusCode > 201) {
                 console.log(response.body.toString())
-                cb({err:response.body.toString()})
+                err.push({err:response.body.toString()})
+               // cb({err:response.body.toString()})
+
             } else {
-                cb()
+               // cb()
             }
             console.log('-----------------')
         });
-        cb()
+
+        cb(err)
+
     } else {
         //there were no patients in the response...
         cb({err:"No patient found with the identifier: "+patientIdentifier})

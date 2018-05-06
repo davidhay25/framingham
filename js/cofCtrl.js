@@ -505,7 +505,7 @@ angular.module("sampleApp")
                     loadScenarioGraph(function(){
                         makeGraph();
                     });
-/*
+
                     //testing
                     $http.get('http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/cc-Patient').then(
                         function(data) {
@@ -518,7 +518,7 @@ angular.module("sampleApp")
                             )
                         }
                     );
-*/
+
                 }
 
             });

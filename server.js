@@ -221,7 +221,7 @@ app.get('/orion/getRisk',function(req,res){
 
             getRiskOnePatient(hash,function(err,result){
                 if (err) {
-                    console.log(err);
+                    console.log('error getting risk one patient', err);
                     res.json(err,500)
                 } else {
                     var rslt = result;
@@ -332,8 +332,9 @@ function getRiskOnePatient(hash,cb) {
         voData.smoker = {value:{value:'4'},type:'code',display:'Is smoker',type:'code'};
     }
 
+    var tmp;
     try {
-        var tmp = framingham.getRisk(voData);       //calculates the risk and generates a summary observation
+        tmp = framingham.getRisk(voData);       //calculates the risk and generates a summary observation
     } catch(ex) {
         console.log('error calculating score ',ex)
     }
