@@ -32,10 +32,8 @@ if (! port) {
     port=80; //8443;
 }
 
-
 var hashScenario = {};      //a hash of all the scenarios...
 var hashTrack = {};         //a hash of all the tracks
-//var db;
 
 var app = express();
 //to serve up the static web pages - particularly the login page if no page is specified...
@@ -63,35 +61,41 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
             } else {
                 //console.log(result)
                 if (result.length == 0) {
+                    console.log('writing default events')
                     //this is the first time this has run on this server - set up the db from the json file...
                     eventDb.collection("event").insert(dbKeys,function(err,result){
                         if (err) {
                             console.log(err)
                         } else {
                             console.log(result)
+
+                            dbKeys.forEach(function(item){
+                                hashDataBases[item.key] = client.db(item.key);
+                            });
                         }
                     })
                 } else {
-                    //console.log(result)
+                    //console.log('setting dbkeys',result)
                     dbKeys = result;
+
+                    dbKeys.forEach(function(item){
+                        hashDataBases[item.key] = client.db(item.key);
+                    });
+
                 }
             }
         });
 
-
+/*
 
         //all the different databases on this server...
         dbKeys.forEach(function(item){
             hashDataBases[item.key] = client.db(item.key);
         });
-
+*/
 
         //initialize the management module
         manageMod.setup(app,hashDataBases);
-
-        //hashDataBases['connectathon'] = client.db('connectathon');
-
-        //console.log(hashDataBases);
 
         //at server startup, read all the scenarios. We need this when creating the TestReport resource. it is neverupdated (at the moment)
 
