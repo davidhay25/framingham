@@ -360,6 +360,8 @@ app.get('/proxyfhir/*',function(req,res) {
         encoding : null
     };
 
+    options.headers={accept:'fhir+json'};
+
     request(options, function (error, response, body) {
         if (error) {
             console.log('error:',error)
