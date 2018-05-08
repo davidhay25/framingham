@@ -88,7 +88,12 @@ angular.module("sampleApp")
                     $scope.input.address += '/';
                 }
 
-                url = $scope.input.address + 'metadata';
+                //proxyfhir
+
+                //proxy the query through the server to avoid CORS being needed...
+                url = '/proxyfhir/' + $scope.input.address + 'metadata';
+
+                //url = $scope.input.address + 'metadata';
                 $scope.waiting = true;
                 $http.get(url).then(
                     function(data) {
