@@ -5,6 +5,10 @@ angular.module("sampleApp")
             $scope.input = {};
             $scope.input.serverRole = {}
             $scope.saveText = "Add new Server";
+            $scope.selectedResourceDef = {};
+            $scope.selectResourceDef = function(def) {
+                $scope.selectedResourceDef = def;
+            }
 
             var serverExists = false;
 
@@ -12,6 +16,7 @@ angular.module("sampleApp")
 
             if (existingServer) {
                 //this is an edit
+                $scope.editingServer = true;
                 serverExists = true;
                 $scope.saveText = "Update server";//+ existingServer.name;
                 $scope.input.name = existingServer.name;
@@ -51,7 +56,7 @@ angular.module("sampleApp")
                 if (! $scope.input.contact) {
                     modalService.showModal({},{bodyText:"It looks like you haven't selected a person. You can't save unless there is an actual person selected as a contact for this server. "})
                 }
-            }
+            };
 
             $scope.contactSelected = function(item){
                 $scope.selectedPerson = item;
@@ -83,7 +88,6 @@ angular.module("sampleApp")
 
             $scope.checkServerExists = function() {
 
-
                 if ($scope.input.address.substr(-1) !== '/') {
                     $scope.input.address += '/';
                 }
@@ -103,6 +107,7 @@ angular.module("sampleApp")
                         var cs = data.data;
                         $scope.SMART = {};
                         $scope.fhirVersion = cs.fhirVersion;
+                        $scope.CS = cs;
 
 
                         getSMARTEndpoints($scope.SMART,cs);
@@ -115,8 +120,9 @@ angular.module("sampleApp")
                         if (cs.rest && cs.rest[0].resource) {
                             cs.rest[0].resource.forEach(function (res) {
                                 var item = {type:res.type};
+                                item.resource = res;
                                 if (res.interaction) {
-                                    var cap = ""
+                                    var cap = "";
                                     res.interaction.forEach(function (int) {
                                         if (int.code == 'read') {
                                             cap += 'R'

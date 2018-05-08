@@ -1,5 +1,11 @@
 <div>
 
+    <style>
+        .myScroll {
+            height: 350px;
+            overflow-y: scroll;
+        }
+    </style>
 
     <div class="modal-header">
 
@@ -99,6 +105,50 @@
 
 
             </uib-tab>
+
+            <uib-tab heading="Server Capability" ng-show="CS">
+                <br/>
+                <uib-tabset>
+                    <uib-tab heading="Types">
+                        <div class="row">
+                            <div class="col-sm-4 col-md-4">
+                                <br/>
+                                <div class="myScroll">
+
+                                    <ul class="list-group">
+                                        <li ng-class="{'list-group-item':true, listItemSelected:selectedResourceDef == type}" ng-repeat="type in serverDetails.types"
+                                            ng-click="selectResourceDef(type)" style="cursor: pointer">
+                                            <bold>{{type.type}}</bold>
+                                            <span class="pull-right">{{type.cap}}</span>
+                                        </li>
+                                    </ul>
+
+
+                                </div>
+                            </div>
+                            <div class="col-sm-8 col-md-8">
+                                <div class="myScroll">
+                                    <pre>{{selectedResourceDef.resource | json}}</pre>
+                                </div>
+
+                            </div>
+                        </div>
+                    </uib-tab>
+
+                    <uib-tab heading="Json">
+
+                            <pre class="myScroll">{{CS | json}}</pre>
+
+                    </uib-tab>
+
+                </uib-tabset>
+
+
+
+
+
+            </uib-tab>
+
             <uib-tab>
                 <uib-tab-heading>
                     Ecosystem roles
@@ -196,7 +246,16 @@
     <div class="modal-header">
         <div class="row">
             <div class="col-md-12 col-sm-12">
-                <em>Add the details (name and description) for a new server. After this the server can be added to any
+                <em ng-show="input.address">
+                    <div ng-hide="CS">
+                        Click the 'Check CapabilityStetement link to read the Servers CapabilityStatement. After this,
+                        server capabilities will be displayed in a separate tab.
+                    </div>
+
+                </em>
+
+
+                <em ng-hide="editingServer">Add the details (name and description) for a new server. After this the server can be added to any
                     number of scenarios. <span style="color:red">The server name and Contact Person are required.</span></em>
 
             </div>
