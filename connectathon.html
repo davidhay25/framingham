@@ -359,7 +359,8 @@
                                     </div>
                                     <br/>
 
-                                    <div class="row" ng-show="selectedTrack.confServer || selectedTrack.termServer || selectedTrack.LM">
+                                    <div class="row" ng-hide="selectedTrack.trackType == 'technical'">
+                                      <!--  <div class="row" ng-show="selectedTrack.confServer || selectedTrack.termServer || selectedTrack.LM">-->
                                         <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
                                             <strong>Configuration</strong>
