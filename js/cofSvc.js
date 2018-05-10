@@ -223,7 +223,8 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
             //given a StructureDefinition which is a profile (ie potentially has extensions) generate a logical model by de-referencing the extensions
             //currently only working for simple extensions
             var deferred = $q.defer();
-            var confServer = "http://snapp.clinfhir.com:8081/baseDstu3/";       //get from track,
+
+            var confServer = track.confServer || "http://snapp.clinfhir.com:8081/baseDstu3/";       //get from track,
             //var confServer = track.confServer ||  "http://snapp.clinfhir.com:8081/baseDstu3/";
 
             if (profile && profile.snapshot && profile.snapshot.element) {

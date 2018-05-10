@@ -487,7 +487,6 @@ angular.module("sampleApp")
                     track.scenarios.forEach(function(trck){
                         if (trck.scenarioTypes) {
                             trck.scenarioTypes.forEach(function(type){
-
                                 ecosystemSvc.getAllPathsForType(type,true,track)
                             })
                         }

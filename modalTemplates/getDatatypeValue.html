@@ -685,11 +685,14 @@
                 <div ng-hide="renderCCAsList">
 
                     <div class="row">
-                        <div class="col-sm-3 col-md-3">
-                            <input placeholder="Text to search on" class="form-control" ng-model="input.dt.cc.text"/>
+                        <div class="col-sm-4 col-md-4">
+                            <input placeholder="Text. Can be used as search text" class="form-control" ng-model="input.dt.cc.text"/>
+
+
+
                         </div>
-                        <div class="col-sm-3 col-md-3">
-                            <button class="btn btn-primary" ng-click="expandCC(input.dt.cc.text)">Expand</button>
+                        <div class="col-sm-2 col-md-2">
+                            <button class="btn btn-primary pull-right" ng-click="expandCC(input.dt.cc.text)">Search</button>
                         </div>
 
                         <div class="col-sm-6 col-md-6">
@@ -698,6 +701,9 @@
                         </div>
 
                     </div>
+
+
+
                     <hr/>
 
                     <div class="row" ng-show="selectedConceptValue">

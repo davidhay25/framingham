@@ -16,7 +16,7 @@ angular.module("sampleApp")
             if (datatype == 'code') {
                 //get all the options for the valueset and display in a set of radio buttons
                 if (row.binding && row.binding.url) {
-                    var url = termServer + "ValueSet/$expand?url="+row.binding.url
+                    var url = termServer + "ValueSet/$expand?url="+row.binding.url;
                     getExpandedVS(url);
 
                 }

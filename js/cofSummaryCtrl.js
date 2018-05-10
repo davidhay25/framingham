@@ -171,13 +171,11 @@ angular.module("sampleApp")
             ///$scope.$watch('selectedTrack',function(track){
                 if (track && track.scenarios) {
 
-
-
                     //ensure that all the paths for all the resources in all scenarios are in the cache
                     track.scenarios.forEach(function(trck){
                         if (trck.scenarioTypes) {
                             trck.scenarioTypes.forEach(function(type){
-                                ecosystemSvc.getAllPathsForType(type,true)
+                                ecosystemSvc.getAllPathsForType(type,true,track)
                             })
                         }
                     });

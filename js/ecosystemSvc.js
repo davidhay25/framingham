@@ -201,6 +201,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             //console.log(typeName);
             var that = this;
 
+
+
             //st johns
            // confServer = confServer || "http://fhirtest.uhn.ca/baseDstu3/"; //default to HAPI...
 
@@ -208,15 +210,10 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             if (track &&  track.confServer) {
                 confServer = track.confServer;
 
-            }/* else {
-                if (  !reportedTrackWithNoConfserver.id || reportedTrackWithNoConfserver.id == track.id) {
-                    var msg = "There is no Conformance server specified for this track. I'll use the default (HAPI-3) " +
-                        "but if there are connectivity issues (including CORS issues), you'll need to specify one that can be accessed.";
-                    modalService.showModal({},{bodyText:msg})
-                    reportedTrackWithNoConfserver = track;      //only show the warning once!
-                }
+            } else {
+               console.log('no conf server specified, using default: '+ confServer)
 
-            }*/
+            }
 
             var deferred = $q.defer();
             //return all the possible paths for a base type...
@@ -253,8 +250,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                         })
                                     }
                                 }
-
-
                             });
 
                             var vo = {list:lst,hash:hash,dtDef:typeChildren};
