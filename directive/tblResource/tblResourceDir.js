@@ -201,6 +201,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         delete row.references;
                         delete row.structuredData;
                         row.canDelete = true;
+                        row.rootParentId = item.id;     //the parent off the root...
                         //now change the path in the row by incrementing the suffix..
                       /*  var newPath = row.path;
                         var ar = newPath.split('_');
@@ -216,9 +217,31 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             };
 
             //remove a deleted row...
-            $scope.deleteDuplicate = function(inx) {
+            $scope.deleteDuplicate = function(inx,row) {
+                var rootParentId = row.rootParentId;        //if this element has children, then they will have the rootParentId
                 $scope.input.table.splice(inx,1);
-            }
+
+                //now, delete any child elements
+                if (rootParentId) {
+                    var newTable = []
+                    $scope.input.table.forEach(function(item){
+
+                        if (! item.rootParentId) {
+                            //not the child of a duplicated element
+                            newTable.push(item)
+                        } else {
+                            if (item.rootParentId !== rootParentId) {
+                                newTable.push(item)
+                            }
+                        }
+
+
+                    })
+                    $scope.input.table = newTable;
+                }
+
+
+            };
 
             //$scope.hideWOSampleDisplay = true;
             $scope.hideAllWithoutSample = function() {
