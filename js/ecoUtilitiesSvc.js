@@ -12,7 +12,7 @@ angular.module("sampleApp").service('ecoUtilitiesSvc', function($q,$http,modalSe
             serverUrl = serverUrl || "http://fhirtest.uhn.ca/baseDstu3/";
             var qry = serverUrl  + typeOfConformanceResource + "?url=" + url;
 
-            console.log(qry)
+            //console.log(qry)
 
             $http.get(qry).then(
                 function(data){

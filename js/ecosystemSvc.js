@@ -153,7 +153,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 }
             } else {return 0}
         })
-
     };
 
     //copied from builderSvc - could be in a common module
@@ -200,11 +199,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         getAllPathsForType: function (typeName,explode,track) {
             //console.log(typeName);
             var that = this;
-
-
-
-            //st johns
-           // confServer = confServer || "http://fhirtest.uhn.ca/baseDstu3/"; //default to HAPI...
 
             var confServer = "http://fhirtest.uhn.ca/baseDstu3/"; //default to HAPI...
             if (track &&  track.confServer) {

@@ -1,7 +1,7 @@
 
 angular.module("sampleApp")
     .controller('cofCtrl',
-        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc) {
+        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc,$filter) {
 
             $scope.input = {};
             $scope.cofTypeList = [];
@@ -41,6 +41,10 @@ angular.module("sampleApp")
                 }
             );
 
+            $scope.showDescription = function(md) {
+                return $filter('markDown')(md);
+            }
+
             $scope.selectCoreType = function(){
                 $uibModal.open({
                     templateUrl: 'modalTemplates/selectCoreType.html',
@@ -73,10 +77,9 @@ angular.module("sampleApp")
 
             };
 
-
             //Select a logical model rather than a core resource type
             $scope.selectLM = function(LM){
-                var url = LM.url; //"http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/TestCondition";
+                var url = LM.url; //this is a direct url to the model - not a canonical url...
 
                 $http.get(url).then(
                     function(data){
@@ -98,10 +101,8 @@ angular.module("sampleApp")
 
                             profilesCache[name] = data.data;
                         } else {
-                            alert("I couldn't find the base type. Was this LM authored by clinFHIR, and based on a core resource type?")
+                            alert("I couldn't find the base type of the Logical Model. Was this LM authored by clinFHIR, and based on a core resource type?")
                         }
-
-
 
 
 
@@ -174,13 +175,14 @@ angular.module("sampleApp")
                         function (data) {
 
                             var vo = data.data;
-
+                            console.log('saved scenario:',vo)
                             if (vo && vo.items) {
                                 $scope.cofTypeList = vo.items;
-
                                 $scope.input.scenarioNotes = vo.scenarioNotes;
 
                             }
+
+
                             if (cb) {cb()}
                         }
                     )
@@ -244,44 +246,22 @@ angular.module("sampleApp")
 
                 switch(targets.length) {
                     case 0 :
-                        //no resources of this type yet. KJust add one...
+                        //no resources of this type yet. Just add one...
                         var item = addItem(type)
                         var reference = internalAddReference(row,item);
                         if (cb) {cb(item)}
                         break;
                     case 1 :
-                        //there's only one possible target - just add it;
+                        //there's only one possible target - just refer to it;
                         var reference = internalAddReference(row,targets[0]);
                         if (cb) {cb(targets[0])}
                         break;
                     default:
                         //need to show a dialog to select which one...
-
-
                         $uibModal.open({
                             templateUrl: 'modalTemplates/selectResource.html',
                             controller: function($scope,lst,type,source) {
-                                $scope.lst = lst;//[];
-/*
-                                lst.forEach(function (item) {
-                                    var include = false;
-                                    if (type == 'Resource' || item.type == type) {
-                                        include = true;
-                                    }
-
-                                    if (item.id == source.id) {
-                                        include = false;
-                                    }
-
-                                    if (include) {
-                                        $scope.lst.push(item)
-                                    }
-
-
-                                });
-
-*/
-                                //$scope.lst = lst;
+                                $scope.lst = lst;
                                 $scope.type = type;
                                 $scope.source = source
                                 $scope.select=function(item){
@@ -356,8 +336,11 @@ angular.module("sampleApp")
                 }
             };
 
-            $scope.removeReferenceDEP = function(ref){
-                console.log(ref)
+            $scope.removeReference = function(row,inx){
+                //console.log(ref)
+                row.references.splice(inx,1);
+                makeGraph();
+                //delete ref.targetItem;
             };
 
             $scope.editDescription = function(item) {
@@ -365,6 +348,7 @@ angular.module("sampleApp")
                 var description = $window.prompt("Enter description",item.description);
                 if (description) {
                     item.description = description;
+                    makeGraph();
                 }
 
 

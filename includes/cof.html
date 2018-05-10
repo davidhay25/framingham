@@ -22,8 +22,12 @@
         </div>
         <div class="col-sm-3 col-md-3">
             <div><strong>Scenario description</strong></div>
-            <p ng-bind-html="cofScenario.description | markDown"></p>
+            <p uib-popover-html=showDescription(cofScenario.description)
+               popover-placement="right"
+               popover-trigger="'mouseenter'"
+                    ng-bind-html="cofScenario.description | markDown | limitTo:120"></p>
         </div>
+
         <div class="col-sm-2 col-md-2">
             <div><strong>Review Purpose</strong></div>
             <p ng-bind-html="cofScenario.reviewPurpose | markDown"></p>
@@ -67,6 +71,32 @@
             </uib-tabset>
         </div>
         <div class="col-sm-1 col-md-1">
+            <!--
+            <ul class="nav navbar-nav"  ng-hide="waiting">
+                <li uib-dropdown>
+
+                    <a href="#" uib-dropdown-toggle>
+                        <span style="font-size:1.5em; cursor: pointer">
+                            <i class="glyphicon glyphicon-cog"></i>
+                        </span>
+                    </a>
+
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="#" ng-click="clearModel()"
+                               uib-popover="Clear the current model"
+                               popover-placement="left"
+                               popover-trigger="'mouseenter'">Clear model</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+
+-->
+
+
+
             <button class="btn btn-primary pull-right" ng-click="saveGraph()">Save</button>
         </div>
 
@@ -84,8 +114,7 @@
                             <tr ng-repeat="item in cofTypeList">
                                 <td><span class="clickable" ng-click="selectItem(item)"> {{item.type}}</span>
                                     <a class="pull-right" target="_blank" ng-href="{{fhirBasePath}}{{item.baseType | lowercase}}.html">
-                                        <i class="clickable glyphicon glyphicon-question-sign">
-                                        </i>
+                                        <i class="clickable glyphicon glyphicon-question-sign"></i>
                                     </a>
 
                                 </td>
@@ -93,11 +122,11 @@
                                 <td>
                                     <div ng-repeat="row in item.table">
                                         <div ng-repeat="ref in row.references">
-                                            <!--
+
                                             <i class="clickable glyphicon glyphicon-remove-sign"
-                                               title="Remove resource" ng-click="removeReference(ref)">
+                                               title="Remove resource" ng-click="removeReference(row,$index)">
                                             </i>
-                                            -->
+
                                             {{ref.sourcePath}} -> {{ref.targetItem.description}}
                                         </div>
                                     </div>

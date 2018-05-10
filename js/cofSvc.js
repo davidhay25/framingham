@@ -331,7 +331,8 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
             lst.forEach(function (item) {
 
-                var node = {id: item.id, label: item.type, shape: 'box', item: item};
+                var label = item.description + '\n'+ item.type
+                var node = {id: item.id, label: label, shape: 'box', item: item};
 
                 if (objColours[item.baseType]) {
                     node.color = objColours[item.baseType];
