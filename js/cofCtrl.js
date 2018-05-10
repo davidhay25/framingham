@@ -11,13 +11,6 @@ angular.module("sampleApp")
             var elementsByType = {};        //hash of all elements for a given type
             var profilesCache = {};          //cache for SDsss
             var allScenarios = {};
-            //$scope.showvsviewerdialog = {};
-
-
-            //----- testing ----
-
-
-
 
             $scope.getProfile = function(){
                 var item = {id : 'id'+new Date().getTime(), type:'cc-Patient'};

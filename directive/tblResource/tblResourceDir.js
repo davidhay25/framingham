@@ -200,6 +200,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         delete row.isOriginal;
                         delete row.references;
                         delete row.structuredData;
+                        row.canDelete = true;
                         //now change the path in the row by incrementing the suffix..
                       /*  var newPath = row.path;
                         var ar = newPath.split('_');
@@ -213,6 +214,11 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
                 })
             };
+
+            //remove a deleted row...
+            $scope.deleteDuplicate = function(inx) {
+                $scope.input.table.splice(inx,1);
+            }
 
             //$scope.hideWOSampleDisplay = true;
             $scope.hideAllWithoutSample = function() {
@@ -337,6 +343,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 //add a text element as first one
                 var item = {path: 'text',id:'text',type:[{code:'Narrative'}],max:'1',mult:'0..1' };
                 item.definition = "The narrative text that describes this resource to a User";
+               // item.isOriginal = true; //to prevent being able to delete this element
                 ar.push(item);
 
                 SD.snapshot.element.forEach(function (ed,inx) {

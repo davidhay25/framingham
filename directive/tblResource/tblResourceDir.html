@@ -60,9 +60,17 @@
 
                 </td>
                 <td>
-                    <i ng-show="row.isMultiple" class="clickable glyphicon glyphicon-plus-sign pull-right"
+
+                    <div ng-show="row.canDelete"><i class="clickable glyphicon glyphicon-minus-sign pull-right"
+                            title="Delete" ng-click="deleteDuplicate($index)">
+                    </i></div>
+
+                    <i ng-show="row.isMultiple && row.isOriginal" class="clickable glyphicon glyphicon-plus-sign pull-right"
                        title="Edit sample" ng-click="duplicate(row)">
                     </i>
+
+
+
                     <div ng-style="{'padding-left': ((row.path | pathindent) -10)*1.5 +'px'}"
                          uib-popover={{row.definition}}
                          popover-placement="top"
