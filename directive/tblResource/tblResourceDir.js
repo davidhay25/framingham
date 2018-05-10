@@ -236,7 +236,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         }
 
 
-                    })
+
+                    });
                     $scope.input.table = newTable;
                 }
 
@@ -402,6 +403,11 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                             item.definition = ed.definition;
                             item.mult = ed.min + '..'+ed.max;
                             item.max = ed.max;
+
+                            if (ed.min > 0) {
+                                item.isRequired = true;
+                            }
+
                             if (ed.max == '*') {
                                 item.isMultiple = true;
                             }

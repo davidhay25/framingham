@@ -16,6 +16,10 @@
             font-size: 20px;
             font-weight: 800;
         }
+        .required {
+            background-color: white;
+            color : red;
+        }
 
     </style>
 
@@ -73,6 +77,7 @@
 
                     <div ng-style="{'padding-left': ((row.path | pathindent) -10)*1.5 +'px'}"
                          uib-popover={{row.definition}}
+                         ng-class="{required:row.isRequired}"
                          popover-placement="top"
                          popover-trigger="'mouseenter'">{{row.path | lastInPath}}</div>
                 </td>
