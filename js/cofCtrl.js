@@ -17,6 +17,7 @@ angular.module("sampleApp")
                 item.description = 'cc-Patient';
                 //item.url = url;     //needed for LM
                 item.baseType = 'Patient';
+                item.category = 'profile'
 
                 $scope.cofTypeList.push(item)
                 makeGraph();
@@ -95,6 +96,7 @@ angular.module("sampleApp")
                             item.description = 'LM';
                             item.url = url;     //needed for LM
                             item.baseType = baseType;
+                            item.category = 'logical'
 
                             $scope.cofTypeList.push(item)
                             makeGraph();
@@ -397,11 +399,12 @@ angular.module("sampleApp")
                 addItem(type)
             };
 
-            //add an item with a given resource type...
+            //add an item with a given core resource type...
             //note that the cache update is asynchronous...
             function addItem(type) {
                 var item = {id : 'id'+new Date().getTime(),  type:type}
                 item.baseType = type;
+                item.category = 'core'
 
                 //create a default description based on the number of this type in the list
                 var ctr = 1;

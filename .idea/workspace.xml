@@ -7,11 +7,9 @@
   <component name="ChangeListManager">
     <list default="true" id="0a6e7d6f-aa6e-405d-9d94-d3543d427d97" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/includes/cof.html" afterPath="$PROJECT_DIR$/includes/cof.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/includes/cofSummary.html" afterPath="$PROJECT_DIR$/includes/cofSummary.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/cofCtrl.js" afterPath="$PROJECT_DIR$/js/cofCtrl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/cofSvc.js" afterPath="$PROJECT_DIR$/js/cofSvc.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ecoUtilitiesSvc.js" afterPath="$PROJECT_DIR$/js/ecoUtilitiesSvc.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ecosystemSvc.js" afterPath="$PROJECT_DIR$/js/ecosystemSvc.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modalTemplates/selectResource.html" afterPath="$PROJECT_DIR$/modalTemplates/selectResource.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/cofSummaryCtrl.js" afterPath="$PROJECT_DIR$/js/cofSummaryCtrl.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -70,41 +68,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tblResourceDir.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/directive/tblResource/tblResourceDir.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="297">
-              <caret line="111" column="70" lean-forward="true" selection-start-line="111" selection-start-column="70" selection-end-line="111" selection-end-column="70" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tblResourceDir.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/directive/tblResource/tblResourceDir.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="84" column="29" lean-forward="false" selection-start-line="84" selection-start-column="29" selection-end-line="84" selection-end-column="29" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="cofCtrl.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/cofCtrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="251">
-              <caret line="43" column="51" lean-forward="true" selection-start-line="43" selection-start-column="51" selection-end-line="43" selection-end-column="51" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="selectResource.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modalTemplates/selectResource.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="457">
-              <caret line="32" column="25" lean-forward="true" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
+            <state relative-caret-position="123">
+              <caret line="401" column="44" lean-forward="false" selection-start-line="401" selection-start-column="44" selection-end-line="401" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -113,22 +81,54 @@
       <file leaf-file-name="cof.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/includes/cof.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="130">
-              <caret line="72" column="37" lean-forward="false" selection-start-line="72" selection-start-column="37" selection-end-line="72" selection-end-column="37" />
+            <state relative-caret-position="226">
+              <caret line="120" column="39" lean-forward="false" selection-start-line="120" selection-start-column="39" selection-end-line="120" selection-end-column="39" />
               <folding>
                 <element signature="n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
                 <element signature="n#div#1;n#div#0;n#div#0;n#!!top" expanded="false" />
-                <marker date="1525959731821" expanded="false" signature="2936:3673" ph="..." />
+                <marker date="1526014138368" expanded="false" signature="2936:3673" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ecoUtilitiesSvc.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/ecoUtilitiesSvc.js">
+      <file leaf-file-name="cofSummaryCtrl.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/cofSummaryCtrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" column="14" lean-forward="false" selection-start-line="14" selection-start-column="14" selection-end-line="14" selection-end-column="14" />
+            <state relative-caret-position="720">
+              <caret line="165" column="14" lean-forward="false" selection-start-line="165" selection-start-column="14" selection-end-line="165" selection-end-column="14" />
+              <folding>
+                <element signature="e#309#912#0" expanded="false" />
+                <element signature="e#606#838#0" expanded="false" />
+                <element signature="e#705#819#0" expanded="false" />
+                <element signature="e#1015#2800#0" expanded="false" />
+                <element signature="e#1227#2730#0" expanded="false" />
+                <element signature="e#3041#4687#0" expanded="false" />
+                <element signature="e#3215#3285#0" expanded="false" />
+                <element signature="e#3393#4009#0" expanded="false" />
+                <element signature="e#3461#3986#0" expanded="false" />
+                <element signature="e#4049#4669#0" expanded="false" />
+                <element signature="e#4118#4646#0" expanded="false" />
+                <element signature="e#4906#4968#0" expanded="false" />
+                <element signature="e#5734#5854#0" expanded="false" />
+                <element signature="e#5922#5994#0" expanded="false" />
+                <element signature="e#6734#6846#0" expanded="false" />
+                <element signature="e#7051#7146#0" expanded="false" />
+                <element signature="e#7422#7655#0" expanded="false" />
+                <element signature="e#7453#7637#0" expanded="false" />
+                <element signature="e#7529#7615#0" expanded="false" />
+                <element signature="e#7795#8131#0" expanded="false" />
+                <element signature="e#7999#8113#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cofSummary.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/includes/cofSummary.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="19" column="39" lean-forward="false" selection-start-line="19" selection-start-column="39" selection-end-line="19" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -146,7 +146,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>cb</find>
       <find>.on</find>
       <find>emitter.setMaxListeners()</find>
       <find>interaction</find>
@@ -176,6 +175,7 @@
       <find>over-ht</find>
       <find>gear</find>
       <find>showDescription</find>
+      <find>cofTypeList</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -213,7 +213,6 @@
         <option value="$PROJECT_DIR$/artifacts/allResources.json" />
         <option value="$PROJECT_DIR$/modalTemplates/selectCoreType.html" />
         <option value="$PROJECT_DIR$/artifacts/trackTypes.json" />
-        <option value="$PROJECT_DIR$/includes/cofSummary.html" />
         <option value="$PROJECT_DIR$/js/ecosystemCtl.js" />
         <option value="$PROJECT_DIR$/js/editScenarioCtrl.js" />
         <option value="$PROJECT_DIR$/includes/lmCheck.html" />
@@ -240,11 +239,12 @@
         <option value="$PROJECT_DIR$/js/getDatatypeValueCtrl.js" />
         <option value="$PROJECT_DIR$/modalTemplates/getDatatypeValue.html" />
         <option value="$PROJECT_DIR$/modalTemplates/editTrack.html" />
-        <option value="$PROJECT_DIR$/js/cofSummaryCtrl.js" />
         <option value="$PROJECT_DIR$/js/ecosystemSvc.js" />
         <option value="$PROJECT_DIR$/js/ecoUtilitiesSvc.js" />
         <option value="$PROJECT_DIR$/js/cofSvc.js" />
         <option value="$PROJECT_DIR$/modalTemplates/selectResource.html" />
+        <option value="$PROJECT_DIR$/includes/cofSummary.html" />
+        <option value="$PROJECT_DIR$/js/cofSummaryCtrl.js" />
         <option value="$PROJECT_DIR$/js/cofCtrl.js" />
         <option value="$PROJECT_DIR$/includes/cof.html" />
       </list>
@@ -310,7 +310,7 @@
             <path>
               <item name="ecosystem" type="b2602c69:ProjectViewProjectNode" />
               <item name="ecosystem" type="462c0819:PsiDirectoryNode" />
-              <item name="modalTemplates" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -915,12 +915,12 @@
       <workItem from="1525553604570" duration="14871000" />
       <workItem from="1525915605796" duration="807000" />
       <workItem from="1525932663956" duration="5266000" />
-      <workItem from="1525943132856" duration="4698000" />
+      <workItem from="1525943132856" duration="5987000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1307452000" />
+    <option name="totallyTimeSpent" value="1308741000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="74" y="57" width="1261" height="727" extended-state="0" />
@@ -1027,13 +1027,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="2" column="257" lean-forward="false" selection-start-line="2" selection-start-column="257" selection-end-line="2" selection-end-column="257" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/cofSummary.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="305">
-          <caret line="29" column="21" lean-forward="true" selection-start-line="29" selection-start-column="21" selection-end-line="29" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -1486,14 +1479,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/cofSummaryCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="172" column="0" lean-forward="false" selection-start-line="172" selection-start-column="0" selection-end-line="172" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/ecosystemSvc.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
@@ -1581,22 +1566,60 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/includes/cofSummary.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="39" lean-forward="false" selection-start-line="19" selection-start-column="39" selection-end-line="19" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/cofSummaryCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="165" column="14" lean-forward="false" selection-start-line="165" selection-start-column="14" selection-end-line="165" selection-end-column="14" />
+          <folding>
+            <element signature="e#309#912#0" expanded="false" />
+            <element signature="e#606#838#0" expanded="false" />
+            <element signature="e#705#819#0" expanded="false" />
+            <element signature="e#1015#2800#0" expanded="false" />
+            <element signature="e#1227#2730#0" expanded="false" />
+            <element signature="e#3041#4687#0" expanded="false" />
+            <element signature="e#3215#3285#0" expanded="false" />
+            <element signature="e#3393#4009#0" expanded="false" />
+            <element signature="e#3461#3986#0" expanded="false" />
+            <element signature="e#4049#4669#0" expanded="false" />
+            <element signature="e#4118#4646#0" expanded="false" />
+            <element signature="e#4906#4968#0" expanded="false" />
+            <element signature="e#5734#5854#0" expanded="false" />
+            <element signature="e#5922#5994#0" expanded="false" />
+            <element signature="e#6734#6846#0" expanded="false" />
+            <element signature="e#7051#7146#0" expanded="false" />
+            <element signature="e#7422#7655#0" expanded="false" />
+            <element signature="e#7453#7637#0" expanded="false" />
+            <element signature="e#7529#7615#0" expanded="false" />
+            <element signature="e#7795#8131#0" expanded="false" />
+            <element signature="e#7999#8113#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/cofCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="43" column="51" lean-forward="true" selection-start-line="43" selection-start-column="51" selection-end-line="43" selection-end-column="51" />
+        <state relative-caret-position="123">
+          <caret line="401" column="44" lean-forward="false" selection-start-line="401" selection-start-column="44" selection-end-line="401" selection-end-column="44" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/includes/cof.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="72" column="37" lean-forward="false" selection-start-line="72" selection-start-column="37" selection-end-line="72" selection-end-column="37" />
+        <state relative-caret-position="226">
+          <caret line="120" column="39" lean-forward="false" selection-start-line="120" selection-start-column="39" selection-end-line="120" selection-end-column="39" />
           <folding>
             <element signature="n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
             <element signature="n#div#1;n#div#0;n#div#0;n#!!top" expanded="false" />
-            <marker date="1525959731821" expanded="false" signature="2936:3673" ph="..." />
+            <marker date="1526014138368" expanded="false" signature="2936:3673" ph="..." />
           </folding>
         </state>
       </provider>

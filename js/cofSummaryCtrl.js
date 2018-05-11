@@ -80,7 +80,6 @@ angular.module("sampleApp")
 
             };
 
-
             //construct a summary object for the samples and notes in a specific graph...
             function makeItemSummary(item) {
                 var hashPathSummary = {hasData: false};
@@ -127,8 +126,6 @@ angular.module("sampleApp")
                     }
                 }
                 return hashPathSummary;
-
-
             }
 
             //a scenario is selected (from the top selection box)...
@@ -162,9 +159,11 @@ angular.module("sampleApp")
                     )
                 }
 
-
             };
 
+            $scope.refreshSummaryList = function(){
+                $scope.sumSelectScenario($scope.selectedScenario)
+            };
 
             //'selectedTrack' comes from the parent scope...
             $scope.$watch(function(scope) {return scope.selectedTrack},function(track,olfV){

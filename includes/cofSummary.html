@@ -20,6 +20,10 @@
                     ng-change="sumSelectScenario(input.scenario)"
                     ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
 
+            <div>
+                <button class="btn btn-link pull-right" ng-click="refreshSummaryList()">Refresh</button>
+            </div>
+
         </div>
         <div class="col-sm-6 col-md-6">
             <p ng-bind-html="selectedScenario.description | markDown"></p>
