@@ -524,7 +524,9 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
 
                                     grandParentElement = parentElement[0]; //because it could be a grand parent...
-                                    grandParentElement[eleName] = row.structuredData;
+                                    if (grandParentElement) {
+                                        grandParentElement[eleName] = row.structuredData;
+                                    }
 
                                     /*
                                                                     if (row.max == 1) {

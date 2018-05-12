@@ -25,66 +25,102 @@
             </div>
 
         </div>
-        <div class="col-sm-6 col-md-6">
+        <div class="col-sm-10 col-md-10">
             <p ng-bind-html="selectedScenario.description | markDown"></p>
         </div>
     </div>
     <hr/>
 
-    <div class="row">
-        <div class="col-sm-2 col-md-2">
-            <ul class="list-group">
-                <li ng-repeat="graph in graphs"
-                    ng-class="{'list-group-item':true,active:graph.id == selectedGraph.id}" ng-click="selectGraph(graph)">
-                    <div class="clickable">{{graph.user.name}}</div>
-                </li>
-            </ul>
-            <p ng-bind-html="selectedGraph.scenarioNotes | markDown"></p>
-        </div>
+    <uib-tabset>
+        <uib-tab heading="By User">
+            <br/>
 
-        <div class="col-sm-4 col-md-4">
+            <div class="row">
+                <div class="col-sm-2 col-md-2">
+                    <ul class="list-group">
+                        <li ng-repeat="graph in graphs"
+                            ng-class="{'list-group-item':true,active:graph.id == selectedGraph.id}" ng-click="selectGraph(graph)">
+                            <div class="clickable">{{graph.user.name}}</div>
+                        </li>
+                    </ul>
+                    <p ng-bind-html="selectedGraph.scenarioNotes | markDown"></p>
+                </div>
+
+                <div class="col-sm-4 col-md-4">
 
 
-            <div id="sumCofGraph"></div>
-        </div>
-        <div class="col-sm-6 col-md-6">
-            <uib-tabset>
-                <uib-tab heading ='All Resources'>
-                    <div class="row">
-                        <div class="col-sm-4 col-md-4"><h4>Path</h4></div>
-                        <div class="col-sm-4 col-md-4">Sample</div>
-                        <div class="col-sm-4 col-md-4">Note</div>
+                    <div id="sumCofGraph"></div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <uib-tabset>
+                        <uib-tab heading ='All Resources'>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4"><h4>Path</h4></div>
+                                <div class="col-sm-4 col-md-4">Sample</div>
+                                <div class="col-sm-4 col-md-4">Note</div>
 
-                    </div>
-
-                    <div ng-repeat="summary in allHashPathSummaries">
-                        <strong>{{summary.type}}</strong>
-                        <div class='row' ng-repeat="(k,v) in summary.summary">
-                            <div class="col-md-4">
-                                {{v.path}}
                             </div>
-                            <div class="col-md-4">
-                                <div ng-repeat = "sample in v.sample track by $index">{{sample}}</div>
+
+                            <div ng-repeat="summary in allHashPathSummaries">
+                                <strong>{{summary.type}}</strong>
+                                <div class='row' ng-repeat="(k,v) in summary.summary">
+                                    <div class="col-md-4">
+                                        {{v.path}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div ng-repeat = "sample in v.sample track by $index">{{sample}}</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div ng-repeat = "note in v.notes track by $index">{{note}}</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <div ng-repeat = "note in v.notes track by $index">{{note}}</div>
+                        </uib-tab>
+                        <uib-tab heading ='Selected Resource'>
+                            <h4>{{item.type}}</h4>
+                            <table class="table">
+                                <tr><th>Path</th><th>Samples</th><th>Notes</th></tr>
+                                <tr ng-repeat="(k,v) in hashPathSummary track by $index">
+                                    <td>{{v.path}}</td>
+                                    <td><div ng-repeat = "sample in v.sample track by $index">{{sample}}</div></td>
+                                    <td><div ng-repeat = "note in v.notes track by $index">{{note}}</div></td>
+                                </tr>
+                            </table>
+                        </uib-tab>
+                    </uib-tabset>
+                </div>
+            </div>
+
+        </uib-tab>
+        <uib-tab heading="By Resource">
+            <br/>
+            <div class="row">
+                <div class="col-sm-3 col-md-3">
+                    <ul class="list-group">
+                        <li ng-repeat="(k,v) in hashResources"
+                            ng-class="{'list-group-item':true,k : k == selectedSummaryType}" ng-click="selectResourceSummary(k,v)">
+                            <div class="clickable">
+                                {{k}} <span ng-show="v.length > 0" class="badge pull-right">{{v.length}}</span>
+
                             </div>
-                        </div>
-                    </div>
-                </uib-tab>
-                <uib-tab heading ='Selected Resource'>
-                    <h4>{{item.type}}</h4>
+                        </li>
+                    </ul>
+
+                </div>
+
+                <div class="col-sm-9 col-md-9">
                     <table class="table">
-                        <tr><th>Path</th><th>Samples</th><th>Notes</th></tr>
-                        <tr ng-repeat="(k,v) in hashPathSummary track by $index">
-                            <td>{{v.path}}</td>
-                            <td><div ng-repeat = "sample in v.sample track by $index">{{sample}}</div></td>
-                            <td><div ng-repeat = "note in v.notes track by $index">{{note}}</div></td>
+                        <tr ng-repeat="row in selectedSummary">
+                            <td>{{row.user}}</td>
+                            <td>{{row.path}}</td>
+                            <td>{{row.note}}</td>
                         </tr>
                     </table>
-                </uib-tab>
-            </uib-tabset>
-        </div>
-    </div>
+
+                </div>
+            </div>
+
+        </uib-tab>
+    </uib-tabset>
 
 </div>

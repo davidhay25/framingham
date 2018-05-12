@@ -4,6 +4,20 @@ angular.module("sampleApp")
 
             $scope.input = {};
 
+
+            $scope.selectResourceSummary = function(type,summary) {
+                $scope.selectedSummaryType = type;
+                $scope.selectedSummary = summary;
+                $scope.selectedSummary.sort(function(a,b){
+                    if (a.path > b.path) {
+                        return 1
+                    } else {
+                        return -1;
+                    }
+                })
+                console.log(summary)
+            }
+
             //a single graph (for a single user) is selected
             $scope.selectGraph = function(graph){
                 console.log(graph)
@@ -138,6 +152,8 @@ angular.module("sampleApp")
                 delete $scope.allHashPathSummaries;
                 delete $scope.selectedGraph;
 
+                $scope.hashResources = {};
+
                 //retrieve all of the scenarios (actually referred to as graphs) for this scenario...
                 $scope.selectedScenario = scenario;
                 if (scenario) {
@@ -150,13 +166,44 @@ angular.module("sampleApp")
                             //add the user object so er can display in the list...
                             $scope.graphs.forEach(function (graph) {
                                 graph.user = ecosystemSvc.getPersonWithId(graph.userid);
+
+                                if (graph.items) {
+                                    graph.items.forEach(function(item){
+                                        $scope.hashResources[item.type] = $scope.hashResources[item.type] || [];
+
+                                        if (item.notes) {
+                                            //there are notes for this item (== resource)
+                                            //create a hash of id for this item
+                                            var hashId = {}
+                                            item.table.forEach(function (row) {
+                                                hashId[row.id] = row;
+                                            })
+                                            angular.forEach(item.notes,function(note,id){
+                                                var lne = {user:graph.user.name,path:hashId[id].path,note:note}
+                                                console.log(lne)
+                                                $scope.hashResources[item.type].push(lne)
+                                            })
+
+                                        }
+
+
+                                        //hashResources[item.type].push(item)
+                                    })
+                                }
+
                             })
 
+
+
+
+                            console.log($scope.hashResources)
                         },
                         function(err) {
                             console.log(err)
                         }
                     )
+
+
                 }
 
             };

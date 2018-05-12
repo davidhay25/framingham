@@ -42,9 +42,6 @@ angular.module("sampleApp")
                 }
             );
 
-
-
-
             $scope.formWasUpdated = function(table) {
                 console.log(table)
                 drawTree(table)
@@ -252,14 +249,13 @@ angular.module("sampleApp")
 
                 });
 
-
-
                 switch(targets.length) {
                     case 0 :
                         //no resources of this type yet. Just add one...
                         var item = addItem(type)
                         var reference = internalAddReference(row,item);
                         if (cb) {cb(item)}
+
                         break;
                     case 1 :
                         //there's only one possible target - just refer to it;
@@ -301,7 +297,7 @@ angular.module("sampleApp")
                 }
 
 
-                return
+                return;
 
                 function internalAddReference(row,target) {
                     var path = row.path;
