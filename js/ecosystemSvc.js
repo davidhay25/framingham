@@ -190,6 +190,69 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     //var reportedTrackWithNoConfserver  = {};      //a
 
     return {
+        makeAllScenarioSummary : function(allScenarioGraphs,tracks) {
+            console.log(allScenarioGraphs)
+            var that = this;
+
+
+            //construct a hash of scenarioId...
+            var hashScenarioId = {};
+            tracks.forEach(function (track) {
+                console.log(track)
+                track.scenarios.forEach(function (scenario) {
+                    hashScenarioId[scenario.id] = {track:track,scenario:scenario}
+                })
+            });
+
+            console.log(hashScenarioId)
+
+            //now construct the summary object...
+            var hashResourceType = {};
+            allScenarioGraphs.forEach(function (graph) {
+                var vo = hashScenarioId[graph.scenarioid];
+                graph.user = that.getPersonWithId(graph.userid);
+
+                if (vo && graph.items) {
+                    graph.items.forEach(function(item){
+                        hashResourceType[item.type] = hashResourceType[item.type] || [];
+
+                        if (item.notes) {
+                            //there are notes for this item (== resource)
+                            //create a hash of id for this item
+                            var hashId = {};
+                            item.table.forEach(function (row) {
+                                hashId[row.id] = row;
+                            });
+
+                            angular.forEach(item.notes,function(note,id){
+
+                                var lne = {user:graph.user,path:hashId[id].path,note:note,scenario:vo.scenario,track:vo.track};
+
+                                console.log(lne)
+                                hashResourceType[item.type].push(lne)
+                            })
+
+                        }
+
+                    })
+                }
+            });
+
+            console.log(hashResourceType)
+
+            angular.forEach(hashResourceType,function(value,key){
+                value.sort(function(a,b){
+                    if (a.path < b.path) {
+                        return -1
+                    } else {return 1}
+                })
+            })
+
+            return hashResourceType;
+
+
+
+        },
         objColours : function(){
             return objColours;
         },
@@ -1186,6 +1249,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             urls.push({url:'/result',"name":"results"});
             urls.push({url:'/person',"name":"persons"});
 
+            urls.push({url:'/scenarioGraph',"name":"scenarioGraph"});
+
             var vo = {}
 
             var queries = []
@@ -1217,6 +1282,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     allRoles.length = 0;
                     allPersons = vo.persons;    //scoped to service
                     ciSort(allPersons,'name');
+
 
 
 

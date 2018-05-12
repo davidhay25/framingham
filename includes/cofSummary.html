@@ -98,7 +98,7 @@
                 <div class="col-sm-3 col-md-3">
                     <ul class="list-group">
                         <li ng-repeat="(k,v) in hashResources"
-                            ng-class="{'list-group-item':true,k : k == selectedSummaryType}" ng-click="selectResourceSummary(k,v)">
+                            ng-class="{'list-group-item':true,active : k == selectedSummaryType}" ng-click="selectResourceSummary(k,v)">
                             <div class="clickable">
                                 {{k}} <span ng-show="v.length > 0" class="badge pull-right">{{v.length}}</span>
 
@@ -110,6 +110,7 @@
 
                 <div class="col-sm-9 col-md-9">
                     <table class="table">
+                        <tr><th>User</th><th>Path</th><th>Note</th></tr>
                         <tr ng-repeat="row in selectedSummary">
                             <td>{{row.user}}</td>
                             <td>{{row.path}}</td>

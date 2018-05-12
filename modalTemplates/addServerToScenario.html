@@ -39,6 +39,10 @@
                         {{role.name}}
                     </li>
                 </ul>
+                <div ng-hide="roles.length > 0">
+                    <em>There are no roles defined! You need to add them in the definition of the scenario
+                        before you can record any test results.</em>
+                </div>
 
             </div>
 

@@ -47,6 +47,9 @@ angular.module("sampleApp")
                 drawTree(table)
             }
 
+
+
+
             $scope.showDescription = function(md) {
                 return $filter('markDown')(md);
             }

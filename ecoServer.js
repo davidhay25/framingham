@@ -647,6 +647,25 @@ app.put('/scenarioGraph',function(req,res){
     clinicalUpdate(collection,result,res)
 });
 
+
+//get all the graphs for all tasks
+app.get('/scenarioGraph',function(req,res) {
+
+    var collection = req.selectedDbCon.collection('scenarioGraph')
+
+    collection.find().toArray(function (err, result) {
+        if (err) {
+            res.send(err,500)
+        } else {
+            if (result.length > 0) {
+                res.send(result)
+            } else {
+                res.send([])
+            }
+        }
+    })
+});
+
 //get all the graphs for a  specific scenario
 app.get('/scenarioGraph/:scenarioid',function(req,res) {
 
@@ -663,7 +682,6 @@ app.get('/scenarioGraph/:scenarioid',function(req,res) {
             } else {
                 res.send([])
             }
-
         }
     })
 });

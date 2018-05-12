@@ -75,6 +75,12 @@ angular.module("sampleApp")
                 login()
             };
 
+            $scope.selectAllNotes = function(type,notes) {
+                $scope.oneTypeAllNotes = notes;
+                console.log(notes)
+                $scope.oneTypeAllNotesType = type;
+
+            }
 
             $http.get('/artifacts/trackTypes.json').then(
                 function(data) {
@@ -434,12 +440,9 @@ angular.module("sampleApp")
                         modalService.showModal({}, {bodyText:msg})
                     }
 
-
-
                     //redraw charts (will handle nulls)
                     $scope.selectTrackResults($scope.selectedTrack);
                     $scope.selectScenarioResults($scope.selectedScenarioSummary);
-
 
                 })
             };
@@ -449,6 +452,8 @@ angular.module("sampleApp")
                 ecosystemSvc.getConnectathonResources().then(
                     function(vo) {
 
+                        console.log(vo.scenarioGraph)
+                        $scope.hashAllScenarioNotes = ecosystemSvc.makeAllScenarioSummary(vo.scenarioGraph,vo.tracks);
 
                         console.log(ecoUtilitiesSvc.getObjectSize(vo));
 

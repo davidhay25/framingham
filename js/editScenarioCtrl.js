@@ -23,19 +23,22 @@ angular.module("sampleApp")
             $scope.allRoles = ecosystemSvc.getAllRoles();
 
             $scope.addNewRole = function(name,description) {
-                ecosystemSvc.addNewRole(name,description).then(
-                    function(role){
-                        //so the role has been added - link it to the current scenario
-                        scenario.roleIds = scenario.roleIds || []
-                        scenario.roleIds.push(role.id);
-                        $scope.input.roles[role.id] = true;
+                if (name) {
+                    ecosystemSvc.addNewRole(name,description).then(
+                        function(role){
+                            //so the role has been added - link it to the current scenario
+                            scenario.roleIds = scenario.roleIds || [];
+                            scenario.roleIds.push(role.id);
+                            $scope.input.roles[role.id] = true;
 
-                        delete $scope.input.newRoleName;
-                    },
-                    function(err) {
-                        alert(err)
-                    }
-                )
+                            delete $scope.input.newRoleName;
+                        },
+                        function(err) {
+                            alert(err)
+                        }
+                    )
+                }
+
             };
 
             //console.log($scope.allRoles)
@@ -195,6 +198,10 @@ angular.module("sampleApp")
                         scenario.roles.push(role)
                     }
                 });
+
+                if (scenario.roleIds.length == 0 && track.trackType == 'technical') {
+                    alert("You haven't selected any roles. You need to do this before you can record any test results for this scenario. ")
+                }
 
                 if (scenario.scenarioTypes) {
                     scenario.scenarioTypes.sort();
