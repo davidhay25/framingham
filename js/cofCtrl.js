@@ -42,6 +42,14 @@ angular.module("sampleApp")
                 }
             );
 
+
+
+
+            $scope.formWasUpdated = function(table) {
+                console.log(table)
+                drawTree(table)
+            }
+
             $scope.showDescription = function(md) {
                 return $filter('markDown')(md);
             }
@@ -363,8 +371,8 @@ angular.module("sampleApp")
                 var type = item.type;
 
                 if (profilesCache[type]) {
-                    $scope.showResourceTable.open(item,profilesCache[type],$scope.cofScenario,$scope.selectedTrack);
-                   // $scope.resourceJson = cofSvc.makeJson(item);
+                    $scope.showResourceTable.open(item,profilesCache[type],$scope.cofScenario,$scope.selectedTrack,receiveTable);
+
                 } else {
                     //A LM will have a resolvable reference to the SD. A core resource won't
                     if (item.url) {
@@ -372,11 +380,11 @@ angular.module("sampleApp")
                             function(data) {
                                 var SD = data.data;
                                 profilesCache[type] = SD;
-                                $scope.showResourceTable.open(item,SD,$scope.cofScenario,$scope.selectedTrack);
+                                $scope.showResourceTable.open(item,SD,$scope.cofScenario,$scope.selectedTrack,receiveTable);
                             }
                         )
                     } else {
-                        //THis must be a core resource. Find it on the locally defined conformance server
+                        //This must be a core resource. Find it on the locally defined conformance server
                         url = "http://hl7.org/fhir/StructureDefinition/" + item.type;
 
                         var confServer = $scope.selectedTrack.confServer;
@@ -384,14 +392,46 @@ angular.module("sampleApp")
                         ecoUtilitiesSvc.findConformanceResourceByUri(url,confServer).then(      //in st johns...
                             function (SD) {
                                 profilesCache[type] = SD;
-                                $scope.showResourceTable.open(item,SD,$scope.cofScenario,$scope.selectedTrack);
+                                $scope.showResourceTable.open(item,SD,$scope.cofScenario,$scope.selectedTrack,receiveTable);
                             }
                         )
                     }
+                }
 
-
+                function receiveTable(table) {
+                    drawTree(table);
+                    /*
+                    var treeData = cofSvc.makeTree(table);
+                    $('#lmTreeView').jstree('destroy');
+                    $('#lmTreeView').jstree(
+                        {'core': {'multiple': false, 'data': treeData, 'themes': {name: 'proton', responsive: true}}}
+                    ).on('changed.jstree', function (e, data) {
+                        //seems to be the node selection event...;
+                        if (data.node) {
+                            $scope.selectedTreeNode = data.node;
+                            $scope.$digest();
+                        }
+                    })
+                    console.log(table);
+                    */
                 }
             };
+
+
+            function drawTree(table) {
+                var treeData = cofSvc.makeTree(table);
+                $('#lmTreeView').jstree('destroy');
+                $('#lmTreeView').jstree(
+                    {'core': {'multiple': false, 'data': treeData, 'themes': {name: 'proton', responsive: true}}}
+                ).on('changed.jstree', function (e, data) {
+                    //seems to be the node selection event...;
+                    if (data.node) {
+                        $scope.selectedTreeNode = data.node;
+                        $scope.$digest();
+                    }
+                })
+                console.log(table);
+            }
 
 
             //when the user selects a new type to add from the list of types in the scenario...

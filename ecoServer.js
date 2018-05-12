@@ -158,8 +158,8 @@ app.use(function (req, res, next) {
 
     //allow html and js files to be returned - todo - these files should all be in a 'public' folder - or something better
     var url = req.url;
-    //console.log(url)
-    if (url.indexOf('.html') > -1 || url.indexOf('.js') > -1 || url == '/' ||
+    console.log(url)
+    if (url.indexOf('.html') > -1 || url.indexOf('.js') > -1 || url == '/' || url.indexOf('/icons/') > -1 ||
         url.indexOf('.css') > -1 || url.indexOf('.gif') > -1 ||url.indexOf('/public/') > -1 ||
         url.indexOf('/artifacts/') > -1 || url.indexOf('/fonts/') > -1 || url.indexOf('/qa') > -1 ){
 
@@ -678,9 +678,6 @@ app.get('/scenarioGraph/:userid/:scenarioid',function(req,res) {
 
     clinicalFind(collection,userId,scenarioId,res)
 });
-
-
-
 
 
 //add/update a lmCheck (Logical Model) result

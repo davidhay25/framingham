@@ -10,6 +10,10 @@
             height: 500px;
             overflow-y: scroll;
         }
+        .treeNodeHasData {
+            font-weight: bold;
+            color: darkgreen;
+        }
 
     </style>
     <div class="row" ng-show="selectedTrack">
@@ -114,9 +118,6 @@
                             <tr ng-repeat="item in cofTypeList">
                                 <td><span class="clickable" ng-click="selectItem(item)"> {{item.type}}</span>
 
-
-
-
                                     <a ng-show="item.category == 'core'" class="pull-right" target="_blank"
                                        ng-href="{{fhirBasePath}}{{item.baseType | lowercase}}.html">
                                         <i class="clickable glyphicon glyphicon-question-sign"></i>
@@ -167,7 +168,35 @@
                 <uib-tab heading="Table">
                     <tbl-resource trigger="showResourceTable" reference="cofAddReference"
                                   resource-json="fnResourceJson"
+                                  updated="formWasUpdated"
                                   fnshownotes="setShowNotes"></tbl-resource>
+                </uib-tab>
+
+
+                <uib-tab heading="Tree">
+                    <br/>
+                    <div class="row">
+                        <div class="col-sm-4 col-md-4">
+                            <div class="scrollTable">
+                                <div id="lmTreeView"></div>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-8 col-md-8">
+                            <uib-tabset>
+                                <uib-tab heading = 'Data'>
+                                    <pre ng-show="selectedTreeNode">{{selectedTreeNode.data.structuredData | json}}</pre>
+                                </uib-tab>
+                                <uib-tab heading = 'Json'>
+                                    <pre ng-show="selectedTreeNode">{{selectedTreeNode.data | json}}</pre>
+                                </uib-tab>
+                            </uib-tabset>
+
+                        </div>
+
+                    </div>
+
+
                 </uib-tab>
                 <uib-tab heading="Resource Json">
                     <pre>{{resourceJson.resource | json}}</pre>
@@ -175,6 +204,7 @@
                 <uib-tab heading="Item Json">
                     <pre>{{resourceJson.raw | json}}</pre>
                 </uib-tab>
+
             </uib-tabset>
 
 

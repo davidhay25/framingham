@@ -9,7 +9,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             reference : '&',
             fnshownotes : '&',
             showvsviewerdialog : '=',
-            resourceJson : '&'
+            resourceJson : '&',
+            updated : '&'
         },
         templateUrl: '../directive/tblResource/tblResourceDir.html',
 
@@ -26,7 +27,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             //'SD' is a StructureDefinition. If can be a Logical Model. There should be no extensions.
             //'scenario' is the current scenario...
 
-            $scope.internalControl.open = function(item,SD,scenario,track) {
+            $scope.internalControl.open = function(item,SD,scenario,track,cb) {
 
                 $scope.disabledDirectSample = true;
                 if (track) {
@@ -41,6 +42,9 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 if (item) {
                     $scope.input = item;
                     $scope.input.table = $scope.input.table || makeTableArray(SD);
+                    if (cb) {
+                        cb($scope.input.table);
+                    }
                     makeJson();
                     $scope.input.sample = $scope.input.sample || {};
                     $scope.input.notes = $scope.input.notes || {};
@@ -135,6 +139,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
                     checkParentHasStructuredData(row,inx); //if not off the root, walk back up the list of elements to make sure that the parent has a structuredData element. The Json build needs this...
                     makeJson ();
+
+                    $scope.updated()($scope.input.table);          //send the updated table to the host...
 
                 })
             };

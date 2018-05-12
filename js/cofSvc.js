@@ -368,6 +368,90 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
             return {graphData: graphData};
 
+        },
+        makeTree : function(table) {
+            var arTree = [];
+
+            table.forEach(function (row) {
+                var path = row.path;     //this is always unique in a logical model...
+                var arPath = path.split('.');
+                var item = {data:row};
+                item.id = path;
+
+                item.text = arPath[arPath.length-1];
+                if (row.structuredData) {
+                    item['li_attr'] = {class:'treeNodeHasData'};
+                }
+
+
+                item.icon = '/icons/icon_primitive.png';
+
+                if (row.dt) {
+                    var char = row.dt.substr(0,1)
+                    if (char == char.toUpperCase()) {
+                        item.icon='/icons/icon_datatype.gif';
+                    }
+                }
+                if (row.dt == 'Reference') {
+                        item.icon='/icons/icon_reference.png';
+                }
+
+                if (row.isBBE) {
+                    item.icon='/icons/icon_element.gif';
+                }
+
+
+
+/*
+                if (r.isComplex) {
+                    node.icon='/icons/icon_datatype.gif';
+                } else {
+                    node.icon='/icons/icon_primitive.png';
+                }
+
+                if (r.isReference) {
+                    node.icon='/icons/icon_reference.png';
+                }
+                */
+
+
+
+                if (arPath.length == 1) {
+                    //the root
+                    item.parent = '#'
+                } else {
+                    arPath.pop();//
+                    item.parent = arPath.join('.');
+                }
+                arTree.push(item)
+            })
+
+            return arTree;
+
+            /*
+            if (SD && SD.snapshot && SD.snapshot.element) {
+
+                SD.snapshot.element.forEach(function (ed, inx) {
+                    var path = ed.path;     //this is always unique in a logical model...
+                    var arPath = path.split('.');
+                    var item = {data:{}}
+                    item.id = path
+                    item.text = path;
+
+                    if (arPath.length == 1) {
+                        //the root
+                        item.parent = '#'
+                    } else {
+                        arPath.pop();//
+                        item.parent = arPath.join('.');
+                    }
+                    arTree.push(item)
+
+                })
+            }
+            console.log(arTree)
+            */
         }
+
     }
 })
