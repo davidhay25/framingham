@@ -15,7 +15,7 @@ angular.module("sampleApp")
 
             if (scenario && scenario.roleIds) {
                 scenario.roleIds.forEach(function (id) {
-                    console.log(id)
+
                     $scope.input.roles[id] = true;
                 })
             }
@@ -41,7 +41,7 @@ angular.module("sampleApp")
 
             };
 
-            //console.log($scope.allRoles)
+
 
             if (scenario && library && scenario.cfScenario) {
                 for (var i=0; i<library.length;i++) {
@@ -55,13 +55,13 @@ angular.module("sampleApp")
             }
 
             $scope.libraryItemSelected = function(item){
-                console.log(item)
+
                 $scope.selectedLibrary = item;
                 $scope.scenario.cfScenario = {name:item.name};
             };
 
             $scope.selectHxItem = function(hx) {
-               // console.log(hx)
+
 
                 var vo = ecosystemSvc.makeGraph(hx.bundle);
 
@@ -145,9 +145,52 @@ angular.module("sampleApp")
 
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addLMToScenario.html',
-                    controller: function($scope,lms){
+                    controller: function($scope,lms,track,ecoUtilitiesSvc){
+
+                        $scope.track = track;
+                        var confServer = track.confServer;
+
+                        $scope.selectModel = function(model) {
+
+                            $scope.input.lmUrl = model.url;
+                            $scope.input.lmDescription = model.purpose;
+                        }
+
+                        //load all the LM's on the conf server
+                        if (confServer) {
+                            var url = confServer + "StructureDefinition?kind=logical&identifier=http://clinfhir.com|author";
+                            ecoUtilitiesSvc.performQueryFollowingPaging(url).then(
+                                // $http.get(url).then(
+                                function (bundleModels) {
+
+                                    if (bundleModels.entry) {
+                                        var lst = []
+                                        bundleModels.entry.forEach(function (entry) {
+                                            lst.push({url:entry.fullUrl,name:entry.resource.name, purpose:entry.resource.purpose})
+                                        });
+
+                                        lst.sort(function(a,b){
+                                            if (a.name < b.name) {
+                                                return -1
+                                            } else {
+                                                return 1
+                                            }
+                                        });
+
+                                        $scope.models = lst
+                                    }
+
+
+
+                                },
+                                function (err) {
+                                    alert('Error loading models: ' + angular.toJson(err));
+                                }
+                            )
+                        }
+
                         $scope.input = {};
-                        $scope.addLM = function() {
+                        $scope.addNewLM = function() {
                             lms.push({url:$scope.input.lmUrl,description:$scope.input.lmDescription});
                             $scope.$close();
                         }
@@ -156,6 +199,8 @@ angular.module("sampleApp")
                         lms: function () {          //the default config
                             scenario.lms = scenario.lms || []
                             return scenario.lms;
+                        }, track: function() {
+                            return $scope.track;
                         }
                     }
                 }).result.then(function(vo){

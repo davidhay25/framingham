@@ -12,7 +12,7 @@ angular.module("sampleApp").service('ecoUtilitiesSvc', function($q,$http,modalSe
             serverUrl = serverUrl || "http://fhirtest.uhn.ca/baseDstu3/";
             var qry = serverUrl  + typeOfConformanceResource + "?url=" + url;
 
-            //console.log(qry)
+
 
             $http.get(qry).then(
                 function(data){
@@ -97,7 +97,7 @@ angular.module("sampleApp").service('ecoUtilitiesSvc', function($q,$http,modalSe
 
             //get a single page of data
             function getPage(url) {
-               // console.log(url)
+
                 return $http.get(url).then(
                     function(data) {
                         var bundle = data.data;     //the response is a bundle...

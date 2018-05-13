@@ -191,20 +191,20 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
     return {
         makeAllScenarioSummary : function(allScenarioGraphs,tracks) {
-            console.log(allScenarioGraphs)
+
             var that = this;
 
 
             //construct a hash of scenarioId...
             var hashScenarioId = {};
             tracks.forEach(function (track) {
-                console.log(track)
+
                 track.scenarios.forEach(function (scenario) {
                     hashScenarioId[scenario.id] = {track:track,scenario:scenario}
                 })
             });
 
-            console.log(hashScenarioId)
+
 
             //now construct the summary object...
             var hashResourceType = {};
@@ -228,7 +228,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                                 var lne = {user:graph.user,path:hashId[id].path,note:note,scenario:vo.scenario,track:vo.track};
 
-                                console.log(lne)
+
                                 hashResourceType[item.type].push(lne)
                             })
 
@@ -238,7 +238,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 }
             });
 
-            console.log(hashResourceType)
+
 
             angular.forEach(hashResourceType,function(value,key){
                 value.sort(function(a,b){
@@ -260,7 +260,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             return hashAllPersons[id]
         },
         getAllPathsForType: function (typeName,explode,track) {
-            //console.log(typeName);
+
             var that = this;
 
             var confServer = "http://fhirtest.uhn.ca/baseDstu3/"; //default to HAPI...
@@ -277,7 +277,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             //derived from logicalmodelsvc
 
             if ( pathsCache[typeName]) {
-                console.log('hit');
+
                 deferred.resolve(pathsCache[typeName])
 
             } else {
@@ -506,9 +506,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                         } else {
                             return 1
                         }
-                    })
-
-
+                    });
                     deferred.resolve(person)
                 }, function(err) {
                     console.log(err);
@@ -1347,7 +1345,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
 
                     allRoles = vo.roles;
-                    console.log(allRoles,vo.roles)
+
                     vo.roles.forEach(function (role) {
                         hashRole[role.id] = role
                     });
