@@ -51,6 +51,7 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
                         break;
 
                     case 'Quantity' :
+                    case 'Age' :
                         var f = parseFloat(value.quantity.value)
 
                         if (f !== f) {      //test for Nan (http://stackoverflow.com/questions/30314447/how-do-you-test-for-nan-in-javascript)
@@ -183,7 +184,16 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
                             var end = value.period.end;
                             v = {start:start,end:end}
 
-                            text = moment(v.start).format() + " to " + moment(v.end.format()) ;
+                            text = '';
+                            if (v.start) {
+                                text += moment(v.start).format('YYYY-MM-DD');
+                            }
+
+                            if (v.end) {
+                                text += " to " + moment(v.end).format('YYYY-MM-DD') ;
+                            }
+
+                            //text = moment(v.start).format() + " to " + moment(v.end.format()) ;
                         }
 
 

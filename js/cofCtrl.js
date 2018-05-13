@@ -1,7 +1,7 @@
 
 angular.module("sampleApp")
     .controller('cofCtrl',
-        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc,$filter) {
+        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc) {
 
             $scope.input = {};
             $scope.cofTypeList = [];
@@ -25,8 +25,6 @@ angular.module("sampleApp")
                 profilesCache['cc-Patient'] = $scope.LM;
             }
 
-            //==========
-
 
             $scope.fhirBasePath = "http://hl7.org/fhir/";       //root of the spec.
             $http.get('/artifacts/allResources.json').then(
@@ -46,9 +44,6 @@ angular.module("sampleApp")
                 console.log(table)
                 drawTree(table)
             }
-
-
-
 
             $scope.showDescription = function(md) {
                 return $filter('markDown')(md);
@@ -162,6 +157,13 @@ angular.module("sampleApp")
                     saveObject.id = user.id + "-" + $scope.cofScenario.id;
                     saveObject.items = $scope.cofTypeList;      //all of the items (ie the resource instances
                     saveObject.scenarioNotes = $scope.input.scenarioNotes;
+
+                    try {
+                        var t = angular.toJson(saveObject)
+                    } catch (ex) {
+                        alert("There was a problem serializing the graph, and it wasn't saved. Can you please tell David Hay about this? and preferably a screen dump of the List tab")
+                        return;
+                    }
 
                     $http.put("/scenarioGraph",saveObject).then(
                         function(){

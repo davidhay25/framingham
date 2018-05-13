@@ -367,7 +367,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
             //construct the initial table from the SD...
             function makeTableArray(SD){
-                var ignore=['id','meta','implicitRules','language','text','contained','extension','modifierExtension']
+                var ignoreAll=['id','meta','implicitRules','contained','extension','modifierExtension']
+                var ignoreRoot = ['language','text']
                 var ar = []
 
                 //add a text element as first one
@@ -381,10 +382,20 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         var path = $filter('dropFirstInPath')(ed.path);     //remove the leading segment (the resource type)
 
                         var ar1 = path.split('.')
-                        if (ignore.indexOf(ar1[ar1.length-1]) == -1) {
-                            //if (ignore.indexOf(path) == -1) {
+                        var include = true;
 
-                            //path += '_0';         //add a suffix - this will be used to keep paths unique when copying..
+                        //ignore all elements that end with this string
+                        if (ignoreAll.indexOf(ar1[ar1.length-1]) !== -1) {
+                            include = false;
+                        }
+
+                        //ignore element if off the root...
+                        if (ar1.length == 1 && (ar1[0]== 'language' ||ar1[0]== 'text' )) {
+                            include = false;
+                        }
+
+                        if (include) {
+                        //if (ignore.indexOf(ar1[ar1.length-1]) == -1) {
 
                             //item is a ValueObject - one per ED
                             var item = {path: path };
@@ -523,10 +534,13 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                                     //node[eleName] = row.structuredData;
 
 
-                                    grandParentElement = parentElement[0]; //because it could be a grand parent...
-                                    if (grandParentElement) {
-                                        grandParentElement[eleName] = row.structuredData;
+                                    if (parentElement) {
+                                        grandParentElement = parentElement[0]; //because it could be a grand parent...
+                                        if (grandParentElement) {
+                                            grandParentElement[eleName] = row.structuredData;
+                                        }
                                     }
+
 
                                     /*
                                                                     if (row.max == 1) {

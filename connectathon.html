@@ -166,6 +166,7 @@
     <script src="js/lmSummaryCtrl.js"></script>
     <script src="js/getDatatypeValueCtrl.js"></script>
     <script src="js/getDatatypeValueSvc.js"></script>
+    <script src="js/allNotes.js"></script>
 
     <script src="js/libs/jstree.min.js"></script>
 
@@ -180,7 +181,7 @@
         <div class="container-fluid row">
             <div class="col-md-7 col-sm-7">
                 <a class="navbar-brand" href="#">
-                    ConMan: {{eventConfig.name}} <span ng-hide="eventConfig">No event specified.</span>
+                    Parole: {{eventConfig.name}} <span ng-hide="eventConfig">No event specified.</span>
                 </a>
             </div>
 
@@ -1374,6 +1375,12 @@
 
                 <uib-tab heading="All scenario notes" ng-show="selectedTrack.trackType == 'scenario'">
                     <br/>
+
+
+                    <div ng-controller="allNotesCtrl">
+                        <ng-include src="'includes/allNotes.html'"></ng-include>
+                    </div>
+                    <!--
                     <div class="row">
                         <div class="col-sm-3 col-md-3">
                             <ul class="list-group">
@@ -1404,6 +1411,8 @@
 
                         </div>
                     </div>
+-->
+
                 </uib-tab>
 
 

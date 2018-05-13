@@ -20,7 +20,7 @@ angular.module("sampleApp")
                     getExpandedVS(url);
 
                 }
-            } else if (datatype == 'CodeableConcept') {
+            } else if (datatype == 'CodeableConcept' || datatype == 'Coding') {
                 if (row.binding && row.binding.url) {
                     $scope.binding = row.binding;
 
@@ -39,6 +39,7 @@ angular.module("sampleApp")
             }
 
             function getExpandedVS(url) {
+                $scope.waiting = true;
                 $http.get(url).then(
                     function(data) {
                         console.log(data)
@@ -46,6 +47,10 @@ angular.module("sampleApp")
                     },
                     function(err) {
                         console.log(err)
+                    }
+                ).finally(
+                    function(){
+                        $scope.waiting = false;
                     }
                 )
             }
