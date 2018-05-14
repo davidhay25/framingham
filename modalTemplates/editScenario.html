@@ -89,6 +89,9 @@
                             </div>
                             <div class="col-sm-2 col-md-2">
                                 <i class="clickable glyphicon glyphicon-plus-sign pull-right"
+                                   uib-popover="Click to add link"
+                                   popover-placement="top"
+                                   popover-trigger="'mouseenter'"
                                    title="Add link" ng-click="addLink(input.link)">
                                 </i>
                             </div>
@@ -98,110 +101,114 @@
                 </div>
                 <br/>
 
-                <div class="row" ng-show="track.trackType == 'scenario'">
-                    <div class="col-md-3 col-sm-3">
-                        <div uib-popover="Sample resource types that can be included in the scenario (others can be selected)"
-                             popover-placement="top"
-                             popover-trigger="'mouseenter'">Resource types used</div>
-
-                    </div>
-
-                    <div class="col-md-9 col-sm-9">
-                        <ul class="list-unstyled">
-                            <li ng-repeat="type in scenario.scenarioTypes">
-                                <div class="row">
-                                    <div class="col-md-10 col-sm-10">
-                                        {{type}}
-                                    </div>
-                                    <div class="col-md-2 col-sm-2">
-                                        <i class="clickable glyphicon glyphicon-remove-sign pull-right"
-                                           ng-click="removeType($index)">
-                                        </i>
-                                    </div>
-                                </div>
-
-                            </li>
-                        </ul>
-                        <select ng-model="input.resource" class="form-control"
-                                ng-change="addType(input.resource)"
-                                ng-options = "type.name for type in allResourceTypes"></select>
-                    </div>
-                </div>
-
-                <br/>
-
-                <div class="row" ng-show="track.trackType == 'scenario'">
-                    <div class="col-md-3 col-sm-3">
-                        <div uib-popover="Logical Models that can be included in the scenario"
-                             popover-placement="top"
-                             popover-trigger="'mouseenter'">Logical Models</div>
 
 
-                    </div>
-
-                    <div class="col-md-9 col-sm-9">
-                        <ul class="list-unstyled">
-                            <li ng-repeat="lm in scenario.lms">
-                                <div class="row">
-                                    <div class="col-md-10 col-sm-10">
-
-                                        <div uib-popover={{lm.url}}
-                                             popover-placement="top"
-                                             popover-trigger="'mouseenter'">{{lm.description}}</div>
-                                    </div>
-                                    <div class="col-md-2 col-sm-2">
-                                        <i class="clickable glyphicon glyphicon-remove-sign pull-right"
-                                           ng-click="removeLM($index)">
-                                        </i>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-
-                        <div class="row">
-                            <div class="col-sm-10 col-md-10">
-                            </div>
-                            <div class="col-sm-2 col-md-2">
-                                <i class="clickable glyphicon glyphicon-plus-sign pull-right"
-                                   title="Add Logical Model" ng-click="addLM(input.link)">
-                                </i>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-
-
-                <div class="row" ng-show = "1==2">
-                    <div class="col-md-3 col-sm-3">
-                        Associated CF Scenario
-                    </div>
-                    <div class="col-md-9 col-sm-9">
-                        <div ng-show="library.length > 0">
-                            <input type="text" ng-model="input.selectedLibraryItem"
-                                   placeholder="Select clinFHIR library scenario"
-                                   typeahead-on-select = "libraryItemSelected($item, $model, $label, $event)"
-                                   uib-typeahead="library.name for library in library | filter:{name:$viewValue} | limitTo:8" class="form-control"/>
-
-                        </div>
-                        <div ng-show="! library || library.length <= 0">
-                            <em>The Library is empty. Generally this means that it hasn't yet been downloaded from from
-                            the Server. This can take a while, so you can close and re-open this dialog if you need to.</em>
-                        </div>
-
-
-                    </div>
-                </div>
 
 
             </div>
             <div class="col-md-6 col-sm-6">
 
                 <uib-tabset>
+                    <uib-tab heading="Types">
+                        <h4>Resource types used</h4>
+
+                        <br/>
+                        <div class="row" ng-show="track.trackType == 'scenario'">
+                            <!--
+                            <div class="col-md-3 col-sm-3">
+                                <div uib-popover="Sample resource types that can be included in the scenario (others can be selected)"
+                                     popover-placement="top"
+                                     popover-trigger="'mouseenter'">Resource types used</div>
+
+                            </div>
+-->
+                            <div class="col-md-12 col-sm-12">
+                                <ul class="list-unstyled">
+                                    <li ng-repeat="type in scenario.scenarioTypes">
+                                        <div class="row">
+                                            <div class="col-md-10 col-sm-10">
+                                                {{type}}
+                                            </div>
+                                            <div class="col-md-2 col-sm-2">
+                                                <i class="clickable glyphicon glyphicon-remove-sign pull-right"
+                                                   uib-popover="Click to remove"
+                                                   popover-placement="top"
+                                                   popover-trigger="'mouseenter'"
+                                                   ng-click="removeType($index)">
+                                                </i>
+                                            </div>
+                                        </div>
+
+                                    </li>
+                                </ul>
+                                <select ng-model="input.resource" class="form-control"
+                                        ng-change="addType(input.resource)"
+                                        placeholder="Please select the core type"
+
+                                        ng-options = "type.name for type in allResourceTypes"></select>
+                            </div>
+                        </div>
+
+                        <h4>Logical Models used</h4>
+
+                        <div class="row" ng-show="track.trackType == 'scenario'">
+                            <!--
+                            <div class="col-md-3 col-sm-3">
+                                <div uib-popover="Logical Models that can be included in the scenario"
+                                     popover-placement="top"
+                                     popover-trigger="'mouseenter'">Logical Models</div>
+
+
+                            </div>
+                            -->
+
+                            <div class="col-md-12 col-sm-12">
+                                <ul class="list-unstyled">
+                                    <li ng-repeat="lm in scenario.lms">
+                                        <div class="row">
+                                            <div class="col-md-10 col-sm-10">
+
+                                                <div uib-popover={{lm.url}}
+                                                     popover-placement="top"
+                                                     popover-trigger="'mouseenter'">{{lm.description}}</div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-2">
+                                                <i class="clickable glyphicon glyphicon-remove-sign pull-right"
+                                                   uib-popover="click to remove Logical Model"
+                                                   popover-placement="top"
+                                                   popover-trigger="'mouseenter'"
+                                                   ng-click="removeLM($index)">
+                                                </i>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <div class="row">
+                                    <div class="col-sm-10 col-md-10">
+                                    </div>
+                                    <div class="col-sm-2 col-md-2">
+                                        <i class="clickable glyphicon glyphicon-plus-sign pull-right"
+                                           uib-popover="click to add Logical Model"
+                                           popover-placement="top"
+                                           popover-trigger="'mouseenter'"
+                                           title="Add Logical Model" ng-click="addLM(input.link)">
+                                        </i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </uib-tab>
+
                     <uib-tab heading="Pre">
-                        <h4>Pre Conditions</h4>
+                        <h4>Preconditions</h4>
                         <textarea class="form-control" ng-model="scenario.precondition"></textarea>
+
+                        <h4>Success criteria</h4>
+                        <textarea class="form-control" ng-model="scenario.success"></textarea>
+
                     </uib-tab>
                     <uib-tab>
                         <uib-tab-heading>
@@ -261,12 +268,12 @@
                         <em>Enter the actual steps to complete the scenario</em>
                     </uib-tab>
 
-
+<!--
                     <uib-tab heading="Success">
                         <h4>Success</h4>
                         <textarea class="form-control" ng-model="scenario.success"></textarea>
                     </uib-tab>
-
+-->
 
                     <uib-tab>
                         <uib-tab-heading>
@@ -292,11 +299,7 @@
                             <div class="col-sm-6 col-md-6">
                                 <input class="form-control" ng-model="input.newRoleName" placeholder="New role name"/>
                             </div>
-                            <!--
-                            <div class="col-sm-6 col-md-6">
-                                <input class="form-control" ng-model="input.newRoleDescription" placeholder="Description"/>
-                            </div>
-                            -->
+
                             <div class="col-sm-1 col-md-1">
                                 <button ng-show="input.newRoleName" class="btn btn-link"
                                         ng-click="addNewRole(input.newRoleName,input.newRoleName)">Add</button>
@@ -318,9 +321,7 @@
                         </ol>
 
                         <div id="resourceGraph"></div>
-<!--
-                        <pre>{{selectedLibrary | json}}</pre>
-                        -->
+
                     </uib-tab>
 
                 </uib-tabset>
@@ -331,17 +332,6 @@
 
             </div>
         </div>
-
-
-
-        <br/>
-
-
-
-
-
-
-
     </div>
 
     <div class="modal-header">
@@ -357,6 +347,11 @@
                     MarkDown cheat sheet
                 </a>
                 <em>(Markdown is a way to format text with bullets, headings and test formatting by putting specific characters in the text)</em>
+
+                <div ng-show="! isNew">
+                    <button class="btn btn-danger" ng-click="deleteScenario()">Delete</button>
+                    <button style="padding-left: 10px" class="btn btn-warning" ng-click="archiveScenario()">Archive</button>
+                </div>
             </div>
 
         </div>

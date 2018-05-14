@@ -102,12 +102,30 @@ angular.module("sampleApp")
                 $scope.$close({track:$scope.track,lead:$scope.input.trackLead})
             };
 
+
+            $scope.archiveTrack = function(){
+                var modalOptions = {
+                    closeButtonText: "No, I changed my mind",
+                    headerText: "Archive track",
+                    actionButtonText: 'Yes, please archive',
+                    bodyText: 'Are you sure you wish to archive this Track? After this, it will no longer be listed or available.'
+                };
+
+                modalService.showModal({}, modalOptions).then(
+                    function() {
+                        track.status = 'archived';
+                        alert('Not yet implemented')
+                       // $scope.$close({track:track,lead:$scope.input.trackLead})
+                    }
+                )
+            }
+
             $scope.deleteTrack = function(){
                 var modalOptions = {
                     closeButtonText: "No, I changed my mind",
                     headerText: "Remove track",
                     actionButtonText: 'Yes, please remove',
-                    bodyText: 'Are you sure you wish to remove this Track?'
+                    bodyText: 'Are you sure you wish to remove this Track? After this, it will no longer be listed or available.'
                 };
 
                 modalService.showModal({}, modalOptions).then(

@@ -1,6 +1,6 @@
 angular.module("sampleApp")
     .controller('editScenarioCtrl',
-        function ($scope,ecosystemSvc,scenario,allResourceTypes,library,$uibModal,isNew,track) {
+        function ($scope,ecosystemSvc,scenario,modalService,allResourceTypes,library,$uibModal,isNew,track) {
 
 
             $scope.saveText = 'Update';
@@ -260,6 +260,40 @@ angular.module("sampleApp")
 
 
             };
+
+            $scope.deleteScenario = function(){
+                var modalOptions = {
+                    closeButtonText: "No, I changed my mind",
+                    headerText: "Delect track",
+                    actionButtonText: 'Yes, please remove',
+                    bodyText: 'Are you sure you wish to remove this Scenario? After this, it will no longer be listed or available.'
+                };
+
+                modalService.showModal({}, modalOptions).then(
+                    function() {
+                        track.status = 'archived';
+                        alert('Not yet implemented')
+                        // $scope.$close({track:track,lead:$scope.input.trackLead})
+                    }
+                )
+            }
+
+            $scope.archiveScenario = function(){
+                var modalOptions = {
+                    closeButtonText: "No, I changed my mind",
+                    headerText: "Archive track",
+                    actionButtonText: 'Yes, please archive',
+                    bodyText: 'Are you sure you wish to archive this Scenario? After this, it will no longer be listed or available.'
+                };
+
+                modalService.showModal({}, modalOptions).then(
+                    function() {
+                        track.status = 'archived';
+                        alert('Not yet implemented')
+                        // $scope.$close({track:track,lead:$scope.input.trackLead})
+                    }
+                )
+            }
 
             function cfLibraryHistorySummary(hx){
                 $scope.hxSummary = []
