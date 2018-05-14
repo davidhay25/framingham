@@ -8,10 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0a6e7d6f-aa6e-405d-9d94-d3543d427d97" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/editScenarioCtrl.js" afterPath="$PROJECT_DIR$/js/editScenarioCtrl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/editTrackCtrl.js" afterPath="$PROJECT_DIR$/js/editTrackCtrl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modalTemplates/editScenario.html" afterPath="$PROJECT_DIR$/modalTemplates/editScenario.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modalTemplates/editTrack.html" afterPath="$PROJECT_DIR$/modalTemplates/editTrack.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/cofCtrl.js" afterPath="$PROJECT_DIR$/js/cofCtrl.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -119,7 +116,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="editScenario.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="editScenario.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modalTemplates/editScenario.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="234">
@@ -132,6 +129,16 @@
                 <element signature="n#style#0;n#button#1;n#div#1;n#div#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
                 <marker date="1526293477710" expanded="false" signature="4463:4789" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cofCtrl.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/js/cofCtrl.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="214">
+              <caret line="120" column="26" lean-forward="true" selection-start-line="120" selection-start-column="26" selection-end-line="120" selection-end-column="26" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -165,7 +172,6 @@
       <find>.addLM</find>
       <find>ole.lo</find>
       <find>save</find>
-      <find>pop</find>
       <find>language</find>
       <find>ignore</find>
       <find>codea</find>
@@ -178,6 +184,7 @@
       <find>ccSelectedFromList</find>
       <find>dele</find>
       <find>isNew</find>
+      <find>pop</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -242,13 +249,13 @@
         <option value="$PROJECT_DIR$/js/allNotes.js" />
         <option value="$PROJECT_DIR$/directive/tblResource/tblResourceDir.js" />
         <option value="$PROJECT_DIR$/js/getDatatypeValueSvc.js" />
-        <option value="$PROJECT_DIR$/js/cofCtrl.js" />
         <option value="$PROJECT_DIR$/js/getDatatypeValueCtrl.js" />
         <option value="$PROJECT_DIR$/modalTemplates/getDatatypeValue.html" />
         <option value="$PROJECT_DIR$/js/editTrackCtrl.js" />
         <option value="$PROJECT_DIR$/modalTemplates/editTrack.html" />
         <option value="$PROJECT_DIR$/js/editScenarioCtrl.js" />
         <option value="$PROJECT_DIR$/modalTemplates/editScenario.html" />
+        <option value="$PROJECT_DIR$/js/cofCtrl.js" />
       </list>
     </option>
   </component>
@@ -928,12 +935,12 @@
       <workItem from="1525915605796" duration="807000" />
       <workItem from="1525932663956" duration="5266000" />
       <workItem from="1525943132856" duration="29783000" />
-      <workItem from="1526194568904" duration="18305000" />
+      <workItem from="1526194568904" duration="19074000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1350842000" />
+    <option name="totallyTimeSpent" value="1351611000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="23" y="108" width="1261" height="727" extended-state="0" />
@@ -1507,14 +1514,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/cofCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="43" column="18" lean-forward="false" selection-start-line="43" selection-start-column="18" selection-end-line="43" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/getDatatypeValueSvc.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -1922,6 +1921,14 @@
             <element signature="n#style#0;n#button#1;n#div#1;n#div#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
             <marker date="1526293477710" expanded="false" signature="4463:4789" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/cofCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="214">
+          <caret line="120" column="26" lean-forward="true" selection-start-line="120" selection-start-column="26" selection-end-line="120" selection-end-column="26" />
+          <folding />
         </state>
       </provider>
     </entry>

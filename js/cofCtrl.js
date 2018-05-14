@@ -120,13 +120,15 @@ angular.module("sampleApp")
 
             function getExtensionValue(resource,url) {
                 if (resource) {
+                    var extension = {}
                     resource.extension = resource.extension || []
                     resource.extension.forEach(function(ext){
                         if (ext.url == url) {extension = ext}
                     });
+                    return extension;
                 }
 
-                return extension;
+
             }
 
             //if showNotes is true, then the right pane is larger.
