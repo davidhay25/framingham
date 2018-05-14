@@ -41,7 +41,7 @@ angular.module("sampleApp")
             );
 
             $scope.formWasUpdated = function(table) {
-                console.log(table)
+                //console.log(table)
                 drawTree(table)
             }
 
@@ -431,7 +431,7 @@ angular.module("sampleApp")
                         $scope.$digest();
                     }
                 })
-                console.log(table);
+                //console.log(table);
             }
 
 

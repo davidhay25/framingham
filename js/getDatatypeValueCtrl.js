@@ -36,6 +36,11 @@ angular.module("sampleApp")
 
                     }
                 }
+            } else if (datatype == 'UsageContext') {
+                var url = termServer + "ValueSet/$expand?url=http://hl7.org/fhir/ValueSet/usage-context-type"
+                getExpandedVS(url);     //sets $scope.expandedValueSet
+                console.log($scope.expandedValueSet);
+
             }
 
             function getExpandedVS(url) {
@@ -110,6 +115,10 @@ angular.module("sampleApp")
 
 
 
+            $scope.ccSelectedFromList = function(concept) {
+                console.log(concept)
+                $scope.selectedConceptValue = {value:{Coding:[concept]},text:concept.display}
+            }
 
 
             //called when a concept is initially selected, and also when a parent or child is selected...

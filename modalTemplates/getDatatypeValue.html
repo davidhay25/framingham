@@ -7,6 +7,12 @@
             border: 1px solid lightgray;
         }
 
+        input[type="radio"] {
+            -ms-transform: scale(1.5); /* IE 9 */
+            -webkit-transform: scale(1.5); /* Chrome, Safari, Opera */
+            transform: scale(1.5);
+        }
+
 
 
     </style>
@@ -32,6 +38,15 @@
 
 
         <div>
+
+            <div ng-show="datatype == 'UsageContext'">
+
+                <div class="col-md-3 col-sm-3" ng-repeat = "option in expandedValueSet.expansion.contains">
+                    <input type="radio" ng-model="input.dt.code" name="name" value="{{option.code}}"  />
+                    <span title="{{option.system}}">{{option.display}}</span>
+                </div>
+
+            </div>
 
 
             <div ng-show="datatype == 'instant'">
@@ -623,7 +638,10 @@
                 <div ng-show="renderCCAsList">
                     <div class="row">
                         <div class="col-md-4 col-sm-4" ng-repeat = "option in expandedValueSet.expansion.contains">
-                            <input type="radio" ng-model="input.dt.cc" name="name" value="{{option}}"  />
+                            <input type="radio" ng-model="input.dt.cc" name="CodingItemNme"
+                                   ng-click="ccSelectedFromList(option)"
+
+                                   value="{{option}}"  />
                             <span title="{{option.system}}">{{option.display}}</span>
                         </div>
                     </div>
@@ -770,15 +788,26 @@
 
             <div ng-show="datatype == 'CodeableConcept'">
 
-
                 <!-- This was a small list, so completely expanded...-->
                 <div ng-show="renderCCAsList">
-                    <div class="row">
-                        <div class="col-md-4 col-sm-4" ng-repeat = "option in expandedValueSet.expansion.contains">
-                            <input type="radio" ng-model="input.dt.cc" name="name" value="{{option}}"  />
-                            <span title="{{option.system}}">{{option.display}}</span>
-                        </div>
-                    </div>
+                    <uib-tabset>
+                        <uib-tab heading="List">
+                            <br/>
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4" ng-repeat = "option in expandedValueSet.expansion.contains">
+                                    <input type="radio"
+                                           ng-click="ccSelectedFromList(option)"
+                                           ng-model="input.dt.cc" name="ccListname" value="{{option}}"  />
+                                    <span title="{{option.system}}">{{option.display}}</span>
+                                </div>
+                            </div>
+                        </uib-tab>
+
+                        <uib-tab heading="Json" ng-show="expandedValueSet">
+                            <pre>{{expandedValueSet | json}}</pre>
+                        </uib-tab>
+                    </uib-tabset>
+
                 </div>
 
 
@@ -802,10 +831,12 @@
 
                     </div>
 
-
-
-
                     <hr/>
+
+                    <uib-tabset>
+                        <uib-tab heading="List">
+
+
 
                     <div class="row" ng-show="selectedConceptValue">
                         <div class="col-sm-12 col-md-12 banner">
@@ -814,10 +845,6 @@
                             {{selectedConceptValue.text}} ({{selectedConceptValue.value.Coding[0].code}})
                         </div>
                     </div>
-
-<!--
-                    <div id="ccGraph"></div>
--->
                     <div class="row" ng-show="selectedConceptProperties">
                         <div class="col-sm-6 col-md-6">
                             <strong>Parent</strong>
@@ -836,8 +863,6 @@
                             </ul>
                         </div>
                     </div>
-
-
                     <table class="table">
                         <tr ng-repeat="concept in expandedValueSet.expansion.contains">
                             <td><div class="clickable" ng-click="selectConcept(concept)"> {{concept.display}}</div></td>
@@ -845,16 +870,13 @@
                             <td>{{concept.system}}</td>
                         </tr>
                     </table>
-                    <!--
-                    <input type="text" ng-model="input.dt.cc.coding"
-                           placeholder="autocomplete from {{vsDetails.minLength}} characters"
-                           typeahead-min-length="3"
-                           typeahead-wait-ms="1000"
-                           typeahead-on-select="selectCCfromList($item, $model, $label)"
-                           uib-typeahead="opt as opt.display for opt in vsLookup($viewValue,vsUrl)"
-                           class="form-control"/>
 
--->
+                        </uib-tab>
+                        <uib-tab heading="Json" ng-show="expandedValueSet">
+                            <pre>{{expandedValueSet | json}}</pre>
+                        </uib-tab>
+                    </uib-tabset>
+
 
                     <div class="row" ng-hide="expandedValueSet.expansion.contains">
                         <div class="col-sm-12 col-md-12">
