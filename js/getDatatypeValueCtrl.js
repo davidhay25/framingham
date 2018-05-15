@@ -118,7 +118,7 @@ angular.module("sampleApp")
             $scope.ccSelectedFromList = function(concept) {
                 console.log(concept)
                 $scope.selectedConceptValue = {value:{Coding:[concept]},text:concept.display}
-            }
+            };
 
 
             //called when a concept is initially selected, and also when a parent or child is selected...
@@ -126,7 +126,10 @@ angular.module("sampleApp")
                 $scope.waiting = true;
                 $scope.selectedConceptValue = {value:{Coding:[concept]},text:concept.display}
 
-                delete $scope.input.dt.cc.text;
+                if ($scope.input.dt && $scope.input.dt.cc) {
+                    delete $scope.input.dt.cc.text;
+                }
+
                 delete $scope.expandedValueSet;
                 delete $scope.selectedConceptProperties;
 

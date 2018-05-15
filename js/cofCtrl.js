@@ -40,10 +40,11 @@ angular.module("sampleApp")
                 }
             );
 
+            //called when the form is updated
             $scope.formWasUpdated = function(table) {
-
+                $scope.saveGraph(true);     //save the graph without showing
                 drawTree(table)
-            }
+            };
 
             $scope.showDescription = function(md) {
                 return $filter('markDown')(md);
@@ -149,7 +150,7 @@ angular.module("sampleApp")
 
             $scope.showResourceTable = {};
 
-            $scope.saveGraph = function () {
+            $scope.saveGraph = function (hideNotification) {
 
                 var user = ecosystemSvc.getCurrentUser();
                 if (user) {
@@ -169,7 +170,17 @@ angular.module("sampleApp")
 
                     $http.put("/scenarioGraph",saveObject).then(
                         function(){
-                            alert('Updated.')
+                            if (! hideNotification) {
+                                alert('Updated.')
+                            } else {
+                                console.log('updated')
+                                $scope.writeNotification = "Updated";
+                                $timeout(function(){
+                                    delete $scope.writeNotification
+                                },2000);
+
+                            }
+
                         }, function(err) {
                             alert('error saving result '+angular.toJson(err))
                         }
@@ -231,9 +242,10 @@ angular.module("sampleApp")
                 makeGraph();
             };
 
-            //add a reference to another resourrce
+            //add a reference to another resource
             $scope.cofAddReference = function(row,type,cb) {
                 //row is the functional equivalent of an Element definition...
+                //cb used by the tblResourceDir directive
                 var path = row.path;        //the path in the source;
                 var type = $filter('referenceType')(type.targetProfile); //target
 
@@ -261,12 +273,14 @@ angular.module("sampleApp")
                         //no resources of this type yet. Just add one...
                         var item = addItem(type)
                         var reference = internalAddReference(row,item);
+                        $scope.saveGraph(true);
                         if (cb) {cb(item)}
 
                         break;
                     case 1 :
                         //there's only one possible target - just refer to it;
                         var reference = internalAddReference(row,targets[0]);
+                        $scope.saveGraph(true);
                         if (cb) {cb(targets[0])}
                         break;
                     default:
@@ -297,6 +311,7 @@ angular.module("sampleApp")
                         }).result.then(function(item){
 
                             var reference = internalAddReference(row,item);
+                            $scope.saveGraph(true);
                             if (cb) {cb(item)}
                         });
                     break;
