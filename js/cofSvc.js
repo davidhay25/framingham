@@ -39,7 +39,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                 if (element.path) {
                     var arPath = element.path.split('.')
 
-                    //console.log(element.slicing)
+
                     /*
                     The genomics extensions have a slicing element even for a 'simple' extension
                     so, change the criteria to a path >= 3 segments
@@ -92,8 +92,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
         }
 
-        //          console.log(vo)
-//console.log('----------')
+
         return vo;
 
         //process a complex extension. Will only handle a single level hierarchy - ie a list of child extensions
@@ -383,7 +382,6 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                     item['li_attr'] = {class:'treeNodeHasData'};
                 }
 
-
                 item.icon = '/icons/icon_primitive.png';
 
                 if (row.dt) {
@@ -400,22 +398,6 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                     item.icon='/icons/icon_element.gif';
                 }
 
-
-
-/*
-                if (r.isComplex) {
-                    node.icon='/icons/icon_datatype.gif';
-                } else {
-                    node.icon='/icons/icon_primitive.png';
-                }
-
-                if (r.isReference) {
-                    node.icon='/icons/icon_reference.png';
-                }
-                */
-
-
-
                 if (arPath.length == 1) {
                     //the root
                     item.parent = '#'
@@ -424,34 +406,9 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                     item.parent = arPath.join('.');
                 }
                 arTree.push(item)
-            })
+            });
 
             return arTree;
-
-            /*
-            if (SD && SD.snapshot && SD.snapshot.element) {
-
-                SD.snapshot.element.forEach(function (ed, inx) {
-                    var path = ed.path;     //this is always unique in a logical model...
-                    var arPath = path.split('.');
-                    var item = {data:{}}
-                    item.id = path
-                    item.text = path;
-
-                    if (arPath.length == 1) {
-                        //the root
-                        item.parent = '#'
-                    } else {
-                        arPath.pop();//
-                        item.parent = arPath.join('.');
-                    }
-                    arTree.push(item)
-
-                })
-            }
-            console.log(arTree)
-            */
         }
-
     }
-})
+});

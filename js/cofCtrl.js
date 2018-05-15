@@ -41,7 +41,7 @@ angular.module("sampleApp")
             );
 
             $scope.formWasUpdated = function(table) {
-                //console.log(table)
+
                 drawTree(table)
             }
 
@@ -189,7 +189,7 @@ angular.module("sampleApp")
                         function (data) {
 
                             var vo = data.data;
-                            console.log('saved scenario:',vo)
+
                             if (vo && vo.items) {
                                 $scope.cofTypeList = vo.items;
                                 $scope.input.scenarioNotes = vo.scenarioNotes;
@@ -350,10 +350,10 @@ angular.module("sampleApp")
             };
 
             $scope.removeReference = function(row,inx){
-                //console.log(ref)
+
                 row.references.splice(inx,1);
                 makeGraph();
-                //delete ref.targetItem;
+
             };
 
             $scope.editDescription = function(item) {
@@ -403,20 +403,7 @@ angular.module("sampleApp")
 
                 function receiveTable(table) {
                     drawTree(table);
-                    /*
-                    var treeData = cofSvc.makeTree(table);
-                    $('#lmTreeView').jstree('destroy');
-                    $('#lmTreeView').jstree(
-                        {'core': {'multiple': false, 'data': treeData, 'themes': {name: 'proton', responsive: true}}}
-                    ).on('changed.jstree', function (e, data) {
-                        //seems to be the node selection event...;
-                        if (data.node) {
-                            $scope.selectedTreeNode = data.node;
-                            $scope.$digest();
-                        }
-                    })
-                    console.log(table);
-                    */
+
                 }
             };
 
@@ -433,7 +420,7 @@ angular.module("sampleApp")
                         $scope.$digest();
                     }
                 })
-                //console.log(table);
+
             }
 
 
@@ -534,7 +521,7 @@ angular.module("sampleApp")
                             var SD = data.data;
                             cofSvc.makeLogicalModelFromSD(SD,track).then(
                                 function(LM) {
-                                    console.log(LM)
+
                                     $scope.LM = LM;
                                 }
                             )

@@ -15,12 +15,12 @@ angular.module("sampleApp")
                         return -1;
                     }
                 })
-                console.log(summary)
+
             }
 
             //a single graph (for a single user) is selected
             $scope.selectGraph = function(graph){
-                console.log(graph)
+
                 $scope.selectedGraph = graph;
                 makeGraph(graph.items)
 
@@ -33,62 +33,18 @@ angular.module("sampleApp")
                     }
 
                 });
-                console.log($scope.allHashPathSummaries)
+
 
             };
 
             //select an item/resource from the graph
             $scope.selectItem = function(item) {
-                console.log(item);
+
 
                 $scope.item = item;
 
                 //a hash of notes & samples by path...
                 $scope.hashPathSummary = makeItemSummary(item);
-
-
-                /*
-                if (item.notes || item.sample) {
-                    //build a hash of rows by id (item.table must be present)
-                    var hashRows = {};
-                    item.table.forEach(function (row) {
-                        hashRows[row.id] = row
-                    });
-
-                    //if there are any notes for this item/resource
-                    if (item.notes) {
-                        angular.forEach(item.notes,function(v,id){
-                            var h = hashRows[id]
-                            var path = h.path;
-
-                            $scope.hashPathSummary[path] = $scope.hashPathSummary[path] || {};
-                            var t = $scope.hashPathSummary[path];
-
-                            t.path = h.path;
-                            t.notes = t.notes || [];
-                            t.notes.push(v)
-                        })
-                    }
-
-
-                    if (item.sample) {
-                        angular.forEach(item.sample,function(v,id){
-                            var h = hashRows[id]
-                            var path = h.path;
-
-                            $scope.hashPathSummary[path] = $scope.hashPathSummary[path] || {};
-                            var t = $scope.hashPathSummary[path];
-
-                            t.path = h.path;
-                            t.sample = t.sample || [];
-                            t.sample.push(v)
-                        })
-                    }
-                }
-
-*/
-                console.log($scope.hashPathSummary)
-
 
 
 
@@ -161,7 +117,7 @@ angular.module("sampleApp")
                     $http.get(url).then(
                         function(data) {
                             $scope.graphs = data.data;
-                            console.log($scope.graphs);
+
 
                             //add the user object so er can display in the list...
                             $scope.graphs.forEach(function (graph) {
@@ -180,7 +136,7 @@ angular.module("sampleApp")
                                             })
                                             angular.forEach(item.notes,function(note,id){
                                                 var lne = {user:graph.user.name,path:hashId[id].path,note:note}
-                                                console.log(lne)
+
                                                 $scope.hashResources[item.type].push(lne)
                                             })
 
@@ -196,7 +152,7 @@ angular.module("sampleApp")
 
 
 
-                            console.log($scope.hashResources)
+
                         },
                         function(err) {
                             console.log(err)

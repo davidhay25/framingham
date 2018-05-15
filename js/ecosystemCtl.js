@@ -77,7 +77,7 @@ angular.module("sampleApp")
 
             $scope.selectAllNotes = function(type,notes) {
                 $scope.oneTypeAllNotes = notes;
-                console.log(notes)
+
                 $scope.oneTypeAllNotesType = type;
 
             }
@@ -109,7 +109,7 @@ angular.module("sampleApp")
                         }
                     }
                 }).result.then(function(vo){
-                    console.log(vo)
+
                     if (vo.user) {
                         //this was an existing user...
                         var person = vo.person;
@@ -180,45 +180,7 @@ angular.module("sampleApp")
                 }
             );
 
-/*
-            //load the library. Hard code to hapi for now...
-            var url = 'http://fhirtest.uhn.ca/baseDstu3/DocumentReference?type=http://clinfhir.com/docs|builderDoc';
-            console.log(url)
-            ecoUtilitiesSvc.performQueryFollowingPaging(url).then(
-                function(bundle) {
-                    console.log(bundle)
 
-                    $scope.library = []
-                    bundle.entry.forEach(function(entry){
-                        var dr = entry.resource;
-                        if (dr && dr.content && dr.content[0] && dr.content[0].attachment && dr.content[0].attachment.data) {
-                            var item = {name:dr.description}
-                            try {
-                                item.bundle = angular.fromJson(atob(dr.content[0].attachment.data));
-                                //get the history (if any)
-                                if (dr.content.length > 1) {
-                                    var hx = angular.fromJson(atob(dr.content[1].attachment.data))
-                                    item.history = hx.history;
-                                }
-                                $scope.library.push(item)
-                            } catch (ex) {
-                                console.log('error loading library item: ',ex)
-                            }
-                        }
-                    });
-                    console.log($scope.library);
-                },
-                function(err) {
-                    console.log(err)
-                }
-            );
-
-            */
-
-
-            //get the current user and db (if any)
-           // var currentState = ecosystemSvc.getCurrentUserAndDb();
-           // console.log(currentState)
 
             //login is called when there is no configured user. the call GET config/admin/ will return a list of connectathon events...
             function loginDEP(err){
@@ -322,25 +284,14 @@ angular.module("sampleApp")
                     delete clone.roles;        //don't want the role objects in the db...
                     $http.post(url,clone).then(
                         function(data) {
-                            //alert('scenario updated')
+
 
                             //update all roles for the track - just for the display...
                             //updateRolesListInTrack($scope.selectedTrack);
                             ecosystemSvc.updateTrackRoles($scope.selectedTrack)
 
 
-                            /*
-                            var hashRoles = {}
-                            $scope.selectedTrack.roles.length = 0;
-                            $scope.selectedTrack.scenarios.forEach(function (sc) {
-                                sc.roles.forEach(function (role) {
-                                    if (! hashRoles[role.id]) {
-                                        hashRoles[role.id] = role;
-                                        $scope.selectedTrack.roles.push(role)
-                                    }
-                                })
-                            })
-                            */
+
 
                         }, function(err) {
                             console.log(err)
@@ -373,19 +324,11 @@ angular.module("sampleApp")
 
             $scope.clearUser = function(){
                 ecosystemSvc.clearCurrentUser();
-               // delete $scope.input.currentUser
+
                 login();
 
 
-                /*
-                $http.get('/public/logout').then(
-                    function(data) {
-                        console.log(data.data)
-                        login({data:data.data});
-                    }
-                );
-*/
-                //
+
 
 
             };
@@ -452,7 +395,7 @@ angular.module("sampleApp")
                 ecosystemSvc.getConnectathonResources().then(
                     function(vo) {
 
-                        console.log(vo.scenarioGraph)
+
                         $scope.hashAllScenarioNotes = ecosystemSvc.makeAllScenarioSummary(vo.scenarioGraph,vo.tracks);
 
                         console.log(ecoUtilitiesSvc.getObjectSize(vo));
