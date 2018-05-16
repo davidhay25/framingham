@@ -41,7 +41,41 @@ angular.module("sampleApp")
                 getExpandedVS(url);     //sets $scope.expandedValueSet
                 console.log($scope.expandedValueSet);
 
+            } else if(datatype == 'Dosage') {
+                $scope.timingArray = [];
+
+                $scope.timingArray.push({description:"Twice a day",timing :{freq:2,period:1,periodUnits:'d'}});
+                $scope.timingArray.push({description:"Three times a day",timing :{freq:3,period:1,periodUnits:'d'}});
+
+                $scope.timingArray.push({description:"Every 8 hours",timing:{freq:1,period:8,periodUnits:'h'}});
+                $scope.timingArray.push({description:"Every 7 days",timing:{freq:1,period:7,periodUnits:'d'}});
+                $scope.timingArray.push({description:"3-4 times a day",timing:{freq:3,freqMax:4,period:1,periodUnits:'d'}});
+                $scope.timingArray.push({description:"Every 4-6 hours",timing:{freq:1,periodMax:6,period:1,periodUnits:'h'}});
+                $scope.timingArray.push({description:"Every 21 days for 1 hour",timing:{duration:1,units:'h',freq:1,period:21,periodUnits:'d'}});
+
+                $scope.input.dt = {dosage: {timing:{}}}
             }
+
+            $scope.updateTimingDetails = function(item) {
+
+                if (item && item.timing) {
+                    $scope.input.dt.dosage.timing.duration = item.timing.duration;
+                    $scope.input.dt.dosage.timing.units = item.timing.units;
+                    $scope.input.dt.dosage.timing.freq = item.timing.freq;
+                    $scope.input.dt.dosage.timing.freq_max = item.timing.freqMax;
+                    $scope.input.dt.dosage.timing.period = item.timing.period;
+                    $scope.input.dt.dosage.timing.period_max = item.timing.periodMax;
+                    $scope.input.dt.dosage.timing.period_units = item.timing.periodUnits;
+                    $scope.input.dt.dosage.timing.when = item.timing.when;
+
+                    if (! $scope.input.dt.dosage.text) {
+                        $scope.input.dt.dosage.text = item.description;
+                    }
+
+                }
+
+            };
+
 
             function getExpandedVS(url) {
                 $scope.waiting = true;

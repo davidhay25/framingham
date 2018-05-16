@@ -104,7 +104,7 @@ angular.module("sampleApp")
 
                             $scope.cofTypeList.push(item)
                             makeGraph();
-
+                            $scope.saveGraph(true)
                             profilesCache[name] = data.data;
                         } else {
                             alert("I couldn't find the base type of the Logical Model. Was this LM authored by clinFHIR, and based on a core resource type?")
@@ -240,6 +240,7 @@ angular.module("sampleApp")
                 });
 
                 makeGraph();
+                $scope.saveGraph(true);
             };
 
             //add a reference to another resource
@@ -368,6 +369,7 @@ angular.module("sampleApp")
 
                 row.references.splice(inx,1);
                 makeGraph();
+                $scope.saveGraph(true);
 
             };
 
@@ -463,6 +465,7 @@ angular.module("sampleApp")
 
                 $scope.cofTypeList.push(item)
                 makeGraph();
+                $scope.saveGraph(true);
 
 
                 //load the profile (SD) for the type...

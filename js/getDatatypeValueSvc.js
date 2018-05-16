@@ -6,6 +6,8 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
                 var v,text = "";
                 switch (dt) {
 
+
+
                     case 'positiveInt' :
                         v = parseInt(value.integer,10);
                         text = v;

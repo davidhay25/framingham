@@ -70,13 +70,13 @@
                             <div ng-repeat="summary in allHashPathSummaries">
                                 <strong>{{summary.type}}</strong>
                                 <div class='row' ng-repeat="(k,v) in summary.summary">
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 col-sm-4">
                                         {{v.path}}
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 col-sm-4">
                                         <div ng-repeat = "sample in v.sample track by $index">{{sample}}</div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 col-sm-4">
                                         <div ng-repeat = "note in v.notes track by $index">{{note}}</div>
                                     </div>
                                 </div>
