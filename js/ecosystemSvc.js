@@ -259,6 +259,9 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         getPersonWithId : function(id) {
             return hashAllPersons[id]
         },
+        getScenarioWithId : function(id) {
+            console.log(this.eventConfig);
+        },
         getAllPathsForType: function (typeName,explode,track) {
 
             var that = this;

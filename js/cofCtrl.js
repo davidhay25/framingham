@@ -1,12 +1,12 @@
 
 angular.module("sampleApp")
     .controller('cofCtrl',
-        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc) {
+        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc,modalService) {
 
             $scope.input = {};
             $scope.cofTypeList = [];
 
-            var objColoursDEP = ecosystemSvc.objColours();
+            //var objColoursDEP = ecosystemSvc.objColours();
 
             var elementsByType = {};        //hash of all elements for a given type
             var profilesCache = {};          //cache for SDsss
@@ -39,6 +39,75 @@ angular.module("sampleApp")
                     })
                 }
             );
+
+            //import a pre-existing graph from this track...
+            $scope.importGraph = function(){
+
+                console.log()
+                    var url = "/scenarioGraph/";
+                    $http.get(url).then(
+                        function(data) {
+                            var allGraphs = data.data;
+
+                            allGraphs.forEach(function (graph) {
+                                graph.user = ecosystemSvc.getPersonWithId(graph.userid);
+                                graph.scenario = ecosystemSvc.getScenarioWithId(graph.scenarioid);
+
+
+                            });
+
+                            $uibModal.open({
+                                templateUrl: 'modalTemplates/importGraph.html',
+                                size : 'lg',
+                                controller: 'importGraphCtrl',
+                                resolve : {
+                                    allGraphs: function(){
+                                        return allGraphs;
+                                        // return $scope.cofTypeList;
+                                    }, allScenariosThisTrack : function(){
+                                        return $scope.selectedTrack.scenarios;
+                                    }
+                                }
+                            }).result.then(function(graph){
+                                if ($scope.cofTypeList && $scope.cofTypeList.length > 0) {
+
+                                    var modalOptions = {
+                                        closeButtonText: "No, I changed my mind",
+                                        headerText: "Import scenario graph",
+                                        actionButtonText: 'Yes, please import',
+                                        bodyText: 'Are you sure you wish to import a graph? It will replace your current graph...'
+                                    };
+
+                                    //var msg = "Are you sure you wish to import a graph? It will replace your current graph...";
+                                    modalService.showModal({}, modalOptions).then(
+                                        function(){
+                                            doImport(graph)
+                                        }
+                                    )
+
+                                } else {
+                                    doImport(graph)
+                                }
+
+
+                                //$scope.cofTypeList = graph.items;
+                                //$scope.input.scenarioNotes = graph.scenarioNotes;
+                               // makeGraph();
+                            });
+
+                            console.log(allGraphs)
+                        })
+
+
+
+                function doImport(graph) {
+                    $scope.cofTypeList = graph.items;
+                    $scope.input.scenarioNotes = graph.scenarioNotes;
+                    makeGraph();
+                }
+
+
+            };
 
             //called when the form is updated
             $scope.formWasUpdated = function(table) {
@@ -74,7 +143,6 @@ angular.module("sampleApp")
 
                 });
             };
-
 
             //when the directive is updated with structured data, this function is called with the json version of the resource...
             $scope.fnResourceJson = function(json) {
@@ -423,7 +491,6 @@ angular.module("sampleApp")
 
                 }
             };
-
 
             function drawTree(table) {
                 var treeData = cofSvc.makeTree(table);

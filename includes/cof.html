@@ -22,6 +22,7 @@
             <select class="form-control" ng-model="input.scenario"
                     ng-change="cofSelectScenario(input.scenario)"
                     ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
+            <div class="pull-right"><button class="btn btn-link" ng-click="importGraph()">Import</button> </div>
 
         </div>
         <div class="col-sm-3 col-md-3">

@@ -52,7 +52,6 @@ angular.module("sampleApp")
                 $scope.timingArray.push({description:"3-4 times a day",timing:{freq:3,freqMax:4,period:1,periodUnits:'d'}});
                 $scope.timingArray.push({description:"Every 4-6 hours",timing:{freq:1,periodMax:6,period:1,periodUnits:'h'}});
                 $scope.timingArray.push({description:"Every 21 days for 1 hour",timing:{duration:1,units:'h',freq:1,period:21,periodUnits:'d'}});
-
                 $scope.input.dt = {dosage: {timing:{}}}
             }
 
