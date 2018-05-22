@@ -53,7 +53,10 @@
                 </div>
 
                 <div class="col-sm-4 col-md-4">
-
+                    <div ng-show="item">
+                        <span style="padding: 8px" ng-hide="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Set focus</span>
+                        <span style="padding: 8px" ng-show="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Show all</span>
+                    </div>
 
                     <div id="sumCofGraph"></div>
                 </div>

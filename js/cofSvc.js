@@ -361,7 +361,6 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
                                 if (focusResourceId) {
 
-                                    console.log(focusResourceId,ref.targetItem.id);
 
                                     //if this resorcce (item) has a reference to the target
                                     if  (ref.targetItem.id == focusResourceId) {
@@ -397,7 +396,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                 //hide the node
 
                 arNodes.forEach(function(node){
-                    console.log(node)
+
                     if (! nodesWithReferenceFromFocus[node.id]) {
                        // var node = nodes.get(n.id)
                         node.hidden = true;
@@ -408,7 +407,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
 
             var nodes = new vis.DataSet(arNodes);
-            console.log(nodes)
+
 
             var edges = new vis.DataSet(arEdges);
 

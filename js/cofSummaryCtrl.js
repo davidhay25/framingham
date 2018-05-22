@@ -16,10 +16,27 @@ angular.module("sampleApp")
                     }
                 })
 
-            }
+            };
 
-            //a single graph (for a single user) is selected
+            $scope.filteredGraph = false;
+            $scope.setFocus = function() {
+                $scope.filteredGraph = ! $scope.filteredGraph
+
+                console.log($scope.currentItem);
+                if ($scope.filteredGraph) {
+                    console.log($scope.item);
+                    makeGraph($scope.selectedGraph.items,$scope.item.id)
+                } else {
+                    makeGraph($scope.selectedGraph.items)
+                }
+
+
+            };
+
+            //a single graph (for a single user) is selected from the list at the left...
             $scope.selectGraph = function(graph){
+                $scope.filteredGraph = false;       //set the filter off to start with...
+                delete $scope.item;                 //this is a selected item in teh selected graph
 
                 $scope.selectedGraph = graph;
                 makeGraph(graph.items)
@@ -197,9 +214,9 @@ angular.module("sampleApp")
 
 
 
-            function makeGraph(lst) {
+            function makeGraph(lst,focusId) {
 
-                var vo = cofSvc.makeGraph(lst);
+                var vo = cofSvc.makeGraph(lst,focusId);
                 var graphData = vo.graphData;
 
                 var container = document.getElementById('sumCofGraph');
