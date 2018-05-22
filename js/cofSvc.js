@@ -324,9 +324,11 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
 
         },
-        makeGraph: function (lst) {
+        makeGraph: function (lst,focusResourceId) {
+            //if focusResourceId, then only show resources with a directreference to that one
             var arNodes = [], arEdges = [];
             var objColours = ecosystemSvc.objColours();
+            var nodesWithReferenceFromFocus = {}
 
             lst.forEach(function (item) {
 
@@ -337,8 +339,17 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                     node.color = objColours[item.baseType];
                 }
 
+
+
+                //add the focus node to the hash of nodes to keep...
+                if (focusResourceId && item.id == focusResourceId) {
+                    nodesWithReferenceFromFocus[item.id] = item;
+                }
                 arNodes.push(node);
 
+
+
+                //now get all the references from this node...
                 if (item.table) {
                     item.table.forEach(function (row) {
                         if (row.references) {
@@ -348,15 +359,57 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                                     label: ref.sourcePath, arrows: {to: true}
                                 };
 
-                                arEdges.push(edge)
+                                if (focusResourceId) {
+
+                                    console.log(focusResourceId,ref.targetItem.id);
+
+                                    //if this resorcce (item) has a reference to the target
+                                    if  (ref.targetItem.id == focusResourceId) {
+                                        nodesWithReferenceFromFocus[item.id] = item;
+                                        arEdges.push(edge)
+                                    }
+
+                                    //if this is the focus, then include all the resources that it references
+                                    if (item.id == focusResourceId) {
+                                        nodesWithReferenceFromFocus[ref.targetItem.id] = "x";
+                                        arEdges.push(edge)
+                                    }
+
+
+
+                                } else {
+                                    arEdges.push(edge)
+                                }
+
                             })
                         }
-                    })
+                    });
+
                 }
+
+
+
 
             });
 
+            //now, hide all the nodes that aren't referenced by the focus
+            if (focusResourceId) {
+                //hide the node
+
+                arNodes.forEach(function(node){
+                    console.log(node)
+                    if (! nodesWithReferenceFromFocus[node.id]) {
+                       // var node = nodes.get(n.id)
+                        node.hidden = true;
+                        node.physics=false;
+                    }
+                })
+            }
+
+
             var nodes = new vis.DataSet(arNodes);
+            console.log(nodes)
+
             var edges = new vis.DataSet(arEdges);
 
             // provide the data in the vis format

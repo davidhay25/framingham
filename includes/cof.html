@@ -167,16 +167,30 @@
 
                 </uib-tab>
                 <uib-tab heading="Graph" select = "fitGraph()">
+                    <div ng-show="currentItem">
+                        <span style="padding: 8px" ng-hide="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Set focus</span>
+                        <span style="padding: 8px" ng-show="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Show all</span>
+                    </div>
                     <div id="cofGraph"></div>
                 </uib-tab>
-                <uib-tab heading="Notes on scenario">
-                    <form name="form">
-                        <markdown-editor ng-model="input.scenarioNotes"
-                                         rows="10"
-                                         placeholder="Enter any comments you have about this scenario"
-                                         options="mdOptions" >
-                        </markdown-editor>
-                    </form>
+                <uib-tab heading="Notes on scenario" deselect="resourceNoteUpdated()">
+
+                         <form name="form">
+                            <!--
+
+                            <textarea ng-model="input.scenarioNotes" name="editor1" markdown-editor="" rows="10"></textarea>
+                            <div marked="editor1" class="markdown" style="padding: 20px"></div>
+
+                             -->
+                            <markdown-editor ng-model="input.scenarioNotes"
+
+                                             rows="10"
+                                             placeholder="Enter any comments you have about this scenario"
+                                             options="mdOptions" >
+                            </markdown-editor>
+                            <div><strong><em>Please select another tab after updating to ensure notes are saved. This is a limitation being worked on.</em></strong></div>
+                        </form>
+
                 </uib-tab>
             </uib-tabset>
 

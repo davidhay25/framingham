@@ -12,6 +12,21 @@ angular.module("sampleApp")
             var profilesCache = {};          //cache for SDsss
             var allScenarios = {};
 
+            $scope.filteredGraph = false
+            $scope.setFocus = function() {
+                $scope.filteredGraph = ! $scope.filteredGraph
+
+                console.log($scope.currentItem);
+                if ($scope.filteredGraph) {
+                    makeGraph($scope.currentItem.id)
+                } else {
+                    makeGraph()
+                }
+
+
+            };
+
+
             $scope.getProfile = function(){
                 var item = {id : 'id'+new Date().getTime(), type:'cc-Patient'};
                 item.description = 'cc-Patient';
@@ -108,6 +123,13 @@ angular.module("sampleApp")
 
 
             };
+
+
+
+
+            $scope.resourceNoteUpdated = function() {
+                $scope.saveGraph(true)
+            }
 
             //called when the form is updated
             $scope.formWasUpdated = function(table) {
@@ -448,8 +470,6 @@ angular.module("sampleApp")
                     item.description = description;
                     makeGraph();
                 }
-
-
             };
 
             //select an item from the list of items. The SD will have been loaded for this type (async) into profilesCache
@@ -624,9 +644,9 @@ angular.module("sampleApp")
 
             };
 
-            function makeGraph() {
+            function makeGraph(focusResourceId) {
 
-                var vo = cofSvc.makeGraph($scope.cofTypeList);
+                var vo = cofSvc.makeGraph($scope.cofTypeList,focusResourceId);
                 var graphData = vo.graphData;
 
                 var container = document.getElementById('cofGraph');
