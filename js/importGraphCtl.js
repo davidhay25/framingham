@@ -9,9 +9,33 @@ angular.module("sampleApp")
             $scope.waiting = true;
             $scope.input = {};
 
+            var currentUser = ecosystemSvc.getCurrentUser();
+
+            $scope.mineOnly = function(mineOnly) {
+                console.log(mineOnly)
+
+                if (mineOnly) {
+                    if (currentUser && $scope.allGraphsForEvent) {
+                        $scope.allGraphs.length = 0;
+                        $scope.allGraphsForEvent.forEach(function(graph) {
+                            if (graph.userid == currentUser.id && hashScenario[graph.scenarioid]) { //this user and a valid scenario
+                                graph.scenario = hashScenario[graph.scenarioid]
+                                $scope.allGraphs.push(graph)
+                            }
+                        })
+                    }
+                } else {
+                    if ($scope.input.selectedScenario) {
+                        $scope.selectScenario($scope.input.selectedScenario)
+                    }
+
+                }
 
 
 
+            };
+
+            //load all the scenarios for this track...
             $http.get(url).then(
                 function(data) {
                     //var allGraphs = data.data;
@@ -23,17 +47,12 @@ angular.module("sampleApp")
                                 graph.user = user;
                             }
                         }
-
-
                         graph.scenario = ecosystemSvc.getScenarioWithId(graph.scenarioid);
-
-
                     });
 
 
                     if (allScenariosThisTrack) {
                         $scope.allScenarios = allScenariosThisTrack;
-
 
                         //the list of scenario...
                         var initial = {name:'All Scenarios',id:'allScenarios'};
@@ -43,7 +62,6 @@ angular.module("sampleApp")
 
                         allScenariosThisTrack.forEach(function (scenario) {
                             hashScenario[scenario.id] = scenario;
-
                         });
 
                         //only add graphs from the same track...
@@ -63,10 +81,11 @@ angular.module("sampleApp")
                 }
             ).finally(function(){$scope.waiting = false;});
 
-        
 
+            //when a single scenario is selected for display
             $scope.selectScenario = function(scenario){
                 console.log(scenario)
+                $scope.input.mineOnly = false;
                 if (scenario.id == 'allScenarios') {
                     $scope.allGraphs.length = 0;
                     $scope.allGraphsForEvent.forEach(function(graph) {
@@ -74,7 +93,6 @@ angular.module("sampleApp")
                             graph.scenario = hashScenario[graph.scenarioid]
                             $scope.allGraphs.push(graph)
                         }
-
                     })
                 } else {
                     $scope.allGraphs.length = 0;
@@ -86,11 +104,7 @@ angular.module("sampleApp")
 
                     })
                 }
-
             };
-
-
-            //$scope.allGraphs = allGraphs;//[];
 
             $scope.selectGraph = function(graph){
                 $scope.selectedGraph = graph;

@@ -41,12 +41,22 @@
 
         <div class="row">
             <div class="col-sm-4 col-md-4">
+                <select ng-options = "scenario.name for scenario in allScenarios" class="form-control"
+                        ng-model="input.selectedScenario" ng-change="selectScenario(input.selectedScenario)">
+
+                </select>
+
+            </div>
+            <div class="col-sm-6 col-md-6">
+
+                <checkbox ng-model="input.mineOnly" ng-change ="mineOnly(input.mineOnly)"></checkbox> Show only my graphs
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-sm-4 col-md-4">
                 <div class="scrollList">
 
-                    <select ng-options = "scenario.name for scenario in allScenarios" class="form-control"
-                            ng-model="input.selectedScenario" ng-change="selectScenario(input.selectedScenario)">
-
-                    </select>
 
 
                     <ul class="list-group">
