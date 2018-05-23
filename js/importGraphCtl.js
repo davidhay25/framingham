@@ -1,27 +1,60 @@
 
 angular.module("sampleApp")
     .controller('importGraphCtrl',
-        function ($scope,allGraphs,cofSvc,allScenariosThisTrack) {
-        
+        function ($scope,cofSvc,allScenariosThisTrack,ecosystemSvc,$http) {
+
             var hashScenario={};
-            $scope.allGraphs = []
+            $scope.allGraphs = [];
+            var url = "/scenarioGraph/";
+            $scope.waiting = true;
 
-            if (allScenariosThisTrack) {
-                allScenariosThisTrack.forEach(function (scenario) {
-                    hashScenario[scenario.id] = scenario;
 
-                });
 
-                //only add graphs from the same track...
-                allGraphs.forEach(function(graph) {
-                    if (hashScenario[graph.scenarioid]) {
-                        graph.scenario = hashScenario[graph.scenarioid]
-                        $scope.allGraphs.push(graph)
+            $http.get(url).then(
+                function(data) {
+                    var allGraphs = data.data;
+                    allGraphs.forEach(function (graph) {
+
+
+                        if (! graph.user) {
+                            var user = ecosystemSvc.getPersonWithId(graph.userid);
+                            if (user) {
+                                graph.user = user;
+                            }
+                        }
+                        graph.scenario = ecosystemSvc.getScenarioWithId(graph.scenarioid);
+
+
+                    });
+
+
+                    if (allScenariosThisTrack) {
+                        allScenariosThisTrack.forEach(function (scenario) {
+                            hashScenario[scenario.id] = scenario;
+
+                        });
+
+                        //only add graphs from the same track...
+                        allGraphs.forEach(function(graph) {
+                            if (hashScenario[graph.scenarioid]) {
+                                graph.scenario = hashScenario[graph.scenarioid]
+                                $scope.allGraphs.push(graph)
+                            }
+
+                        })
+                    } else {
+                        alert('There were no scenario definitions passed into the import function')
                     }
+                },
+                function(err) {
+                    alert('Error getting scenarios: '+ angular.toJson(err))
+                }
+            ).finally(function(){$scope.waiting = false;});
 
-                })
+        
 
-            }
+
+
 
             //$scope.allGraphs = allGraphs;//[];
 

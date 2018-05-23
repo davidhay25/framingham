@@ -209,7 +209,6 @@ angular.module("sampleApp")
 */
 
                 }
-
             });
 
 

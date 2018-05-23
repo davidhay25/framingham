@@ -214,7 +214,7 @@
                     <div class="pull-right">
                         <div ng-show="library">*</div>
                     </div>
-                    <button class="btn btn-primary pull-right" ng-click="refresh()">Refresh</button>
+                    <button ng-show="selectedTrack.trackType == 'technical'" class="btn btn-primary pull-right" ng-click="refresh()">Refresh</button>
 
                 </div>
             </div>
@@ -247,7 +247,9 @@
 
 
                                         {{track.name}}
+                                        <!-- Is this confusing?
                                         <div><em>({{track.trackType}})</em></div>
+                                        -->
                                     </li>
                                 </ul>
 

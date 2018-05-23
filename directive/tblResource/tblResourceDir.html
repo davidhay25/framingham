@@ -148,7 +148,7 @@
                     </div>
                 </td>
                 <td ng-hide="hideNotes" width="25%">
-                    <textarea msd-elastic class="form-control" ng-model="input.notes[row.id]" rows="1"></textarea>
+                    <textarea  ng-blur="noteAdded()"  msd-elastic class="form-control" ng-model="input.notes[row.id]" rows="1"></textarea>
                 </td>
                 <!--<td><pre>{{row | json}}</pre></td>-->
             </tr>

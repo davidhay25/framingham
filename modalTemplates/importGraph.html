@@ -7,7 +7,7 @@
             border: 1px solid lightgray;
         }
 
-        .scrollTable {
+        .scrollList {
             height: 500px;
             overflow-y: scroll;
         }
@@ -24,9 +24,6 @@
 
             <div class="col-md-6 col-sm-6">
                 <div class="pull-right">
-
-
-
                     <button class="btn btn-link" ng-click="$dismiss()">Cancel</button>
                     <button ng-show="selectedGraph" class="btn btn-primary"
                             ng-click="import()">Import</button>
@@ -38,20 +35,25 @@
 
     <div class="modal-body">
 
+        <div  style="margin: 100px" ng-show="waiting">
+            Loading all the scenario graphs in this track, please wait...
+        </div>
+
         <div class="row">
             <div class="col-sm-4 col-md-4">
-                <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="graph in allGraphs" ng-click="selectGraph(graph)">
-                        {{graph.scenario.name}}
-                        <div><em>{{graph.user.name}}</em></div>
-                    </li>
-                </ul>
+                <div class="scrollList">
+                    <ul class="list-group">
+                        <li ng-class="{'list-group-item':1,'listItemSelected':selectedGraph.id == graph.id}"
+                            ng-repeat="graph in allGraphs" ng-click="selectGraph(graph)">
+                            {{graph.scenario.name}}
+                            <div><em>{{graph.user.name}}</em></div>
+                        </li>
+                    </ul>
+                </div>
 
             </div>
             <div class="col-sm-8 col-md-8">
-<!--
-                <pre>{{selectedGraph | json}}</pre>
--->
+
                 <div class="importGraph" id="importGraph"></div>
 
 

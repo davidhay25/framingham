@@ -177,6 +177,11 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 }
             }
 
+            //called by onBlur from adding a note
+            $scope.noteAdded = function(){
+                $scope.updated()($scope.input.table);
+                //console.log('note')
+            }
 
             //called by the vsViewer when a concept is selected form an expansion...
             $scope.conceptSelectedDEP = function(concept) {

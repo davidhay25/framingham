@@ -50,7 +50,12 @@
             <div><strong>Review Purpose</strong></div>
             <p ng-bind-html="cofScenario.reviewPurpose | markDown"></p>
         </div>
-        <div class="col-sm-4 col-md-4">
+        <div class="col-sm-5 col-md-5">
+
+            <div ng-show="writeNotification"><span style="background-color: #00A000; color: white; padding: 5px"
+                                                   class="rounded-box pull-right">{{writeNotification}}</span></div>
+
+
             <uib-tabset>
                 <uib-tab heading="Core resource types">
                     <div class="row">
@@ -84,44 +89,22 @@
 
 
                     </uib-tab-heading>
+                    <!--
                     <button ng-click="getProfile()">test</button>
+                    -->
                 </uib-tab>
             </uib-tabset>
         </div>
+        <!--
         <div class="col-sm-1 col-md-1">
-            <!--
-            <ul class="nav navbar-nav"  ng-hide="waiting">
-                <li uib-dropdown>
 
-                    <a href="#" uib-dropdown-toggle>
-                        <span style="font-size:1.5em; cursor: pointer">
-                            <i class="glyphicon glyphicon-cog"></i>
-                        </span>
-                    </a>
-
-                    <ul class="dropdown-menu" role="menu">
-                        <li>
-                            <a href="#" ng-click="clearModel()"
-                               uib-popover="Clear the current model"
-                               popover-placement="left"
-                               popover-trigger="'mouseenter'">Clear model</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-
-
--->
 
             <div ng-show="writeNotification"><span style="background-color: #00A000; color: white; padding: 5px"
                     class="rounded-box pull-right">{{writeNotification}}</span></div>
 
-<!--
-            <button class="btn btn-primary pull-right" ng-click="saveGraph()">Save</button>
 
-            -->
         </div>
-
+-->
     </div>
     <hr/>
 
@@ -176,12 +159,6 @@
                 <uib-tab heading="Notes on scenario" deselect="resourceNoteUpdated()">
 
                          <form name="form">
-                            <!--
-
-                            <textarea ng-model="input.scenarioNotes" name="editor1" markdown-editor="" rows="10"></textarea>
-                            <div marked="editor1" class="markdown" style="padding: 20px"></div>
-
-                             -->
                             <markdown-editor ng-model="input.scenarioNotes"
 
                                              rows="10"

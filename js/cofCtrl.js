@@ -12,7 +12,7 @@ angular.module("sampleApp")
             var profilesCache = {};          //cache for SDsss
             var allScenarios = {};
 
-            $scope.filteredGraph = false
+            $scope.filteredGraph = false;
             $scope.setFocus = function() {
                 $scope.filteredGraph = ! $scope.filteredGraph
 
@@ -58,14 +58,57 @@ angular.module("sampleApp")
             //import a pre-existing graph from this track...
             $scope.importGraph = function(){
 
-                console.log()
+
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/importGraph.html',
+                    size : 'lg',
+                    controller: 'importGraphCtrl',
+                    resolve : {
+
+                        allScenariosThisTrack : function(){
+                            return $scope.selectedTrack.scenarios;
+                        }
+                    }
+                }).result.then(function(graph){
+                    if ($scope.cofTypeList && $scope.cofTypeList.length > 0) {
+
+                        var modalOptions = {
+                            closeButtonText: "No, I changed my mind",
+                            headerText: "Import scenario graph",
+                            actionButtonText: 'Yes, please import',
+                            bodyText: 'Are you sure you wish to import a graph? It will replace your current graph...'
+                        };
+
+                        //var msg = "Are you sure you wish to import a graph? It will replace your current graph...";
+                        modalService.showModal({}, modalOptions).then(
+                            function(){
+                                doImport(graph)
+                            }
+                        )
+
+                    } else {
+                        doImport(graph)
+                    }
+                });
+
+                return;
+
+
+                //console.log()
                     var url = "/scenarioGraph/";
                     $http.get(url).then(
                         function(data) {
                             var allGraphs = data.data;
 
                             allGraphs.forEach(function (graph) {
-                                graph.user = ecosystemSvc.getPersonWithId(graph.userid);
+
+                                if (! graph.user) {
+                                    var user = ecosystemSvc.getPersonWithId(graph.userid);
+                                    if (user) {
+                                        graph.user = user;
+                                    }
+                                }
+
                                 graph.scenario = ecosystemSvc.getScenarioWithId(graph.scenarioid);
 
 
@@ -103,14 +146,9 @@ angular.module("sampleApp")
                                 } else {
                                     doImport(graph)
                                 }
-
-
-                                //$scope.cofTypeList = graph.items;
-                                //$scope.input.scenarioNotes = graph.scenarioNotes;
-                               // makeGraph();
                             });
 
-                            console.log(allGraphs)
+
                         })
 
 
@@ -124,9 +162,6 @@ angular.module("sampleApp")
 
             };
 
-
-
-
             $scope.resourceNoteUpdated = function() {
                 $scope.saveGraph(true)
             }
@@ -134,7 +169,10 @@ angular.module("sampleApp")
             //called when the form is updated
             $scope.formWasUpdated = function(table) {
                 $scope.saveGraph(true);     //save the graph without showing
-                drawTree(table)
+                if (table) {
+                    drawTree(table)
+                }
+
             };
 
             $scope.showDescription = function(md) {
@@ -304,33 +342,52 @@ angular.module("sampleApp")
                 }
             }
 
+            //remove an item (resource) from the list...
             $scope.removeItem = function(inx){
-                var ar1 = $scope.cofTypeList.splice(inx,1);
 
-                //remove any references to the deleted resource from other resources...
-                var id = ar1[0].id;      //the id of the item that was removed
-                $scope.cofTypeList.forEach(function (item) {
-                    if (item.table) {
-                        item.table.forEach(function (row) {
-                            var ar = angular.copy(row.references);
-                            if (ar && ar.length > 0) {
-                                //if the resource has references, then remove them all and copy back the ones that aren't the deleted one...
-                                row.references.length = 0;
 
-                                ar.forEach(function (ref) {
-                                    if (ref.targetItem.id !== id) {
-                                        row.references.push(ref)
+                var resource = $scope.cofTypeList[inx]
+                var modalOptions = {
+                    closeButtonText: "No, I changed my mind",
+                    headerText: "Remove resource instance",
+                    actionButtonText: 'Yes, please remove',
+                    bodyText: 'Are you sure you wish to remove this '+resource.type+' resource (and all the references to it)?'
+                };
+
+                //var msg = "Are you sure you wish to import a graph? It will replace your current graph...";
+                modalService.showModal({}, modalOptions).then(
+                    function(){
+                        var ar1 = $scope.cofTypeList.splice(inx,1);
+
+                        //remove any references to the deleted resource from other resources...
+                        var id = ar1[0].id;      //the id of the item that was removed
+                        $scope.cofTypeList.forEach(function (item) {
+                            if (item.table) {
+                                item.table.forEach(function (row) {
+                                    var ar = angular.copy(row.references);
+                                    if (ar && ar.length > 0) {
+                                        //if the resource has references, then remove them all and copy back the ones that aren't the deleted one...
+                                        row.references.length = 0;
+
+                                        ar.forEach(function (ref) {
+                                            if (ref.targetItem.id !== id) {
+                                                row.references.push(ref)
+                                            }
+                                        })
                                     }
+
                                 })
                             }
 
-                        })
+                        });
+
+                        makeGraph();
+                        $scope.saveGraph(true);
                     }
+                )
 
-                });
 
-                makeGraph();
-                $scope.saveGraph(true);
+
             };
 
             //add a reference to another resource
@@ -513,17 +570,20 @@ angular.module("sampleApp")
             };
 
             function drawTree(table) {
-                var treeData = cofSvc.makeTree(table);
-                $('#lmTreeView').jstree('destroy');
-                $('#lmTreeView').jstree(
-                    {'core': {'multiple': false, 'data': treeData, 'themes': {name: 'proton', responsive: true}}}
-                ).on('changed.jstree', function (e, data) {
-                    //seems to be the node selection event...;
-                    if (data.node) {
-                        $scope.selectedTreeNode = data.node;
-                        $scope.$digest();
-                    }
-                })
+                if (table) {
+                    var treeData = cofSvc.makeTree(table);
+                    $('#lmTreeView').jstree('destroy');
+                    $('#lmTreeView').jstree(
+                        {'core': {'multiple': false, 'data': treeData, 'themes': {name: 'proton', responsive: true}}}
+                    ).on('changed.jstree', function (e, data) {
+                        //seems to be the node selection event...;
+                        if (data.node) {
+                            $scope.selectedTreeNode = data.node;
+                            $scope.$digest();
+                        }
+                    })
+
+                }
 
             }
 
