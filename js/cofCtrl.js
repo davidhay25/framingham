@@ -522,7 +522,7 @@ angular.module("sampleApp")
 
             $scope.editDescription = function(item) {
 
-                var description = $window.prompt("Enter description",item.description);
+                var description = $window.prompt("Enter a short description for this resource",item.description);
                 if (description) {
                     item.description = description;
                     makeGraph();
@@ -609,6 +609,14 @@ angular.module("sampleApp")
                 })
 
                 item.description = type + " " + ctr;
+
+                var description = $window.prompt("Enter a short description for this resource",item.description);
+                if (description) {
+                    item.description = description;
+
+                }
+
+
 
                 $scope.cofTypeList.push(item)
                 makeGraph();
