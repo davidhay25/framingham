@@ -232,6 +232,12 @@
                     <br/>
                     <div class="row">
                         <div class="col-sm-2 col-md-2">
+
+                            <div ng-hide="tracks">
+                                <br/>
+                                Loading the event data from the server, please wait...
+                            </div>
+
                             <div class="trackScroll">
                                 <ul class="list-group">
                                     <li ng-class="{'list-group-item':1,'listItemSelected':selectedTrack.id == track.id}"
@@ -254,7 +260,7 @@
                                 </ul>
 
                                 <div>
-                                    <div class="pull-right">
+                                    <div class="pull-right" ng-show="tracks">
                                         <button class="btn btn-link" ng-click="addTrack()">
                                             Add a new Track
                                         </button>
@@ -264,7 +270,10 @@
 
 
                         </div>
+
                         <div class="col-sm-10 col-md-10" ng-show="selectedTrack">
+
+
 
 
                             <uib-tabset>
@@ -424,7 +433,7 @@
 
                                                     <div class="row">
 
-                                                        <div class="col-sm-4 col-md-4">
+                                                        <div class="col-sm-6 col-md-6">
                                                             <ul>
                                                                 <li style="cursor: pointer"
                                                                     ng-repeat="person in selectedTrack.persons track by $index"
@@ -434,7 +443,7 @@
                                                             </ul>
 
                                                         </div>
-                                                        <div class="col-sm-8 col-md-8">
+                                                        <div class="col-sm-6 col-md-6">
 
                                                             <div class="row" ng-repeat="contact in input.selectedTrackPerson.contact">
                                                                 <div class="col-sm-6 col-md-6">
@@ -492,48 +501,7 @@
                                         </div>
                                     </div>
 
-<!--
-                                    <div class="row">
-                                        <hr class="trackBorder"/>
-                                        <div class="col-sm-2 col-md-2">
-                                            <strong>Watchers (Tracks of Interest)</strong>
-                                        </div>
-                                        <div class="col-sm-10 col-md-10">
 
-                                            <div ng-show="selectedTrack.toi.length==0">
-                                                No Watchers registered so far.
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-sm-4 col-md-4">
-                                                    <ul>
-                                                        <li
-                                                            style="cursor: pointer"
-                                                            ng-repeat="person in selectedTrack.toi track by $index"
-                                                            ng-click="input.selectedTrackTOIPerson = person">
-                                                            {{person.name}}
-                                                        </li>
-                                                    </ul>
-
-                                                </div>
-                                                <div class="col-sm-8 col-md-8">
-                                                    {{input.selectedTrackTOIPerson.name}}
-                                                    <div class="row" ng-repeat="contact in input.selectedTrackTOIPerson.contact">
-                                                        <div class="col-sm-4 col-md-4">
-                                                            <strong>{{contact.type}}</strong>
-                                                        </div>
-                                                        <div class="col-sm-8 col-md-8">
-                                                            {{contact.value}}
-                                                        </div>
-                                                    </div>
-
-
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    -->
 
 
                                     <div class="row">
@@ -579,6 +547,12 @@
                                                         <div class="col-sm-9 col-md-9">
                                                             <h4>Description</h4>
                                                             <p ng-bind-html="selectedScenario.description | markDown"></p>
+
+                                                            <div ng-show="selectedScenario.reviewPurpose">
+                                                                <h4>Purpose</h4>
+                                                                <p ng-bind-html="selectedScenario.reviewPurpose | markDown"></p>
+                                                            </div>
+
 
                                                             <div class="row" ng-show="selectedScenario.action">
                                                                 <div class="col-sm-3 col-md-3">

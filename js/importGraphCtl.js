@@ -40,6 +40,7 @@ angular.module("sampleApp")
                 function(data) {
                     //var allGraphs = data.data;
                     $scope.allGraphsForEvent = data.data;
+
                     $scope.allGraphsForEvent.forEach(function (graph) {
                         if (! graph.user) {
                             var user = ecosystemSvc.getPersonWithId(graph.userid);
@@ -50,6 +51,16 @@ angular.module("sampleApp")
                         graph.scenario = ecosystemSvc.getScenarioWithId(graph.scenarioid);
                     });
 
+                    //sort by the name of the person who created it...
+                    $scope.allGraphsForEvent.sort(function(a,b){
+                        if (a.user && a.user.name && b.user && b.user.name) {
+                            if (a.user.name.toLowerCase() > b.user.name.toLowerCase()) {
+                                return 1
+                            } else {
+                                return -1
+                            }
+                        }
+                    });
 
                     if (allScenariosThisTrack) {
                         $scope.allScenarios = allScenariosThisTrack;
