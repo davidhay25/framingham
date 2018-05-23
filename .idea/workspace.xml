@@ -7,12 +7,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0a6e7d6f-aa6e-405d-9d94-d3543d427d97" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/connectathon.html" afterPath="$PROJECT_DIR$/connectathon.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/directive/tblResource/tblResourceDir.html" afterPath="$PROJECT_DIR$/directive/tblResource/tblResourceDir.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/directive/tblResource/tblResourceDir.js" afterPath="$PROJECT_DIR$/directive/tblResource/tblResourceDir.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/includes/cof.html" afterPath="$PROJECT_DIR$/includes/cof.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/cofCtrl.js" afterPath="$PROJECT_DIR$/js/cofCtrl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/cofSummaryCtrl.js" afterPath="$PROJECT_DIR$/js/cofSummaryCtrl.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/importGraphCtl.js" afterPath="$PROJECT_DIR$/js/importGraphCtl.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modalTemplates/importGraph.html" afterPath="$PROJECT_DIR$/modalTemplates/importGraph.html" />
     </list>
@@ -28,11 +22,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="importGraph.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="importGraph.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modalTemplates/importGraph.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="424">
-              <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+            <state relative-caret-position="298">
+              <caret line="40" column="0" lean-forward="true" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
               </folding>
@@ -55,27 +49,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="connectathon.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/connectathon.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="451" column="62" lean-forward="false" selection-start-line="451" selection-start-column="62" selection-end-line="451" selection-end-column="62" />
-              <folding>
-                <marker date="1527065046616" expanded="true" signature="72413:72547" ph="{...}" />
-                <marker date="1527065046616" expanded="true" signature="81675:81796" ph="{...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="importGraphCtl.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="importGraphCtl.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/importGraphCtl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="42">
-              <caret line="3" column="72" lean-forward="true" selection-start-line="3" selection-start-column="72" selection-end-line="3" selection-end-column="72" />
+            <state relative-caret-position="388">
+              <caret line="81" column="57" lean-forward="false" selection-start-line="81" selection-start-column="57" selection-end-line="81" selection-end-column="57" />
               <folding>
-                <element signature="e#352#1632#0" expanded="false" />
-                <element signature="e#2851#2937#0" expanded="false" />
+                <element signature="e#4280#4366#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -105,10 +85,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Dosage</find>
-      <find>.required</find>
-      <find>dosage</find>
-      <find>/scenarioGraph</find>
       <find>uib</find>
       <find>$htt</find>
       <find>$http</find>
@@ -134,7 +110,11 @@
       <find>formWasUpdated</find>
       <find>list-group-item</find>
       <find>importGraphCtrl</find>
+      <find>ng-opt</find>
       <find>import</find>
+      <find>allGraphs</find>
+      <find>$scope.selectScenario</find>
+      <find>scrollTable</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -204,8 +184,8 @@
         <option value="$PROJECT_DIR$/connectathon.html" />
         <option value="$PROJECT_DIR$/includes/cof.html" />
         <option value="$PROJECT_DIR$/js/cofCtrl.js" />
-        <option value="$PROJECT_DIR$/js/importGraphCtl.js" />
         <option value="$PROJECT_DIR$/modalTemplates/importGraph.html" />
+        <option value="$PROJECT_DIR$/js/importGraphCtl.js" />
       </list>
     </option>
   </component>
@@ -882,15 +862,16 @@
       <workItem from="1525943132856" duration="29783000" />
       <workItem from="1526194568904" duration="22519000" />
       <workItem from="1526375720145" duration="17072000" />
-      <workItem from="1526882832030" duration="18860000" />
+      <workItem from="1526882832030" duration="20270000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1390988000" />
+    <option name="totallyTimeSpent" value="1392398000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1358" y="1011" width="1335" height="708" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21232876" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1280,6 +1261,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="197">
           <caret line="231" column="85" lean-forward="false" selection-start-line="231" selection-start-column="65" selection-end-line="231" selection-end-column="85" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#div#5;n#div#0;n#div#1;n#div#0;n#!!top" expanded="false" />
+            <element signature="n#div#1;n#div#5;n#div#0;n#div#1;n#div#0;n#!!top" expanded="false" />
+            <element signature="n#style#0;n#div#2;n#div#5;n#div#0;n#div#1;n#div#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1353,6 +1339,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2184,6 +2171,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/js/cofCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="636">
+          <caret line="97" column="48" lean-forward="true" selection-start-line="97" selection-start-column="19" selection-end-line="97" selection-end-column="48" />
+          <folding>
+            <element signature="e#4157#4833#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/connectathon.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -2208,33 +2205,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/cofCtrl.js">
+    <entry file="file://$PROJECT_DIR$/modalTemplates/importGraph.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="636">
-          <caret line="97" column="48" lean-forward="true" selection-start-line="97" selection-start-column="19" selection-end-line="97" selection-end-column="48" />
+        <state relative-caret-position="298">
+          <caret line="40" column="0" lean-forward="true" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
           <folding>
-            <element signature="e#4157#4833#0" expanded="false" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/importGraphCtl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="3" column="72" lean-forward="true" selection-start-line="3" selection-start-column="72" selection-end-line="3" selection-end-column="72" />
+        <state relative-caret-position="388">
+          <caret line="81" column="57" lean-forward="false" selection-start-line="81" selection-start-column="57" selection-end-line="81" selection-end-column="57" />
           <folding>
-            <element signature="e#352#1632#0" expanded="false" />
-            <element signature="e#2851#2937#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modalTemplates/importGraph.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="e#4280#4366#0" expanded="false" />
           </folding>
         </state>
       </provider>

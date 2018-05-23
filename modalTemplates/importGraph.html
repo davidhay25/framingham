@@ -42,6 +42,13 @@
         <div class="row">
             <div class="col-sm-4 col-md-4">
                 <div class="scrollList">
+
+                    <select ng-options = "scenario.name for scenario in allScenarios" class="form-control"
+                            ng-model="input.selectedScenario" ng-change="selectScenario(input.selectedScenario)">
+
+                    </select>
+
+
                     <ul class="list-group">
                         <li ng-class="{'list-group-item':1,'listItemSelected':selectedGraph.id == graph.id}"
                             ng-repeat="graph in allGraphs" ng-click="selectGraph(graph)">
