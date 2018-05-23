@@ -63,7 +63,7 @@ angular.module("sampleApp")
                     });
 
                     if (allScenariosThisTrack) {
-                        $scope.allScenarios = allScenariosThisTrack;
+                        $scope.allScenarios = angular.copy(allScenariosThisTrack);
 
                         //the list of scenario...
                         var initial = {name:'All Scenarios',id:'allScenarios'};

@@ -12,6 +12,40 @@ angular.module("sampleApp")
             var profilesCache = {};          //cache for SDsss
             var allScenarios = {};
 
+
+            //------- document stuff - ? move to service or
+
+            function makeDocumentDisplay(){
+                $scope.document = {}
+                $scope.cofTypeList.forEach(function(item){
+                    if (item.type == 'Composition') {
+                        $scope.document.composition = angular.copy(item);
+                    }
+                });
+
+                console.log($scope.document);
+                var hashSample = {};
+
+
+                //get all the sections
+                if ($scope.document.composition && $scope.document.composition.sample) {
+
+                    //create a hash of sample data...
+                   // $scope.document.composition.sample.forEach(function(sample){
+                      //  hashSample[sample.id] = sample;
+                    //})
+
+                    $scope.document.composition.table.forEach(function (row) {
+                        if ($scope.document.composition.sample[row.id]) {
+                            row.sample = $scope.document.composition.sample[row.id];
+                        }
+                    })
+
+                }
+            }
+
+
+
             $scope.filteredGraph = false;
             $scope.setFocus = function() {
                 $scope.filteredGraph = ! $scope.filteredGraph
@@ -90,7 +124,7 @@ angular.module("sampleApp")
                         doImport(graph)
                     }
                 });
-
+/*
                 return;
 
 
@@ -151,12 +185,13 @@ angular.module("sampleApp")
 
                         })
 
-
+*/
 
                 function doImport(graph) {
                     $scope.cofTypeList = graph.items;
                     $scope.input.scenarioNotes = graph.scenarioNotes;
                     makeGraph();
+                    makeDocumentDisplay()
                 }
 
 
@@ -171,6 +206,7 @@ angular.module("sampleApp")
                 $scope.saveGraph(true);     //save the graph without showing
                 if (table) {
                     drawTree(table)
+                    makeDocumentDisplay();
                 }
 
             };
@@ -332,6 +368,8 @@ angular.module("sampleApp")
                             if (vo && vo.items) {
                                 $scope.cofTypeList = vo.items;
                                 $scope.input.scenarioNotes = vo.scenarioNotes;
+
+                                makeDocumentDisplay();
 
                             }
 
@@ -613,14 +651,17 @@ angular.module("sampleApp")
                 var description = $window.prompt("Enter a short description for this resource",item.description);
                 if (description) {
                     item.description = description;
-
                 }
 
 
 
                 $scope.cofTypeList.push(item)
                 makeGraph();
+
+                makeDocumentDisplay();  //if there is a Composition, sets up the document tab...
+
                 $scope.saveGraph(true);
+
 
 
                 //load the profile (SD) for the type...
