@@ -61,6 +61,7 @@
 
                     <ul class="list-group">
                         <li ng-class="{'list-group-item':1,'listItemSelected':selectedGraph.id == graph.id}"
+                            ng-show="graph.user"
                             ng-repeat="graph in allGraphs" ng-click="selectGraph(graph)">
                             {{graph.scenario.name}}
                             <div><em>{{graph.user.name}}</em></div>

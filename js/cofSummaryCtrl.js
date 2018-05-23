@@ -140,7 +140,8 @@ angular.module("sampleApp")
                             $scope.graphs.forEach(function (graph) {
                                 graph.user = ecosystemSvc.getPersonWithId(graph.userid);
 
-                                if (graph.items) {
+                                //if there's a graph and the user can't be found then ignore...
+                                if (graph.items && graph.user) {
                                     graph.items.forEach(function(item){
                                         $scope.hashResources[item.type] = $scope.hashResources[item.type] || [];
 
