@@ -687,14 +687,14 @@ app.get('/scenarioGraph',function(req,res) {
     })
 });
 
-//get all the graphs for a  specific scenario
+//get all the graph indexes for a  specific scenario
 app.get('/scenarioGraph/:scenarioid',function(req,res) {
 
     var scenarioId = req.params.scenarioid;
     //console.log(userid,scenarioid)
     var collection = req.selectedDbCon.collection('scenarioGraph')
 
-    collection.find({scenarioid:scenarioId}).toArray(function (err, result) {
+    collection.find({scenarioid:scenarioId},{projection:{id:1,name:1,userid:1,scenarioid:1}}).toArray(function (err, result) {
         if (err) {
             res.send(err,500)
         } else {

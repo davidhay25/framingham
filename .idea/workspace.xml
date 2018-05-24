@@ -8,8 +8,8 @@
   <component name="ChangeListManager">
     <list default="true" id="0a6e7d6f-aa6e-405d-9d94-d3543d427d97" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ecoServer.js" afterPath="$PROJECT_DIR$/ecoServer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/cofCtrl.js" afterPath="$PROJECT_DIR$/js/cofCtrl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/importGraphCtl.js" afterPath="$PROJECT_DIR$/js/importGraphCtl.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/includes/cofSummary.html" afterPath="$PROJECT_DIR$/includes/cofSummary.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/cofSummaryCtrl.js" afterPath="$PROJECT_DIR$/js/cofSummaryCtrl.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -23,11 +23,26 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="cof.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/includes/cof.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="16" column="9" lean-forward="true" selection-start-line="13" selection-start-column="7" selection-end-line="16" selection-end-column="9" />
+              <folding>
+                <element signature="n#style#0;n#span#0;n#div#0;n#div#3;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#uib-tab#1;n#uib-tabset#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#0;n#uib-tab#1;n#uib-tabset#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#uib-tab#1;n#uib-tabset#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="importGraphCtl.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/importGraphCtl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="249">
-              <caret line="132" column="0" lean-forward="true" selection-start-line="132" selection-start-column="0" selection-end-line="132" selection-end-column="0" />
+            <state relative-caret-position="266">
+              <caret line="132" column="0" lean-forward="true" selection-start-line="121" selection-start-column="15" selection-end-line="132" selection-end-column="0" />
               <folding>
                 <element signature="e#466#1303#0" expanded="false" />
                 <element signature="e#1431#3646#0" expanded="false" />
@@ -38,26 +53,48 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cofSummaryCtrl.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="cofSummaryCtrl.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/cofSummaryCtrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="83" column="38" lean-forward="true" selection-start-line="83" selection-start-column="38" selection-end-line="83" selection-end-column="38" />
+            <state relative-caret-position="159">
+              <caret line="52" column="49" lean-forward="true" selection-start-line="52" selection-start-column="49" selection-end-line="52" selection-end-column="49" />
               <folding>
-                <element signature="e#1697#1929#0" expanded="false" />
-                <element signature="e#1796#1910#0" expanded="false" />
-                <element signature="e#2703#2781#0" expanded="false" />
-                <element signature="e#2969#3530#0" expanded="false" />
-                <element signature="e#3601#4265#0" expanded="false" />
-                <element signature="e#3674#4238#0" expanded="false" />
-                <element signature="e#4525#4587#0" expanded="false" />
-                <element signature="e#7732#7844#0" expanded="false" />
-                <element signature="e#8049#8144#0" expanded="false" />
-                <element signature="e#8435#8668#0" expanded="false" />
-                <element signature="e#8466#8650#0" expanded="false" />
-                <element signature="e#8542#8628#0" expanded="false" />
-                <element signature="e#8808#9144#0" expanded="false" />
-                <element signature="e#9012#9126#0" expanded="false" />
+                <element signature="e#267#624#0" expanded="false" />
+                <element signature="e#427#608#0" expanded="false" />
+                <element signature="e#470#526#0" expanded="false" />
+                <element signature="e#532#590#0" expanded="false" />
+                <element signature="e#710#1103#0" expanded="false" />
+                <element signature="e#866#1004#0" expanded="false" />
+                <element signature="e#1010#1087#0" expanded="false" />
+                <element signature="e#2489#2665#0" expanded="false" />
+                <element signature="e#2801#4799#0" expanded="false" />
+                <element signature="e#2906#4745#0" expanded="false" />
+                <element signature="e#3082#4726#0" expanded="false" />
+                <element signature="e#3142#3220#0" expanded="false" />
+                <element signature="e#3336#3996#0" expanded="false" />
+                <element signature="e#3408#3969#0" expanded="false" />
+                <element signature="e#4040#4704#0" expanded="false" />
+                <element signature="e#4113#4677#0" expanded="false" />
+                <element signature="e#4964#5026#0" expanded="false" />
+                <element signature="e#5835#7339#0" expanded="false" />
+                <element signature="e#6086#7308#0" expanded="false" />
+                <element signature="e#6158#7273#0" expanded="false" />
+                <element signature="e#6344#7155#0" expanded="false" />
+                <element signature="e#6390#6435#0" expanded="false" />
+                <element signature="e#6654#6771#0" expanded="false" />
+                <element signature="e#6861#7111#0" expanded="false" />
+                <element signature="e#7411#7483#0" expanded="false" />
+                <element signature="e#7593#7674#0" expanded="false" />
+                <element signature="e#8104#8386#0" expanded="false" />
+                <element signature="e#8154#8364#0" expanded="false" />
+                <element signature="e#8225#8337#0" expanded="false" />
+                <element signature="e#8542#8637#0" expanded="false" />
+                <element signature="e#8720#9653#0" expanded="false" />
+                <element signature="e#8928#9161#0" expanded="false" />
+                <element signature="e#8959#9143#0" expanded="false" />
+                <element signature="e#9035#9121#0" expanded="false" />
+                <element signature="e#9301#9637#0" expanded="false" />
+                <element signature="e#9505#9619#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -477,7 +514,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cofCtrl.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="cofCtrl.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/cofCtrl.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="255">
@@ -616,25 +653,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ecoServer.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ecoServer.js">
+      <file leaf-file-name="cofSummary.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/includes/cofSummary.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="652" column="31" lean-forward="false" selection-start-line="652" selection-start-column="31" selection-end-line="652" selection-end-column="31" />
+            <state relative-caret-position="212">
+              <caret line="54" column="54" lean-forward="false" selection-start-line="54" selection-start-column="48" selection-end-line="54" selection-end-column="54" />
               <folding>
-                <element signature="e#20438#20904#0" expanded="false" />
+                <element signature="n#div#0;n#div#1;n#div#0;n#!!top" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="importGraph.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modalTemplates/importGraph.html">
+      <file leaf-file-name="ecoServer.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ecoServer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="945">
-              <caret line="63" column="48" lean-forward="false" selection-start-line="63" selection-start-column="48" selection-end-line="63" selection-end-column="48" />
+            <state relative-caret-position="166">
+              <caret line="696" column="92" lean-forward="false" selection-start-line="696" selection-start-column="92" selection-end-line="696" selection-end-column="92" />
               <folding>
-                <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="e#19909#20344#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -652,9 +689,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>$watch</find>
-      <find>xxx</find>
-      <find>angular-ligh</find>
       <find>focusResourceId</find>
       <find>save</find>
       <find>ole.lo</find>
@@ -681,6 +715,9 @@
       <find>item.table</find>
       <find>/scenarioGraph</find>
       <find>scrollScenarioDescription</find>
+      <find>user</find>
+      <find>graphs</find>
+      <find>scenarioGraph/</find>
       <find>mongo</find>
     </findStrings>
     <replaceStrings>
@@ -748,14 +785,14 @@
         <option value="$PROJECT_DIR$/directive/tblResource/tblResourceDir.html" />
         <option value="$PROJECT_DIR$/directive/tblResource/tblResourceDir.js" />
         <option value="$PROJECT_DIR$/connectathon.html" />
-        <option value="$PROJECT_DIR$/includes/cofSummary.html" />
         <option value="$PROJECT_DIR$/modalTemplates/importGraph.html" />
         <option value="$PROJECT_DIR$/js/ecosystemSvc.js" />
-        <option value="$PROJECT_DIR$/js/cofSummaryCtrl.js" />
         <option value="$PROJECT_DIR$/includes/cof.html" />
         <option value="$PROJECT_DIR$/js/importGraphCtl.js" />
-        <option value="$PROJECT_DIR$/ecoServer.js" />
         <option value="$PROJECT_DIR$/js/cofCtrl.js" />
+        <option value="$PROJECT_DIR$/includes/cofSummary.html" />
+        <option value="$PROJECT_DIR$/ecoServer.js" />
+        <option value="$PROJECT_DIR$/js/cofSummaryCtrl.js" />
       </list>
     </option>
   </component>
@@ -1438,12 +1475,12 @@
       <workItem from="1526194568904" duration="22519000" />
       <workItem from="1526375720145" duration="17072000" />
       <workItem from="1526882832030" duration="32230000" />
-      <workItem from="1527160504722" duration="5075000" />
+      <workItem from="1527160504722" duration="6124000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1409433000" />
+    <option name="totallyTimeSpent" value="1410482000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="45" y="148" width="1335" height="708" extended-state="0" />
@@ -1706,6 +1743,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="620">
           <caret line="1010" column="38" lean-forward="false" selection-start-line="1010" selection-start-column="32" selection-end-line="1010" selection-end-column="38" />
+          <folding>
+            <element signature="e#960#3169#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2019,17 +2059,6 @@
             <element signature="n#div#5;n#uib-tab#0;n#uib-tabset#0;n#div#1;n#div#0;n#uib-tab#0;n#uib-tabset#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
             <marker date="1527081861866" expanded="true" signature="70511:70645" ph="{...}" />
             <marker date="1527081861866" expanded="true" signature="79773:79894" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/cofSummary.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="48" column="48" lean-forward="false" selection-start-line="48" selection-start-column="28" selection-end-line="48" selection-end-column="48" />
-          <folding>
-            <element signature="n#style#0;n#span#0;n#div#0;n#div#1;n#div#0;n#uib-tab#0;n#uib-tabset#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#div#1;n#div#0;n#uib-tab#0;n#uib-tabset#0;n#div#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2441,65 +2470,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/cofSummaryCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="83" column="38" lean-forward="true" selection-start-line="83" selection-start-column="38" selection-end-line="83" selection-end-column="38" />
-          <folding>
-            <element signature="e#1697#1929#0" expanded="false" />
-            <element signature="e#1796#1910#0" expanded="false" />
-            <element signature="e#2703#2781#0" expanded="false" />
-            <element signature="e#2969#3530#0" expanded="false" />
-            <element signature="e#3601#4265#0" expanded="false" />
-            <element signature="e#3674#4238#0" expanded="false" />
-            <element signature="e#4525#4587#0" expanded="false" />
-            <element signature="e#7732#7844#0" expanded="false" />
-            <element signature="e#8049#8144#0" expanded="false" />
-            <element signature="e#8435#8668#0" expanded="false" />
-            <element signature="e#8466#8650#0" expanded="false" />
-            <element signature="e#8542#8628#0" expanded="false" />
-            <element signature="e#8808#9144#0" expanded="false" />
-            <element signature="e#9012#9126#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/cof.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="51" column="75" lean-forward="false" selection-start-line="51" selection-start-column="75" selection-end-line="51" selection-end-column="75" />
-          <folding>
-            <element signature="n#style#0;n#span#0;n#div#0;n#div#3;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#uib-tab#1;n#uib-tabset#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#1;n#div#0;n#uib-tab#1;n#uib-tabset#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#uib-tab#1;n#uib-tabset#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/importGraphCtl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="132" column="0" lean-forward="true" selection-start-line="132" selection-start-column="0" selection-end-line="132" selection-end-column="0" />
-          <folding>
-            <element signature="e#466#1303#0" expanded="false" />
-            <element signature="e#1431#3646#0" expanded="false" />
-            <element signature="e#3951#4877#0" expanded="false" />
-            <element signature="e#6253#6339#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ecoServer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="652" column="31" lean-forward="false" selection-start-line="652" selection-start-column="31" selection-end-line="652" selection-end-column="31" />
-          <folding>
-            <element signature="e#20438#20904#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/cofCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -2633,6 +2603,97 @@
             <marker date="1527185368985" expanded="false" signature="4668:7150" ph="{...}" />
             <marker date="1527185368985" expanded="false" signature="29142:29455" ph="{...}" />
             <marker date="1527185368985" expanded="false" signature="29311:29399" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/cof.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="9" lean-forward="true" selection-start-line="13" selection-start-column="7" selection-end-line="16" selection-end-column="9" />
+          <folding>
+            <element signature="n#style#0;n#span#0;n#div#0;n#div#3;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#uib-tab#1;n#uib-tabset#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#uib-tab#1;n#uib-tabset#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#uib-tab#1;n#uib-tabset#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/cofSummary.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="54" column="54" lean-forward="false" selection-start-line="54" selection-start-column="48" selection-end-line="54" selection-end-column="54" />
+          <folding>
+            <element signature="n#div#0;n#div#1;n#div#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ecoServer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="166">
+          <caret line="696" column="92" lean-forward="false" selection-start-line="696" selection-start-column="92" selection-end-line="696" selection-end-column="92" />
+          <folding>
+            <element signature="e#19909#20344#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/importGraphCtl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="132" column="0" lean-forward="true" selection-start-line="121" selection-start-column="15" selection-end-line="132" selection-end-column="0" />
+          <folding>
+            <element signature="e#466#1303#0" expanded="false" />
+            <element signature="e#1431#3646#0" expanded="false" />
+            <element signature="e#3951#4877#0" expanded="false" />
+            <element signature="e#6253#6339#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/cofSummaryCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="159">
+          <caret line="52" column="49" lean-forward="true" selection-start-line="52" selection-start-column="49" selection-end-line="52" selection-end-column="49" />
+          <folding>
+            <element signature="e#267#624#0" expanded="false" />
+            <element signature="e#427#608#0" expanded="false" />
+            <element signature="e#470#526#0" expanded="false" />
+            <element signature="e#532#590#0" expanded="false" />
+            <element signature="e#710#1103#0" expanded="false" />
+            <element signature="e#866#1004#0" expanded="false" />
+            <element signature="e#1010#1087#0" expanded="false" />
+            <element signature="e#2489#2665#0" expanded="false" />
+            <element signature="e#2801#4799#0" expanded="false" />
+            <element signature="e#2906#4745#0" expanded="false" />
+            <element signature="e#3082#4726#0" expanded="false" />
+            <element signature="e#3142#3220#0" expanded="false" />
+            <element signature="e#3336#3996#0" expanded="false" />
+            <element signature="e#3408#3969#0" expanded="false" />
+            <element signature="e#4040#4704#0" expanded="false" />
+            <element signature="e#4113#4677#0" expanded="false" />
+            <element signature="e#4964#5026#0" expanded="false" />
+            <element signature="e#5835#7339#0" expanded="false" />
+            <element signature="e#6086#7308#0" expanded="false" />
+            <element signature="e#6158#7273#0" expanded="false" />
+            <element signature="e#6344#7155#0" expanded="false" />
+            <element signature="e#6390#6435#0" expanded="false" />
+            <element signature="e#6654#6771#0" expanded="false" />
+            <element signature="e#6861#7111#0" expanded="false" />
+            <element signature="e#7411#7483#0" expanded="false" />
+            <element signature="e#7593#7674#0" expanded="false" />
+            <element signature="e#8104#8386#0" expanded="false" />
+            <element signature="e#8154#8364#0" expanded="false" />
+            <element signature="e#8225#8337#0" expanded="false" />
+            <element signature="e#8542#8637#0" expanded="false" />
+            <element signature="e#8720#9653#0" expanded="false" />
+            <element signature="e#8928#9161#0" expanded="false" />
+            <element signature="e#8959#9143#0" expanded="false" />
+            <element signature="e#9035#9121#0" expanded="false" />
+            <element signature="e#9301#9637#0" expanded="false" />
+            <element signature="e#9505#9619#0" expanded="false" />
           </folding>
         </state>
       </provider>

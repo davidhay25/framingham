@@ -34,22 +34,37 @@ angular.module("sampleApp")
             };
 
             //a single graph (for a single user) is selected from the list at the left...
-            $scope.selectGraph = function(graph){
+            $scope.selectGraph = function(shortGraph){
                 $scope.filteredGraph = false;       //set the filter off to start with...
                 delete $scope.item;                 //this is a selected item in teh selected graph
 
-                $scope.selectedGraph = graph;
-                makeGraph(graph.items)
 
-                //now generate the complete set of sample/notes summaries
-                $scope.allHashPathSummaries = [];
-                graph.items.forEach(function(item){
-                    var summary = makeItemSummary(item)
-                    if (summary.hasData) {
-                        $scope.allHashPathSummaries.push({type:item.type,summary:summary})
+                var url = "/oneScenarioGraph/"+shortGraph.id
+
+                $http.get(url).then(
+                    function(data) {
+                        $scope.selectedGraph = data.data;
+                        makeGraph($scope.selectedGraph.items)
+
+                        //now generate the complete set of sample/notes summaries
+                        $scope.allHashPathSummaries = [];
+                        $scope.selectedGraph.items.forEach(function(item){
+                            var summary = makeItemSummary(item)
+                            if (summary.hasData) {
+                                $scope.allHashPathSummaries.push({type:item.type,summary:summary})
+                            }
+
+                        });
+
+
+                    },
+                    function(err) {
+                        alert('error retrieving graph: '+angular.toJson(err))
                     }
+                );
 
-                });
+
+
 
 
             };
@@ -137,7 +152,7 @@ angular.module("sampleApp")
                     var url = "/scenarioGraph/"+scenario.id
                     $http.get(url).then(
                         function(data) {
-                            $scope.graphs = data.data;
+                            $scope.graphs = data.data;      //note that this doesn't include the elements...
 
 
                             //add the user object so er can display in the list...
