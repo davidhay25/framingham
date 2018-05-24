@@ -216,7 +216,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     graph.items.forEach(function(item){
                         hashResourceType[item.type] = hashResourceType[item.type] || [];
 
-                        if (item.notes) {
+                        if (item.notes && item.table) {
                             //there are notes for this item (== resource)
                             //create a hash of id for this item
                             var hashId = {};
