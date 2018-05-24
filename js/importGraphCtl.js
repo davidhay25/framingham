@@ -130,6 +130,7 @@ angular.module("sampleApp")
                     $scope.selectedGraph.items.forEach(function(item){
                         item.sample = [];
                         item.notes = [];
+
                     })
                 }
 

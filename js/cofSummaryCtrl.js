@@ -74,43 +74,47 @@ angular.module("sampleApp")
 
                     //build a hash of rows by id (item.table must be present)
                     var hashRows = {};
-                    item.table.forEach(function (row) {
-                        hashRows[row.id] = row
-                    });
 
-                    //if there are any notes for this item/resource
-                    if (item.notes) {
+                    if (item.table) {
+                        item.table.forEach(function (row) {
+                            hashRows[row.id] = row
+                        });
 
-                        angular.forEach(item.notes,function(v,id){
-                            hashPathSummary.hasData = true;     //have to do it here, as there can be am empty object
-                            var h = hashRows[id]
-                            var path = h.path;
+                        //if there are any notes for this item/resource
+                        if (item.notes) {
 
-                            hashPathSummary[path] = hashPathSummary[path] || {};
-                            var t = hashPathSummary[path];
+                            angular.forEach(item.notes,function(v,id){
+                                hashPathSummary.hasData = true;     //have to do it here, as there can be am empty object
+                                var h = hashRows[id]
+                                var path = h.path;
 
-                            t.path = h.path;
-                            t.notes = t.notes || [];
-                            t.notes.push(v)
-                        })
+                                hashPathSummary[path] = hashPathSummary[path] || {};
+                                var t = hashPathSummary[path];
+
+                                t.path = h.path;
+                                t.notes = t.notes || [];
+                                t.notes.push(v)
+                            })
+                        }
+
+
+                        if (item.sample) {
+
+                            angular.forEach(item.sample,function(v,id){
+                                hashPathSummary.hasData = true;     //have to do it here, as there can be am empty object
+                                var h = hashRows[id]
+                                var path = h.path;
+
+                                hashPathSummary[path] = hashPathSummary[path] || {};
+                                var t = hashPathSummary[path];
+
+                                t.path = h.path;
+                                t.sample = t.sample || [];
+                                t.sample.push(v)
+                            })
+                        }
                     }
 
-
-                    if (item.sample) {
-
-                        angular.forEach(item.sample,function(v,id){
-                            hashPathSummary.hasData = true;     //have to do it here, as there can be am empty object
-                            var h = hashRows[id]
-                            var path = h.path;
-
-                            hashPathSummary[path] = hashPathSummary[path] || {};
-                            var t = hashPathSummary[path];
-
-                            t.path = h.path;
-                            t.sample = t.sample || [];
-                            t.sample.push(v)
-                        })
-                    }
                 }
                 return hashPathSummary;
             }
