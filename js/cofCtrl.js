@@ -192,6 +192,7 @@ angular.module("sampleApp")
                     $scope.input.scenarioNotes = graph.scenarioNotes;
                     makeGraph();
                     makeDocumentDisplay()
+                    $scope.saveGraph(true)
                 }
 
 
