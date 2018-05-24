@@ -731,6 +731,7 @@ angular.module("sampleApp")
                     });
 
                     //testing
+                    /*
                     $http.get('http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/cc-Patient').then(
                         function(data) {
                             var SD = data.data;
@@ -742,6 +743,7 @@ angular.module("sampleApp")
                             )
                         }
                     );
+                    */
 
                 }
 
