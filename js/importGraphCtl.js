@@ -35,7 +35,7 @@ angular.module("sampleApp")
 
             };
 
-            //load all the scenarios for this track...
+            //load all the scenario graphs for this track...
             $http.get(url).then(
                 function(data) {
                     //var allGraphs = data.data;
@@ -117,9 +117,23 @@ angular.module("sampleApp")
                 }
             };
 
-            $scope.selectGraph = function(graph){
-                $scope.selectedGraph = graph;
-                makeGraph(graph.items)
+            $scope.selectGraph = function(shortGraph){
+
+                var url = "/oneScenarioGraph/"+shortGraph.id
+
+                $http.get(url).then(
+                    function(data) {
+                        $scope.selectedGraph = data.data;
+                        makeGraph($scope.selectedGraph.items)
+                    },
+                    function(err) {
+                        alert('error retrieving graph: '+angular.toJson(err))
+                    }
+                );
+
+                //var url = "/scenarioGraph/";
+
+
             };
 
             $scope.import = function(){

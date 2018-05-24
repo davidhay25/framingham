@@ -23,7 +23,7 @@ angular.module("sampleApp")
                     }
                 });
 
-                console.log($scope.document);
+                //console.log($scope.document);
                 var hashSample = {};
 
 

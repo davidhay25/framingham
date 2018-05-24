@@ -321,10 +321,6 @@ app.post('/public/loginDEP',function(req,res){
 
     }
 
-
-
-
-
 });
 
 
@@ -647,45 +643,42 @@ app.put('/scenarioGraph',function(req,res){
     clinicalUpdate(collection,result,res)
 });
 
+//get a single scenarioGraph by Id
+app.get('/oneScenarioGraph/:graphid',function(req,res) {
 
-//get all the graphs for all tasks
-app.get('/scenarioGraph',function(req,res) {
-
-    res.send([])
-    return;
-
-
+    var graphId = req.params.graphid;
+    //console.log(userid,scenarioid)
     var collection = req.selectedDbCon.collection('scenarioGraph')
 
-
-    collection.find({userid:'id1527157065008'}).toArray(function (err, result) {
+    collection.find({id:graphId}).toArray(function (err, result) {
         if (err) {
             res.send(err,500)
         } else {
             if (result.length > 0) {
-                res.send(result)     //should only be 1...
-            } else {
-                res.send({})
-            }
 
+                res.send(result[0])
+            } else {
+                res.send([])
+            }
         }
     })
+});
 
+//get an index of all the graphs for all tasks
+app.get('/scenarioGraph',function(req,res) {
 
-
-
-
-
-
+    //res.send([])
+    //return;
 
 
     var collection = req.selectedDbCon.collection('scenarioGraph')
 
-    collection.find().toArray(function (err, result) {
+    collection.find({},{projection:{id:1,name:1,userid:1,scenarioid:1}}).toArray(function (err, result) {
         if (err) {
             res.send(err,500)
         } else {
             if (result.length > 0) {
+                console.log(result)
                 res.send(result)
             } else {
                 res.send([])
