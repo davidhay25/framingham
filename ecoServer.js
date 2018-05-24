@@ -651,8 +651,8 @@ app.put('/scenarioGraph',function(req,res){
 //get all the graphs for all tasks
 app.get('/scenarioGraph',function(req,res) {
 
-    //res.send([])
-    //return;
+    res.send([])
+    return;
 
 
     var collection = req.selectedDbCon.collection('scenarioGraph')
