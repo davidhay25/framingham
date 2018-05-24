@@ -184,11 +184,19 @@ angular.module("sampleApp")
                                     })
                                 }
 
+                            });
+
+                            $scope.graphs.sort(function(a,b){
+                                if (a.user && a.user.name && b.user && b.user.name) {
+                                    if (a.user.name > b.user.name) {
+                                        return 1
+                                    } else {
+                                        return -1
+                                    }
+                                }
+
                             })
-
-
-
-
+                            
 
                         },
                         function(err) {
