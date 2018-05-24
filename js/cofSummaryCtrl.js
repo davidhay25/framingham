@@ -72,7 +72,7 @@ angular.module("sampleApp")
                 var hashPathSummary = {hasData: false};
                 if (item.notes || item.sample) {
 
-                    //build a hash of rows by id (item.table must be present)
+                    //build a hash of rows by id (item.table must be present - not for imported)
                     var hashRows = {};
 
                     if (item.table) {
