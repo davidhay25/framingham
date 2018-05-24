@@ -48,7 +48,10 @@
 
         <div class="col-sm-2 col-md-2">
             <div><strong>Review Purpose</strong></div>
-            <p ng-bind-html="cofScenario.reviewPurpose | markDown"></p>
+            <div class="scrollScenarioDescription">
+                <p ng-bind-html="cofScenario.reviewPurpose | markDown"></p>
+            </div>
+
         </div>
         <div class="col-sm-5 col-md-5">
 
