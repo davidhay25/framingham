@@ -650,6 +650,7 @@ app.put('/scenarioGraph',function(req,res){
 
 //get all the graphs for all tasks
 app.get('/scenarioGraph',function(req,res) {
+    var collection = req.selectedDbCon.collection('scenarioGraph')
 
 
     collection.find({userid:'id1527157065008'}).toArray(function (err, result) {
