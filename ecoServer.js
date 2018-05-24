@@ -651,7 +651,26 @@ app.put('/scenarioGraph',function(req,res){
 //get all the graphs for all tasks
 app.get('/scenarioGraph',function(req,res) {
 
-    res.send([])
+
+    collection.find({userid:'id1527157065008'}).toArray(function (err, result) {
+        if (err) {
+            res.send(err,500)
+        } else {
+            if (result.length > 0) {
+                res.send(result[0])     //should only be 1...
+            } else {
+                res.send({})
+            }
+
+        }
+    })
+
+
+
+
+
+
+   // res.send([])
     return;
 
 
