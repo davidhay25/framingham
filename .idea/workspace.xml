@@ -7,7 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0a6e7d6f-aa6e-405d-9d94-d3543d427d97" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/cofCtrl.js" afterPath="$PROJECT_DIR$/js/cofCtrl.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/cofSummaryCtrl.js" afterPath="$PROJECT_DIR$/js/cofSummaryCtrl.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -49,11 +49,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cofSummaryCtrl.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="cofSummaryCtrl.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/cofSummaryCtrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="181">
-              <caret line="142" column="95" lean-forward="false" selection-start-line="142" selection-start-column="95" selection-end-line="142" selection-end-column="95" />
+            <state relative-caret-position="256">
+              <caret line="147" column="68" lean-forward="false" selection-start-line="147" selection-start-column="68" selection-end-line="147" selection-end-column="68" />
               <folding>
                 <element signature="e#1697#1929#0" expanded="false" />
                 <element signature="e#1796#1910#0" expanded="false" />
@@ -64,13 +64,13 @@
                 <element signature="e#3475#4095#0" expanded="false" />
                 <element signature="e#3544#4072#0" expanded="false" />
                 <element signature="e#4332#4394#0" expanded="false" />
-                <element signature="e#7525#7637#0" expanded="false" />
-                <element signature="e#7842#7937#0" expanded="false" />
-                <element signature="e#8228#8461#0" expanded="false" />
-                <element signature="e#8259#8443#0" expanded="false" />
-                <element signature="e#8335#8421#0" expanded="false" />
-                <element signature="e#8601#8937#0" expanded="false" />
-                <element signature="e#8805#8919#0" expanded="false" />
+                <element signature="e#7539#7651#0" expanded="false" />
+                <element signature="e#7856#7951#0" expanded="false" />
+                <element signature="e#8242#8475#0" expanded="false" />
+                <element signature="e#8273#8457#0" expanded="false" />
+                <element signature="e#8349#8435#0" expanded="false" />
+                <element signature="e#8615#8951#0" expanded="false" />
+                <element signature="e#8819#8933#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -503,7 +503,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cofCtrl.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="cofCtrl.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/cofCtrl.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="312">
@@ -671,7 +671,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>modal</find>
       <find>scena</find>
       <find>scenarioGraph</find>
       <find>allScenarios</find>
@@ -701,6 +700,7 @@
       <find>people</find>
       <find>all sc</find>
       <find>import</find>
+      <find>cc</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -767,11 +767,11 @@
         <option value="$PROJECT_DIR$/connectathon.html" />
         <option value="$PROJECT_DIR$/includes/cof.html" />
         <option value="$PROJECT_DIR$/js/importGraphCtl.js" />
-        <option value="$PROJECT_DIR$/js/cofSummaryCtrl.js" />
         <option value="$PROJECT_DIR$/includes/cofSummary.html" />
         <option value="$PROJECT_DIR$/modalTemplates/importGraph.html" />
         <option value="$PROJECT_DIR$/js/ecosystemSvc.js" />
         <option value="$PROJECT_DIR$/js/cofCtrl.js" />
+        <option value="$PROJECT_DIR$/js/cofSummaryCtrl.js" />
       </list>
     </option>
   </component>
@@ -1453,12 +1453,12 @@
       <workItem from="1525943132856" duration="29783000" />
       <workItem from="1526194568904" duration="22519000" />
       <workItem from="1526375720145" duration="17072000" />
-      <workItem from="1526882832030" duration="31077000" />
+      <workItem from="1526882832030" duration="31183000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1403205000" />
+    <option name="totallyTimeSpent" value="1403311000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="88" y="86" width="1335" height="708" extended-state="0" />
@@ -2336,31 +2336,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/cofSummaryCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="142" column="95" lean-forward="false" selection-start-line="142" selection-start-column="95" selection-end-line="142" selection-end-column="95" />
-          <folding>
-            <element signature="e#1697#1929#0" expanded="false" />
-            <element signature="e#1796#1910#0" expanded="false" />
-            <element signature="e#2467#4113#0" expanded="false" />
-            <element signature="e#2641#2711#0" expanded="false" />
-            <element signature="e#2819#3435#0" expanded="false" />
-            <element signature="e#2887#3412#0" expanded="false" />
-            <element signature="e#3475#4095#0" expanded="false" />
-            <element signature="e#3544#4072#0" expanded="false" />
-            <element signature="e#4332#4394#0" expanded="false" />
-            <element signature="e#7525#7637#0" expanded="false" />
-            <element signature="e#7842#7937#0" expanded="false" />
-            <element signature="e#8228#8461#0" expanded="false" />
-            <element signature="e#8259#8443#0" expanded="false" />
-            <element signature="e#8335#8421#0" expanded="false" />
-            <element signature="e#8601#8937#0" expanded="false" />
-            <element signature="e#8805#8919#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/connectathon.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="193">
@@ -2941,6 +2916,31 @@
             <marker date="1527141075315" expanded="false" signature="4666:7148" ph="{...}" />
             <marker date="1527141075315" expanded="false" signature="29140:29453" ph="{...}" />
             <marker date="1527141075315" expanded="false" signature="29309:29397" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/cofSummaryCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="147" column="68" lean-forward="false" selection-start-line="147" selection-start-column="68" selection-end-line="147" selection-end-column="68" />
+          <folding>
+            <element signature="e#1697#1929#0" expanded="false" />
+            <element signature="e#1796#1910#0" expanded="false" />
+            <element signature="e#2467#4113#0" expanded="false" />
+            <element signature="e#2641#2711#0" expanded="false" />
+            <element signature="e#2819#3435#0" expanded="false" />
+            <element signature="e#2887#3412#0" expanded="false" />
+            <element signature="e#3475#4095#0" expanded="false" />
+            <element signature="e#3544#4072#0" expanded="false" />
+            <element signature="e#4332#4394#0" expanded="false" />
+            <element signature="e#7539#7651#0" expanded="false" />
+            <element signature="e#7856#7951#0" expanded="false" />
+            <element signature="e#8242#8475#0" expanded="false" />
+            <element signature="e#8273#8457#0" expanded="false" />
+            <element signature="e#8349#8435#0" expanded="false" />
+            <element signature="e#8615#8951#0" expanded="false" />
+            <element signature="e#8819#8933#0" expanded="false" />
           </folding>
         </state>
       </provider>

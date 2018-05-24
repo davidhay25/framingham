@@ -145,7 +145,7 @@ angular.module("sampleApp")
                                     graph.items.forEach(function(item){
                                         $scope.hashResources[item.type] = $scope.hashResources[item.type] || [];
 
-                                        if (item.notes) {
+                                        if (item.notes && item.table) {
                                             //there are notes for this item (== resource)
                                             //create a hash of id for this item
                                             var hashId = {}
