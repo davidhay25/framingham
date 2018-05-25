@@ -1,0 +1,21 @@
+<div>
+    <!-- Controller is cofCtrl-->
+    <table class="table table-bordered" ng-show="input">
+        <tr><th>Model Element</th><th>Clinical Description</th><th>Action</th></tr>
+
+        <tr ng-repeat="row in localTableCopy">
+            <td>
+            <div ng-style="{'padding-left': ((row.path | pathindent) -10)*1.5 +'px'}"
+                 uib-popover={{row.definition}}
+                 ng-class="{required:row.isRequired}"
+                 popover-placement="top"
+                 popover-trigger="'mouseenter'">{{row.path | lastInPath}}</div>
+            </td>
+            <td>
+                {{row.clinDesc}}
+            </td>
+            <td><button class="btn btn-link" ng-click="addElement($index)">Add sibling below</button> </td>
+        </tr>
+    </table>
+
+</div>

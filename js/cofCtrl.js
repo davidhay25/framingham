@@ -13,7 +13,7 @@ angular.module("sampleApp")
             var allScenarios = {};
 
 
-            //------- document stuff - ? move to service or
+            //------- document stuff - ? move to service or...
 
             function makeDocumentDisplay(){
                 $scope.document = {}
@@ -45,6 +45,20 @@ angular.module("sampleApp")
             }
 
 
+            $scope.addElement = function(inx){
+                console.log(inx)
+
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/addModelElement.html',
+                    size : 'lg',
+                    controller: 'addElementCtrl'
+                }).result.then(function(row){
+                    console.log(row)
+                    $scope.localTableCopy.splice(inx+1,0,row)
+
+                });
+
+            };
 
             $scope.filteredGraph = false;
             $scope.setFocus = function() {
@@ -602,8 +616,12 @@ angular.module("sampleApp")
                     }
                 }
 
+                //called when the form directive has created teh table...
                 function receiveTable(table) {
                     drawTree(table);
+//console.log(table)
+                    $scope.localTableCopy = table;      //used in teh designer...
+
 
                 }
             };

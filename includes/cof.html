@@ -22,6 +22,7 @@
         }
 
     </style>
+
     <div class="row" ng-show="selectedTrack">
         <div class="col-sm-2 col-md-2">
 
@@ -184,6 +185,12 @@
                                   fnshownotes="setShowNotes"></tbl-resource>
                 </uib-tab>
 
+                <uib-tab heading="Designer">
+                   <br/>
+                    <ng-include src="'includes/designer.html'"></ng-include>
+
+
+                </uib-tab>
 
                 <uib-tab heading="Tree">
                     <br/>

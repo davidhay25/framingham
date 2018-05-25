@@ -110,19 +110,21 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         } else {
                             //this is a reference. need to also show all the parents...
                             var ar = row.path.split('.')
-                            //ar.forEach(function)
+
                             switch(ar.length) {
                                 case 1:
                                     break;
                                 case 2:
                                     var p = ar[0];
                                     parents[p] = true;  //eg in List entry.item will show wntry
+                                    break;
+                                case 3 :
+                                    var p = ar[0] + '.' + ar[1];
+                                    break;
                             }
-
-
                         }
 
-                    })
+                    });
 
                     //now show all the parents
                     $scope.input.table.forEach(function(row){

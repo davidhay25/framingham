@@ -135,6 +135,8 @@
     <script src="directive/vsViewer/vsViewer.js"></script>
     <script src="directive/tblResource/tblResourceDir.js"></script>
 
+
+
     <script src="js/libs/showdown.min.js"></script>
     <script src="js/libs/angular-lightweight-markdown-editor.min.js"></script>
     <script src="js/ecosystemCtl.js"></script>
@@ -168,6 +170,8 @@
     <script src="js/getDatatypeValueSvc.js"></script>
     <script src="js/allNotes.js"></script>
     <script src="js/importGraphCtl.js"></script>
+    <script src="js/addElementCtrl.js"></script>
+
 
     <script src="js/libs/jstree.min.js"></script>
 
@@ -1357,38 +1361,7 @@
                     <div ng-controller="allNotesCtrl">
                         <ng-include src="'includes/allNotes.html'"></ng-include>
                     </div>
-                    <!--
-                    <div class="row">
-                        <div class="col-sm-3 col-md-3">
-                            <ul class="list-group">
-                                <li ng-repeat="(k,v) in hashAllScenarioNotes"
-                                    ng-class="{'list-group-item':true,active : k == oneTypeAllNotesType}"
-                                    ng-click="selectAllNotes(k,v)">
-                                    <div class="clickable">
-                                        {{k}} <span ng-show="v.length > 0" class="badge pull-right">{{v.length}}</span>
 
-                                    </div>
-                                </li>
-                            </ul>
-
-                        </div>
-
-                        <div class="col-sm-9 col-md-9">
-
-                            <table class="table">
-                                <tr><th>Track</th><th>Scenario</th><th>User</th><th>Path</th><th>Note</th></tr>
-                                <tr ng-repeat="row in oneTypeAllNotes">
-                                    <td>{{row.track.name}}</td>
-                                    <td>{{row.scenario.name}}</td>
-                                    <td>{{row.user.name}}</td>
-                                    <td>{{row.path}}</td>
-                                    <td>{{row.note}}</td>
-                                </tr>
-                            </table>
-
-                        </div>
-                    </div>
--->
 
                 </uib-tab>
 
