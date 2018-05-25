@@ -38,9 +38,11 @@ angular.module("sampleApp")
                     if ($scope.input.isMultiple) {
                         $scope.row.mult = '0..*';
                         $scope.row.max='*'
+                        $scope.row.isMultiple = true;
                     } else {
                         $scope.row.mult = '0..1';
                         $scope.row.max=1
+                        $scope.row.isMultiple = false;
                     }
                     $scope.$close($scope.row)
 
@@ -49,9 +51,11 @@ angular.module("sampleApp")
                     if ($scope.input.isMultiple) {
                         row.mult = '0..*';
                         row.max='*'
+                        $scope.row.isMultiple = true;
                     } else {
                         row.mult = '0..1';
                         row.max=1
+                        $scope.row.isMultiple = false;
                     }
                     row.edited = true;
                     row.type = [$scope.input.dt];
