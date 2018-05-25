@@ -96,6 +96,50 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 });
             };
 
+            //if referenceOnly is true, show only references - and pareents of references
+            $scope.onlyRefsShown = false
+            $scope.toggleReferences = function() {
+                var parents = {}
+                $scope.onlyRefsShown = ! $scope.onlyRefsShown;
+                if ($scope.onlyRefsShown) {
+                    $scope.input.table.forEach(function(row){
+                        row.lastHiddenStatus = row.isHidden;        //save what the hide status was, so we can restore it...
+                        if (! row.isReference) {
+
+                            row.isHidden = true;
+                        } else {
+                            //this is a reference. need to also show all the parents...
+                            var ar = row.path.split('.')
+                            //ar.forEach(function)
+                            switch(ar.length) {
+                                case 1:
+                                    break;
+                                case 2:
+                                    var p = ar[0];
+                                    parents[p] = true;  //eg in List entry.item will show wntry
+                            }
+
+
+                        }
+
+                    })
+
+                    //now show all the parents
+                    $scope.input.table.forEach(function(row){
+                        if (parents[row.path]) {
+                            row.isHidden = false;
+                        }
+                    })
+
+                } else {
+                    $scope.input.table.forEach(function(row){
+                        row.isHidden = row.lastHiddenStatus;
+                        delete row.lastHiddenStatus;
+                    })
+                }
+
+            };
+
             $scope.radio = {};
 
             $scope.editSample = function(row,dt,inx) {
@@ -440,6 +484,15 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
                             if (item.dt == 'Reference') {
                                 item.isReference = true;
+
+                                //need to flag all the parents of a node with a reference for the 'show references only' flag
+                                //console.log(item.path);
+                                //var ar = item.path.split('.');
+
+
+
+
+
                                 var type = $filter('getLogicalID')(ed.type[0].targetProfile)
                                 item.referenceDisplay = '--> ' + type;
                             }

@@ -37,6 +37,7 @@ angular.module("sampleApp")
             $scope.selectGraph = function(shortGraph){
                 $scope.filteredGraph = false;       //set the filter off to start with...
                 delete $scope.item;                 //this is a selected item in teh selected graph
+                delete $scope.allHashPathSummaries;
 
 
                 var url = "/oneScenarioGraph/"+shortGraph.id
@@ -196,7 +197,7 @@ angular.module("sampleApp")
                                 }
 
                             })
-                            
+
 
                         },
                         function(err) {
@@ -215,7 +216,7 @@ angular.module("sampleApp")
 
             //'selectedTrack' comes from the parent scope...
             $scope.$watch(function(scope) {return scope.selectedTrack},function(track,olfV){
-            ///$scope.$watch('selectedTrack',function(track){
+
                 if (track && track.scenarios) {
 
                     //ensure that all the paths for all the resources in all scenarios are in the cache
@@ -231,10 +232,7 @@ angular.module("sampleApp")
                     $scope.sumSelectScenario(track.scenarios[0]);
                     $scope.input.scenario = track.scenarios[0];
 
-                    /*loadScenarioGraph(function(){
-                        makeGraph();
-                    });
-*/
+
 
                 }
             });

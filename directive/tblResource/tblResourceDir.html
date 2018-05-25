@@ -29,13 +29,21 @@
         </div>
 
         <div class="col-sm-6 col-md-6">
+
+
+
             <button class="btn btn-link pull-right icon-spacing"
-                    ng-click="act()">Collapse</button>
+                    ng-click="collapse()">Collapse</button>
             <button ng-hide="showOnlyPopulated" class="btn btn-link pull-right icon-spacing"
                     ng-click="hideAllWithoutSample()">Hide without data</button>
             <button ng-show="showOnlyPopulated" class="btn btn-link pull-right icon-spacing"
                     ng-click="showAll()">Show all</button>
 
+
+            <button ng-hide = "onlyRefsShown" class="btn btn-link pull-right icon-spacing"
+                    ng-click="toggleReferences()">References only</button>
+            <button ng-show = "onlyRefsShown" class="btn btn-link pull-right icon-spacing"
+                    ng-click="toggleReferences()">Show all DT</button>
 
             <button ng-hide="hideNotes" class="btn btn-link pull-right icon-spacing"
                     ng-click="showNotes(false)">Hide Notes</button>
@@ -47,6 +55,7 @@
     </div>
 
     <div class="scrollForm">
+
         <table class="table table-bordered" ng-show="input">
             <tr><th></th><th>Model Element</th><th>Card.</th><th>DataTypes</th>
                 <!--<th>Flags</th>-->
@@ -66,7 +75,7 @@
                 <td>
 
                     <div ng-show="row.canDelete"><i class="clickable glyphicon glyphicon-minus-sign pull-right"
-                            title="Delete" ng-click="deleteDuplicate($index,row)">
+                                                    title="Delete" ng-click="deleteDuplicate($index,row)">
                     </i></div>
 
                     <i ng-show="row.isMultiple && row.isOriginal" class="clickable glyphicon glyphicon-plus-sign pull-right"
@@ -132,16 +141,7 @@
 
                 </span>
                 </td>
-                <!--
-                <td>
-                    <span uib-popover='Must Support'
-                          popover-placement="top"
-                          popover-trigger="'mouseenter'" ng-show="row.mustSupport">S</span>
-                    <span uib-popover='Is Modifier'
-                          popover-placement="top"
-                          popover-trigger="'mouseenter'" ng-show="row.isModifier">?!</span>
-                </td>
-                -->
+
                 <td width="25%">
                     <div ng-hide="row.dt == 'Reference' || row.dt=='BackboneElement'">
                         <textarea ng-disabled = "disabledDirectSample" msd-elastic class="form-control" ng-model="input.sample[row.id]" rows="1"></textarea>
@@ -153,6 +153,10 @@
                 <!--<td><pre>{{row | json}}</pre></td>-->
             </tr>
         </table>
+
+
+
+
     </div>
 
     <vs-viewer trigger="showvsviewerdialog" term-server="termServer"
