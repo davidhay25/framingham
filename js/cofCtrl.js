@@ -44,6 +44,27 @@ angular.module("sampleApp")
                 }
             }
 
+            //element edit functions
+            $scope.editElement = function(row) {
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/addModelElement.html',
+                    size : 'lg',
+                    controller: 'addElementCtrl',
+                    resolve: {
+                        row : function(){
+                            return row
+                        },
+                        tableCopy : function(){
+                            return $scope.localTableCopy
+                        }
+                    }
+                }).result.then(function(updatedRow){
+                    //console.log(updatedRow)
+                   row = updatedRow;
+                    $scope.saveGraph(true)
+                });
+
+            };
 
             $scope.addElement = function(inx){
                 console.log(inx)
@@ -51,11 +72,19 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addModelElement.html',
                     size : 'lg',
-                    controller: 'addElementCtrl'
+                    controller: 'addElementCtrl',
+                    resolve: {
+                        row : function(){
+                            return null
+                        },
+                        tableCopy : function(){
+                            return $scope.localTableCopy
+                        }
+                    }
                 }).result.then(function(row){
                     console.log(row)
                     $scope.localTableCopy.splice(inx+1,0,row)
-
+                    $scope.saveGraph(true)
                 });
 
             };

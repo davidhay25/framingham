@@ -14,7 +14,10 @@
             <td>
                 {{row.clinDesc}}
             </td>
-            <td><button class="btn btn-link" ng-click="addElement($index)">Add sibling below</button> </td>
+            <td>
+                <button class="btn btn-link" ng-click="editElement(row)">Edit</button>
+                <button class="btn btn-link" ng-click="addElement($index)">Add sibling below</button>
+            </td>
         </tr>
     </table>
 
