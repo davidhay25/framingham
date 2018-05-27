@@ -98,15 +98,46 @@
                             </div>
                         </uib-tab>
                         <uib-tab heading ='Selected Resource'>
-                            <h4>{{item.type}}</h4>
-                            <table class="table">
-                                <tr><th>Path</th><th>Samples</th><th>Notes</th></tr>
-                                <tr ng-repeat="(k,v) in hashPathSummary track by $index">
-                                    <td>{{v.path}}</td>
-                                    <td><div ng-repeat = "sample in v.sample track by $index">{{sample}}</div></td>
-                                    <td><div ng-repeat = "note in v.notes track by $index">{{note}}</div></td>
-                                </tr>
-                            </table>
+
+                            <uib-tabset>
+                                <br/>
+                                <uib-tab heading="Data & Notes">
+                                    <h4>{{item.type}}</h4>
+                                    <table class="table">
+                                        <tr><th>Path</th><th>Samples</th><th>Notes</th></tr>
+                                        <tr ng-repeat="(k,v) in hashPathSummary track by $index">
+                                            <td>{{v.path}}</td>
+                                            <td><div ng-repeat = "sample in v.sample track by $index">{{sample}}</div></td>
+                                            <td><div ng-repeat = "note in v.notes track by $index">{{note}}</div></td>
+                                        </tr>
+                                    </table>
+                                </uib-tab>
+                                <uib-tab heading="All comments">
+                                    <table class="table">
+                                        <tr><th>Path</th><th>Author note</th><th>Notes</th></tr>
+                                        <tr ng-repeat="row in commentItem.table">
+                                            <td>{{row.path}}</td>
+                                            <td>{{row.authorNote}}</td>
+                                            <td>
+                                                <div ng-repeat="comment in row.comments">
+                                                    {{comment.value}}
+                                                </div>
+                                            </td>
+                                            <td>
+
+                                                <div class="clickable" ng-click="addComment(row)">Details / Add comment</div>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+
+                                </uib-tab>
+                            </uib-tabset>
+
+
+
+
                         </uib-tab>
                     </uib-tabset>
                 </div>

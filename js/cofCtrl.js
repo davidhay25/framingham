@@ -44,7 +44,7 @@ angular.module("sampleApp")
                 }
             }
 
-            //element edit functions
+            //element edit functions (sclinical description, muliiplicity - in the scenario designer)
             $scope.editElement = function(row) {
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addModelElement.html',
@@ -78,6 +78,7 @@ angular.module("sampleApp")
                             return null
                         },
                         tableCopy : function(){
+
                             return $scope.localTableCopy
                         }
                     }

@@ -68,6 +68,16 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             };
 
 
+            $scope.getPopoverText = function(row) {
+                var text = "";
+                if (row.definition) {
+                    text = row.definition
+                }
+                if (row.clinDesc) {
+                    text += '<br/>'+row.clinDesc
+                }
+                return text
+            }
 
             $scope.showNotes = function(show) {
                 if (show) {

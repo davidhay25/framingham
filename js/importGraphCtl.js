@@ -140,6 +140,7 @@ angular.module("sampleApp")
 
                 //remove all the samples and comments....
                 delete $scope.selectedGraph.scenarioNotes;
+                delete $scope.selectedGraph.comments;
                 if ($scope.selectedGraph.items) {
                     $scope.selectedGraph.items.forEach(function(item){
                         item.sample = [];

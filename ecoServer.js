@@ -636,11 +636,39 @@ app.post('/person',function(req,res){
 
 //add/update a scenarioGraph (Logical Model) result
 app.put('/scenarioGraph',function(req,res){
-    var result = req.body;
-    result.issued = new Date();
+    var data = req.body;
+   // var result = req.body;
+    data.issued = new Date();
     var collection = req.selectedDbCon.collection('scenarioGraph')
 
-    clinicalUpdate(collection,result,res)
+    collection.update({id:data.id},{$set: {items:data.items}},function(err,result){
+        if (err) {
+            console.log(err)
+            res.send(err,500)
+        } else {
+            console.log('updated',result.result)
+            if (result.result.nModified == 0) {
+                //no updates, this is a new document
+                console.log('inserting...')
+                collection.insertOne(data,function(err,result){
+                    if (err) {
+                        res.send(err,501)
+                    } else {
+                        res.send(result)
+                    }
+                })
+
+
+            } else {
+                //this is an update
+                res.send(result)
+            }
+
+        }
+    })
+
+
+    //clinicalUpdate(collection,result,res)
 });
 
 //get a single scenarioGraph by Id
@@ -718,6 +746,32 @@ app.get('/scenarioGraph/:userid/:scenarioid',function(req,res) {
     clinicalFind(collection,userId,scenarioId,res)
 });
 
+//add a comment to a specific graph
+app.put('/scenarioGraphComment',function(req,res) {
+    var id = req.params.id;
+
+    var comment = req.body;
+    comment.date = new Date();
+    console.log(comment);
+
+    var collection = req.selectedDbCon.collection('scenarioGraph')
+    collection.update({id:comment.graphid}, {$push: {comments:comment}},function(err,result){
+        if (err) {
+            console.log(err)
+            res.status(500).send(err);
+        } else {
+            res.send();
+        }
+    })
+
+
+
+
+    //
+
+    }
+)
+
 
 //add/update a lmCheck (Logical Model) result
 app.put('/lmCheck',function(req,res){
@@ -725,15 +779,7 @@ app.put('/lmCheck',function(req,res){
     result.issued = new Date();
     var collection = req.selectedDbCon.collection('lmCheck')
     clinicalUpdate(collection,result,res)
-    /*
-    req.selectedDbCon.collection("lmCheck").update({id:result.id},result,{upsert:true},function(err,result){
-        if (err) {
-            res.send(err,500)
-        } else {
-            res.send(result)
-        }
-    })
-    */
+
 });
 
 
@@ -752,24 +798,11 @@ app.get('/lmCheck/:userid/:scenarioid',function(req,res) {
 
     var userId = req.params.userid;
     var scenarioId = req.params.scenarioid;
-    //console.log(userid,scenarioid)
+
     var collection = req.selectedDbCon.collection('lmCheck')
 
     clinicalFind(collection,userId,scenarioId,res)
-    /*
-    req.selectedDbCon.collection("lmCheck").find({userid:userid,scenarioid:scenarioid}).toArray(function (err, result) {
-        if (err) {
-            res.send(err,500)
-        } else {
-            if (result.length > 0) {
-                res.send(result[0])     //should only be 1...
-            } else {
-                res.send({})
-            }
 
-        }
-    })
-    */
 });
 
 function clinicalFind(collection,userId,scenarioId,res) {

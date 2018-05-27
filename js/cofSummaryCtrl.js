@@ -1,6 +1,6 @@
 angular.module("sampleApp")
     .controller('cofSummaryCtrl',
-        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc) {
+        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc,moment) {
 
             $scope.input = {};
 
@@ -18,6 +18,7 @@ angular.module("sampleApp")
 
             };
 
+            //show/hide elements in the graph...
             $scope.filteredGraph = false;
             $scope.setFocus = function() {
                 $scope.filteredGraph = ! $scope.filteredGraph
@@ -33,6 +34,68 @@ angular.module("sampleApp")
 
             };
 
+
+            //add a comment to the selected item (from the graph)
+            $scope.addComment = function(row){
+                console.log($scope.item);
+
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/addElementComment.html',
+                    size : 'lg',
+                    controller: function($scope,commentItem,row,user,graph,moment){
+                        $scope.moment = moment;
+                        $scope.input = {};
+                        $scope.row = row;
+
+console.log(graph);
+
+
+
+                        $scope.save = function() {
+                            var url = "/scenarioGraphComment"; //+ commentItem.id;
+                            var comment = {graphid:graph.id,itemid:commentItem.id, rowid:row.id,value:$scope.input.comment};
+                            if (user) {
+                                comment.user = {userid:user.id,name:user.name};
+                            }
+
+                            $http.put(url,comment).then(
+                                function(data) {
+                                    console.log(data)
+                                },
+                                function(err) {
+                                    console.log(err)
+                                }
+                            ).finally(
+                                function() {
+                                    $scope.$close();
+                                }
+                            )
+                        }
+                    },
+                    resolve: {
+                        graph : function(){
+                            //the graph that the comment is being added to...
+                            return $scope.selectedGraph
+                        },
+                        commentItem : function(){
+                            //the item (containing the resource) where the resource instance is...
+                            return $scope.commentItem
+                        },
+                        row : function(){
+                            // actual row (ie element) that the comment is attached to
+                            return row;
+                        },
+                        user : function() {
+                            return ecosystemSvc.getCurrentUser();
+                        }
+
+                    }
+                }).result.then(function(row){
+                    console.log(row)
+
+                });
+            }
+
             //a single graph (for a single user) is selected from the list at the left...
             $scope.selectGraph = function(shortGraph){
                 $scope.filteredGraph = false;       //set the filter off to start with...
@@ -44,18 +107,48 @@ angular.module("sampleApp")
 
                 $http.get(url).then(
                     function(data) {
-                        $scope.selectedGraph = data.data;
-                        makeGraph($scope.selectedGraph.items)
+                        $scope.selectedGraph = angular.copy(data.data); //not saving the graph back, but you never know...
+                        makeGraph($scope.selectedGraph.items);
 
-                        //now generate the complete set of sample/notes summaries
+
+
+                        //now generate the complete set of sample/notes summaries (by the graph author)
                         $scope.allHashPathSummaries = [];
                         $scope.selectedGraph.items.forEach(function(item){
                             var summary = makeItemSummary(item)
                             if (summary.hasData) {
                                 $scope.allHashPathSummaries.push({type:item.type,summary:summary})
                             }
-
                         });
+
+
+                        //now decorate the graph items with the comments...
+                        if ($scope.selectedGraph.comments && $scope.selectedGraph.items) {
+                            //craete a hask of items - from all rows...
+                            var itemHash = {};
+                            $scope.selectedGraph.items.forEach(function (item) {
+                                var itemId = item.id;
+                                if (item.table) {
+                                    item.table.forEach(function (row) {
+                                        itemHash[itemId + ':' + row.id] = row;  //composite key
+                                    })
+                                }
+
+                            });
+
+                            console.log(itemHash)
+                            //now, add the comments...
+                            $scope.selectedGraph.comments.forEach(function (comment) {
+                                var cId = comment.itemid + ':' + comment.rowid;
+                                if (itemHash[cId]) {
+                                    itemHash[cId].comments = itemHash[cId].comments || [];
+                                    itemHash[cId].comments.push(comment)
+                                    console.log(itemHash[cId])
+                                }
+                            })
+
+                        }
+
 
 
                     },
@@ -64,17 +157,26 @@ angular.module("sampleApp")
                     }
                 );
 
-
-
-
-
             };
 
             //select an item/resource from the graph
             $scope.selectItem = function(item) {
 
 
-                $scope.item = item;
+                $scope.item = item;     //the item (containing the resourcce)
+
+                $scope.commentItem = angular.copy(item);        //will add all the comments to this object...
+
+                if ($scope.commentItem.table) {
+                    $scope.commentItem.table.forEach(function (row) {
+                        var note = $scope.commentItem.notes[row.id]
+                        if (note) {
+                            row.authorNote = note;
+                        }
+
+                    })
+                }
+
 
                 //a hash of notes & samples by path...
                 $scope.hashPathSummary = makeItemSummary(item);
