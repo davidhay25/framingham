@@ -1,16 +1,27 @@
 angular.module("sampleApp")
     .controller('getDatatypeValueCtrl',
-        function ($scope,$q,ecosystemSvc,modalService,$http,datatype,getDatatypeValueSvc,row,$filter,scenario,resourceType) {
+        function ($scope,$q,ecosystemSvc,modalService,$http,datatype,getDatatypeValueSvc,row,$filter,scenario,resourceType,track) {
             $scope.datatype = datatype;
             $scope.row = row;
             $scope.input = {};
             $scope.scenario = scenario;
             $scope.resourceType = resourceType;
             var vsToRenderAsList = [];
-            getCCToRenderAsList()
+            getCCToRenderAsList();
+
+
+            //pre-pop with existing data... todo - some datatypes need specific actions
+            console.log(row)
+            var tDt = datatype.toLowerCase();
+            $scope.input.dt = {}
+            $scope.input.dt[tDt] = row.structuredData;
 
             //todo this should come from the track - need to figure out the best way to get that here...
             var termServer ='https://ontoserver.csiro.au/stu3-latest/';
+            if (track.termServer) {
+                termServer = track.termServer;
+            }
+            $scope.termServer = termServer;
 
             //some datatypes require pre-processing....
             if (datatype == 'code') {

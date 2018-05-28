@@ -59,7 +59,7 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
             if (err) {
                 console.log('Unable to access the event database')
             } else {
-                //console.log(result)
+
                 if (result.length == 0) {
                     console.log('writing default events')
                     //this is the first time this has run on this server - set up the db from the json file...
@@ -75,7 +75,7 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
                         }
                     })
                 } else {
-                    //console.log('setting dbkeys',result)
+
                     dbKeys = result;
 
                     dbKeys.forEach(function(item){
@@ -158,7 +158,7 @@ app.use(function (req, res, next) {
 
     //allow html and js files to be returned - todo - these files should all be in a 'public' folder - or something better
     var url = req.url;
-    console.log(url)
+
     if (url.indexOf('.html') > -1 || url.indexOf('.js') > -1 || url == '/' || url.indexOf('/icons/') > -1 ||
         url.indexOf('.css') > -1 || url.indexOf('.gif') > -1 ||url.indexOf('/public/') > -1 ||
         url.indexOf('/artifacts/') > -1 || url.indexOf('/fonts/') > -1 || url.indexOf('/qa') > -1 ){
@@ -252,7 +252,7 @@ function recordAccess(req,data,cb) {
 //return all the users for a given database. Used when logging in to an event
 app.get('/public/getUsers/:key',function(req,res){
     var key = req.params.key;
-   // console.log('/public/getUsers/:key')
+
     if (hashDataBases[key]) {
         //we have established a connection to the given database
         hashDataBases[key].collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
@@ -281,7 +281,7 @@ app.get('/event/list',function(req,res){
 app.get('/event/detail/:key',function(req,res){
     var key = req.params.key;
     if (hashDataBases[key]) {
-        console.log(hashDataBases[key])
+
         hashDataBases[key].collection("admin").find().toArray(function(err,result){
             if (err) {
                 res.send(err,500)
@@ -313,7 +313,7 @@ app.post('/public/setEvent',function(req,res) {
 app.post('/public/loginDEP',function(req,res){
 
     var body = req.body;
-    console.log(body);
+
     if (body) {
         //the userid and database key were sent in - ie the client is wanting to initialize the session from browser storage
         session['config'] = body;
@@ -384,7 +384,7 @@ app.post('/proxyfhir/*',function(req,res) {
         encoding : null
     };
 
-    console.log(fhirQuery);
+
     request(options, function (error, response, body) {
         if (error) {
             console.log('error:',error)
@@ -475,12 +475,12 @@ app.get('/result',function(req,res){
 app.delete('/result/:id',function(req,res){
 
     var id = req.params.id;       //the id of the result to delete
-    console.log(id)
+
     req.selectedDbCon.collection("result").update({id:id},{$set: {status:'deleted'}},function(err,result){
         if (err) {
             res.send(err,500)
         } else {
-            console.log(result.result)
+
             res.send(result.result)
         }
     })
@@ -641,13 +641,15 @@ app.put('/scenarioGraph',function(req,res){
     data.issued = new Date();
     var collection = req.selectedDbCon.collection('scenarioGraph')
 
-    collection.update({id:data.id},{$set: {items:data.items}},function(err,result){
+
+
+    collection.update({id:data.id},{$set: {items:data.items,scenarioNotes:data.scenarioNotes}},function(err,result){
         if (err) {
             console.log(err)
             res.send(err,500)
         } else {
-            console.log('updated',result.result)
-            if (result.result.nModified == 0) {
+
+            if (result.result.n == 0) {     //no matches found
                 //no updates, this is a new document
                 console.log('inserting...')
                 collection.insertOne(data,function(err,result){
@@ -668,14 +670,13 @@ app.put('/scenarioGraph',function(req,res){
     })
 
 
-    //clinicalUpdate(collection,result,res)
 });
 
 //get a single scenarioGraph by Id
 app.get('/oneScenarioGraph/:graphid',function(req,res) {
 
     var graphId = req.params.graphid;
-    //console.log(userid,scenarioid)
+
     var collection = req.selectedDbCon.collection('scenarioGraph')
 
     collection.find({id:graphId}).toArray(function (err, result) {
@@ -695,8 +696,6 @@ app.get('/oneScenarioGraph/:graphid',function(req,res) {
 //get an index of all the graphs for all tasks
 app.get('/scenarioGraph',function(req,res) {
 
-    //res.send([])
-    //return;
 
 
     var collection = req.selectedDbCon.collection('scenarioGraph')
@@ -740,7 +739,7 @@ app.get('/scenarioGraph/:userid/:scenarioid',function(req,res) {
 
     var userId = req.params.userid;
     var scenarioId = req.params.scenarioid;
-    //console.log(userid,scenarioid)
+
     var collection = req.selectedDbCon.collection('scenarioGraph')
 
     clinicalFind(collection,userId,scenarioId,res)
@@ -752,7 +751,7 @@ app.put('/scenarioGraphComment',function(req,res) {
 
     var comment = req.body;
     comment.date = new Date();
-    console.log(comment);
+
 
     var collection = req.selectedDbCon.collection('scenarioGraph')
     collection.update({id:comment.graphid}, {$push: {comments:comment}},function(err,result){
@@ -765,9 +764,6 @@ app.put('/scenarioGraphComment',function(req,res) {
     })
 
 
-
-
-    //
 
     }
 )

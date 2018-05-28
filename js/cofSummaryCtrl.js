@@ -1,6 +1,6 @@
 angular.module("sampleApp")
     .controller('cofSummaryCtrl',
-        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc,moment) {
+        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc) {
 
             $scope.input = {};
 
@@ -31,13 +31,10 @@ angular.module("sampleApp")
                     makeGraph($scope.selectedGraph.items)
                 }
 
-
             };
-
 
             //add a comment to the selected item (from the graph)
             $scope.addComment = function(row){
-                console.log($scope.item);
 
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addElementComment.html',
@@ -47,7 +44,7 @@ angular.module("sampleApp")
                         $scope.input = {};
                         $scope.row = row;
 
-console.log(graph);
+
 
 
 

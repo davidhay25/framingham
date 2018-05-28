@@ -112,7 +112,10 @@
                                         </tr>
                                     </table>
                                 </uib-tab>
-                                <uib-tab heading="All comments">
+                                <uib-tab>
+                                    <uib-tab-heading>
+                                        All comments <span class="badge">{{selectedGraph.comments.length}}</span>
+                                    </uib-tab-heading>
                                     <table class="table">
                                         <tr><th>Path</th><th>Author note</th><th>Notes</th></tr>
                                         <tr ng-repeat="row in commentItem.table">
@@ -124,8 +127,7 @@
                                                 </div>
                                             </td>
                                             <td>
-
-                                                <div class="clickable" ng-click="addComment(row)">Details / Add comment</div>
+                                                <div class="clickable" ng-click="addComment(row)">Details</div>
                                             </td>
                                         </tr>
 

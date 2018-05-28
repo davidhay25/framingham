@@ -35,6 +35,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         $scope.disabledDirectSample = false;
                     }
                 }
+                $scope.formTrack = track;
 
                 $scope.hideNotes = true;    //default to hiding notes
 
@@ -60,11 +61,17 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     } else {
                         $scope.collapse();
                     }
+
+                    //this preserves the 'show only references
+                    if ($scope.onlyRefsShown) {
+                        $scope.onlyRefsShown = false;       //will be toggled on...
+                        $scope.toggleReferences();
+                    }
+
                 } else {
                     //clear the display...
                     delete $scope.input;
                 }
-
             };
 
 
@@ -185,6 +192,9 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         },
                         'resourceType' : function(){
                             return $scope.input.type;
+                        },
+                        'track' : function(){
+                            return $scope.formTrack;
                         }
 
                     }}
