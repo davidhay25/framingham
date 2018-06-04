@@ -221,9 +221,11 @@
                     <pre>{{resourceJson.resource | json}}</pre>
                 </uib-tab>
                 <uib-tab heading="Document" ng-show="document.composition">
+                    <ng-include src="'includes/document.html'"></ng-include>
 
+
+<!--
                     <div ng-repeat = "item in document.composition.table">
-                        <!--{{item.path}}-->
 
                         <div ng-show="item.path == 'section.title'">
                             <strong>{{item.sample}}</strong>
@@ -238,7 +240,7 @@
 
                         </div>
                     </div>
-
+-->
                 </uib-tab>
 
                 <uib-tab heading="Item Json">

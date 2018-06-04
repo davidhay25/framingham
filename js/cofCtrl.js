@@ -14,13 +14,25 @@ angular.module("sampleApp")
 
 
             //------- document stuff - ? move to service or...
-
             function makeDocumentDisplay(){
                 $scope.document = {}
                 $scope.cofTypeList.forEach(function(item){
                     if (item.type == 'Composition') {
                         $scope.document.composition = angular.copy(item);
                     }
+                    if (item.type == 'Patient') {
+                        $scope.document.patient = angular.copy(item);
+                        //find the patient text....
+                        if (item.sample) {
+                            $scope.document.patientText = item.sample['text']
+
+                        }
+
+
+
+                    }
+
+
                 });
 
                 //console.log($scope.document);
@@ -35,6 +47,7 @@ angular.module("sampleApp")
                       //  hashSample[sample.id] = sample;
                     //})
 
+                    //add the sample text to the row to make the rendering display easier...
                     $scope.document.composition.table.forEach(function (row) {
                         if ($scope.document.composition.sample[row.id]) {
                             row.sample = $scope.document.composition.sample[row.id];
@@ -120,6 +133,8 @@ angular.module("sampleApp")
 
 
             $scope.fhirBasePath = "http://hl7.org/fhir/";       //root of the spec.
+
+
             $http.get('/artifacts/allResources.json').then(
                 function(data) {
                     $scope.allResourceTypes = data.data;
@@ -132,6 +147,7 @@ angular.module("sampleApp")
                     })
                 }
             );
+
 
             //import a pre-existing graph from this track...
             $scope.importGraph = function(){
@@ -168,68 +184,7 @@ angular.module("sampleApp")
                         doImport(graph)
                     }
                 });
-/*
-                return;
 
-
-                //console.log()
-                    var url = "/scenarioGraph/";
-                    $http.get(url).then(
-                        function(data) {
-                            var allGraphs = data.data;
-
-                            allGraphs.forEach(function (graph) {
-
-                                if (! graph.user) {
-                                    var user = ecosystemSvc.getPersonWithId(graph.userid);
-                                    if (user) {
-                                        graph.user = user;
-                                    }
-                                }
-
-                                graph.scenario = ecosystemSvc.getScenarioWithId(graph.scenarioid);
-
-
-                            });
-
-                            $uibModal.open({
-                                templateUrl: 'modalTemplates/importGraph.html',
-                                size : 'lg',
-                                controller: 'importGraphCtrl',
-                                resolve : {
-                                    allGraphs: function(){
-                                        return allGraphs;
-                                        // return $scope.cofTypeList;
-                                    }, allScenariosThisTrack : function(){
-                                        return $scope.selectedTrack.scenarios;
-                                    }
-                                }
-                            }).result.then(function(graph){
-                                if ($scope.cofTypeList && $scope.cofTypeList.length > 0) {
-
-                                    var modalOptions = {
-                                        closeButtonText: "No, I changed my mind",
-                                        headerText: "Import scenario graph",
-                                        actionButtonText: 'Yes, please import',
-                                        bodyText: 'Are you sure you wish to import a graph? It will replace your current graph...'
-                                    };
-
-                                    //var msg = "Are you sure you wish to import a graph? It will replace your current graph...";
-                                    modalService.showModal({}, modalOptions).then(
-                                        function(){
-                                            doImport(graph)
-                                        }
-                                    )
-
-                                } else {
-                                    doImport(graph)
-                                }
-                            });
-
-
-                        })
-
-*/
 
                 function doImport(graph) {
                     $scope.cofTypeList = graph.items;
@@ -244,7 +199,7 @@ angular.module("sampleApp")
 
             $scope.resourceNoteUpdated = function() {
                 $scope.saveGraph(true)
-            }
+            };
 
             //called when the form is updated
             $scope.formWasUpdated = function(table) {
@@ -258,7 +213,7 @@ angular.module("sampleApp")
 
             $scope.showDescription = function(md) {
                 return $filter('markDown')(md);
-            }
+            };
 
             $scope.selectCoreType = function(){
                 $uibModal.open({
@@ -469,8 +424,6 @@ angular.module("sampleApp")
                     }
                 )
 
-
-
             };
 
             //add a reference to another resource
@@ -495,7 +448,6 @@ angular.module("sampleApp")
                             }
                         }
                     }
-
 
                 });
 
@@ -530,7 +482,7 @@ angular.module("sampleApp")
                             resolve : {
                                 lst: function(){
                                     return targets;
-                                   // return $scope.cofTypeList;
+
                                 },
                                 type: function(){
                                     //
@@ -646,7 +598,7 @@ angular.module("sampleApp")
                     }
                 }
 
-                //called when the form directive has created teh table...
+                //called when the form directive has created the table...
                 function receiveTable(table) {
                     drawTree(table);
 //console.log(table)

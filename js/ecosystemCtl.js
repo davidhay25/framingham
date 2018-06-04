@@ -477,7 +477,6 @@ angular.module("sampleApp")
 
             };
 
-
             $scope.editRole = function(role) {
                 $uibModal.open({
                     templateUrl: 'modalTemplates/editRole.html',
@@ -510,11 +509,6 @@ angular.module("sampleApp")
 
                 })
             };
-
-
-
-
-
 
             $scope.editTrack = function(track,isNew) {
                 $uibModal.open({

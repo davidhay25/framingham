@@ -1,6 +1,7 @@
 angular.module("sampleApp")
     .controller('getDatatypeValueCtrl',
-        function ($scope,$q,ecosystemSvc,modalService,$http,datatype,getDatatypeValueSvc,row,$filter,scenario,resourceType,track) {
+        function ($scope,$q,ecosystemSvc,modalService,$http,datatype,getDatatypeValueSvc,row,$filter,scenario,
+                  resourceType,track,currentJson) {
             $scope.datatype = datatype;
             $scope.row = row;
             $scope.input = {};
@@ -8,6 +9,39 @@ angular.module("sampleApp")
             $scope.resourceType = resourceType;
             var vsToRenderAsList = [];
             getCCToRenderAsList();
+
+            console.log(currentJson);
+
+
+          //  var displayTemplate = []
+           // displayTemplate.push({type:'Patient', path:'gender',display:'Gender:'});
+
+            $scope.textFromTemplate = ecosystemSvc.makeResourceText(currentJson)
+            $scope.pasteNarrative = function(text) {
+                $scope.input.dt.narrative = $scope.input.dt.narrative || {}
+                $scope.input.dt.narrative.div = text;
+            };
+
+/*
+            if (currentJson) {
+                var json = angular.fromJson(currentJson);
+                var baseType = json.resourceType;
+                var arDisplay = [];
+                textDisplayTemplate.forEach(function (lne) {
+                    if (lne.type == baseType) {
+                        var v = json[lne.path];
+                        if (v) {
+                            arDisplay.push(lne.display + " "+ v)
+                        }
+                    }
+                })
+                var text = arDisplay.join('\n');
+                console.log(text)
+
+            }
+
+
+*/
 
 
             //pre-pop with existing data... todo - some datatypes need specific actions

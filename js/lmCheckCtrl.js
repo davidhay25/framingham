@@ -14,6 +14,17 @@ angular.module("sampleApp")
             });
 
 
+            //called when the form is updated. Defined in the scenario builder component. Not sure what is needed here...
+            $scope.formWasUpdated = function(table) {
+                /*
+                $scope.saveGraph(true);     //save the graph without showing
+                if (table) {
+                    drawTree(table)
+                    makeDocumentDisplay();
+                }
+*/
+            };
+
 
 
             // ------- functions and objects for the table directive...
@@ -167,10 +178,10 @@ angular.module("sampleApp")
                                 $scope.item.notes = vo.notes;
                                 $scope.item.reviewComment = vo.reviewComment ;
 
-                                $scope.showResourceTable.open($scope.item,$scope.SD,$scope.cofScenario);
+                                $scope.showResourceTable.open($scope.item,$scope.SD,$scope.cofScenario,$scope.selectedTrack);
 
                             } else {
-                                $scope.showResourceTable.open($scope.item,$scope.SD,$scope.cofScenario);
+                                $scope.showResourceTable.open($scope.item,$scope.SD,$scope.cofScenario,$scope.selectedTrack);
                             }
                         }
                     )

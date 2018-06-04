@@ -60,10 +60,22 @@
             <div ng-show="datatype == 'Narrative'">
                 <!-- The status is 'additional' if any user text is entered...-->
                 <div class="row">
-                    <div class="col-md-7  col-sm-7 col-centered">
-                        <textarea rows="8" class="form-control"ng-model="input.dt.narrative.div"></textarea>
+
+
+                    <div class="col-md-7  col-sm-7 col-centered">  <!--  -->
+                        <textarea rows="8" class="form-control" ng-model="input.dt.narrative.div"></textarea>
                     </div>
                 </div>
+
+                <div class="row" ng-show="textFromTemplate">
+                    <div class="col-sm-6 col-md-6">
+
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <button class="btn btn-link" ng-click="pasteNarrative(textFromTemplate)">Paste from structured data</button>
+                    </div>
+                </div>
+
             </div>
 
             <div ng-show="datatype == 'Attachment'">
@@ -634,7 +646,7 @@
             <div ng-show="datatype == 'Coding'">
 
 
-                <!-- This was a small list, so completely expanded...-->
+                <!-- This was a small list, so completely expanded with radio buttons...-->
                 <div ng-show="renderCCAsList">
                     <div class="row">
                         <div class="col-md-4 col-sm-4" ng-repeat = "option in expandedValueSet.expansion.contains">
@@ -647,7 +659,7 @@
                     </div>
                 </div>
 
-
+                <!-- Use a $expand lookup from the server-->
                 <div ng-hide="renderCCAsList">
 
                     <div class="row">
@@ -655,7 +667,8 @@
                             <input placeholder="Filter text. Can be used as search text" class="form-control" ng-model="input.dt.cc.text"/>
                         </div>
                         <div class="col-sm-2 col-md-2">
-                            <button class="btn btn-primary pull-right" ng-click="expandCC(input.dt.cc.text)">Search</button>
+                            <button ng-show="binding.url"
+                                    class="btn btn-primary pull-right" ng-click="expandCC(input.dt.cc.text)">Search</button>
                         </div>
 
                         <div class="col-sm-6 col-md-6">
@@ -819,7 +832,7 @@
                             <input placeholder="Concept text. Can be used as search text" class="form-control" ng-model="input.dt.cc.text"/>
                         </div>
                         <div class="col-sm-2 col-md-2">
-                            <button class="btn btn-primary pull-right" ng-click="expandCC(input.dt.cc.text)">Search</button>
+                            <button ng-show="binding.url" class="btn btn-primary pull-right" ng-click="expandCC(input.dt.cc.text)">Search</button>
                         </div>
 
                         <div class="col-sm-6 col-md-6">
@@ -829,6 +842,24 @@
                             <!--<div><em>Click the 'Search' button to list values. If there is text in the
                             filter box, then the results are filtered by that text, otherwise all values are
                             returned (can take a while)</em></div>-->
+                        </div>
+
+                    </div>
+                    <div class="row" ng-hide="binding.url">
+                        <div class="col-sm-12 col-md-12">
+                            <br/>
+                            <em>The underlying model has no binding to a ValueSet, so I can't do a lookup from a
+                            terminology server. You can, however, enter the text value of the concept you want in the input
+                                box above.</em>
+                        </div>
+                    </div>
+
+
+                    <div class="row" ng-hide="expandedValueSet.expansion.contains || (!binding.url)">
+                        <div class="col-sm-12 col-md-12">
+                            <em>Click the 'Search' button to list values. If there is text in the
+                                filter box, then the results are filtered by that text, otherwise all values are
+                                returned (can take a while)</em>
                         </div>
 
                     </div>
@@ -879,7 +910,7 @@
                         </uib-tab>
                     </uib-tabset>
 
-
+<!--
                     <div class="row" ng-hide="expandedValueSet.expansion.contains">
                         <div class="col-sm-12 col-md-12">
                             <em>Click the 'Search' button to list values. If there is text in the
@@ -888,6 +919,7 @@
                         </div>
 
                     </div>
+                    -->
                 </div>
 
             </div>

@@ -1,6 +1,6 @@
 //directile to render a UI for a profile.
 //adapted from clinfhir resourcebuilder
-angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal,$http  ) {
+angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal ) {
     return {
         restrict: 'E',
         scope: {
@@ -20,6 +20,9 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
             $scope.internalControl = $scope.trigger || {};
             $scope.showOnlyPopulated = false;       //true if only elements with data are being displayed...
+
+
+
 
 
             //this function is called to display a specific resource;
@@ -107,6 +110,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     //if there's a target then update the structuredData...
                     if (target) {
                         row.structuredData = {reference: target.type + "/"+ target.id};     //needed for building the resource
+                        row.structuredData.display = target.description;
                         checkParentHasStructuredData(row,inx)
                         makeJson();
                     }
@@ -195,7 +199,12 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         },
                         'track' : function(){
                             return $scope.formTrack;
+                        },
+                        'currentJson' : function(){
+                            return makeJson();
                         }
+
+
 
                     }}
                 ).result.then(function(vo) {
@@ -639,7 +648,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
 
                     $scope.resourceJson()({resource: resource, raw: data})
-
+                    return resource;
 
                 } catch (ex) {
                     console.log(ex)

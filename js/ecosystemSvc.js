@@ -1,4 +1,4 @@
-angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalService,$localStorage,ecoUtilitiesSvc,$filter) {
+angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalService,$localStorage,ecoUtilitiesSvc,$filter,moment) {
 
     var serverIP = "http://localhost:8080/baseDstu3/";    //hard code to local server for now...
     var addExtension =  function(resource,url,value) {
@@ -186,10 +186,92 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         }
     );
 
+    var textDisplayTemplate;
+    $http.get('/artifacts/textDisplayTemplate.json').then(
+        function(data) {
+            textDisplayTemplate = data.data;
+
+        }
+    );
+
     var pathsCache = {};    //cache for paths by type - ?save in browser cache
     //var reportedTrackWithNoConfserver  = {};      //a
 
     return {
+
+        makeResourceText : function(currentJson) {
+            if (currentJson) {
+                var json = angular.fromJson(currentJson);
+                var baseType = json.resourceType;
+                var arDisplay = [];
+                textDisplayTemplate.forEach(function (lne) {
+                    if (lne.type == baseType) {
+                        var v = json[lne.path];
+                        if (v) {
+                            if (angular.isArray(v)) {
+
+                                v.forEach(function (el) {
+                                    arDisplay.push(lne.display + " "+ fromDT(lne.dt,el))
+                                })
+                            } else {
+                                arDisplay.push(lne.display + " "+ fromDT(lne.dt,v))
+                            }
+
+                        }
+                    }
+                });
+
+                var text = arDisplay.join('\n');
+                console.log(text)
+                return text;
+
+                function fromDT(dt,v) {
+                    if (! dt) {
+                        return v;
+                    }
+
+
+                    var txt="";
+                    switch (dt) {
+                        case "cc" :
+                            if (v.text) { return v.text;}
+                            if (v.Coding) {
+                                var vv = v.Coding[0];       //firts one only
+                                return vv.display;
+                            }
+
+
+                            break;
+                        case "reference" :
+                            return v.display;
+                            break;
+                        case "dateTime" :
+                            return moment(v).format('YYYY-MM-DD h:mm a');
+                            break;
+                        case "HumanName" :
+                            if (v.text) {
+                                return v.text
+                            } else {
+                                if (v.given) {
+                                    v.given.forEach(function(s) {txt += s + " "})
+                                }
+                                if (v.family) {
+                                    txt += v.family + " ";
+                                }
+
+                                return txt;
+                            }
+
+
+                            break;
+                    }
+
+                }
+
+            }
+
+        },
+
         makeAllScenarioSummary : function(allScenarioGraphs,tracks) {
 
             var that = this;

@@ -1,0 +1,35 @@
+<div>
+    <!-- Render a document -->
+
+    <h3>Patient</h3>
+    <p ng-bind-html="document.patientText | markDown"></p>
+
+
+    <div ng-repeat = "element in document.patient.sample">
+
+    </div>
+
+
+    {{document.patient.sample | json}}
+
+
+    <div ng-repeat = "item in document.composition.table">
+
+        <div ng-show="item.path == 'section.title'">
+            <strong>{{item.sample}}</strong>
+        </div>
+
+        <div ng-show="item.path == 'section.code'">
+            {{item.sample}}
+        </div>
+
+        <div ng-show="item.path == 'section.text'">
+            <p ng-bind-html="item.sample | markDown"></p>
+
+        </div>
+    </div>
+
+<!--
+    <pre>{{document | json}}</pre>
+    -->
+</div>
