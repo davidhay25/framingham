@@ -25,19 +25,21 @@
                     ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
 
         </div>
-        <div class="col-sm-6 col-md-6">
+        <div class="col-sm-5 col-md-5">
             <div class="scrollScenarioDescription">
+                <!--
                 <p ng-bind-html="lmScenario.description | markDown"></p>
+                -->
             </div>
 
         </div>
 
         <div class="col-sm-3 col-md-3">
             <textarea msd-elastic class="form-control" ng-model="input.reviewComment" rows="2"
-                placeholder="Enter notes about overall model - eg missing elements"></textarea>
+                placeholder="Notes about model - eg missing elements"></textarea>
         </div>
 
-        <div class="col-sm-1 col-md-1">
+        <div class="col-sm-2 col-md-2">
             <div class="pull-right">
 
                 <div ng-show="writeNotification">
@@ -54,11 +56,21 @@
     </div>
 
 
-    <tbl-resource trigger="showResourceTable"
-                  reference="addReference"
-                  resource-json="fnResourceJson"
-                  updated="formWasUpdated"
-                  fnshownotes="setShowNotes"></tbl-resource>
+    <div class="row">
+        <div class="col-sm-3 col-md-3">
+            <p ng-bind-html="lmScenario.description | markDown"></p>
+        </div>
+        <div class="col-sm-9 col-md-9">
+            <tbl-resource trigger="showResourceTable"
+                          reference="addReference"
+                          resource-json="fnResourceJson"
+                          updated="formWasUpdated"
+                          fnshownotes="setShowNotes"></tbl-resource>
+        </div>
+    </div>
+
+
+
 
 
 
