@@ -182,7 +182,7 @@ angular.module("sampleApp")
                             if (! hideNotification) {
                                 alert('Updated.')
                             } else {
-                                console.log('updated')
+                                //console.log('updated')
                                 $scope.writeNotification = "Updated";
                                 $timeout(function(){
                                     delete $scope.writeNotification
@@ -219,7 +219,6 @@ angular.module("sampleApp")
                             var vo = data.data;
                             if (vo && vo.table && vo.sample) {
                                 //yep - this user has started a sample for this scenario...
-                              //  $scope.table = vo.table ;
 
                                 $scope.item.sample = vo.sample;
                                 $scope.item.notes = vo.notes;
