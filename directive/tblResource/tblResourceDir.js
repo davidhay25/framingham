@@ -1,6 +1,6 @@
 //directile to render a UI for a profile.
 //adapted from clinfhir resourcebuilder
-angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal ) {
+angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal, ecosystemSvc ) {
     return {
         restrict: 'E',
         scope: {
@@ -573,91 +573,15 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 return ar;
             }
 
+
+
             function makeJson() {
 
-                try {
-                    //hide exceptions for now...
-                    var data = []
-                    //var resource = {resourceType:$scope.input.type};
-                    var resource = {resourceType: $scope.input.baseType, id: $scope.input.id};
-                    var previousEle = {};
-                    var parentElement, grandParentElement;
-                    $scope.input.table.forEach(function (row, index) {
-                        if (row.structuredData) {
-                            data.push(row);
-
-                            var path = row.path;
-                            var ar = path.split('.');
-                            switch (ar.length) {
-                                case 1:
-                                    //this is off the root
-                                    var eleName = ar[0];
-                                    if (eleName.indexOf('[x]') > -1) {
-                                        eleName = eleName.substr(0, eleName.length - 3) + _capitalize(row.sdDt);
-                                    }
-
-                                    parentElement = row.structuredData; //because it could be a parent...
-                                    if (row.max == 1) {
-                                        resource[eleName] = parentElement;
-                                    } else {
-                                        resource[eleName] = resource[eleName] || [];
-                                        resource[eleName].push(parentElement)
-                                    }
-                                    break;
-                                case 2: {
-                                    //if the
-                                    var parentEleName = ar[0];      //the parent element name
-
-                                    //var parent = resource[parentEleName];
+                var vo = ecosystemSvc.makeResourceJson($scope.input.baseType, $scope.input.id,$scope.input.table);
+                $scope.resourceJson()({resource: vo.resource, raw: vo.data});
+                return vo.resource;
 
 
-                                    var eleName = ar[1];
-                                    if (eleName.indexOf('[x]') > -1) {
-                                        eleName = eleName.substr(0, eleName.length - 3) + _capitalize(row.sdDt);
-                                    }
-
-                                    // grandParentElement = {}; //because it could be a grand parent...
-                                    // grandParentElement[eleName] = row.structuredData;
-
-                                    //var node = parentElement[0];
-                                    //node[eleName] = row.structuredData;
-
-
-                                    if (parentElement) {
-                                        grandParentElement = parentElement[0]; //because it could be a grand parent...
-                                        if (grandParentElement) {
-                                            grandParentElement[eleName] = row.structuredData;
-                                        }
-                                    }
-
-
-                                    /*
-                                                                    if (row.max == 1) {
-                                                                        parentElement[eleName] = grandParentElement;
-                                                                    } else {
-                                                                        parentElement[eleName] =  resource[eleName] || [];
-                                                                        parentElement[eleName].push(grandParentElement)
-                                                                    }
-                                    */
-                                    break;
-                                }
-                            }
-
-                        }
-                    });
-
-
-                    $scope.resourceJson()({resource: resource, raw: data})
-                    return resource;
-
-                } catch (ex) {
-                    console.log(ex)
-                }
-
-
-                function _capitalize(str) {
-                    return (str.charAt(0).toUpperCase() + str.slice(1));
-                }
             }
 
 

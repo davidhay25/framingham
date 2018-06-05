@@ -1,35 +1,57 @@
 <div>
     <!-- Render a document -->
 
-    <h3>Patient</h3>
-    <p ng-bind-html="document.patientText | markDown"></p>
+    <uib-tabset>
+        <br/>
+        <uib-tab heading="Rendered Document">
+            <h5>Patient</h5>
+            <p class="inset" ng-bind-html="document.patientText | markDown"></p>
+
+            <h5>Document</h5>
+            <p class="inset"ng-bind-html="document.compositionText | markDown"></p>
+
+            <h5>Sections</h5>
+            <div ng-repeat = "item in document.composition.table">
+
+                <div class="inset" ng-show="item.path == 'section.title'">
+                    <strong>{{item.sample}}</strong>
+                </div>
+
+                <div class="inset" ng-show="item.path == 'section.code'">
+                    {{item.sample}}
+                </div>
+
+                <div class="inset" ng-show="item.path == 'section.text'">
+                    <p ng-bind-html="item.sample | markDown"></p>
+                </div>
+
+            </div>
+        </uib-tab>
+        <uib-tab heading="Resource List">
+            <br/>
+            <div class="row">
+                <div class="col-sm-4 col-md-4">
+
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="entry in document.bundle.entry"
+                            ng-click="selectItemInList(entry)">
+                            <strong>{{entry.resource.resourceType}}</strong>
+                            <div><em>{{entry.resource.id}}</em></div>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="col-sm-8 col-md-8">
+                    <pre ng-show="selectedEntry">{{selectedEntry.resource | json}}</pre>
+
+                </div>
+            </div>
 
 
-    <div ng-repeat = "element in document.patient.sample">
+        </uib-tab>
+        <uib-tab heading="Json">
+            <pre>{{document.bundle | json}}</pre>
+        </uib-tab>
+    </uib-tabset>
 
-    </div>
-
-
-    {{document.patient.sample | json}}
-
-
-    <div ng-repeat = "item in document.composition.table">
-
-        <div ng-show="item.path == 'section.title'">
-            <strong>{{item.sample}}</strong>
-        </div>
-
-        <div ng-show="item.path == 'section.code'">
-            {{item.sample}}
-        </div>
-
-        <div ng-show="item.path == 'section.text'">
-            <p ng-bind-html="item.sample | markDown"></p>
-
-        </div>
-    </div>
-
-<!--
-    <pre>{{document | json}}</pre>
-    -->
 </div>

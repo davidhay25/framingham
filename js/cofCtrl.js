@@ -15,25 +15,29 @@ angular.module("sampleApp")
 
             //------- document stuff - ? move to service or...
             function makeDocumentDisplay(){
-                $scope.document = {}
+                $scope.document = {items:[]}
                 $scope.cofTypeList.forEach(function(item){
-                    if (item.type == 'Composition') {
-                        $scope.document.composition = angular.copy(item);
+
+                    switch (item.type) {
+                        case 'Composition' :
+                            $scope.document.composition = angular.copy(item);
+                            $scope.document.compositionText = item.sample['text']
+                            break;
+                        case 'Patient' :
+                            $scope.document.patient = angular.copy(item);
+                            //find the patient text....
+                            if (item.sample) {
+                                $scope.document.patientText = item.sample['text']
+                            }
+                            break;
+                        default :
+                            $scope.document.items.push(item)
+                            break;
                     }
-                    if (item.type == 'Patient') {
-                        $scope.document.patient = angular.copy(item);
-                        //find the patient text....
-                        if (item.sample) {
-                            $scope.document.patientText = item.sample['text']
-
-                        }
-
-
-
-                    }
-
-
                 });
+
+                $scope.document.bundle = ecosystemSvc.makeDocumentBundle($scope.document)
+
 
                 //console.log($scope.document);
                 var hashSample = {};
@@ -56,6 +60,11 @@ angular.module("sampleApp")
 
                 }
             }
+
+            $scope.selectItemInList = function(entry) {
+                console.log(entry)
+                $scope.selectedEntry = entry;
+            };
 
             //element edit functions (sclinical description, muliiplicity - in the scenario designer)
             $scope.editElement = function(row) {

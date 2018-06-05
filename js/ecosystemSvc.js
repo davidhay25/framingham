@@ -198,8 +198,127 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     //var reportedTrackWithNoConfserver  = {};      //a
 
     return {
+        makeDocumentBundle : function(document) {
+            //construct a document bundle
+            var that = this;
+            var bundle = {resourceType:'Bundle',type:'document',entry:[]};
+            bundle.id = 'id'+new Date().getTime();
+
+            bundle.entry.push(getEntry(document.composition));
+            bundle.entry.push(getEntry(document.patient));
+            document.items.forEach(function (item) {
+                bundle.entry.push(getEntry(item));
+            });
+
+            return bundle;
+
+
+            function getEntry(item){
+                var vo = that.makeResourceJson(item.baseType,item.id,item.table);
+
+                var url = "http://clinfhir.com/fhir/"+item.baseType + "/"+item.id;
+                var entry = {fullUrl:url};
+                entry.resource = vo.resource;
+                return entry;
+
+
+            }
+
+        },
+
+        makeResourceJson : function (type,id,table) {
+            //construct the json for a single resource based on the table from the tblResourceDir
+
+            if (! table) {
+                return {resource:{resourceType:type,id:id},data:[]};
+
+            }
+
+            try {
+                //hide exceptions for now...
+                var data = []
+                //var resource = {resourceType:$scope.input.type};
+                var resource = {resourceType: type, id: id};
+                var previousEle = {};
+                var parentElement, grandParentElement;
+                table.forEach(function (row, index) {
+                    if (row.structuredData) {
+                        data.push(row);
+
+                        var path = row.path;
+                        var ar = path.split('.');
+                        switch (ar.length) {
+                            case 1:
+                                //this is off the root
+                                var eleName = ar[0];
+                                if (eleName.indexOf('[x]') > -1) {
+                                    eleName = eleName.substr(0, eleName.length - 3) + _capitalize(row.sdDt);
+                                }
+
+                                parentElement = row.structuredData; //because it could be a parent...
+                                if (row.max == 1) {
+                                    resource[eleName] = parentElement;
+                                } else {
+                                    resource[eleName] = resource[eleName] || [];
+                                    resource[eleName].push(parentElement)
+                                }
+                                break;
+                            case 2: {
+                                //if the
+                                var parentEleName = ar[0];      //the parent element name
+
+                                //var parent = resource[parentEleName];
+
+
+                                var eleName = ar[1];
+                                if (eleName.indexOf('[x]') > -1) {
+                                    eleName = eleName.substr(0, eleName.length - 3) + _capitalize(row.sdDt);
+                                }
+
+                                // grandParentElement = {}; //because it could be a grand parent...
+                                // grandParentElement[eleName] = row.structuredData;
+
+                                //var node = parentElement[0];
+                                //node[eleName] = row.structuredData;
+
+
+                                if (parentElement) {
+                                    grandParentElement = parentElement[0]; //because it could be a grand parent...
+                                    if (grandParentElement) {
+                                        grandParentElement[eleName] = row.structuredData;
+                                    }
+                                }
+
+
+                                /*
+                                                                if (row.max == 1) {
+                                                                    parentElement[eleName] = grandParentElement;
+                                                                } else {
+                                                                    parentElement[eleName] =  resource[eleName] || [];
+                                                                    parentElement[eleName].push(grandParentElement)
+                                                                }
+                                */
+                                break;
+                            }
+                        }
+                    }
+                });
+
+                return {resource: resource,data:data};
+
+            } catch (ex) {
+                console.log(ex)
+                return null;
+            }
+
+            function _capitalize(str) {
+                return (str.charAt(0).toUpperCase() + str.slice(1));
+            }
+
+        },
 
         makeResourceText : function(currentJson) {
+            //generate the text for a resource from the structured data.
             if (currentJson) {
                 var json = angular.fromJson(currentJson);
                 var baseType = json.resourceType;
@@ -209,12 +328,11 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                         var v = json[lne.path];
                         if (v) {
                             if (angular.isArray(v)) {
-
                                 v.forEach(function (el) {
-                                    arDisplay.push(lne.display + " "+ fromDT(lne.dt,el))
+                                    arDisplay.push("<div>" + lne.display + " "+ fromDT(lne.dt,el) + "</div>")
                                 })
                             } else {
-                                arDisplay.push(lne.display + " "+ fromDT(lne.dt,v))
+                                arDisplay.push("<div>" + lne.display + " "+ fromDT(lne.dt,v)+ "</div>")
                             }
 
                         }
@@ -222,6 +340,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 });
 
                 var text = arDisplay.join('\n');
+
+
                 console.log(text)
                 return text;
 

@@ -23,33 +23,59 @@
 
     </style>
 
-    <div class="row rounded-box-filled" ng-show="input.type">
-        <div class="col-sm-6 col-md-6">
-            <div class="heading">{{input.description}} ({{input.type}})</div>
+    <div class="rounded-box-filled">
+        <div class="row" ng-show="input.type">
+            <div class="col-sm-12 col-md-12">
+                <div class="heading">{{input.description}} ({{input.type}})</div>
+            </div>
+            <!--
+                    <div class="col-sm-6 col-md-6">
+
+
+
+                        <button class="btn btn-link pull-right icon-spacing"
+                                ng-click="collapse()">Collapse</button>
+                        <button ng-hide="showOnlyPopulated" class="btn btn-link pull-right icon-spacing"
+                                ng-click="hideAllWithoutSample()">Hide without data</button>
+                        <button ng-show="showOnlyPopulated" class="btn btn-link pull-right icon-spacing"
+                                ng-click="showAll()">Show all</button>
+
+
+                        <button ng-hide = "onlyRefsShown" class="btn btn-link pull-right icon-spacing"
+                                ng-click="toggleReferences()">References only</button>
+                        <button ng-show = "onlyRefsShown" class="btn btn-link pull-right icon-spacing"
+                                ng-click="toggleReferences()">Show all DT</button>
+
+                        <button ng-hide="hideNotes" class="btn btn-link pull-right icon-spacing"
+                                ng-click="showNotes(false)">Hide Notes</button>
+
+                        <button ng-show="hideNotes" class="btn btn-link pull-right icon-spacing"
+                                ng-click="showNotes(true)">Show Notes</button>
+
+            </div> -->
         </div>
+        <div class="row"  ng-show="input.type">
+            <div class="col-sm-12 col-md-12">
 
-        <div class="col-sm-6 col-md-6">
-
-
-
-            <button class="btn btn-link pull-right icon-spacing"
-                    ng-click="collapse()">Collapse</button>
-            <button ng-hide="showOnlyPopulated" class="btn btn-link pull-right icon-spacing"
-                    ng-click="hideAllWithoutSample()">Hide without data</button>
-            <button ng-show="showOnlyPopulated" class="btn btn-link pull-right icon-spacing"
-                    ng-click="showAll()">Show all</button>
+                <button class="btn btn-link pull-right icon-spacing"
+                        ng-click="collapse()">Collapse</button>
+                <button ng-hide="showOnlyPopulated" class="btn btn-link pull-right icon-spacing"
+                        ng-click="hideAllWithoutSample()">Hide without data</button>
+                <button ng-show="showOnlyPopulated" class="btn btn-link pull-right icon-spacing"
+                        ng-click="showAll()">Show all</button>
 
 
-            <button ng-hide = "onlyRefsShown" class="btn btn-link pull-right icon-spacing"
-                    ng-click="toggleReferences()">References only</button>
-            <button ng-show = "onlyRefsShown" class="btn btn-link pull-right icon-spacing"
-                    ng-click="toggleReferences()">Show all DT</button>
+                <button ng-hide = "onlyRefsShown" class="btn btn-link pull-right icon-spacing"
+                        ng-click="toggleReferences()">References only</button>
+                <button ng-show = "onlyRefsShown" class="btn btn-link pull-right icon-spacing"
+                        ng-click="toggleReferences()">Show all DT</button>
 
-            <button ng-hide="hideNotes" class="btn btn-link pull-right icon-spacing"
-                    ng-click="showNotes(false)">Hide Notes</button>
+                <button ng-hide="hideNotes" class="btn btn-link pull-right icon-spacing"
+                        ng-click="showNotes(false)">Hide Notes</button>
 
-            <button ng-show="hideNotes" class="btn btn-link pull-right icon-spacing"
-                    ng-click="showNotes(true)">Show Notes</button>
+                <button ng-show="hideNotes" class="btn btn-link pull-right icon-spacing"
+                        ng-click="showNotes(true)">Show Notes</button>
+            </div>
 
         </div>
     </div>
@@ -59,7 +85,7 @@
         <table class="table table-bordered" ng-show="input">
             <tr><th></th><th>Model Element</th><th>Card.</th><th>DataTypes</th>
                 <!--<th>Flags</th>-->
-                <th>Sample Value</th>
+                <th>Value</th>
                 <th ng-hide="hideNotes">Notes</th></tr>
             <tr ng-repeat="row in input.table" ng-hide="row.isHidden">
                 <td>
@@ -143,10 +169,16 @@
                 </td>
 
                 <td width="25%">
-                    <div ng-hide="row.dt == 'Reference' || row.dt=='BackboneElement'">
+                    <div ng-hide="row.dt == 'Reference' || row.dt=='BackboneElement' ||  row.path == 'text'" >
                         <textarea ng-disabled = "disabledDirectSample" msd-elastic class="form-control" ng-model="input.sample[row.id]" rows="1"></textarea>
                     </div>
+
+                    <div ng-show="row.path == 'text'">
+                        <p ng-bind-html="input.sample[row.id] | markDown"></p>
+                    </div>
+
                 </td>
+
                 <td ng-hide="hideNotes" width="25%">
                     <textarea  ng-blur="noteAdded()"  msd-elastic class="form-control" ng-model="input.notes[row.id]" rows="1"></textarea>
                 </td>
