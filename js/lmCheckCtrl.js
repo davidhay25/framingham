@@ -1,21 +1,24 @@
 
 angular.module("sampleApp")
     .controller('lmCheckCtrl',
-        function ($rootScope,$scope,ecosystemSvc,$http,$filter,modalService) {
+        function ($rootScope,$scope,ecosystemSvc,$http,$filter,modalService,$timeout) {
 
             $scope.input = {sample:{}};
 
             $scope.user = ecosystemSvc.getCurrentUser();
-            console.log($scope.user);
+
 
             $scope.$on('logout',function(){
-                console.log ('logout');
+
                 delete $scope.lmScenario;
             });
 
 
             //called when the form is updated. Defined in the scenario builder component. Not sure what is needed here...
             $scope.formWasUpdated = function(table) {
+
+                $scope.saveExample(true);
+
                 /*
                 $scope.saveGraph(true);     //save the graph without showing
                 if (table) {
@@ -32,15 +35,9 @@ angular.module("sampleApp")
             //when the directive is updated with structured data, this function is called with the json version of the resource...
             $scope.fnResourceJson = function(json) {
                 $scope.resourceJson = json;
-                console.log($scope.item);
+
             };
-/*
-            if (!String.prototype.startsWith) {
-                String.prototype.startsWith = function(search, pos) {
-                    return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
-                };
-            }
-*/
+
 
             //this is called by the directive when a reference is selected.
             $scope.addReference = function(row,type,cb) {
@@ -57,9 +54,50 @@ angular.module("sampleApp")
 
             //--------------
 
-
-
             $scope.refreshLM = function(){
+
+                var modalOptions = {
+                    closeButtonText: "No, I changed my mind",
+                    headerText: "Remove resource instance",
+                    actionButtonText: 'Yes, please remove',
+                    bodyText: "Are you sure you wish to refresh the Logical Model? THis will clear all your data..."
+                };
+
+
+                modalService.showModal({}, modalOptions).then(
+                    function(){
+
+
+                        var url = $scope.selectedTrack.LM;
+                        if (url) {
+                            $http.get(url).then(
+                                function(data){
+                                    $scope.SD = data.data;
+                                    //$scope.item was defined when the scenario was selected...
+                                    $scope.item.sample = {};
+                                    $scope.item.notes = [];
+                                    delete $scope.item.reviewComment ;
+                                    $scope.showResourceTable.open($scope.item,$scope.SD,$scope.cofScenario,$scope.selectedTrack);
+
+                                },
+                                function(err){
+                                    modalService.showModal({}, {bodyText:"The url: "+url+" specified in the track could not be found."})
+
+                                }
+                            );
+                        } else {
+                            alert('No Logical Model defined for this track')
+                        }
+
+
+
+
+                    }
+                )
+            };
+
+
+            $scope.refreshLMDEP = function(){
                 var msg = "Are you sure you wish to refresh the Logical Model";
                 modalService.showModal({}, {bodyText:msg}).then(
                     function(){
@@ -123,7 +161,7 @@ angular.module("sampleApp")
 
 
             //save the current example. $scope.item is the object that the directive is updating...
-            $scope.saveExample = function () {
+            $scope.saveExample = function (hideNotification) {
 
                 var user = ecosystemSvc.getCurrentUser();
                 if (user) {
@@ -137,11 +175,20 @@ angular.module("sampleApp")
                     saveObject.notes = $scope.item.notes;       //notes (hash by row id)
 
 
-                    //console.log(saveObject);
+
 
                     $http.put("/lmCheck",saveObject).then(
                         function(){
-                            alert('Updated.')
+                            if (! hideNotification) {
+                                alert('Updated.')
+                            } else {
+                                console.log('updated')
+                                $scope.writeNotification = "Updated";
+                                $timeout(function(){
+                                    delete $scope.writeNotification
+                                },2000);
+
+                            }
                         }, function(err) {
                             alert('error saving result '+angular.toJson(err))
                         }
@@ -168,7 +215,7 @@ angular.module("sampleApp")
 
                     $http.get(url).then(
                         function(data) {
-                            console.log(data.data)
+
                             var vo = data.data;
                             if (vo && vo.table && vo.sample) {
                                 //yep - this user has started a sample for this scenario...
@@ -176,8 +223,8 @@ angular.module("sampleApp")
 
                                 $scope.item.sample = vo.sample;
                                 $scope.item.notes = vo.notes;
+                                $scope.item.table = vo.table;
                                 $scope.item.reviewComment = vo.reviewComment ;
-
                                 $scope.showResourceTable.open($scope.item,$scope.SD,$scope.cofScenario,$scope.selectedTrack);
 
                             } else {

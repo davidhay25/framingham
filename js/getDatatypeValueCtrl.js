@@ -1,7 +1,7 @@
 angular.module("sampleApp")
     .controller('getDatatypeValueCtrl',
         function ($scope,$q,ecosystemSvc,modalService,$http,datatype,getDatatypeValueSvc,row,$filter,scenario,
-                  resourceType,track,currentJson) {
+                  resourceType,track,currentJson,item) {
             $scope.datatype = datatype;
             $scope.row = row;
             $scope.input = {};
@@ -22,35 +22,28 @@ angular.module("sampleApp")
                 $scope.input.dt.narrative.div = text;
             };
 
-/*
-            if (currentJson) {
-                var json = angular.fromJson(currentJson);
-                var baseType = json.resourceType;
-                var arDisplay = [];
-                textDisplayTemplate.forEach(function (lne) {
-                    if (lne.type == baseType) {
-                        var v = json[lne.path];
-                        if (v) {
-                            arDisplay.push(lne.display + " "+ v)
-                        }
-                    }
-                })
-                var text = arDisplay.join('\n');
-                console.log(text)
-
-            }
-
-
-*/
 
 
             //pre-pop with existing data... todo - some datatypes need specific actions
             console.log(row)
             var tDt = datatype.toLowerCase();
             $scope.input.dt = {}
-            $scope.input.dt[tDt] = row.structuredData;
+            //$scope.input.dt[tDt] = row.structuredData;
+            //?? could this be combined with the pre-porcessing below
+            switch (datatype) {
+                case 'IdentifierXX' :
+                    $scope.input.dt.identifier = {};
+                    $scope.input.dt.identifier.system = row.structuredData.system;
 
-            //todo this should come from the track - need to figure out the best way to get that here...
+                    break;
+                default :
+                    $scope.input.dt[tDt] = row.structuredData;
+                    break;
+            }
+
+
+
+
             var termServer ='https://ontoserver.csiro.au/stu3-latest/';
             if (track.termServer) {
                 termServer = track.termServer;
@@ -98,6 +91,12 @@ angular.module("sampleApp")
                 $scope.timingArray.push({description:"Every 4-6 hours",timing:{freq:1,periodMax:6,period:1,periodUnits:'h'}});
                 $scope.timingArray.push({description:"Every 21 days for 1 hour",timing:{duration:1,units:'h',freq:1,period:21,periodUnits:'d'}});
                 $scope.input.dt = {dosage: {timing:{}}}
+            } else if (datatype == 'Narrative') {
+                if (row.path == 'text') {
+
+                    $scope.input.narrativeStatus = item.narrativeStatus || 'generated';
+
+                }
             }
 
             $scope.updateTimingDetails = function(item) {
@@ -389,6 +388,9 @@ angular.module("sampleApp")
             $scope.save = function() {
                 //console.log($scope.input.dt);
                 var vo;
+                if (row.path == 'text') {
+                    item.narrativeStatus = $scope.input.narrativeStatus; //assuming row was passed in be reference..
+                }
 
                 //If this was a cc, then already have value...
                 if ($scope.selectedConceptValue) {
@@ -398,13 +400,6 @@ angular.module("sampleApp")
                     vo = getDatatypeValueSvc.getDTValue(datatype,$scope.input.dt)
 
                 }
-
-
-                //console.log(vo);
-
-
-
-
 
                 $scope.$close(vo);
             };

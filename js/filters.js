@@ -78,12 +78,15 @@ angular.module("sampleApp")
     }])
     .filter('markDown', function() {
         return function(text) {
-            //https://github.com/showdownjs/showdown/wiki/Showdown-Options
-            var options = {tables: true, strikethrough: true};
-            var converter = new showdown.Converter(options),
-            html  = converter.makeHtml(text);
+            if (angular.isString(text)) {
+                //https://github.com/showdownjs/showdown/wiki/Showdown-Options
+                var options = {tables: true, strikethrough: true};
+                var converter = new showdown.Converter(options),
+                    html  = converter.makeHtml(text);
 
-            return html;
+                return html;
+            }
+
         }
     })
     .filter('oneLineResource', ['ResourceUtilsSvc', function(ResourceUtilsSvc) {

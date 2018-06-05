@@ -48,7 +48,6 @@
 
             </div>
 
-
             <div ng-show="datatype == 'instant'">
                 <div class="row">
                     <div class="col-md-7  col-sm-7 col-centered">
@@ -59,9 +58,21 @@
 
             <div ng-show="datatype == 'Narrative'">
                 <!-- The status is 'additional' if any user text is entered...-->
+
+                <div ng-show="input.narrativeStatus" class="row">
+                    <div class="col-sm-2 col-md-2">
+                        Narrative Status
+                    </div>
+                    <div class="col-sm-2 col-md-2">
+                        <select ng-model="input.narrativeStatus" class="form-control">
+                            <option value="generated">Generated</option>
+                            <option value="extensions">Extensions</option>
+                            <option value="additional">Additional</option>
+                            <option value="empty">Empty</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="row">
-
-
                     <div class="col-md-7  col-sm-7 col-centered">  <!--  -->
                         <textarea rows="8" class="form-control" ng-model="input.dt.narrative.div"></textarea>
                     </div>
@@ -69,6 +80,7 @@
 
                 <div class="row" ng-show="textFromTemplate">
                     <div class="col-sm-6 col-md-6">
+
 
                     </div>
                     <div class="col-sm-6 col-md-6">
@@ -866,7 +878,7 @@
 
                     <hr/>
 
-                    <uib-tabset>
+                    <uib-tabset ng-show="binding.url">
                         <uib-tab heading="List">
 
 

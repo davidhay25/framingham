@@ -2,12 +2,15 @@
   {"type":"Patient","path":"name","display":"Name:","dt":"HumanName"},
   {"type":"Patient","path":"gender","display":"Gender:"},
   {"type":"Patient","path":"birthDate","display":"Date of Birth:"},
+  {"type":"Patient","path":"identifier","display":"Identifier:","dt":"Identifier"},
 
   {"type":"Composition","path":"date","display":"Date:","dt":"dateTime"},
   {"type":"Composition","path":"subject","display":"Subject:","dt":"reference"},
   {"type":"Composition","path":"author","display":"Author:","dt":"reference"},
   {"type":"Composition","path":"type","display":"Type:","dt":"cc"},
-  {"type":"Composition","path":"status","display":"Status:"}
+  {"type":"Composition","path":"status","display":"Status:"},
+
+  {"type":"Condition","path":"code","display":"Code:","dt":"cc"}
 
 
 

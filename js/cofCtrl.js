@@ -38,7 +38,6 @@ angular.module("sampleApp")
 
                 $scope.document.bundle = ecosystemSvc.makeDocumentBundle($scope.document)
 
-
                 //console.log($scope.document);
                 var hashSample = {};
 
@@ -46,10 +45,6 @@ angular.module("sampleApp")
                 //get all the sections
                 if ($scope.document.composition && $scope.document.composition.sample) {
 
-                    //create a hash of sample data...
-                   // $scope.document.composition.sample.forEach(function(sample){
-                      //  hashSample[sample.id] = sample;
-                    //})
 
                     //add the sample text to the row to make the rendering display easier...
                     $scope.document.composition.table.forEach(function (row) {
@@ -61,6 +56,7 @@ angular.module("sampleApp")
                 }
             }
 
+            //when an item is selected in the document list of resources (if there is a Composition resource)
             $scope.selectItemInList = function(entry) {
                 console.log(entry)
                 $scope.selectedEntry = entry;
@@ -157,7 +153,6 @@ angular.module("sampleApp")
                 }
             );
 
-
             //import a pre-existing graph from this track...
             $scope.importGraph = function(){
 
@@ -212,6 +207,21 @@ angular.module("sampleApp")
 
             //called when the form is updated
             $scope.formWasUpdated = function(table) {
+
+
+                if ($scope.currentItem.narrativeStatus == 'generated') {
+                    var vo = ecosystemSvc.makeResourceJson($scope.currentItem.baseType,$scope.currentItem.id,$scope.currentItem.table);
+                    if (vo && vo.resource) {
+
+                        var text = ecosystemSvc.makeResourceText(vo.resource);
+                        console.log(text);
+                        if (text) {
+                            $scope.currentItem.sample['text'] = text;
+                        }
+
+                    }
+
+                }
                 $scope.saveGraph(true);     //save the graph without showing
                 if (table) {
                     drawTree(table)
@@ -610,10 +620,7 @@ angular.module("sampleApp")
                 //called when the form directive has created the table...
                 function receiveTable(table) {
                     drawTree(table);
-//console.log(table)
                     $scope.localTableCopy = table;      //used in teh designer...
-
-
                 }
             };
 
@@ -646,7 +653,8 @@ angular.module("sampleApp")
             function addItem(type) {
                 var item = {id : 'id'+new Date().getTime(),  type:type}
                 item.baseType = type;
-                item.category = 'core'
+                item.category = 'core';
+                item.narrativeStatus = 'generated';     //default to automatically building the text...
 
                 //create a default description based on the number of this type in the list
                 var ctr = 1;
@@ -664,15 +672,12 @@ angular.module("sampleApp")
                 }
 
 
-
                 $scope.cofTypeList.push(item)
                 makeGraph();
 
                 makeDocumentDisplay();  //if there is a Composition, sets up the document tab...
 
                 $scope.saveGraph(true);
-
-
 
                 //load the profile (SD) for the type...
                 if ( ! profilesCache[type]) {

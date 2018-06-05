@@ -30,6 +30,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             //'SD' is a StructureDefinition. If can be a Logical Model. There should be no extensions.
             //'scenario' is the current scenario...
 
+
             $scope.internalControl.open = function(item,SD,scenario,track,cb) {
 
                 $scope.disabledDirectSample = true;
@@ -45,7 +46,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 $scope.scenario = scenario;
                 if (item) {
                     $scope.input = item;
-                    $scope.input.table = $scope.input.table || makeTableArray(SD);
+                    $scope.input.table = $scope.input.table || makeTableArray(SD,track);
                     if (cb) {
                         cb($scope.input.table);
                     }
@@ -202,6 +203,9 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         },
                         'currentJson' : function(){
                             return makeJson();
+                        },
+                        'item' : function() {
+                            return $scope.input;
                         }
 
 
@@ -446,16 +450,19 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             };
 
             //construct the initial table from the SD...
-            function makeTableArray(SD){
+            function makeTableArray(SD,track){
                 var ignoreAll=['id','meta','implicitRules','contained','extension','modifierExtension']
-                var ignoreRoot = ['language','text']
-                var ar = []
+                var ignoreRoot = ['language','text'];   //ignore if on the root...
+                var ar = [];
 
-                //add a text element as first one
-                var item = {path: 'text',id:'text',type:[{code:'Narrative'}],max:'1',mult:'0..1' };
-                item.definition = "The narrative text that describes this resource to a User";
-               // item.isOriginal = true; //to prevent being able to delete this element
-                ar.push(item);
+                //add a text element as first one if not a lmreview track
+                if (track.trackType !== 'lmreview') {
+                    var item = {path: 'text',id:'text',type:[{code:'Narrative'}],max:'1',mult:'0..1' };
+                    item.definition = "The narrative text that describes this resource to a User";
+                    ar.push(item);
+                }
+
+
 
                 SD.snapshot.element.forEach(function (ed,inx) {
                     if (ed.type) {

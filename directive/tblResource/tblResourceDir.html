@@ -65,10 +65,16 @@
                         ng-click="showAll()">Show all</button>
 
 
-                <button ng-hide = "onlyRefsShown" class="btn btn-link pull-right icon-spacing"
-                        ng-click="toggleReferences()">References only</button>
-                <button ng-show = "onlyRefsShown" class="btn btn-link pull-right icon-spacing"
-                        ng-click="toggleReferences()">Show all DT</button>
+                <div ng-show="formTrack.trackType=='scenario'">
+                    <button ng-hide = "onlyRefsShown" class="btn btn-link pull-right icon-spacing"
+                            ng-click="toggleReferences()">References only</button>
+
+                    <button ng-show = "onlyRefsShown" class="btn btn-link pull-right icon-spacing"
+                            ng-click="toggleReferences()">Show all DT</button>
+                </div>
+
+
+
 
                 <button ng-hide="hideNotes" class="btn btn-link pull-right icon-spacing"
                         ng-click="showNotes(false)">Hide Notes</button>

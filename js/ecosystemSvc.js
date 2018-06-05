@@ -214,14 +214,14 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
 
             function getEntry(item){
-                var vo = that.makeResourceJson(item.baseType,item.id,item.table);
+                if (item) {
+                    var vo = that.makeResourceJson(item.baseType,item.id,item.table);
 
-                var url = "http://clinfhir.com/fhir/"+item.baseType + "/"+item.id;
-                var entry = {fullUrl:url};
-                entry.resource = vo.resource;
-                return entry;
-
-
+                    var url = "http://clinfhir.com/fhir/"+item.baseType + "/"+item.id;
+                    var entry = {fullUrl:url};
+                    entry.resource = vo.resource;
+                    return entry;
+                }
             }
 
         },
@@ -353,6 +353,9 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                     var txt="";
                     switch (dt) {
+                        case "Identifier" :
+                            return v.system + "|" + v.value;
+                            break;
                         case "cc" :
                             if (v.text) { return v.text;}
                             if (v.Coding) {
