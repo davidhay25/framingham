@@ -175,18 +175,18 @@
                 </td>
 
                 <td width="25%">
-                    <div ng-hide="row.dt == 'Reference' || row.dt=='BackboneElement' ||  row.path == 'text'" >
+                    <div ng-hide="row.dt == 'Reference' || row.dt=='BackboneElement' || row.dt=='MarkDown'||  row.path == 'text'" >
                         <textarea ng-disabled = "disabledDirectSample" msd-elastic class="form-control" ng-model="input.sample[row.id]" rows="1"></textarea>
                     </div>
 
-                    <div ng-show="row.path == 'text'">
+                    <div ng-show="row.path == 'text' || row.dt=='MarkDown'">
                         <p ng-bind-html="input.sample[row.id] | markDown"></p>
                     </div>
 
                 </td>
 
                 <td ng-hide="hideNotes" width="25%">
-                    <textarea  ng-blur="noteAdded()"  msd-elastic class="form-control" ng-model="input.notes[row.id]" rows="1"></textarea>
+                    <textarea ng-blur="noteAdded()"  msd-elastic class="form-control" ng-model="input.notes[row.id]" rows="1"></textarea>
                 </td>
                 <!--<td><pre>{{row | json}}</pre></td>-->
             </tr>
