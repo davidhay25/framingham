@@ -19,13 +19,13 @@
 
 
     <div class="row" ng-show="selectedTrack">
-        <div class="col-sm-2 col-md-2">
+        <div class="col-sm-3 col-md-3">
             <select class="form-control" ng-model="input.scenario"
                     ng-change="lmCheckSelectScenario(input.scenario)"
                     ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
 
         </div>
-        <div class="col-sm-5 col-md-5">
+        <div class="col-sm-4 col-md-4">
             <div class="scrollScenarioDescription">
                 <!--
                 <p ng-bind-html="lmScenario.description | markDown"></p>
