@@ -510,6 +510,21 @@
 
             </div>
 
+
+            <div ng-show="datatype == 'MarkDown'">
+
+                <textarea rows="8" class="form-control"ng-model="input.dt.markdown" >
+
+                </textarea>
+                <br/>
+                <a href="https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf" target="_blank">
+                    MarkDown cheat sheet
+                </a>
+                <em>(Markdown is a way to format text with bullets, headings and test formatting by putting specific characters in the text)</em>
+
+
+            </div>
+
             <div ng-show="datatype == 'uri'">
                 <input placeholder = 'Enter value of uri' type="text" class="form-control" ng-model="input.dt.uri"/>
             </div>

@@ -231,6 +231,10 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
                         v = value.string;
                         text = value.string;
                         break;
+                    case 'MarkDown' :
+                        v = value.markdown;
+                        text = value.markdown;
+                        break;
                     case "CodeableConcept" :
                         //value is an object that can have properties code, system, display, text
                         var cc = {},text="";
