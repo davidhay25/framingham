@@ -61,11 +61,14 @@
             <p ng-bind-html="lmScenario.description | markDown"></p>
         </div>
         <div class="col-sm-9 col-md-9">
-            <tbl-resource trigger="showResourceTable"
-                          reference="addReference"
-                          resource-json="fnResourceJson"
-                          updated="formWasUpdated"
-                          fnshownotes="setShowNotes"></tbl-resource>
+            <div class="rounded-box">
+                <tbl-resource trigger="showResourceTable"
+                              reference="addReference"
+                              resource-json="fnResourceJson"
+                              updated="formWasUpdated"
+                              fnshownotes="setShowNotes"></tbl-resource>
+            </div>
+
         </div>
     </div>
 

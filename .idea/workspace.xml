@@ -6,6 +6,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0a6e7d6f-aa6e-405d-9d94-d3543d427d97" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/directive/tblResource/tblResourceDir.html" afterPath="$PROJECT_DIR$/directive/tblResource/tblResourceDir.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/includes/lmCheck.html" afterPath="$PROJECT_DIR$/includes/lmCheck.html" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -127,13 +128,26 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lmCheck.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lmCheck.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/includes/lmCheck.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="27" column="37" lean-forward="false" selection-start-line="27" selection-start-column="37" selection-end-line="27" selection-end-column="37" />
+            <state relative-caret-position="592">
+              <caret line="64" column="24" lean-forward="false" selection-start-line="64" selection-start-column="24" selection-end-line="64" selection-end-column="24" />
               <folding>
                 <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#div#3;n#div#0;n#div#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tblResourceDir.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/directive/tblResource/tblResourceDir.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" column="21" lean-forward="false" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
+              <folding>
+                <element signature="n#td#2;n#tr#1;n#table#0;n#div#1;n#div#0;n#!!top" expanded="false" />
+                <element signature="n#td#3;n#tr#1;n#table#0;n#div#1;n#div#0;n#!!top" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -426,13 +440,13 @@
         <option value="$PROJECT_DIR$/js/ecosystemSvc.js" />
         <option value="$PROJECT_DIR$/js/cofCtrl.js" />
         <option value="$PROJECT_DIR$/directive/tblResource/tblResourceDir.js" />
-        <option value="$PROJECT_DIR$/directive/tblResource/tblResourceDir.html" />
         <option value="$PROJECT_DIR$/connectathon.html" />
         <option value="$PROJECT_DIR$/js/getDatatypeValueCtrl.js" />
         <option value="$PROJECT_DIR$/js/lmCheckCtrl.js" />
         <option value="$PROJECT_DIR$/includes/cof.html" />
         <option value="$PROJECT_DIR$/modalTemplates/getDatatypeValue.html" />
         <option value="$PROJECT_DIR$/includes/lmCheck.html" />
+        <option value="$PROJECT_DIR$/directive/tblResource/tblResourceDir.html" />
       </list>
     </option>
   </component>
@@ -1117,12 +1131,12 @@
       <workItem from="1526882832030" duration="32230000" />
       <workItem from="1527160504722" duration="43565000" />
       <workItem from="1527616403622" duration="77000" />
-      <workItem from="1528046097871" duration="50478000" />
+      <workItem from="1528046097871" duration="50770000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1498478000" />
+    <option name="totallyTimeSpent" value="1498770000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="277" y="1223" width="1344" height="757" extended-state="0" />
@@ -1769,17 +1783,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/directive/tblResource/tblResourceDir.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="67" column="51" lean-forward="false" selection-start-line="67" selection-start-column="51" selection-end-line="67" selection-end-column="51" />
-          <folding>
-            <element signature="n#td#2;n#tr#1;n#table#0;n#div#1;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#td#3;n#tr#1;n#table#0;n#div#1;n#div#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/directive/tblResource/tblResourceDir.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
@@ -2055,10 +2058,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/includes/lmCheck.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="27" column="37" lean-forward="false" selection-start-line="27" selection-start-column="37" selection-end-line="27" selection-end-column="37" />
+        <state relative-caret-position="592">
+          <caret line="64" column="24" lean-forward="false" selection-start-line="64" selection-start-column="24" selection-end-line="64" selection-end-column="24" />
           <folding>
             <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#div#3;n#div#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/directive/tblResource/tblResourceDir.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="21" lean-forward="false" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
+          <folding>
+            <element signature="n#td#2;n#tr#1;n#table#0;n#div#1;n#div#0;n#!!top" expanded="false" />
+            <element signature="n#td#3;n#tr#1;n#table#0;n#div#1;n#div#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
