@@ -20,7 +20,6 @@ angular.module("sampleApp")
             };
 
             $scope.SaveReviewComment = function() {
-                console.log('save');
                 $scope.saveExample(true);
             };
 

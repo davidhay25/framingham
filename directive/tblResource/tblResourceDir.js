@@ -84,9 +84,16 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 if (row.definition) {
                     text = row.definition
                 }
-                if (row.clinDesc) {
-                    text += '<br/>'+row.clinDesc
+
+                if (row.comment) {
+                    text += '<br/><br/>'+row.comment
                 }
+
+                if (row.clinDesc) {
+                    text += '<br/><br/>'+row.clinDesc
+                }
+
+
                 return text
             }
 
@@ -505,6 +512,9 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
 
                             item.definition = ed.definition;
+                            item.comment = ed.comment;
+
+
                             item.mult = ed.min + '..'+ed.max;
                             item.max = ed.max;
 
@@ -550,11 +560,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                             ar.push(item);
                         }
 
-
                     }
-
-
-
 
                 });
 

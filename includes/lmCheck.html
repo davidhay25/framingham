@@ -25,16 +25,9 @@
                     ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
 
         </div>
-        <div class="col-sm-4 col-md-4">
-            <div class="scrollScenarioDescription">
-                <!--
-                <p ng-bind-html="lmScenario.description | markDown"></p>
-                -->
-            </div>
 
-        </div>
 
-        <div class="col-sm-3 col-md-3">
+        <div class="col-sm-7 col-md-7">
             <textarea msd-elastic class="form-control" ng-model="input.reviewComment" ng-blur="SaveReviewComment()" rows="2"
                 placeholder="Notes about model - eg missing elements"></textarea>
         </div>
