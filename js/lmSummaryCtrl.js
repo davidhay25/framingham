@@ -3,9 +3,6 @@ angular.module("sampleApp")
     .controller('lmSummaryCtrl',
         function ($scope,ecosystemSvc,$http,$filter,modalService) {
 
-
-
-
             function makeSummary(arReview) {
                 //construct a hash of path vs id (a single id can have multiple paths).
                 //

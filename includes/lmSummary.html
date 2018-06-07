@@ -13,7 +13,7 @@
 
 
     <div class="row" ng-show="selectedTrack">
-        <div class="col-sm-4 col-md-4">
+        <div class="col-sm-3 col-md-3">
             <select class="form-control" ng-model="input.scenario"
                     ng-change="lmSummarySelectScenario(input.scenario)"
                     ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
@@ -22,7 +22,7 @@
         <div class="col-sm-4 col-md-4">
             <p ng-bind-html="lmScenario.description | markDown"></p>
         </div>
-        <div class="col-sm-3 col-md-3">
+        <div class="col-sm-4 col-md-4">
             <p>This display has the comments entered by the users against each element in the model</p>
         </div>
 

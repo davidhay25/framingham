@@ -16,13 +16,13 @@ angular.module("sampleApp")
 
             //called when the form is updated. Defined in the scenario builder component.
             $scope.formWasUpdated = function(table) {
-
                 $scope.saveExample(true);
-
-
-
             };
 
+            $scope.SaveReviewComment = function() {
+                console.log('save');
+                $scope.saveExample(true);
+            };
 
 
             // ------- functions and objects for the table directive...
@@ -55,13 +55,11 @@ angular.module("sampleApp")
                     closeButtonText: "No, I changed my mind",
                     headerText: "Remove resource instance",
                     actionButtonText: 'Yes, please remove',
-                    bodyText: "Are you sure you wish to refresh the Logical Model? THis will clear all your data..."
+                    bodyText: "Are you sure you wish to refresh the Logical Model? This will clear all your data..."
                 };
-
 
                 modalService.showModal({}, modalOptions).then(
                     function(){
-
                         $scope.waiting = true;
                         var url = $scope.selectedTrack.LM;
                         if (url) {
@@ -165,16 +163,17 @@ angular.module("sampleApp")
                 if (user) {
                     var saveObject = {};
                     saveObject.userid = user.id;
+                    saveObject.userName = user.name;
                     saveObject.scenarioid = $scope.lmScenario.id;
                     saveObject.id = user.id + "-" + $scope.lmScenario.id;
-                    saveObject.reviewComment = $scope.item.reviewComment;
+                    saveObject.reviewComment = $scope.input.reviewComment;
                     saveObject.table = $scope.item.table;       //the list of rows...
                     saveObject.sample = $scope.item.sample;    //the sample data (hash by row id)
                     saveObject.notes = $scope.item.notes;       //notes (hash by row id)
 
 
 
-
+                    $scope.waiting = true;
                     $http.put("/lmCheck",saveObject).then(
                         function(){
                             if (! hideNotification) {
@@ -190,7 +189,9 @@ angular.module("sampleApp")
                         }, function(err) {
                             alert('error saving result '+angular.toJson(err))
                         }
-                    )
+                    ).finally(function () {
+                        $scope.waiting = false;
+                    })
                 }
             };
 
@@ -210,7 +211,7 @@ angular.module("sampleApp")
                 var user = ecosystemSvc.getCurrentUser();
                 if (user && user.id && $scope.lmScenario) {
                     var url = '/lmCheck/'+user.id + "/"+$scope.lmScenario.id;
-
+                    $scope.waiting = true;
                     $http.get(url).then(
                         function(data) {
 
@@ -218,17 +219,20 @@ angular.module("sampleApp")
                             if (vo && vo.table && vo.sample) {
                                 //yep - this user has started a sample for this scenario...
 
+
                                 $scope.item.sample = vo.sample;
                                 $scope.item.notes = vo.notes;
                                 $scope.item.table = vo.table;
-                                $scope.item.reviewComment = vo.reviewComment ;
+                                $scope.input.reviewComment = vo.reviewComment ;
                                 $scope.showResourceTable.open($scope.item,$scope.SD,$scope.cofScenario,$scope.selectedTrack);
 
                             } else {
                                 $scope.showResourceTable.open($scope.item,$scope.SD,$scope.cofScenario,$scope.selectedTrack);
                             }
                         }
-                    )
+                    ).finally(function () {
+                        $scope.waiting = false;
+                    })
                 }
             };
 

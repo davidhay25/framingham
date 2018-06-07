@@ -35,7 +35,7 @@
         </div>
 
         <div class="col-sm-3 col-md-3">
-            <textarea msd-elastic class="form-control" ng-model="input.reviewComment" rows="2"
+            <textarea msd-elastic class="form-control" ng-model="input.reviewComment" ng-blur="SaveReviewComment()" rows="2"
                 placeholder="Notes about model - eg missing elements"></textarea>
         </div>
 
