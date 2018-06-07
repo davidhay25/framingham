@@ -14,18 +14,13 @@ angular.module("sampleApp")
             });
 
 
-            //called when the form is updated. Defined in the scenario builder component. Not sure what is needed here...
+            //called when the form is updated. Defined in the scenario builder component.
             $scope.formWasUpdated = function(table) {
 
                 $scope.saveExample(true);
 
-                /*
-                $scope.saveGraph(true);     //save the graph without showing
-                if (table) {
-                    drawTree(table)
-                    makeDocumentDisplay();
-                }
-*/
+
+
             };
 
 
@@ -67,7 +62,7 @@ angular.module("sampleApp")
                 modalService.showModal({}, modalOptions).then(
                     function(){
 
-
+                        $scope.waiting = true;
                         var url = $scope.selectedTrack.LM;
                         if (url) {
                             $http.get(url).then(
@@ -76,6 +71,7 @@ angular.module("sampleApp")
                                     //$scope.item was defined when the scenario was selected...
                                     $scope.item.sample = {};
                                     $scope.item.notes = [];
+                                    delete $scope.item.table;
                                     delete $scope.item.reviewComment ;
                                     $scope.showResourceTable.open($scope.item,$scope.SD,$scope.cofScenario,$scope.selectedTrack);
 
@@ -84,7 +80,9 @@ angular.module("sampleApp")
                                     modalService.showModal({}, {bodyText:"The url: "+url+" specified in the track could not be found."})
 
                                 }
-                            );
+                            ).finally(function(){
+                                $scope.waiting = false;
+                            });
                         } else {
                             alert('No Logical Model defined for this track')
                         }
