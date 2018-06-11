@@ -860,7 +860,9 @@
                             <input placeholder="Concept text. Can be used as search text" class="form-control" ng-model="input.dt.cc.text"/>
                         </div>
                         <div class="col-sm-2 col-md-2">
-                            <button ng-show="binding.url" class="btn btn-primary pull-right" ng-click="expandCC(input.dt.cc.text)">Search</button>
+                            <button ng-show="binding.url" class="btn btn-primary pull-right"
+
+                                    ng-click="expandCC(input.dt.cc.text)">Search</button>
                         </div>
 
                         <div class="col-sm-6 col-md-6">
@@ -931,6 +933,10 @@
                             <td>{{concept.system}}</td>
                         </tr>
                     </table>
+
+                            <div ng-show="expandedValueSet.expansion.contains.length == 50">
+                                <em>Only 50 items are shown. You may need to refine your search...</em>
+                            </div>
 
                         </uib-tab>
                         <uib-tab heading="Json" ng-show="expandedValueSet">

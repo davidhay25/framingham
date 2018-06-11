@@ -458,6 +458,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
             //construct the initial table from the SD...
             function makeTableArray(SD,track){
+                var that = this;
                 var ignoreAll=['id','meta','implicitRules','contained','extension','modifierExtension']
                 var ignoreRoot = ['language','text'];   //ignore if on the root...
                 var ar = [];
@@ -504,6 +505,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                             item.type = ed.type;
                             item.mustSupport = ed.mustSupport;
                             item.isModifier = ed.isModifier;
+                            //item.fhirMapping = getFHIRMapping(ed);
 
                             if (item.dt == 'code' || item.dt == 'Coding' || item.dt == 'CodeableConcept') {
                                 item.isCoded = true;
@@ -513,6 +515,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
                             item.definition = ed.definition;
                             item.comment = ed.comment;
+
+
 
 
                             item.mult = ed.min + '..'+ed.max;
@@ -551,6 +555,15 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                                     if (map.identity == 'fhir' && map.map) {
                                         var ar = map.map.split('|');
                                         item.fhirMapping = {map:ar[0],notes:ar[1]};
+
+                                        //get the url of the extension (itself stored as an extension)
+                                        var simpleExtensionUrl = 'http://clinfhir.com/fhir/StructureDefinition/simpleExtensionUrl';
+                                        var ext = getSingleExtension(ed,simpleExtensionUrl);
+                                        if (ext) {
+                                            item.fhirMapping.url = ext.valueString;
+                                        }
+
+
                                     }
                                 })
                             }
@@ -584,6 +597,36 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
 
                 return ar;
+
+                function getFHIRMappingDEP(ed) {
+                    //get the FHIR mapping (if any)
+                    var mapping;
+                    if (ed.mapping) {
+                        ed.mapping.forEach(function (map) {
+                            if (map.identity == 'fhir') {
+                                var s = map.map;
+                                var ar = s.split('|');
+                                mapping = ar[0];
+                            }
+                        })
+                    }
+                    return mapping;
+                }
+
+                function getSingleExtension(resource,url) {
+                    //return the value of an extension assuming there is only 1...
+                    var extension = {};
+                    if (resource) {
+                        resource.extension = resource.extension || []
+                        resource.extension.forEach(function(ext){
+                            if (ext.url == url) {
+                                extension = ext
+                            }
+                        });
+                    }
+                    return extension;
+                }
+
             }
 
 

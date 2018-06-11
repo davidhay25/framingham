@@ -6,11 +6,20 @@ angular.module("sampleApp")
             $scope.saveText = "Add Person";
             $scope.titleText = "Add new person";
 
-            $scope.tracks = [{name:''}];
-
+            //$scope.tracks = [{name:''}];
+            $scope.tracks = [];
             tracks.forEach(function (trck) {
                 $scope.tracks.push(trck);
             });
+
+            $scope.tracks.sort(function(a,b){
+                if (a.name > b.name) {
+                    return 1
+                } else {
+                    return -1
+                }
+            });
+
 
             var inputPerson;
             $scope.tracksOfInterest = [];

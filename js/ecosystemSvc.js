@@ -24,6 +24,11 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         }
         return extension;
     };
+
+
+
+
+
     var extDescriptionUrl = "http://clinfhir.com/StructureDefinition/cf-eco-description";
     var extRoleUrl = "http://clinfhir.com/StructureDefinition/cf-eco-role";
     var extNoteUrl = 'http://clinfhir.com/StructureDefinition/cf-eco-note';
@@ -164,7 +169,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     objColours.Practitioner = '#FFBB99';
     objColours.MedicationStatement = '#ffb3ff';
     objColours.CarePlan = '#FF9900';
-    objColours.Sequence = '#FF9900';
+    objColours.Sequence = '#FF9990';
     objColours.CareTeam = '#FFFFCC';
     objColours.Condition = '#cc9900';
     objColours.LogicalModel = '#ff8080';
@@ -256,12 +261,38 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                 }
 
                                 parentElement = row.structuredData; //because it could be a parent...
-                                if (row.max == 1) {
-                                    resource[eleName] = parentElement;
+                                //check for an extension off the root
+                                if (row.fhirMapping && row.fhirMapping.map) {
+
+                                    var ar = row.fhirMapping.map.split('.')
+                                    if (ar[1] == 'extension') {
+                                        //this is an extension
+                                        resource.extension = resource.extension || []
+                                        var ext = {}
+                                        ext.url = row.fhirMapping.url
+                                        var dt = row.type[0].code;
+                                        dt = 'value' + dt.charAt(0).toUpperCase() + dt.substr(1);
+                                        ext[dt] = row.structuredData;
+                                        resource.extension.push(ext)
+                                    } else {
+                                        //this isn't
+                                        if (row.max == 1) {
+                                            resource[eleName] = parentElement;
+                                        } else {
+                                            resource[eleName] = resource[eleName] || [];
+                                            resource[eleName].push(parentElement)
+                                        }
+                                    }
                                 } else {
-                                    resource[eleName] = resource[eleName] || [];
-                                    resource[eleName].push(parentElement)
+                                    //there's no mapping - save the data under the element name
+                                    if (row.max == 1) {
+                                        resource[eleName] = parentElement;
+                                    } else {
+                                        resource[eleName] = resource[eleName] || [];
+                                        resource[eleName].push(parentElement)
+                                    }
                                 }
+
                                 break;
                             case 2: {
                                 //if the
@@ -432,8 +463,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                             angular.forEach(item.notes,function(note,id){
 
                                 var lne = {user:graph.user,path:hashId[id].path,note:note,scenario:vo.scenario,track:vo.track};
-
-
                                 hashResourceType[item.type].push(lne)
                             })
 

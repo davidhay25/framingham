@@ -142,7 +142,7 @@ angular.module("sampleApp")
                 delete $scope.selectedConceptProperties;
                 delete $scope.selectedConceptValue;
 
-                var url = termServer + "ValueSet/$expand?url="+row.binding.url;
+                var url = termServer + "ValueSet/$expand?url="+row.binding.url+"&count=50";
                 if (text) {
                     url += "&filter="+text
                 }
