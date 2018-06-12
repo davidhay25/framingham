@@ -93,8 +93,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     text += '<br/><br/>'+row.clinDesc
                 }
 
-                if (item.binding && item.binding.url) {
-                    text += '<br/><br/>'+item.binding.url
+                if (row.binding && row.binding.url) {
+                    text += '<br/><br/>'+row.binding.url
                 }
 
 
