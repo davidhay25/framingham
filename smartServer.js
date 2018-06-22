@@ -93,6 +93,11 @@ app.post('/setup',function(req,res){
         headers: {accept:'application/json+fhir'}       //todo - may need to set this according to the fhir version...
     };
 
+
+
+
+    //console.log(options);
+
     request(options, function (error, response, body) {
         if (response && response.statusCode == 200) {
 
@@ -161,85 +166,7 @@ app.post('/setup',function(req,res){
 });
 
 
-//load the capabilityStatement from the server, and set the SMART end points in config
-app.get('/setupDEP',function(req,res){
 
-    delete req.session['serverData'];      //will return the server granted scope
-
-    var options = {
-        method: 'GET',
-        uri: config.baseUrl + "/metadata",
-        clientId : "d90584cc-3b0e-40db-8543-536df45a84f4"
-
-    };
-
-    request(options, function (error, response, body) {
-        if (response && response.statusCode == 200) {
-
-            var capStmt =JSON.parse(body);
-            req.session['serverData'] = {capStmt:capStmt};
-
-            getSMARTEndpoints(config,capStmt)
-
-            //how get the keys to decrypt the id token. I'm not yet sure this is the right place...
-            //in particular, this means that teh server MUST support the whole key lookup thing...
-            request.get(config.clientIdConfig,function(err,resp,body){
-                if (!err && body) {
-                    var json = JSON.parse(body)
-                    console.log(body)
-                    console.log(json['jwks_uri'])
-                    if (json['jwks_uri']) {
-                        var url = json['jwks_uri'];
-                        request.get(url,function(err,resp,body) {
-                            if (!err && body) {
-                                req.session.keys = JSON.parse(body);        //should be the decryption keys...
-
-                                console.log('keys',req.session.keys);
-
-                                //now we can return the non-private config...
-                                //console.log(config)
-                                res.json(config)
-
-                            } else {
-                                req.session.error = {err:"couldn't find "+ url + " (from " + config.clientIdConfig + ")"};
-                                res.redirect('smartError.html')
-                            }
-                        })
-
-
-                    } else {
-                        req.session.error = {err:"couldn't find "+ config.clientIdConfig};
-                        res.redirect('smartError.html')
-                    }
-
-                } else {
-                    //can't find the
-                    req.session.error = body;
-                    res.redirect('smartError.html')
-                }
-            })
-
-
-
-        //    console.log(config)
-          //  res.json(config)
-
-
-
-
-
-
-
-
-
-
-        } else {
-            console.log(error,body)
-            req.session.error = body;
-            res.redirect('smartError.html')
-        }
-    })
-});
 
 
 //The first step in authentication. The browser will load this 'page' and receive a redirect to the login page
@@ -253,6 +180,17 @@ app.get('/auth', function(req, res)  {
 
     //generate the uri to re-direct the browser to. This will be the login page for the system
     var authorizationUri = config.authorize;
+
+    console.log('original auth:',authorizationUri);
+/*
+    //smile is not specifying ssl in the SMART extensions
+    authorizationUri = authorizationUri.replace('http://','https://')
+
+    authorizationUri = authorizationUri.replace('http://localhost:19200/oauth/authorize','https://hof.smilecdr.com:9200/oauth/authorize')
+    authorizationUri = 'https://hof.smilecdr.com:9200/oauth/authorize';
+*/
+    console.log('later auth:',authorizationUri);
+
     if (req.session.config.public) {
         //this is a public launch
 
@@ -272,7 +210,7 @@ app.get('/auth', function(req, res)  {
         authorizationUri += "&client_id="+config.clientId;
     }
 
-    if (showLog) {console.log('authUri=',authorizationUri)};
+    if (1==1) {console.log('authUri=',authorizationUri)};
 
     //header
 
@@ -284,7 +222,7 @@ app.get('/auth', function(req, res)  {
 
 //after authentication the browser will be redirected by the auth server to this endpoint
 app.get('/callback', function(req, res) {
-
+console.log('Callback')
     //If authentication was successful, the Authorization Server will return a code which can be exchanged for an
     //access token. If there is no code, then authorization failed, and a redirect to an error page is returned.
     var code = req.query.code;
@@ -361,22 +299,6 @@ app.get('/callback', function(req, res) {
                 res.redirect(req.session["page"]);
 
 
-/*
-                oauthModule.validateJWT(token['id_token']).then(
-                    function(id_token) {
-                        req.session.serverData.idToken = id_token;
-                        console.log('success!',id_token)
-                        res.redirect(req.session["page"]);
-                    },
-                    function(err) {
-                        console.log('fail...' + err);
-                        req.session.error = err
-                        res.redirect("SMARTError.html");
-                    }
-                )
-                */
-
-                //res.redirect(req.session["page"]);
 
             } else {
                 res.redirect(req.session["page"]);
@@ -428,6 +350,7 @@ app.get('/orionfhir/*',function(req,res){
         }
 
         var access_token = req.session['accessToken'];
+        console.log(access_token)
         var config = req.session["config"];     //retrieve the configuration from the session...
 
         console.log('version ' + config.fhirVersion)
@@ -483,7 +406,7 @@ app.get('/orionfhir/*',function(req,res){
             options.headers['X-consent'] = consent;
         }
 
-        //console.log(options)
+        console.log('options',options)
 
         request(options, function (error, response, body) {
             if (error) {

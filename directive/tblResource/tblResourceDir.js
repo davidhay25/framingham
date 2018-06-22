@@ -100,7 +100,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
 
                 return text
-            }
+            };
 
             $scope.showNotes = function(show) {
                 if (show) {

@@ -11,6 +11,7 @@ angular.module("sampleApp")
 
             $scope.input.termServer = "https://ontoserver.csiro.au/stu3-latest/";
             $scope.input.confServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
+            $scope.input.dataServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
 
             console.log($scope.allRoles)
             //$scope.mdOptions = {iconlibrary:'glyph'}
@@ -37,6 +38,7 @@ angular.module("sampleApp")
                 $scope.input.description = track.description;
                 $scope.input.termServer = track.termServer || 'https://ontoserver.csiro.au/stu3-latest/';
                 $scope.input.confServer = track.confServer || 'http://fhirtest.uhn.ca/baseDstu3/';
+                $scope.input.dataServer = track.dataServer || 'http://fhirtest.uhn.ca/baseDstu3/';
                 $scope.input.LM = track.LM;
             }
 
@@ -98,6 +100,8 @@ angular.module("sampleApp")
 
                 $scope.track.termServer = $scope.input.termServer;
                 $scope.track.confServer = $scope.input.confServer ;
+                $scope.track.dataServer = $scope.input.dataServer;
+
                 $scope.track.LM = $scope.input.LM ;
                 $scope.$close({track:$scope.track,lead:$scope.input.trackLead})
             };

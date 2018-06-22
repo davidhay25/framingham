@@ -4,9 +4,51 @@ angular.module("sampleApp")
     .controller('ecosystemCtrl',
         function ($rootScope,$scope,$http,modalService,ecosystemSvc,$window,$localStorage,$uibModal,ecoUtilitiesSvc) {
 
+
+
             $http.post("/startup",{});  //record access
             $scope.ecosystemSvc = ecosystemSvc;
             $scope.input = {};
+
+
+            var req = {
+                method: 'GET',
+                url: 'https://hof.smilecdr.com:8000/Patient/t100',
+                headers: {
+                    'Accept': 'application/fhir+json',
+                    'Authorization':'Basic YWRtaW46SGF5T25GSElS'
+                }
+            };
+
+            $http(req).then(
+                function(data) {
+                    console.log(data)
+                },
+                function(data) {
+                    console.log(data)
+                }
+            )
+
+            /*
+
+                        var authorizationUri = 'https://hof.smilecdr.com:9200/oauth/authorize';
+                        authorizationUri += "?redirect_uri=https://localhost:8090/callback";
+                        authorizationUri += "&response_type=code";
+                        authorizationUri += "&scope=openapi patient/*"
+                        authorizationUri += "&state="+ "test";
+                        authorizationUri += "&aud="+ 'https://hof.smilecdr.com:9200/oauth/authorize'
+                        authorizationUri += "&client_id=clinfhir-test"
+                        $http.post(authorizationUri,{}).then(
+                            function(data) {
+                                console.log(data)
+                            },
+                            function(data) {
+                                console.log(data)
+                            }
+                        )
+            */
+
+
 
             //is there an event in the url?
             var eventCode;
@@ -38,19 +80,23 @@ angular.module("sampleApp")
                                         if ($scope.eventConfig.navBarStyle) {
                                             $scope.navBarStyle = $scope.eventConfig.navBarStyle;
                                         }
+                                        //save the config in the service (if the page is re-loaded
+                                        ecosystemSvc.setEventConfig(data.data[0]);
+                                        loadData();     //can load all the data for the event ...
+
+                                        //is there a user cached for this event?
+                                        var user = ecosystemSvc.getCurrentUser();
+
+                                        if (! user) {
+                                            //no user - need to login
+                                            login();
+                                        }
+
+                                    } else {
+                                        alert('This event is not defined')
                                     }
 
-                                    //save the config in the service (if the page is re-loaded
-                                    ecosystemSvc.setEventConfig(data.data[0]);
-                                    loadData();     //can load all the data for the event ...
 
-                                    //is there a user cached for this event?
-                                    var user = ecosystemSvc.getCurrentUser();
-
-                                    if (! user) {
-                                        //no user - need to login
-                                        login();
-                                    }
                                 }
                             },
                             function(err) {
@@ -60,6 +106,7 @@ angular.module("sampleApp")
                         );
                     },
                     function(err) {
+                        console.log(err);
                         //the event code wasn't recognized...
                         var msg = "The event code '"+eventCode+ "' is not correct. Please contact the event organizers for the correct code."
                         modalService.showModal({}, {bodyText:msg})

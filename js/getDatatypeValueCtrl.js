@@ -201,7 +201,7 @@ angular.module("sampleApp")
             //called when a concept is initially selected, and also when a parent or child is selected...
             $scope.selectConcept = function(concept) {
                 $scope.waiting = true;
-                $scope.selectedConceptValue = {value:{Coding:[concept]},text:concept.display}
+                $scope.selectedConceptValue = {value:{coding:[concept]},text:concept.display}
 
                 if ($scope.input.dt && $scope.input.dt.cc) {
                     delete $scope.input.dt.cc.text;

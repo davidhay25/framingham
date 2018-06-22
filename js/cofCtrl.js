@@ -12,6 +12,34 @@ angular.module("sampleApp")
             var profilesCache = {};          //cache for SDsss
             var allScenarios = {};
 
+            $scope.clearValidationResult = function(){
+                clearValidation()
+            };
+
+            $scope.validateResource = function(resource) {
+                console.log(resource)
+
+                clearValidation();
+
+                cofSvc.validateResource(resource,$scope.selectedTrack).then(
+                    function(data) {
+                        $scope.validationResult = data;
+                        $scope.validationSuccess = true;
+                        console.log(data)
+                    },
+                    function(err) {
+                        $scope.validationResult = err;
+                        $scope.validationSuccess = false;
+                        console.log(err)
+                    }
+                )
+
+            }
+
+            function clearValidation() {
+                delete $scope.validationResult;
+                delete $scope.validationSuccess;
+            }
 
             //------- document stuff - ? move to service or...
             function makeDocumentDisplay(){
@@ -585,6 +613,7 @@ angular.module("sampleApp")
 
             //select an item from the list of items. The SD will have been loaded for this type (async) into profilesCache
             $scope.selectItem = function(item) {
+                clearValidation();
                 $scope.currentItem = item;
 
                 var type = item.type;

@@ -52,6 +52,40 @@
         <uib-tab heading="Json">
             <pre>{{document.bundle | json}}</pre>
         </uib-tab>
+
+        <uib-tab heading="Validate">
+            <div>
+                <button class="btn btn-primary" ng-click="validateResource(document.bundle)">Validate</button>
+            </div>
+            <hr/>
+
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <table class="table table-sm table-bordered">
+                        <tr><th>Severity</th><th>Description</th><th>Location</th></tr>
+                        <tr ng-repeat="iss in validationResult.issue">
+                            <td>{{iss.severity}}</td>
+                            <td>{{iss.diagnostics}}
+                                <div>{{iss.details.text}}</div>
+
+                            </td>
+                            <td>
+                                <div ng-repeat="loc in iss.location">
+                                    {{loc}}
+                                </div>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+
+
+
+
+        </uib-tab>
+
     </uib-tabset>
 
 </div>

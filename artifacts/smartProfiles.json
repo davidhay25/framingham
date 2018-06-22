@@ -1,5 +1,22 @@
 {"profiles": [
   {
+    "name" : "mySmile",
+    "description":"My Amazon SMILE server",
+    "fhirVersion" : "3",
+    "baseUrl" : "https://hof.smilecdr.com:8000/",
+    "callback" : "https://localhost:8443/callback",
+    "clientId" : "clinfhir-test",
+    "secret": "mySecret",
+    "clientIdConfig": "https://hof.smilecdr.com:9200/openid-configuration",
+    "defaultScope" :"openid patient/*.read",
+    "defaultQueries": [
+      {"display":"Procedures","url":"Patient/{patientId}/Procedure"},
+      {"display":"Medications","url":"Patient/{patientId}/MedicationStatement"},
+      {"display":"Patient","url":"Patient/{patientId}"},
+      {"display":"Conditions","url":"Patient/{patientId}/Condition"}
+    ]
+  },
+  {
     "name" : "DHP-web",
     "description":"DHP Open Health Connect hosted in the web",
     "fhirVersion" : "3",

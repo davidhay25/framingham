@@ -1,4 +1,4 @@
-angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilitiesSvc,$q,$filter) {
+angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilitiesSvc,$q,$filter,$http) {
 
 
 
@@ -218,6 +218,29 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
 
     return {
+
+        validateResource: function(resource,track) {
+            var deferred = $q.defer();
+
+            if (!track.dataServer || !resource || ! resource.resourceType) {
+                deferred.reject({msg:'Validation needs the dataServer configured in the track and a minimal resource'})
+            }
+
+
+            var url = track.dataServer + resource.resourceType + '/$validate'
+            $http.post(url,resource).then(
+                function(data){
+                    deferred.resolve(data.data)
+                },
+                function(err) {
+                    console.log(err)
+                    deferred.reject(err.data)
+                }
+            )
+            return deferred.promise;
+
+        },
+
         makeLogicalModelFromSD : function(profile,track){
             //given a StructureDefinition which is a profile (ie potentially has extensions) generate a logical model by de-referencing the extensions
             //currently only working for simple extensions
