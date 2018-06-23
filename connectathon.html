@@ -310,11 +310,12 @@
                                                 <div class="col-sm-6 col-md-6">
                                                     <strong>Track Type: </strong>
                                                     {{selectedTrack.trackType}}
-                                                    <div>{{trackTypes[selectedTrack.trackType]}}</div>
+
+                                                    <div style="padding-top: 8px">{{trackTypes[selectedTrack.trackType]}}</div>
                                                 </div>
                                                 <div class="col-sm-6 col-md-6">
                                                     <strong>Leads</strong>
-                                                    <ul class="list-unstyled">
+                                                    <ul style="padding-top: 8px" class="list-unstyled">
                                                         <li ng-repeat="lead in selectedTrack.leads">
                                                             {{lead.name}}
                                                             <div ng-show="contact.value" style="margin-left: 20px" ng-repeat="contact in lead.contact">

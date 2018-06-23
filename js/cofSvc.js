@@ -219,6 +219,122 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
     return {
 
+        sendToFHIRServer : function(lst,track) {
+            var deferred = $q.defer();
+            var transBundle = {resourceType:'Bundle',type:'transaction',entry:[]}
+
+            lst.forEach(function(item) {
+                var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,item.table);  //create the json for a single entry
+                //console.log(vo.resource)
+
+                var transEntry = {resource:vo.resource};
+                transEntry.request = {method:'PUT',url:vo.resource.resourceType+'/'+vo.resource.id}
+                transBundle.entry.push(transEntry)
+
+
+            });
+
+            var url = track.dataServer;     //the bundle is posted to the root of the server...
+            $http.post(url,transBundle).then(
+                function (data) {
+                    deferred.resolve(data.data)
+                },
+                function (err) {
+                    deferred.reject(err.data)
+                }
+            );
+
+
+
+            return deferred.promise;
+
+
+            //create a new bundle to submit as a transaction. excludes logical models
+            var that=this;
+            var bundle = this.makeDisplayBundle(container.bundle);      //does things like make it a correct document..
+            var deferred = $q.defer();
+
+            transBundle.id = bundle.id;     //needed when saving against /Bundle
+            bundle.entry.forEach(function(entry) {
+
+                if (entry.isLogical) {
+                    console.log('Ignoring Logical Model: ' + entry.resource.resourceType)
+                } else {
+
+                    if (entry.resource.resourceType == 'DocumentReference') {
+                        //need to set the attackent uri to the location of the bundle...
+                        var bundleUrl = appConfigSvc.getCurrentDataServer().url + 'Bundle/'+bundle.id;
+                        var resource = entry.resource;
+                        if (resource.content) {
+                            resource.content[0].attachment.url=bundleUrl;
+                        }
+
+                    }
+
+                    var transEntry = {resource:entry.resource};
+                    transEntry.request = {method:'PUT',url:entry.resource.resourceType+'/'+entry.resource.id}
+                    transBundle.entry.push(transEntry)
+                }
+            });
+
+            var url = appConfigSvc.getCurrentDataServer().url;
+
+            //post the transaction bundle to the server root so the individual resources are saved...
+            $http.post(url,transBundle).then(
+                function(data) {
+
+                    var responseBundle = data.data;
+
+
+                    console.log(responseBundle);
+
+
+                    //save the bundle directly against the /Bundle endpoint. Use the original bundle...
+
+                    SaveDataToServer.saveResource(bundle).then(
+                        function(data){
+                            //saveProvenance will resolve the promise...
+                            saveProvenance(responseBundle,container.name,note,deferred)
+
+
+                        },function (err) {
+                            //??? add error status to provenance
+                            alert('error saving bundle ' + angular.toJson(err))
+                            saveProvenance(responseBundle,container.name,note,deferred);
+                        }
+                    );
+
+
+                    //the response contains the location where all resources were stored. Create a provenance resource...
+
+                },
+                function(err) {
+                    alert('Error saving scenario resources\n'+angular.toJson(err));
+                }
+            );
+
+            return deferred.promise
+
+            //save the provenence resource and resolve the promise. Note that we resolve anyway
+            //?? todo what to do if the provenance save fails??
+            function saveProvenance(data,name,note,deferred) {
+                var prov = that.createProvenance(data,name,note);
+                SaveDataToServer.saveResource(prov).then(
+                    function(data) {
+                        deferred.resolve()
+                    },
+                    function(err) {
+                        alert('error saving provenance ' + angular.toJson(err))
+
+                        deferred.resolve();
+                    }
+                )
+            }
+
+
+        },
+
+
         validateResource: function(resource,track) {
             var deferred = $q.defer();
 

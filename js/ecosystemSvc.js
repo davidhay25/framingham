@@ -203,12 +203,17 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     //var reportedTrackWithNoConfserver  = {};      //a
 
     return {
+
+
         makeDocumentBundle : function(document) {
             //construct a document bundle
+            var clinFHIRRoot = 'http://clinfhir.com/fhir/';
             var that = this;
-            var bundle = {resourceType:'Bundle',type:'document',entry:[]};
+            var bundle = {resourceType:'Bundle',type:'document'};
             bundle.id = 'id'+new Date().getTime();
+            bundle.identifier = {system:clinFHIRRoot+'NamingSystem',value:'id'+ new Date()};
 
+            bundle.entry = [];
             bundle.entry.push(getEntry(document.composition));
             bundle.entry.push(getEntry(document.patient));
             document.items.forEach(function (item) {

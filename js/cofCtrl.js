@@ -12,8 +12,68 @@ angular.module("sampleApp")
             var profilesCache = {};          //cache for SDsss
             var allScenarios = {};
 
+
+            //save the resources to the data server. This can only be called when a data server is defined in the track
+            $scope.saveToFHIRServer = function(cofTypeList){
+
+                var modalOptions = {
+                    closeButtonText: "No, I changed my mind",
+                    headerText: "Store resource instances on data server",
+                    actionButtonText: "Yes, let's do this!",
+                    bodyText: 'Are you sure you wish to save these '+cofTypeList.length+' resources on the data server',
+                    secondaryText :" Server Url: "+ $scope.selectedTrack.dataServer
+                };
+
+
+                modalService.showModal({}, modalOptions).then(
+                    function(){
+
+                       cofSvc.sendToFHIRServer(cofTypeList,$scope.selectedTrack ).then(
+                           function (data) {
+                               console.log(data)
+                               alert('Resources saved.')
+                           },
+                           function (err) {
+                               console.log(err)
+                           }
+                       )
+                    }
+                )
+
+
+
+            };
+
             $scope.clearValidationResult = function(){
                 clearValidation()
+            };
+
+            $scope.validateAll = function(lstItem){
+
+                lstItem.forEach(function (item) {
+                    console.log(item)
+
+                    var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,item.table);
+
+                    console.log(vo.resource)
+
+                    cofSvc.validateResource(vo.resource,$scope.selectedTrack).then(
+                        function(data) {
+                            item.validation={isValid:'yes',oo:data.data}
+                            console.log('valid')
+                        },
+                        function(err) {
+                            //item.isValid='no'
+                            item.validation={isValid:'no',oo:err.data}
+                            console.log('invalid')
+                        }
+                    )
+
+
+
+                })
+
+
             };
 
             $scope.validateResource = function(resource) {

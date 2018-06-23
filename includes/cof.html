@@ -124,7 +124,7 @@
                     <div class="scrollTable">
                         <table class="table table-bordered">
                             <tr><th>Type</th><th>Title</th><th>References</th><th></th></tr>
-                            <tr ng-repeat="item in cofTypeList">
+                            <tr ng-repeat="item in cofTypeList" ng-class="{active:currentItem.id == item.id}">
                                 <td><span class="clickable" ng-click="selectItem(item)"> {{item.type}}</span>
 
                                     <a ng-show="item.category == 'core'" class="pull-right" target="_blank"
@@ -176,6 +176,61 @@
                             <div><strong><em>Please select another tab after updating to ensure notes are saved. This is a limitation being worked on.</em></strong></div>
                         </form>
 
+                </uib-tab>
+                <uib-tab heading="Save to server" ng-show="selectedTrack.dataServer">
+                    <br/>
+                    <div class="row">
+                        <div class="col-sm-8 col-md-8">
+                            <strong>Server: </strong> {{selectedTrack.dataServer}}
+                        </div>
+                        <div class="col-sm-4 col-md-4">
+                            <div class="pull-right">
+                                <button class="btn btn-link" ng-click="validateAll(cofTypeList)">Validate</button>
+                                <button class="btn btn-danger" ng-click="saveToFHIRServer(cofTypeList)">Submit</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <hr/>
+                    <table class="table table-bordered">
+                        <tr><th>Type</th><th>Title</th><th>Id</th><th>Valid</th></tr>
+                        <tr ng-repeat="item in cofTypeList" ng-class="{active:currentItem.id == item.id}">
+                            <td>
+
+                                <span class="clickable" ng-click="selectItem(item)"> {{item.type}}</span>
+                            </td>
+                            <td><span class="clickable" ng-click="editDescription(item)"> {{item.description}}</span></td>
+                            <td>{{item.id}}</td>
+                            <td width="10%">
+
+
+                                <div  ng-hide="entry.isLogical" ng-switch on="item.validation.isValid">
+                                    <div ng-switch-when="yes">
+                                        <i class="glyphicon glyphicon-ok clickable pass"
+                                           title="Resource is valid">
+                                        </i>
+                                    </div>
+                                    <div ng-switch-when="no">
+                                        <i class="glyphicon glyphicon-remove clickable fail"
+                                           title="Resource is not valid">
+                                        </i>
+                                    </div>
+
+                                    <div ng-switch-default>
+                                        <i class="glyphicon glyphicon-question-sign clickable"
+                                           title="Validity not yet checked">
+                                        </i>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                            </td>
+                        </tr>
+                    </table>
                 </uib-tab>
             </uib-tabset>
 
