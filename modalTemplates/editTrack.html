@@ -79,8 +79,8 @@
             </div>
             <div class="col-sm-9 col-md-9">
                <p>If true, then allows a user to enter text directly into the 'sample data' input box for each element (as
-                   opposed to needing to select a FHIR datype). This does prevent a Resource instance from being created, but
-                   does allow for a quicker review if this level of detail is not needed.
+                   opposed to needing to select a FHIR datype). This does prevent a FHIR Resource instance from being created
+                   and saved, but does allow for a quicker review if this level of detail is not needed.
                </p>
             </div>
         </div>
@@ -174,7 +174,7 @@
                         <input class="form-control" ng-model="input.confServer"/>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" ng-hide="track.allowDirectSample">
                     <div class="col-sm-3 col-md-3">
                         Data Server
                     </div>

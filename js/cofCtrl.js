@@ -1,7 +1,7 @@
 
 angular.module("sampleApp")
     .controller('cofCtrl',
-        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc,modalService) {
+        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc,modalService,$q) {
 
             $scope.input = {};
             $scope.cofTypeList = [];
@@ -48,49 +48,74 @@ angular.module("sampleApp")
                 clearValidation()
             };
 
+            //validate all the resource instances - update the server model
             $scope.validateAll = function(lstItem){
 
                 lstItem.forEach(function (item) {
-                    console.log(item)
+                    item.validation={isValid:'unknown'}
+                });
+                var arQuery = [];
+
+                lstItem.forEach(function (item) {
+                    //console.log(item)
 
                     var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,item.table);
+                    //console.log(vo.resource)
+                    var dateValidated = new Date()
 
-                    console.log(vo.resource)
-
-                    cofSvc.validateResource(vo.resource,$scope.selectedTrack).then(
+                    arQuery.push (cofSvc.validateResource(vo.resource,$scope.selectedTrack).then(
                         function(data) {
-                            item.validation={isValid:'yes',oo:data.data}
+                            item.validation={isValid:'yes',oo:data,date:dateValidated}
                             console.log('valid')
                         },
                         function(err) {
-                            //item.isValid='no'
-                            item.validation={isValid:'no',oo:err.data}
+
+                            item.validation={isValid:'no',oo:err,date:dateValidated}
                             console.log('invalid')
                         }
-                    )
-
-
+                    ))
 
                 })
 
 
+                $q.all(arQuery).then(function(data){
+                    console.log(data);
+                    $scope.saveGraph(true)
+                   //alert('done')
+                },function(err){
+                    console.log(err);
+                })
+
             };
 
             $scope.validateResource = function(resource) {
-                console.log(resource)
+
+                if (! resource) {
+                    alert('Please select a resource first');
+                    return;
+                }
+
 
                 clearValidation();
-
+                var dateValidated = new Date();
                 cofSvc.validateResource(resource,$scope.selectedTrack).then(
                     function(data) {
-                        $scope.validationResult = data;
-                        $scope.validationSuccess = true;
+                       // $scope.validationResult = data;
+                       // $scope.validationSuccess = true;
+
+                        $scope.currentItem.validation={isValid:'yes',oo:data,date:dateValidated}
                         console.log(data)
                     },
                     function(err) {
-                        $scope.validationResult = err;
-                        $scope.validationSuccess = false;
+                     //   $scope.validationResult = err;
+                     //   $scope.validationSuccess = false;
+                        $scope.currentItem.validation={isValid:'no',oo:err,date:dateValidated}
+
                         console.log(err)
+                    }
+                ).finally(
+                    function(){
+                        $scope.saveGraph(true);
                     }
                 )
 
@@ -109,7 +134,9 @@ angular.module("sampleApp")
                     switch (item.type) {
                         case 'Composition' :
                             $scope.document.composition = angular.copy(item);
-                            $scope.document.compositionText = item.sample['text']
+                            if (item.sample) {
+                                $scope.document.compositionText = item.sample['text']
+                            }
                             break;
                         case 'Patient' :
                             $scope.document.patient = angular.copy(item);
