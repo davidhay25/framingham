@@ -464,7 +464,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             //construct the initial table from the SD...
             function makeTableArray(SD,track){
                 var that = this;
-                var ignoreAll=['id','meta','implicitRules','contained','extension','modifierExtension']
+                //var ignoreAll=['id','meta','implicitRules','contained','extension','modifierExtension']
+                var ignoreAll=['id','meta','implicitRules','contained','modifierExtension']
                 var ignoreRoot = ['language','text'];   //ignore if on the root...
                 var ar = [];
 
@@ -476,7 +477,6 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 }
 
 
-
                 SD.snapshot.element.forEach(function (ed,inx) {
                     if (ed.type) {
                         var path = $filter('dropFirstInPath')(ed.path);     //remove the leading segment (the resource type)
@@ -486,12 +486,14 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
                         //ignore all elements that end with this string
                         if (ignoreAll.indexOf(ar1[ar1.length-1]) !== -1) {
+                            console.log('ignoring '+ path)
                             include = false;
                         }
 
                         //ignore element if off the root...
                         if (ar1.length == 1 && (ar1[0]== 'language' ||ar1[0]== 'text' )) {
                             include = false;
+                            console.log('ignoring '+ path)
                         }
 
                         if (include) {
@@ -501,6 +503,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                             var item = {path: path };
                             item.isOriginal = true;         //to avoid exponential growth when copying...
                             item.id = 'id' + (inx-1);
+                            item.sliceName = ed.sliceName;
 
                             if (ed.type[0].code == 'BackboneElement') {
                                 item.isBBE = true;
@@ -520,9 +523,6 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
                             item.definition = ed.definition;
                             item.comment = ed.comment;
-
-
-
 
                             item.mult = ed.min + '..'+ed.max;
                             item.max = ed.max;
@@ -573,7 +573,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                                 })
                             }
 
-
+console.log(item)
 
                             ar.push(item);
                         }

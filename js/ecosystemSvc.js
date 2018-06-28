@@ -557,7 +557,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                         }
 
                     }, function (err) {
-                        var msg = "I was unable to retrieve the conformance resource at " + url +
+                        var msg = "I was unable to retrieve the conformance resource: " + url + " from " + confServer +
                             ". Is it on-line, and accepting CORS requests?";
                         modalService.showModal({},{bodyText:msg})
                        // alert("error with query: " + url + "\n" + angular.toJson(err));

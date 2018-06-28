@@ -120,7 +120,10 @@
                          uib-popover-html=getPopoverText(row)
                          ng-class="{required:row.isRequired}"
                          popover-placement="top"
-                         popover-trigger="'mouseenter'">{{row.path | lastInPath}}</div>
+                         popover-trigger="'mouseenter'">{{row.path | lastInPath}}
+
+                        <span ng-show="row.sliceName">({{row.sliceName}})</span>
+                    </div>
                 </td>
                 <td>
                     {{row.mult}}</td>

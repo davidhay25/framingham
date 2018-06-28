@@ -360,6 +360,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
         makeLogicalModelFromSD : function(profile,track){
             //given a StructureDefinition which is a profile (ie potentially has extensions) generate a logical model by de-referencing the extensions
             //currently only working for simple extensions
+            //assume R3
             var deferred = $q.defer();
 
             var confServer = track.confServer || "http://snapp.clinfhir.com:8081/baseDstu3/";       //get from track,
@@ -370,9 +371,15 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                 var logicalModel = angular.copy(profile);       //this will be the logical model
                 var queries = [];       //the queries to retrieve the extension definition
                 logicalModel.snapshot.element.length = 0; //remove the current element definitions
+                var elementsToInsert = {};      //A hash of elements to insert. key is parent path, value is [ed]
 
-                profile.snapshot.element.forEach(function (ed) {
+                //remove elements that are actually sub-elements of Complex DataTypes...
+                var ar = stripDTChildren(profile.snapshot.element);
+
+                ar.forEach(function (ed) {
+                //profile.snapshot.element.forEach(function (ed) {
                     logicalModel.snapshot.element.push(ed)
+
                     var path = ed.path;
                     var ar = path.split('.');
                     if (ar.indexOf('extension') > -1) {
@@ -380,28 +387,21 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
                         if (ed.type) {
                             var profileUrl = ed.type[0].profile;
-                            if (profileUrl) {
+                            if (profileUrl) {   //if there's a profile, then this is an extension
 
                                 queries.push(ecoUtilitiesSvc.findConformanceResourceByUri(profileUrl,confServer).then(
                                     function (sdef) {
                                         var analysis = analyseExtensionDefinition(sdef);
 
                                         if (! analysis.isComplexExtension) {
-
+                                            //note that ed is here by virtue of the magic of closure...
                                             if (! ed.name) {
                                                 ed.name = analysis.name;
                                             }
 
                                             ed.type = analysis.type;
                                             ed.binding = analysis.binding;
-                                            //now update the path and other key properties of the ed
-                                            var text = $filter('getLogicalID')(profileUrl);
 
-                                            //oct3-2017 why did I do this???
-                                            ed.path = ed.path.replace('extension',text)
-
-
-                                            //ed.builderMeta || {}
                                             ed.builderMeta = {isExtension : true};  //to colourize it, and help with the build..
                                             ed.builderMeta.extensionUrl = profileUrl;
 
@@ -410,6 +410,31 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
                                         } else {
                                             console.log(profileUrl + " is complex, not processed")
+                                            console.log(analysis)
+
+                                            ed.type = [{code:'BackboneElement'}]
+                                            ed.path += ed.sliceName;
+
+                                            if (analysis && analysis.children) {
+                                                elementsToInsert[ed.path] = []
+                                                analysis.children.forEach(function (child) {
+
+                                                    var newED = {};
+                                                    newED.path = ed.path + '.' + child.code;
+                                                    newED.id = newED.path;
+                                                    newED.min = child.min;
+                                                    newED.max = child.max;
+                                                    newED.type = child.ed.type;
+                                                    elementsToInsert[ed.path].push(newED)
+                                                    ///logicalModel.snapshot.element.push(newED)
+                                                    //console.log(newED)
+
+
+                                                })
+                                            }
+
+
+
                                         }
 
 
@@ -432,11 +457,36 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                     //yes - execute all the queries and resolve when all have been completed...
                     $q.all(queries).then(
                         function () {
+                            //console.log(logicalModel.snapshot.element)
+
+                            console.log(elementsToInsert)
+                            //for each of the complex extensions, find the parent in the list then insert the children immediately after.
+                            angular.forEach(elementsToInsert,function(value,parentPath){
+                                var l = logicalModel.snapshot.element.length;
+
+                                for (var i=0; i< l;i++) {
+                                    var el = logicalModel.snapshot.element[i];
+                                    var p = el.path;
+                                    if (p == parentPath) {
+                                        //this is the parent for the child elements at this has pos. insert them after.
+                                        for (var j=0; j < value.length; j++) {
+                                            logicalModel.snapshot.element.splice(i+j+1,0,value[j])
+                                        }
+                                        break;
+                                    }
+                                }
+                            });
+
+
+                            logicalModel.snapshot.element = removeExtensions(logicalModel.snapshot.element)
+                            console.log(logicalModel.snapshot.element)
+
                             deferred.resolve(logicalModel);
                         },
                         function (err) {
 
                             //return the error and the incomplete model...
+
                             deferred.reject({err:err,lm:logicalModel})
 
 
@@ -446,6 +496,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
                 } else {
                     //no - we can return the list immediately...
+                    logicalModel.snapshot.element = removeExtensions(logicalModel.snapshot.element)
                     deferred.resolve(logicalModel)
 
                 }
@@ -459,6 +510,97 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
             return deferred.promise;
 
 
+            function removeExtensions(arED) {
+                return arED;        //temp
+
+
+                var ar = [];
+                arED.forEach(function(ed){
+                    if (ed.type && ed.type[0].code=='Extension') {
+
+                    } else {
+                        ar.push(ed)
+                    }
+                })
+                return ar;
+            }
+
+
+            //remove all ed's that are 'exploded' children of datatypes - ie Identifier.use.
+            //these are added by Forge to allow fixing of child elements and other changes...
+            function stripDTChildren(arED) {
+                var ar = [],parentBBE;
+
+                var hashBBE = {};      // all of the BackBone elements...
+                arED.forEach(function(ed){
+                    if (isEDaBBE(ed)) {
+                        hashBBE[ed.path] = true;
+                    }
+                });
+
+                arED.forEach(function(ed,inx){
+
+                    //just clutter the ed
+                    delete ed.constraint;
+                    delete ed.mapping;
+                    delete ed.condition;
+
+                    if (inx == 0) {
+                        ar.push(ed);
+                    } else {
+                        var ar1 = ed.path.split('.');
+                        ar1.pop();
+                        var p = ar1.join('.');
+                        if (hashBBE[p] && (! ed.slicing)) {
+                            //add if the parent is a BBE and it's not a slicing element...
+                            ar.push(ed);
+                        } else {
+                            //this is an extension on an element....
+                            if ( ed.type[0].profile) {
+                                ar.push(ed);
+                            }
+                        }
+
+
+
+
+                    }
+
+/*
+                    var isBBE = isEDaBBE(ed)
+                    if (isBBE) {
+                        //if a BBE, then add it and set the parent va
+                        ar.push(ed);
+                        parentBBE = true;
+                    } else {
+                        //this is not a BBE. It only gets added if the parent was a BBE
+                        if (parentBBE) {
+                            ar.push(ed);
+                        }
+                        parentBBE = false;
+                    }
+                    */
+                });
+
+
+
+
+                return ar;
+
+
+                function isEDaBBE(ed) {
+                    if (ed.type) {
+                        if (ed.type[0].code == 'BackboneElement') {
+                            return true
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return true;    //this is the root element - the only one without a type
+                    }
+                }
+
+            }
 
 
 

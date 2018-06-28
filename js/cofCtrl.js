@@ -861,7 +861,9 @@ angular.module("sampleApp")
                     });
 
                     //testing
-                    /*
+
+                    //https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Patient-1
+
                     $http.get('http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/cc-Patient').then(
                         function(data) {
                             var SD = data.data;
@@ -873,7 +875,7 @@ angular.module("sampleApp")
                             )
                         }
                     );
-                    */
+
 
                 }
 

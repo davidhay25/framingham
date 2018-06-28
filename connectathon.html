@@ -171,7 +171,7 @@
     <script src="js/allNotes.js"></script>
     <script src="js/importGraphCtl.js"></script>
     <script src="js/addElementCtrl.js"></script>
-
+    <script src="js/touchStone.js"></script>
 
     <script src="js/libs/jstree.min.js"></script>
 
@@ -1325,6 +1325,42 @@
                                             </div>
                                         </div>
 
+                                    </div>
+
+                                </uib-tab>
+
+                                <uib-tab heading="Pull from Touchstone">
+                                    <br/>
+                                    <div ng-controller="touchStoneCtrl">
+
+
+                                        <p class="banner">Pull test results from touchstone
+
+                                        </p>
+                                        <div class="pull-right"><button
+                                                ng-click="getTestResults()"
+                                                class="btn btn-primary">Retrieve</button> </div>
+
+
+                                        <div class="row">
+
+                                            <div class="col-md-3 col-sm-3">
+                                                <ul class="list-group">
+                                                    <li ng-class="{'list-group-item':1,
+                                                    'listItemSelected':selectedScenarioDirect.id == scenario.id}"
+                                                        style="cursor: pointer"
+                                                        ng-repeat="scenario in selectedTrack.scenarios"
+                                                        ng-click="selectScenarioDirect(scenario)">
+                                                        {{scenario.name}}
+
+                                                    </li>
+                                                </ul>
+
+                                            </div>
+                                            <div class="col-md-3 col-sm-3">
+
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </uib-tab>

@@ -301,6 +301,7 @@ app.get('/event/detail/:key',function(req,res){
 //sets the session for the specified event...
 app.post('/public/setEvent',function(req,res) {
     var event = req.body;
+    console.log(event)
     if (hashDataBases[event.key]) {
         req.session['config'] = {key: event.key};      //record the database key in the session
         res.json({});
