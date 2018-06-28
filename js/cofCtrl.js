@@ -238,17 +238,32 @@ angular.module("sampleApp")
             };
 
 
-            $scope.getProfile = function(){
-                var item = {id : 'id'+new Date().getTime(), type:'cc-Patient'};
-                item.description = 'cc-Patient';
-                //item.url = url;     //needed for LM
-                item.baseType = 'Patient';
+            //testing! - horrible code
+            $scope.getProfile = function(key){
+                var item = {id : 'id'+new Date().getTime()};
                 item.category = 'profile'
+
+                switch (key) {
+                    case 'LM' :
+                        item.description = 'cc-Patient';
+                        //item.url = url;     //needed for LM
+                        item.baseType = 'Patient';
+                        item.type='cc-Patient'
+                        profilesCache['cc-Patient'] = $scope.LM;
+                        break;
+                    case 'LMEnc' :
+                        item.description = 'cc-Encounter';
+                        item.type='cc-Encounter'
+                        profilesCache['cc-Encounter'] = $scope.LMEnc;
+                        //item.url = url;     //needed for LM
+                        item.baseType = 'Encounter';
+                        break;
+                }
 
                 $scope.cofTypeList.push(item)
                 makeGraph();
 
-                profilesCache['cc-Patient'] = $scope.LM;
+
             }
 
 
@@ -863,6 +878,22 @@ angular.module("sampleApp")
                     //testing
 
                     //https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Patient-1
+
+
+
+
+/**/
+                        $http.get('https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Encounter-1').then(
+                            function(data) {
+                                var SD = data.data;
+                                cofSvc.makeLogicalModelFromSD(SD,track).then(
+                                    function(LM) {
+
+                                        $scope.LMEnc = LM;
+                                    }
+                                )
+                            }
+                        );
 
                     $http.get('http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/cc-Patient').then(
                         function(data) {

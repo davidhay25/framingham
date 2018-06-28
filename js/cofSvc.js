@@ -359,12 +359,10 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
         makeLogicalModelFromSD : function(profile,track){
             //given a StructureDefinition which is a profile (ie potentially has extensions) generate a logical model by de-referencing the extensions
-            //currently only working for simple extensions
             //assume R3
             var deferred = $q.defer();
 
             var confServer = track.confServer || "http://snapp.clinfhir.com:8081/baseDstu3/";       //get from track,
-            //var confServer = track.confServer ||  "http://snapp.clinfhir.com:8081/baseDstu3/";
 
             if (profile && profile.snapshot && profile.snapshot.element) {
 
@@ -372,6 +370,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                 var queries = [];       //the queries to retrieve the extension definition
                 logicalModel.snapshot.element.length = 0; //remove the current element definitions
                 var elementsToInsert = {};      //A hash of elements to insert. key is parent path, value is [ed]
+                var extensionCount = 0;         //a counter to make paths for simple extensions unique
 
                 //remove elements that are actually sub-elements of Complex DataTypes...
                 var ar = stripDTChildren(profile.snapshot.element);
@@ -387,11 +386,19 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
                         if (ed.type) {
                             var profileUrl = ed.type[0].profile;
-                            if (profileUrl) {   //if there's a profile, then this is an extension
+
+                            ed.meta = ed.meta || {};
+                            ed.meta = {isExtension : true};  //to colourize it, and help with the build..
+                            ed.meta.extensionUrl = profileUrl;
+
+
+                            if (profileUrl) {   //if there's a profile, then this is a 'real' extension
 
                                 queries.push(ecoUtilitiesSvc.findConformanceResourceByUri(profileUrl,confServer).then(
                                     function (sdef) {
                                         var analysis = analyseExtensionDefinition(sdef);
+
+                                        //console.log(analysis)
 
                                         if (! analysis.isComplexExtension) {
                                             //note that ed is here by virtue of the magic of closure...
@@ -399,42 +406,39 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                                                 ed.name = analysis.name;
                                             }
 
+                                            ed.path += '-'+ extensionCount;
+                                            extensionCount++;
                                             ed.type = analysis.type;
                                             ed.binding = analysis.binding;
 
-                                            ed.builderMeta = {isExtension : true};  //to colourize it, and help with the build..
-                                            ed.builderMeta.extensionUrl = profileUrl;
+                                           // ed.builderMeta = {isExtension : true};  //to colourize it, and help with the build..
+                                            //ed.builderMeta.extensionUrl = profileUrl;
+
+
 
                                             ed.comments = sdef.description;
 
 
                                         } else {
-                                            console.log(profileUrl + " is complex, not processed")
-                                            console.log(analysis)
+                                            //console.log(profileUrl + " is complex")
+                                            //console.log(analysis)
 
                                             ed.type = [{code:'BackboneElement'}]
-                                            ed.path += ed.sliceName;
+                                            ed.path += '-'+ed.sliceName;
 
                                             if (analysis && analysis.children) {
                                                 elementsToInsert[ed.path] = []
                                                 analysis.children.forEach(function (child) {
-
                                                     var newED = {};
                                                     newED.path = ed.path + '.' + child.code;
                                                     newED.id = newED.path;
                                                     newED.min = child.min;
                                                     newED.max = child.max;
                                                     newED.type = child.ed.type;
+                                                    newED.display = child.code;
                                                     elementsToInsert[ed.path].push(newED)
-                                                    ///logicalModel.snapshot.element.push(newED)
-                                                    //console.log(newED)
-
-
                                                 })
                                             }
-
-
-
                                         }
 
 
@@ -478,19 +482,19 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                             });
 
 
-                            logicalModel.snapshot.element = removeExtensions(logicalModel.snapshot.element)
+                            var lst = logicalModel.snapshot.element;
+                            //lst = removeExtensions(lst);
+                            lst = removeDeletedElements(lst);
+                            logicalModel.snapshot.element = lst;
+
+                            //logicalModel.snapshot.element = removeExtensions(logicalModel.snapshot.element)
                             console.log(logicalModel.snapshot.element)
 
                             deferred.resolve(logicalModel);
                         },
                         function (err) {
-
                             //return the error and the incomplete model...
-
                             deferred.reject({err:err,lm:logicalModel})
-
-
-
                         }
                     )
 
@@ -498,11 +502,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                     //no - we can return the list immediately...
                     logicalModel.snapshot.element = removeExtensions(logicalModel.snapshot.element)
                     deferred.resolve(logicalModel)
-
                 }
-
-
-
             } else {
                 deferred.reject();
             }
@@ -526,8 +526,40 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
             }
 
 
+            //remove all the elements that have a max of 0
+            function removeDeletedElements(lst) {
+                var finished = false;
+                while (! finished) {
+                    finished = true;
+                    var l = lst.length;
+                    for (var i=0; i < l; i++) {
+                        var element = lst[i];
+                        if (element.max === '0') {
+                            lst = pruneBranch(element.path,lst);
+                            finished = false;
+                            break;
+                        }
+                    }
+                }
+                return lst;
+            }
+
+            //remove all the elements (and their children) with a given path
+            function pruneBranch(path,lst) {
+                var newLst = []
+                lst.forEach(function (item) {
+
+                    if (! item.path.startsWith(path)){      //startsWith defined in ecoSystemSvc
+                        newLst.push(item)
+                    }
+                });
+                return newLst;
+            }
+
+
+
             //remove all ed's that are 'exploded' children of datatypes - ie Identifier.use.
-            //these are added by Forge to allow fixing of child elements and other changes...
+            //these are added by Forge to allow fixing of child elements and other changes... (so these won't be reflected in the form right now)
             function stripDTChildren(arED) {
                 var ar = [],parentBBE;
 
@@ -660,16 +692,10 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                                 } else {
                                     arEdges.push(edge)
                                 }
-
                             })
                         }
                     });
-
                 }
-
-
-
-
             });
 
             //now, hide all the nodes that aren't referenced by the focus

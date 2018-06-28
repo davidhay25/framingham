@@ -20,6 +20,10 @@
             background-color: white;
             color : red;
         }
+        .extension {
+            background-color: white;
+            color : purple;
+        }
 
     </style>
 
@@ -96,11 +100,11 @@
             <tr ng-repeat="row in input.table" ng-hide="row.isHidden">
                 <td>
                     <i ng-hide="row.childrenHidden || row.isLeaf" class="clickable glyphiconBig glyphicon glyphicon-menu-down"
-                       title="Edit sample" ng-click="hideChildren(row)">
+                        ng-click="hideChildren(row)">
                     </i>
 
                     <i ng-show="row.childrenHidden" class="clickable glyphiconBig glyphicon glyphicon-menu-right"
-                       title="Edit sample" ng-click="showChildren(row)">
+                        ng-click="showChildren(row)">
                     </i>
 
                 </td>
@@ -118,11 +122,15 @@
 
                     <div ng-style="{'padding-left': ((row.path | pathindent) -10)*1.5 +'px'}"
                          uib-popover-html=getPopoverText(row)
-                         ng-class="{required:row.isRequired}"
+                         ng-class="{required:row.isRequired,extension:row.ed.meta.isExtension}"
                          popover-placement="top"
-                         popover-trigger="'mouseenter'">{{row.path | lastInPath}}
+                         popover-trigger="'mouseenter'">
+                            {{row.display}}
+                        <!--
+                            {{row.path | lastInPath}}
 
                         <span ng-show="row.sliceName">({{row.sliceName}})</span>
+                        -->
                     </div>
                 </td>
                 <td>

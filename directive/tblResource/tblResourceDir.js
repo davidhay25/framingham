@@ -220,8 +220,6 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                             return $scope.input;
                         }
 
-
-
                     }}
                 ).result.then(function(vo) {
                     $scope.input.sample[row.id] = vo.text;
@@ -471,11 +469,10 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
                 //add a text element as first one if not a lmreview track
                 if (track.trackType !== 'lmreview') {
-                    var item = {path: 'text',id:'text',type:[{code:'Narrative'}],max:'1',mult:'0..1' };
+                    var item = {path: 'text',display:'text', id:'text',type:[{code:'Narrative'}],max:'1',mult:'0..1' };
                     item.definition = "The narrative text that describes this resource to a User";
                     ar.push(item);
                 }
-
 
                 SD.snapshot.element.forEach(function (ed,inx) {
                     if (ed.type) {
@@ -497,13 +494,19 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         }
 
                         if (include) {
-                        //if (ignore.indexOf(ar1[ar1.length-1]) == -1) {
-
                             //item is a ValueObject - one per ED
                             var item = {path: path };
+                            item.ed = ed;                   //so we can view the ED for this element
                             item.isOriginal = true;         //to avoid exponential growth when copying...
                             item.id = 'id' + (inx-1);
-                            item.sliceName = ed.sliceName;
+
+                            //set the display in the table
+                            //item.sliceName = ed.sliceName;
+                            item.display = ed.display || ed.path;     //default the display to the path
+                            if (ed.sliceName ) {
+                                //if this is a sliced element...
+                                item.display = ed.sliceName
+                            }
 
                             if (ed.type[0].code == 'BackboneElement') {
                                 item.isBBE = true;
@@ -573,7 +576,6 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                                 })
                             }
 
-console.log(item)
 
                             ar.push(item);
                         }
@@ -588,7 +590,8 @@ console.log(item)
                     var childFound = false;
                     for (var i=0; i < ar.length; i++) {
                         var testItem = ar[i];
-                        if (testItem.path.startsWith(path) && testItem.path.length > path.length) {
+                        if (testItem.path.startsWith(path+'.')) {
+                        //if (testItem.path.startsWith(path+'.') && testItem.path.length > path.length) {
                             childFound = true;
                         }
                     }
@@ -598,9 +601,7 @@ console.log(item)
                     }
                 });
 
-
-
-
+                
                 return ar;
 
                 function getFHIRMappingDEP(ed) {

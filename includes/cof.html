@@ -98,7 +98,8 @@
 
                     </uib-tab-heading>
 
-                    <button ng-click="getProfile()">test</button>
+                    <button class="btn btn-primary" ng-click="getProfile('LM')">Patient</button>
+                    <button class="btn btn-primary" ng-click="getProfile('LMEnc')">Encounter</button>
 
                 </uib-tab>
             </uib-tabset>
@@ -248,9 +249,9 @@
 
                 </uib-tab>
             </uib-tabset>
-
+<!--
             <pre>{{LM | json}}</pre>
-
+-->
 
         </div>
         <div ng-class="rightPane">
@@ -375,6 +376,27 @@
                     <ng-include src="'includes/document.html'"></ng-include>
 
                 </uib-tab>
+                <uib-tab heading="Json">
+
+                    <div class="row">
+                        <div class="col-sm-3 col-md-3">
+                            <ul class="list-group">
+                                <li class="list-group-item" ng-repeat="ele in currentItem.table"
+                                ng-click="input.jsonElement = ele">
+                                    {{ele.display}}
+                                    <div>{{ele.path}}</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-9 col-md-9">
+                            <pre>{{input.jsonElement | json}}</pre>
+                        </div>
+                    </div>
+
+                    <pre>{{currentItem | json}}</pre>
+                </uib-tab>
+
+
 
                 <!-- This is dev only - ?still useful-->
                 <uib-tab  ng-hide='true' heading="Item Json">
