@@ -171,6 +171,7 @@
     <script src="js/allNotes.js"></script>
     <script src="js/importGraphCtl.js"></script>
     <script src="js/addElementCtrl.js"></script>
+    <script src="js/addProfileToScenario.js"></script>
     <script src="js/touchStone.js"></script>
 
     <script src="js/libs/jstree.min.js"></script>
@@ -410,12 +411,20 @@
                                                     {{selectedTrack.termServer}}
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row" ng-show="selectedTrack.LM">
                                                 <div class="col-sm-3 col-md-3">
                                                     <strong>Logical model</strong>
                                                 </div>
                                                 <div class="col-sm-8 col-md-8">
                                                     {{selectedTrack.LM}}
+                                                </div>
+                                            </div>
+                                            <div class="row" ng-show="selectedTrack.IG">
+                                                <div class="col-sm-3 col-md-3">
+                                                    <strong>Implementation Guide</strong>
+                                                </div>
+                                                <div class="col-sm-8 col-md-8">
+                                                    {{selectedTrack.IG.name}}
                                                 </div>
                                             </div>
                                         </div>

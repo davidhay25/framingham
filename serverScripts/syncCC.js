@@ -12,12 +12,13 @@ var allCSurl =sourceUrlRoot + "CodeSystem?_count=100";
 //Create an implementation guide to hold the artifacts
 var IG = {resourceType:'ImplementationGuide',status:'draft',package:[{name:'complete',resource:[]}]};
 IG.id = 'cf-careconnect';
-IG.description = "Care Connect";
+IG.name = "Care Connect";
+IG.description = "The Care Connect profiles";
 IG.extension = [{url: "http://clinfhir.com/fhir/StructureDefinition/cfAuthor",valueBoolean:true}]
 
 //var addCodeSystem = true;
 //var add
-var writeIG = false;
+var writeIG = true;
 
 
 if (1==1) {
@@ -95,7 +96,7 @@ if (1==1) {
 
 
 
-if (1 == 2) {
+if (1 == 1) {
     var allSDurl =sourceUrlRoot + "StructureDefinition?_count=100";
 
     console.log('Getting StructureDefinitions...',allSDurl)
@@ -130,7 +131,7 @@ if (1 == 2) {
                 purpose = 'extension'
             }
             var description = SD.description;
-            var IGEntry = {acronym: purpose, description: description, sourceReference: {reference: SD.url}}
+            var IGEntry = {acronym: purpose, description: description, name:SD.name, sourceReference: {reference: SD.url}}
             IG.package[0].resource.push(IGEntry);
 
         }

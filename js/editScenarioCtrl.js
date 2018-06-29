@@ -42,7 +42,7 @@ angular.module("sampleApp")
             };
 
 
-
+/*
             if (scenario && library && scenario.cfScenario) {
                 for (var i=0; i<library.length;i++) {
                     var item = library[i];
@@ -53,14 +53,15 @@ angular.module("sampleApp")
                     }
                 }
             }
+            */
 
-            $scope.libraryItemSelected = function(item){
+            $scope.libraryItemSelectedDEP = function(item){
 
                 $scope.selectedLibrary = item;
                 $scope.scenario.cfScenario = {name:item.name};
             };
 
-            $scope.selectHxItem = function(hx) {
+            $scope.selectHxItemDEP = function(hx) {
 
 
                 var vo = ecosystemSvc.makeGraph(hx.bundle);
@@ -86,7 +87,7 @@ angular.module("sampleApp")
 
 
 
-            $scope.allResourceTypes = allResourceTypes;
+            $scope.allResourceTypes = angular.copy(allResourceTypes);
 
             $scope.deleteStep = function(inx) {
                 $scope.scenario.steps.splice(inx,1)
@@ -108,10 +109,31 @@ angular.module("sampleApp")
                 delete $scope.input.newStep;
             };
 
-            $scope.addType = function(type) {
+            $scope.addType = function(type,inx) {
+
                 scenario.scenarioTypes.push(type.name);
                 delete $scope.input.resource;
+                $scope.allResourceTypes.splice(inx,1)
 
+            };
+
+
+            $scope.selectProfile = function() {
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/addProfileToScenario.html',
+                    controller: 'addProfileToScenarioCtrl',
+                    size:'lg',
+                    resolve : {
+                        track: function () {          //the default config
+                            return track;
+                        },
+                        scenario: function () {          //the default config
+                            return scenario;
+                        }
+                    }
+                }).result.then(function(vo){
+
+                })
             };
 
             $scope.addLink = function() {

@@ -234,8 +234,58 @@ angular.module("sampleApp")
                     makeGraph()
                 }
 
-
             };
+
+            //when a profile is selected from the list of scenario.selectedProfiles
+            $scope.selectCofProfile = function(profileDef) {
+                var url = profileDef.sourceReference.reference;
+                var baseType;
+
+                //we need to retrieve the profile now so we can determine the base type (needed for referencing)
+                if (profilesCache[url]) {
+                    //there's an entry in the cache...
+                    //this works for CC - may need to be more flexible for others (like STU-2 argonaut)
+                    baseType = profilesCache[url].type;
+                    addToTypeList(baseType,url)
+                } else {
+                    //this is the first time this SD has been selected - retrive if
+                    var confServer = $scope.selectedTrack.confServer;
+                    ecoUtilitiesSvc.findConformanceResourceByUri(url,confServer).then(      //in st johns...
+                        function (SD) {
+
+                            cofSvc.makeLogicalModelFromSD(SD,$scope.selectedTrack).then(
+                                function(LM) {
+                                    profilesCache[url] = LM;
+                                    //this works for CC - may need to be more flexible for others (like STU-2 argonaut)
+                                    baseType = SD.type;
+                                    addToTypeList(baseType,url)
+                                    alert('done');
+                                }
+                            )
+
+
+
+                        }
+                    )
+                }
+
+
+                function addToTypeList(baseType,url) {
+                    var name = $filter('getLogicalID')(url) + '-'+baseType;
+
+                    var item = {id : 'id'+new Date().getTime(), type:name};
+                    item.description = 'LM';
+                    item.type = url;     
+
+                    item.baseType = baseType;
+                    item.category = 'profile'
+
+                    $scope.cofTypeList.push(item)
+                }
+
+
+
+            }
 
 
             //testing! - horrible code
@@ -721,6 +771,7 @@ angular.module("sampleApp")
                 var type = item.type;
 
                 if (profilesCache[type]) {
+                    //the SD is in the cache. Note that a Profile is loaded into the cache when first selected
                     $scope.showResourceTable.open(item,profilesCache[type],$scope.cofScenario,$scope.selectedTrack,receiveTable);
 
                 } else {

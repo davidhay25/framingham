@@ -601,7 +601,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     }
                 });
 
-                
+
                 return ar;
 
                 function getFHIRMappingDEP(ed) {

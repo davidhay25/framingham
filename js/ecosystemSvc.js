@@ -201,9 +201,38 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
     var pathsCache = {};    //cache for paths by type - ?save in browser cache
     //var reportedTrackWithNoConfserver  = {};      //a
+    var IGCacheByServer = {};   //Implementation Guides by server
 
     return {
 
+        getIGs : function(serverUrl) {
+            var deferred = $q.defer();
+            //get all the Implementation Guides on the conformance server
+            if (IGCacheByServer[serverUrl]) {
+                deferred.resolve(IGCacheByServer[serverUrl]) 
+            } else {
+                IGCacheByServer[serverUrl] = [];
+                var url = serverUrl + 'ImplementationGuide?_count=100';
+                $http.get(url).then(
+                    function(data) {
+                        if (data.data.entry) {
+
+                            data.data.entry.forEach(function (entry) {
+                                //?? filter by CF created ??
+                                IGCacheByServer[serverUrl].push(entry.resource)
+                                
+                            })
+                        }
+                        deferred.resolve(IGCacheByServer[serverUrl])
+                    },
+                    function(err) {
+                        deferred.reject(err)
+                    }
+                )
+            }
+            
+            return deferred.promise;
+        },
 
         makeDocumentBundle : function(document) {
             //construct a document bundle

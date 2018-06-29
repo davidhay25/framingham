@@ -9,9 +9,13 @@ angular.module("sampleApp")
            // $scope.clone = {};
             $scope.isNew = isNew;
 
+            //$scope.IGs = ecosystemSvc.getIGs()
+
             $scope.input.termServer = "https://ontoserver.csiro.au/stu3-latest/";
             $scope.input.confServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
             $scope.input.dataServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
+
+
 
             console.log($scope.allRoles)
             //$scope.mdOptions = {iconlibrary:'glyph'}
@@ -40,7 +44,38 @@ angular.module("sampleApp")
                 $scope.input.confServer = track.confServer || 'http://fhirtest.uhn.ca/baseDstu3/';
                 $scope.input.dataServer = track.dataServer || 'http://fhirtest.uhn.ca/baseDstu3/';
                 $scope.input.LM = track.LM;
+
             }
+
+            $scope.findIGs = function(serverUrl) {
+                //console.log('blur')
+                $scope.IGs = $scope.IGs || [];
+                $scope.IGs.length =0;
+                ecosystemSvc.getIGs(serverUrl).then(
+                    function (list) {
+                        $scope.IGs = list
+                        console.log(list)
+
+                        //set the currently selected IG (if any)
+                        if (track.IG) {
+                            list.forEach(function (item) {
+                                if (item.id == track.IG.id) {
+                                    $scope.input.IG = item;
+                                }
+                            })
+                        }
+
+
+                    },
+
+                    function(err) {
+                        console.log('Error accessing conformance server ',err)
+                    }
+                );
+            }
+
+            $scope.findIGs($scope.input.confServer)
+
 
             $scope.addLink = function() {
 
@@ -103,6 +138,14 @@ angular.module("sampleApp")
                 $scope.track.dataServer = $scope.input.dataServer;
 
                 $scope.track.LM = $scope.input.LM ;
+
+                if ($scope.input.IG) {
+                    $scope.track.IG = {id:$scope.input.IG.id,name:$scope.input.IG.name}
+                    $scope.track.IG.url = $scope.track.confServer + "ImplementationGuide/"+$scope.input.IG.id;
+                } else {
+                    delete $scope.track.IG;
+                }
+
                 $scope.$close({track:$scope.track,lead:$scope.input.trackLead})
             };
 

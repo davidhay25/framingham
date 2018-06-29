@@ -101,6 +101,17 @@
                     <button class="btn btn-primary" ng-click="getProfile('LM')">Patient</button>
                     <button class="btn btn-primary" ng-click="getProfile('LMEnc')">Encounter</button>
 
+                    <div class="row">
+                        <div class="col-sm-4 clickable" ng-repeat="profile in cofScenario.selectedProfiles">
+                            <span ng-click="selectCofProfile(profile)"  style="cursor:pointer">{{profile.name}}</span>
+                        </div>
+
+                        <div class="col-sm-4 clickable" ng-click="alert('not yet enabled')">&gt;Select Direct&lt;</div>
+                    </div>
+
+
+
+
                 </uib-tab>
             </uib-tabset>
         </div>
