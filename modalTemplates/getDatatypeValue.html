@@ -935,8 +935,26 @@
                     </table>
 
                             <div ng-show="expandedValueSet.expansion.contains.length == 50">
-                                <em>Only 50 items are shown. You may need to refine your search...</em>
+
+                                <div class="alert alert-warning" style="margin: 20px">
+                                    <em>Only 50 items are shown (out of a total of {{expandedValueSet.expansion.total}}). You may need to refine your search...</em>
+                                </div>
+
+
                             </div>
+
+
+
+                            <div ng-show="expandedValueSet.expansion.contains.length == 0 || expandedValueSet.expansion.total == 0">
+
+                                <div class="alert alert-warning" style="margin: 20px">
+                                    <em>There were no values returned. You may need to broaden your search...</em>
+                                </div>
+
+
+                            </div>
+
+
 
                         </uib-tab>
                         <uib-tab heading="Json" ng-show="expandedValueSet">

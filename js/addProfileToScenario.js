@@ -60,6 +60,10 @@ angular.module("sampleApp")
                 angular.forEach($scope.input.selected,function(v,k){
                     console.log(v,k)
                     if (v) {
+
+                        //todo - differentce between data in IG's...
+                        $scope.profiles[k].name = $scope.profiles[k].name || $scope.profiles[k].description
+
                         scenario.selectedProfiles.push($scope.profiles[k])
                     }
 

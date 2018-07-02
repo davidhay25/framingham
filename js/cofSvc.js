@@ -398,7 +398,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                                     function (sdef) {
                                         var analysis = analyseExtensionDefinition(sdef);
 
-                                        //console.log(analysis)
+                                        console.log(profileUrl,analysis)
 
                                         if (! analysis.isComplexExtension) {
                                             //note that ed is here by virtue of the magic of closure...
@@ -436,6 +436,22 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                                                     newED.max = child.max;
                                                     newED.type = child.ed.type;
                                                     newED.display = child.code;
+
+                                                    if (child.boundValueSet) {
+                                                        newED.binding = {valueSetReference: {reference:child.boundValueSet}};
+                                                        newED.binding.strength = child.bindingStrength
+                                                    }
+/*
+
+                                                     if (ed.binding && ed.binding.valueSetReference) {
+                                item.binding = {url:ed.binding.valueSetReference.reference,strength:ed.binding.strength}
+                            }
+
+                                                    "binding": {
+                                                        "url": "http://hl7.org/fhir/ValueSet/administrative-gender",
+                                                            "strength": "required"
+                                                    },
+*/
                                                     elementsToInsert[ed.path].push(newED)
                                                 })
                                             }

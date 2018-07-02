@@ -241,11 +241,13 @@ angular.module("sampleApp")
                 var url = profileDef.sourceReference.reference;
                 var baseType;
 
+                var name = $filter('getLogicalID')(url);    //assume the the profile name is unique
+
                 //we need to retrieve the profile now so we can determine the base type (needed for referencing)
-                if (profilesCache[url]) {
+                if (profilesCache[name]) {
                     //there's an entry in the cache...
                     //this works for CC - may need to be more flexible for others (like STU-2 argonaut)
-                    baseType = profilesCache[url].type;
+                    baseType = profilesCache[name].type;
                     addToTypeList(baseType,url)
                 } else {
                     //this is the first time this SD has been selected - retrive if
@@ -255,11 +257,11 @@ angular.module("sampleApp")
 
                             cofSvc.makeLogicalModelFromSD(SD,$scope.selectedTrack).then(
                                 function(LM) {
-                                    profilesCache[url] = LM;
+                                    profilesCache[name] = LM;
                                     //this works for CC - may need to be more flexible for others (like STU-2 argonaut)
                                     baseType = SD.type;
-                                    addToTypeList(baseType,url)
-                                    alert('done');
+                                    addToTypeList(baseType,name)
+
                                 }
                             )
 
@@ -270,15 +272,16 @@ angular.module("sampleApp")
                 }
 
 
-                function addToTypeList(baseType,url) {
-                    var name = $filter('getLogicalID')(url) + '-'+baseType;
+                function addToTypeList(baseType,name) {
+                    //var name = $filter('getLogicalID')(url) + '-'+baseType;
 
                     var item = {id : 'id'+new Date().getTime(), type:name};
-                    item.description = 'LM';
-                    item.type = url;     
+                    item.description = name + '-' + $scope.cofTypeList.length;
+                    item.type = name;
 
                     item.baseType = baseType;
                     item.category = 'profile'
+                    $scope.editDescription(item);
 
                     $scope.cofTypeList.push(item)
                 }
@@ -289,9 +292,9 @@ angular.module("sampleApp")
 
 
             //testing! - horrible code
-            $scope.getProfile = function(key){
+            $scope.getProfileDEP = function(key){
                 var item = {id : 'id'+new Date().getTime()};
-                item.category = 'profile'
+                item.category = 'profile';
 
                 switch (key) {
                     case 'LM' :

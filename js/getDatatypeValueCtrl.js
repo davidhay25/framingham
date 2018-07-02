@@ -122,13 +122,17 @@ angular.module("sampleApp")
 
             function getExpandedVS(url) {
                 $scope.waiting = true;
+                delete $scope.ooError;
+
                 $http.get(url).then(
                     function(data) {
                         console.log(data)
                         $scope.expandedValueSet = data.data
+
                     },
                     function(err) {
                         console.log(err)
+                        $scope.ooError = err.data;
                     }
                 ).finally(
                     function(){
