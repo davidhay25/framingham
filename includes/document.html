@@ -33,7 +33,7 @@
                 <div class="col-sm-4 col-md-4">
 
                     <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="entry in document.bundle.entry"
+                        <li class="list-group-item" ng-repeat="entry in document.bundle.entry track by $index"
                             ng-click="selectItemInList(entry)">
                             <strong>{{entry.resource.resourceType}}</strong>
                             <div><em>{{entry.resource.id}}</em></div>

@@ -199,6 +199,7 @@ angular.module("sampleApp")
 
             };
 
+            //add an element to a model. Currently not used, but don't remove yet..
             $scope.addElement = function(inx){
                 console.log(inx)
 
@@ -245,10 +246,10 @@ angular.module("sampleApp")
 
                 //we need to retrieve the profile now so we can determine the base type (needed for referencing)
                 if (profilesCache[name]) {
-                    //there's an entry in the cache...
+                    //there's an entry in the cache - ie the user has already selected one of these in this session...
                     //this works for CC - may need to be more flexible for others (like STU-2 argonaut)
                     baseType = profilesCache[name].type;
-                    addToTypeList(baseType,url)
+                    addToTypeList(baseType,name,url)
                 } else {
                     //this is the first time this SD has been selected - retrive if
                     var confServer = $scope.selectedTrack.confServer;
@@ -260,7 +261,7 @@ angular.module("sampleApp")
                                     profilesCache[name] = LM;
                                     //this works for CC - may need to be more flexible for others (like STU-2 argonaut)
                                     baseType = SD.type;
-                                    addToTypeList(baseType,name)
+                                    addToTypeList(baseType,name,url)
 
                                 }
                             )
@@ -272,15 +273,15 @@ angular.module("sampleApp")
                 }
 
 
-                function addToTypeList(baseType,name) {
+                function addToTypeList(baseType,name,url) {
                     //var name = $filter('getLogicalID')(url) + '-'+baseType;
 
                     var item = {id : 'id'+new Date().getTime(), type:name};
                     item.description = name + '-' + $scope.cofTypeList.length;
                     item.type = name;
-
+                    item.url = url;     //the canonical url of the profile...
                     item.baseType = baseType;
-                    item.category = 'profile'
+                    item.category = 'profile';
                     $scope.editDescription(item);
 
                     $scope.cofTypeList.push(item)
@@ -766,7 +767,7 @@ angular.module("sampleApp")
                 }
             };
 
-            //select an item from the list of items. The SD will have been loaded for this type (async) into profilesCache
+            //select an item from the list of items (resource instances already addre). The SD may have been loaded for this type (async) into profilesCache
             $scope.selectItem = function(item) {
                 clearValidation();
                 $scope.currentItem = item;
@@ -779,7 +780,29 @@ angular.module("sampleApp")
 
                 } else {
                     //A LM will have a resolvable reference to the SD. A core resource won't
-                    if (item.url) {
+
+                    if (item.category == 'profile') {
+                        //this is a profile. Retrieve the SD, then build a LM from that...
+                        //item.url is a canonical url...
+
+                        var confServer = $scope.selectedTrack.confServer;
+                        ecoUtilitiesSvc.findConformanceResourceByUri(item.url,confServer).then(      //in st johns...
+                            function (SD) {
+
+                                cofSvc.makeLogicalModelFromSD(SD,$scope.selectedTrack).then(
+                                    function(LM) {
+                                        profilesCache[name] = LM;
+                                        //this works for CC - may need to be more flexible for others (like STU-2 argonaut)
+                                        $scope.showResourceTable.open(item,LM,$scope.cofScenario,$scope.selectedTrack,receiveTable);
+                                    },
+                                    function(err){
+                                        alert(err)
+                                    }
+                                )
+                            }
+                        )
+
+                    } else if (item.url) {
                         $http.get(item.url).then(
                             function(data) {
                                 var SD = data.data;
@@ -936,7 +959,7 @@ angular.module("sampleApp")
 
 
 
-/**/
+/*
                         $http.get('https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Encounter-1').then(
                             function(data) {
                                 var SD = data.data;
@@ -960,7 +983,7 @@ angular.module("sampleApp")
                             )
                         }
                     );
-
+*/
 
                 }
 

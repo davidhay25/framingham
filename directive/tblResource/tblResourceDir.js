@@ -253,7 +253,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                             if (ar.length == (eleDepth -1)) {
                                 //this is the parent node. Make sure it has a structuredData value...
                                 //todo ?sheck for multiplicity
-                                $scope.input.table[inx].structuredData = [{}]
+                                //$scope.input.table[inx].structuredData = [{}]
+                                $scope.input.table[inx].structuredData = []
                                 parentFound = true
                             }
                         }
@@ -496,13 +497,28 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         if (include) {
                             //item is a ValueObject - one per ED
                             var item = {path: path };
+
+/*
+                            if (ed && ed.meta && ed.meta.isExtension) {
+                                item.realPath = 'extension';        //todo - need to adjust this for extensions not off the root
+                            }
+*/
+
                             item.ed = ed;                   //so we can view the ED for this element
                             item.isOriginal = true;         //to avoid exponential growth when copying...
                             item.id = 'id' + (inx-1);
 
                             //set the display in the table
                             //item.sliceName = ed.sliceName;
-                            item.display = ed.display || ed.path;     //default the display to the path
+
+                            item.display = ed.display;
+                            if (! item.display) {
+
+
+                                item.display = ar1[ar1.length-1]    //default the display to the path
+                            }
+
+
                             if (ed.sliceName ) {
                                 //if this is a sliced element...
                                 item.display = ed.sliceName

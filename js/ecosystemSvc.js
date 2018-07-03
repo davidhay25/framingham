@@ -284,7 +284,10 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     if (row.structuredData) {
                         data.push(row);
 
-                        var path = row.path;
+                        var structuredDataClone =row.structuredData;// angular.copy(row.structuredData);
+
+
+                        var path = row.realPath || row.path;
                         var ar = path.split('.');
                         switch (ar.length) {
                             case 1:
@@ -294,22 +297,41 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                     eleName = eleName.substr(0, eleName.length - 3) + _capitalize(row.sdDt);
                                 }
 
-                                parentElement = row.structuredData; //because it could be a parent...
+                                parentElement = structuredDataClone;// row.structuredData; //because it could be a parent...
                                 //check for an extension off the root
                                 if (row.fhirMapping && row.fhirMapping.map) {
 
                                     var ar = row.fhirMapping.map.split('.')
-                                    if (ar[1] == 'extension') {
+                                    if (ar[0] == 'extension') {
+                                    //if (row.ed.meta && row.ed.meta.isExtension){
+
                                         //this is an extension
                                         resource.extension = resource.extension || []
                                         var ext = {}
                                         ext.url = row.fhirMapping.url
                                         var dt = row.type[0].code;
                                         dt = 'value' + dt.charAt(0).toUpperCase() + dt.substr(1);
-                                        ext[dt] = row.structuredData;
+                                        ext[dt] = structuredDataClone;//row.structuredData;
                                         resource.extension.push(ext)
                                     } else {
                                         //this isn't
+                                        if (row.max == 1) {
+                                            resource[eleName] = parentElement;
+                                        } else {
+
+                                            resource[eleName] = resource[eleName] || [];
+                                            resource[eleName].push(parentElement)
+                                        }
+                                    }
+                                } else {
+                                    //there's no mapping - save the data under the element name
+                                    //... but not if the structuredData is an empty array - as this will be a BBE - like Patient.contact
+                                    //???? should we look for a BBE specifically???
+                                    if (angular.isArray(row.structuredData) && row.structuredData.length ==0) {
+                                        //this is the empty array for the bbe
+                                        resource[eleName] = parentElement;
+                                    } else {
+                                        //
                                         if (row.max == 1) {
                                             resource[eleName] = parentElement;
                                         } else {
@@ -317,19 +339,18 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                             resource[eleName].push(parentElement)
                                         }
                                     }
-                                } else {
-                                    //there's no mapping - save the data under the element name
-                                    if (row.max == 1) {
-                                        resource[eleName] = parentElement;
-                                    } else {
-                                        resource[eleName] = resource[eleName] || [];
-                                        resource[eleName].push(parentElement)
-                                    }
+
+
+
+
+
                                 }
 
                                 break;
                             case 2: {
                                 //if the
+
+                               // break;
                                 var parentEleName = ar[0];      //the parent element name
 
                                 //var parent = resource[parentEleName];
@@ -346,12 +367,23 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                 //var node = parentElement[0];
                                 //node[eleName] = row.structuredData;
 
-
+                                var grandParentElement;
                                 if (parentElement) {
+                                    //for now, we assume this is an array. We want the latest element..
+                                    if (parentElement.length == 0) {
+                                        //var el = {}
+                                        grandParentElement = {};
+                                        parentElement.push(grandParentElement)
+                                    } else {
+                                        grandParentElement = parentElement[parentElement.length -1 ]
+                                    }
+                                    grandParentElement[eleName] = structuredDataClone;//angular.copy(row.structuredData);
+                                    /*
                                     grandParentElement = parentElement[0]; //because it could be a grand parent...
                                     if (grandParentElement) {
                                         grandParentElement[eleName] = row.structuredData;
                                     }
+                                    */
                                 }
 
 

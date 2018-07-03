@@ -390,9 +390,18 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                             ed.meta = ed.meta || {};
                             ed.meta = {isExtension : true};  //to colourize it, and help with the build..
                             ed.meta.extensionUrl = profileUrl;
+                            //ed.meta.realPath = 'extension';     //for the json builder
+
 
 
                             if (profileUrl) {   //if there's a profile, then this is a 'real' extension
+
+                                ed.mapping = [{identity:'fhir',map:'extension'}];
+                                //set the url of the extension - itself stored as an extension on the ED (this is the way that the LM does it)
+                                var simpleExtensionUrl = 'http://clinfhir.com/fhir/StructureDefinition/simpleExtensionUrl';
+                                ed.extension = ed.extension || []
+                                ed.extension.push({url:simpleExtensionUrl,valueString:profileUrl})
+
 
                                 queries.push(ecoUtilitiesSvc.findConformanceResourceByUri(profileUrl,confServer).then(
                                     function (sdef) {
@@ -420,6 +429,8 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
 
                                         } else {
+                                            //this is a complex extension...
+
                                             //console.log(profileUrl + " is complex")
                                             //console.log(analysis)
 
@@ -429,7 +440,10 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                                             if (analysis && analysis.children) {
                                                 elementsToInsert[ed.path] = []
                                                 analysis.children.forEach(function (child) {
-                                                    var newED = {};
+                                                    var newED = {meta:{}};
+
+
+
                                                     newED.path = ed.path + '.' + child.code;
                                                     newED.id = newED.path;
                                                     newED.min = child.min;

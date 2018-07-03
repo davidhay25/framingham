@@ -171,11 +171,18 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
 
                         addIfNotEmpty(value.Address.country,insrt,'country');
 
-
-
                         addIfNotEmpty(value.Address.text,insrt,'text');
 
-                        text = insrt.line[0];
+
+                        //make the display test the first line, the address.text or a stringify of the object...
+                        if (insrt.line) {
+                            text = insrt.line[0];
+                        } else if (value.Address.text) {
+                            text = value.Address.text;
+                        } else {
+                            text = angular.toJson(insrt)
+                        }
+
 
                         v = insrt;
                         break;
