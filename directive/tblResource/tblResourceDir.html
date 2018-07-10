@@ -126,6 +126,8 @@
                          popover-placement="top"
                          popover-trigger="'mouseenter'">
                             {{row.display}}
+
+                            <span ng-hide="row.display">{{row.path | lastInPath}}</span>
                         <!--
                             {{row.path | lastInPath}}
 

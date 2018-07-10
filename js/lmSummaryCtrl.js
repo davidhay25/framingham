@@ -22,8 +22,6 @@ angular.module("sampleApp")
                         }
                     });
 
-
-
                     //add to the list of users - if not already present
                     var user = ecosystemSvc.getPersonWithId(rpt.userid);
                     if (!hashUsers[user.name] ) {
@@ -31,7 +29,7 @@ angular.module("sampleApp")
                         hashUsers[user.name] = 'x'
                     }
 
-                    
+
                     //now, the summary of notes/path for each user...
                     angular.forEach(rpt.notes,function(v,k){        //notes is an object keyed by id...
                         //console.log(v,k)

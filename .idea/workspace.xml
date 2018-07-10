@@ -9,6 +9,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0a6e7d6f-aa6e-405d-9d94-d3543d427d97" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/directive/tblResource/tblResourceDir.html" afterPath="$PROJECT_DIR$/directive/tblResource/tblResourceDir.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/lmSummaryCtrl.js" afterPath="$PROJECT_DIR$/js/lmSummaryCtrl.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -37,12 +38,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lmSummaryCtrl.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lmSummaryCtrl.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/lmSummaryCtrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="292">
-              <caret line="33" column="20" lean-forward="true" selection-start-line="33" selection-start-column="20" selection-end-line="33" selection-end-column="20" />
+            <state relative-caret-position="192">
+              <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tblResourceDir.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/directive/tblResource/tblResourceDir.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="341">
+              <caret line="131" column="53" lean-forward="true" selection-start-line="131" selection-start-column="53" selection-end-line="131" selection-end-column="53" />
+              <folding>
+                <element signature="n#div#1;n#div#0;n#div#0;n#!!top" expanded="false" />
+                <element signature="n#td#0;n#tr#1;n#table#0;n#div#1;n#div#0;n#!!top" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -164,7 +178,6 @@
         <option value="$PROJECT_DIR$/modalTemplates/modalDialogTemplate.html" />
         <option value="$PROJECT_DIR$/js/touchStone.js" />
         <option value="$PROJECT_DIR$/artifacts/events.json" />
-        <option value="$PROJECT_DIR$/directive/tblResource/tblResourceDir.html" />
         <option value="$PROJECT_DIR$/modalTemplates/addLMToScenario.html" />
         <option value="$PROJECT_DIR$/js/editTrackCtrl.js" />
         <option value="$PROJECT_DIR$/modalTemplates/editTrack.html" />
@@ -188,6 +201,7 @@
         <option value="$PROJECT_DIR$/ecoServer.js" />
         <option value="$PROJECT_DIR$/includes/lmSummary.html" />
         <option value="$PROJECT_DIR$/js/lmSummaryCtrl.js" />
+        <option value="$PROJECT_DIR$/directive/tblResource/tblResourceDir.html" />
       </list>
     </option>
   </component>
@@ -232,6 +246,17 @@
             <path>
               <item name="ecosystem" type="b2602c69:ProjectViewProjectNode" />
               <item name="ecosystem" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ecosystem" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ecosystem" type="462c0819:PsiDirectoryNode" />
+              <item name="directive" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ecosystem" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ecosystem" type="462c0819:PsiDirectoryNode" />
+              <item name="directive" type="462c0819:PsiDirectoryNode" />
+              <item name="tblResource" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ecosystem" type="b2602c69:ProjectViewProjectNode" />
@@ -858,12 +883,12 @@
       <workItem from="1529201170214" duration="1218000" />
       <workItem from="1529311385239" duration="41224000" />
       <workItem from="1530048185947" duration="2782000" />
-      <workItem from="1530059609664" duration="89086000" />
+      <workItem from="1530059609664" duration="89770000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1656453000" />
+    <option name="totallyTimeSpent" value="1657137000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="291" y="1258" width="1346" height="798" extended-state="0" />
@@ -1199,16 +1224,6 @@
         <state relative-caret-position="377">
           <caret line="56" column="57" lean-forward="true" selection-start-line="56" selection-start-column="7" selection-end-line="56" selection-end-column="57" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/directive/tblResource/tblResourceDir.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="105" column="43" lean-forward="true" selection-start-line="105" selection-start-column="43" selection-end-line="105" selection-end-column="43" />
-          <folding>
-            <element signature="n#div#1;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1599,9 +1614,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/lmSummaryCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="33" column="20" lean-forward="true" selection-start-line="33" selection-start-column="20" selection-end-line="33" selection-end-column="20" />
+        <state relative-caret-position="192">
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/directive/tblResource/tblResourceDir.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="341">
+          <caret line="131" column="53" lean-forward="true" selection-start-line="131" selection-start-column="53" selection-end-line="131" selection-end-column="53" />
+          <folding>
+            <element signature="n#div#1;n#div#0;n#div#0;n#!!top" expanded="false" />
+            <element signature="n#td#0;n#tr#1;n#table#0;n#div#1;n#div#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
