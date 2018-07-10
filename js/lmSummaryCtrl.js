@@ -5,7 +5,6 @@ angular.module("sampleApp")
 
             function makeSummary(arReview) {
                 //construct a hash of path vs id (a single id can have multiple paths).
-                //
 
                 var lmSummary = {fields:[],persons:[],data:{}}
                 //construct summary array for display table
@@ -24,11 +23,14 @@ angular.module("sampleApp")
 
                     //add to the list of users - if not already present
                     var user = ecosystemSvc.getPersonWithId(rpt.userid);
-                    if (!hashUsers[user.name] ) {
+                    if (!hashUsers[user.id] ) {
                         lmSummary.persons.push(user);
-                        hashUsers[user.name] = 'x'
+                        hashUsers[user.id] = 0;   //this will be count of comments
                     }
-
+/* if (!hashUsers[user.name] ) {
+                        lmSummary.persons.push(user);
+                        hashUsers[user.name] = 0;   //this will be count of comments
+                    }*/
 
                     //now, the summary of notes/path for each user...
                     angular.forEach(rpt.notes,function(v,k){        //notes is an object keyed by id...
@@ -44,6 +46,7 @@ angular.module("sampleApp")
                         } else {
                             lmSummary.data[key] = v;
                         }
+                        hashUsers[rpt.userid]++;        //increment the number of comments for this user
                     });
 
                     //and finally the overall comment
@@ -52,8 +55,20 @@ angular.module("sampleApp")
                         lmSummary.data[key] = rpt.reviewComment;
                     }
 
+                    //now remove all users where there is no summary
+                    var ar = [];
+                    lmSummary.persons.forEach(function (person) {
+                        if (hashUsers[person.id] > 0) {
+                            ar.push(person)
+                        }
+                    })
+                    lmSummary.persons = ar;
+
+
                 });
                 //console.log(lmSummary)
+
+
                 return lmSummary;
 
             }
