@@ -10,6 +10,8 @@ angular.module("sampleApp")
                 var lmSummary = {fields:[],persons:[],data:{}}
                 //construct summary array for display table
                 var hash = {};
+                var hashUsers = {};         //a hash of all users...
+
                 arReview.forEach(function(rpt){
                     //first, a hash of paths for Ids...
                     var hashId = {};
@@ -20,8 +22,16 @@ angular.module("sampleApp")
                         }
                     });
 
-                    lmSummary.persons.push(ecosystemSvc.getPersonWithId(rpt.userid))
 
+
+                    //add to the list of users - if not already present
+                    var user = ecosystemSvc.getPersonWithId(rpt.userid);
+                    if (!hashUsers[user.name] ) {
+                        lmSummary.persons.push(user);
+                        hashUsers[user.name] = 'x'
+                    }
+
+                    
                     //now, the summary of notes/path for each user...
                     angular.forEach(rpt.notes,function(v,k){        //notes is an object keyed by id...
                         //console.log(v,k)
