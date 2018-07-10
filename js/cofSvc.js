@@ -362,6 +362,8 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
             //assume R3
             var deferred = $q.defer();
 
+            var errors = [];        //errors during processing...
+
             var confServer = track.confServer || "http://snapp.clinfhir.com:8081/baseDstu3/";       //get from track,
 
             if (profile && profile.snapshot && profile.snapshot.element) {
@@ -475,6 +477,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                                     },
                                     function(err) {
                                         //unable to locate extension
+                                        errors.push(profileUrl + " not found")
                                         console.log(profileUrl + " not found")
                                     }
                                 ))
@@ -524,7 +527,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                         },
                         function (err) {
                             //return the error and the incomplete model...
-                            deferred.reject({err:err,lm:logicalModel})
+                            deferred.reject({err:err,lm:logicalModel,errors:errors})
                         }
                     )
 

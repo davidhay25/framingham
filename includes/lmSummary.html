@@ -12,56 +12,112 @@
     </style>
 
 
-    <div class="row" ng-show="selectedTrack">
-        <div class="col-sm-3 col-md-3">
-            <select class="form-control" ng-model="input.scenario"
-                    ng-change="lmSummarySelectScenario(input.scenario)"
-                    ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
 
-        </div>
-        <div class="col-sm-4 col-md-4">
-            <p ng-bind-html="lmScenario.description | markDown"></p>
-        </div>
-        <div class="col-sm-4 col-md-4">
-            <p>This display has the comments entered by the users against each element in the model</p>
-        </div>
+    <uib-tabset>
+        <uib-tab heading="Summary by Scenario">
+            <br/>
+            <div class="row" ng-show="selectedTrack">
+                <div class="col-sm-3 col-md-3">
+                    <select class="form-control" ng-model="input.scenario"
+                            ng-change="lmSummarySelectScenario(input.scenario)"
+                            ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
 
-        <div class="col-sm-1 col-md-1">
-            <div class="pull-right">
-                <button ng-show="lmSummaryScenario" class="btn btn-primary" ng-click="refresh()">Refresh Summary</button>
+                </div>
+                <div class="col-sm-4 col-md-4">
+                    <p ng-bind-html="lmScenario.description | markDown"></p>
+                </div>
+                <div class="col-sm-4 col-md-4">
+                    <p>This display has the comments entered by the users against each element in the model</p>
+                </div>
+
+                <div class="col-sm-1 col-md-1">
+                    <div class="pull-right">
+                        <button ng-show="lmSummaryScenario" class="btn btn-primary" ng-click="refresh()">Refresh Summary</button>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <br/>
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <table ng-show="lmSummary" class="table table-bordered">
-                <tr>
-                    <th>Path</th>
-                    <th ng-repeat="person in lmSummary.persons">
-                        {{person.name}}
+            <br/>
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <table ng-show="lmSummary" class="table table-bordered">
+                        <tr>
+                            <th>Path</th>
+                            <th ng-repeat="person in lmSummary.persons">
+                                {{person.name}}
 
-                    </th>
-                </tr>
+                            </th>
+                        </tr>
 
-                <tr>
-                    <td>Overall Comment</td>
-                    <td ng-repeat="person in lmSummary.persons">
-                        <p ng-bind-html="lmSummary.data['reviewComment-' +person.id] | markDown"></p>
+                        <tr>
+                            <td>Overall Comment</td>
+                            <td ng-repeat="person in lmSummary.persons">
+                                <p ng-bind-html="lmSummary.data['reviewComment-' +person.id] | markDown"></p>
 
-                    </td>
-                </tr>
+                            </td>
+                        </tr>
 
-                <tr ng-repeat = 'fld in lmSummary.fields'>
-                    <td>{{fld}}</td>
+                        <tr ng-repeat = 'fld in lmSummary.fields'>
+                            <td>{{fld}}</td>
 
-                    <td ng-repeat="person in lmSummary.persons">
-                        <p ng-bind-html="getNote(fld,person.id) | markDown"></p>
+                            <td ng-repeat="person in lmSummary.persons">
+                                <p ng-bind-html="getNote(fld,person.id) | markDown"></p>
 
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+
+        </uib-tab>
+        <uib-tab heading="All scenarios">
+            <div class="row">
+                <div class="col-sm-6 col-md-6">
+
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <button class="btn btn-primary pull-right" ng-click="refreshAll()">Refresh all summaries</button>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <table ng-show="allScenarioLMSummary" class="table table-bordered">
+                        <tr>
+                            <th>Path</th>
+                            <th ng-repeat="person in allScenarioLMSummary.persons">
+                                {{person.name}}
+
+                            </th>
+                        </tr>
+
+                        <tr>
+                            <td>Overall Comment</td>
+                            <td ng-repeat="person in allScenarioLMSummary.persons">
+                                <p ng-bind-html="allScenarioLMSummary.data['reviewComment-' +person.id] | markDown"></p>
+
+                            </td>
+                        </tr>
+
+                        <tr ng-repeat = 'fld in allScenarioLMSummary.fields'>
+                            <td>{{fld}}</td>
+
+                            <td ng-repeat="person in allScenarioLMSummary.persons">
+                                <p ng-bind-html="getNoteFromAll(fld,person.id) | markDown"></p>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+
+
+        </uib-tab>
+    </uib-tabset>
+
+
 </div>

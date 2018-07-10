@@ -13,6 +13,9 @@ var manageMod = require('./ecoModule');
 
 var hashDataBases = {};         //hash for all connected databases
 
+//todo Note - this is needed to avoid an error about maxListeners - but there could be a code issue to review - see https://stackoverflow.com/questions/8313628/node-js-request-how-to-emitter-setmaxlisteners
+require('events').EventEmitter.defaultMaxListeners = 15;
+
 //var qaModule = require('qaModule');
 
 //the known databases (or events)
@@ -835,6 +838,30 @@ app.get('/lmCheck/:scenarioid',function(req,res) {
         }
     })
 });
+
+//get all the reviews for all scenarios
+app.get('/lmCheckTrack/:trackId',function(req,res) {
+//todo - add trachId to comment
+
+    var trackId = req.params.trackId;
+//req.selectedDbCon.collection("lmCheck").find({trackId:trackId}).toArray(function (err, result) {
+    req.selectedDbCon.collection("lmCheck").find().toArray(function (err, result) {
+        if (err) {
+            res.send(err,500)
+        } else {
+            if (result.length > 0) {
+
+
+
+                res.send(result)
+            } else {
+                res.send([])
+            }
+        }
+    })
+});
+
+
 
 
 //=============== config items tracks, scenarios, roles

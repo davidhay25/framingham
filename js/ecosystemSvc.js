@@ -215,7 +215,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 var url = serverUrl + 'ImplementationGuide?_count=100';
                 $http.get(url).then(
                     function(data) {
-                        if (data.data.entry) {
+                        if (data.data.entry && data.data.entry.length > 0) {
 
                             data.data.entry.forEach(function (entry) {
                                 //?? filter by CF created ??

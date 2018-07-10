@@ -34,12 +34,15 @@
 
 <div ng-app="sampleApp" ng-controller="jsonTestCtrl" class="container-fluid">
 
-    <div class="banner">Test Json Creation</div>
+    <div class="banner">Test Json Creation
+        <span class="pull-right clickable" ng-click="toggleSize()">Toggle display</span>
+    </div>
 
     <div class="row">
-        <div class="col-sm-2 col-md-2">
+        <div ng-class="col1Class">
+            <h5>Scenarios</h5>
             <ul class="list-group">
-                <li class="list-group-item" ng-repeat = "graph in graphs" ng-click="selectGraph(graph)">
+                <li ng-class="{'list-group-item':true,'listItemSelected':selectedGraph.id == graph.id}" ng-repeat = "graph in graphs" ng-click="selectGraph(graph)">
                     {{graph.scenario.name}}
                 </li>
 
@@ -47,9 +50,10 @@
 
         </div>
         <div class="col-sm-2 col-md-2">
-
+            <h5>Graphs</h5>
             <ul class="list-group">
-                <li class="list-group-item" ng-repeat="item in selectedGraph.items" ng-click="selectItem(item)">
+                <li  ng-class="{'list-group-item':true,'listItemSelected':selectedItem.id == item.id}"
+                     ng-repeat="item in selectedGraph.items" ng-click="selectItem(item)">
                     {{item.baseType}}
                     <div class="pull-right">{{item.category}}</div>
                     <div>{{item.description}}</div>
@@ -57,7 +61,8 @@
             </ul>
 
         </div>
-        <div class="col-sm-4 col-md-4">
+        <div ng-class="col3Class">
+            <h5>Data</h5>
             <table class="table table-bordered">
                 <tr ng-repeat="element in elements">
                     <td>{{element.path}}</td>
@@ -67,7 +72,8 @@
             </table>
 
         </div>
-        <div class="col-sm-4 col-md-4">
+        <div ng-class="col4Class">
+            <h5>Json</h5>
             <button class="btn btn-primary" ng-click="makeJson()">Refresh Json</button>
             <pre>{{json | json}}</pre>
 

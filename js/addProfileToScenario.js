@@ -25,7 +25,11 @@ angular.module("sampleApp")
                         });
 
                         lst.sort(function(a,b){
-                            if (a.name > b.name) {
+                            var aName = a.name || a.description;
+                            var bName = b.name || b.description;
+
+
+                            if (aName > bName) {
                                 return 1
                             } else {
                                 return -1

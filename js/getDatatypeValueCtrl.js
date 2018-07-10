@@ -57,6 +57,9 @@ angular.module("sampleApp")
                     var url = termServer + "ValueSet/$expand?url="+row.binding.url;
                     getExpandedVS(url);
 
+
+
+
                 }
             } else if (datatype == 'CodeableConcept' || datatype == 'Coding') {
                 if (row.binding && row.binding.url) {
@@ -137,6 +140,7 @@ angular.module("sampleApp")
                 ).finally(
                     function(){
                         $scope.waiting = false;
+
                     }
                 )
             }

@@ -24,7 +24,7 @@ angular.module("sampleApp")
 
                     //now, the summary of notes/path for each user...
                     angular.forEach(rpt.notes,function(v,k){        //notes is an object keyed by id...
-                        console.log(v,k)
+                        //console.log(v,k)
                         var path = hashId[k];
                         if (lmSummary.fields.indexOf(path) == -1) {
                             lmSummary.fields.push(path)
@@ -50,6 +50,8 @@ angular.module("sampleApp")
 
             }
 
+
+
             function load(){
                 if ($scope.lmSummaryScenario) {
                     var url = '/lmCheck/'+$scope.lmSummaryScenario.id;
@@ -63,6 +65,23 @@ angular.module("sampleApp")
                 }
             }
 
+
+            $scope.refreshAll = function() {
+                var url = '/lmCheckTrack/'+$scope.selectedTrack.id;
+
+                $http.get(url).then(
+                    function(data) {
+                        console.log(data.data)
+                        $scope.allScenarioLMSummary = makeSummary(data.data)
+
+                        console.log($scope.allScenarioLMSummary)
+
+                    }
+                )
+            }
+
+            //loadAll($scope.selectedTrack.id)
+
             $scope.refresh = function(){
                 load();
             };
@@ -73,10 +92,18 @@ angular.module("sampleApp")
 
             };
 
+            //return a note for an entry in a single scenario
             $scope.getNote = function(path,personId) {
                 //console.log(path,personId)
                 var key = path + '-' + personId;
                 return $scope.lmSummary.data[key]
+            };
+
+            //return a note for an entry in all scenarios
+            $scope.getNoteFromAll = function(path,personId) {
+                //console.log(path,personId)
+                var key = path + '-' + personId;
+                return $scope.allScenarioLMSummary.data[key]
             }
 
 

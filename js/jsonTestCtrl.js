@@ -22,6 +22,24 @@ angular.module("sampleApp")
             };
 
 
+            var hideLeft = true
+            $scope.toggleSize = function() {
+                hideLeft = !hideLeft
+                if (hideLeft) {
+                    $scope.col1Class = 'hidden';
+                    $scope.col3Class = 'col-sm-5 col-md-5';
+                    $scope.col4Class = 'col-sm-5 col-md-5';
+                } else {
+                    $scope.col1Class = 'col-sm-2 col-md-2';
+                    $scope.col3Class = 'col-sm-4 col-md-4';
+                    $scope.col4Class = 'col-sm-4 col-md-4';
+                }
+
+            }
+            $scope.toggleSize();
+
+
+
             $scope.makeJson = function() {
                 $scope.json = ecosystemSvc.makeResourceJson($scope.selectedItem.baseType, $scope.selectedItem.id, $scope.selectedItem.table).resource
             };
