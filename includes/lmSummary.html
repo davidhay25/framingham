@@ -88,7 +88,7 @@
                     <table ng-show="allScenarioLMSummary" class="table table-bordered">
                         <tr>
                             <th>Path</th>
-                            <th ng-repeat="person in allScenarioLMSummary.persons">
+                            <th ng-repeat="person in allScenarioLMSummary.persons track by $index">
                                 {{person.name}}
 
                             </th>
@@ -96,16 +96,16 @@
 
                         <tr>
                             <td>Overall Comment</td>
-                            <td ng-repeat="person in allScenarioLMSummary.persons">
+                            <td ng-repeat="person in allScenarioLMSummary.persons track by $index">
                                 <p ng-bind-html="allScenarioLMSummary.data['reviewComment-' +person.id] | markDown"></p>
 
                             </td>
                         </tr>
 
-                        <tr ng-repeat = 'fld in allScenarioLMSummary.fields'>
+                        <tr ng-repeat = 'fld in allScenarioLMSummary.fields track by $index'>
                             <td>{{fld}}</td>
 
-                            <td ng-repeat="person in allScenarioLMSummary.persons">
+                            <td ng-repeat="person in allScenarioLMSummary.persons track by $index">
                                 <p ng-bind-html="getNoteFromAll(fld,person.id) | markDown"></p>
 
                             </td>
