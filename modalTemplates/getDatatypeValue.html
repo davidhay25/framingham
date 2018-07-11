@@ -196,20 +196,20 @@
 
             <div ng-show="datatype == 'Dosage'">
 
-
-
                 <div class="row" style="margin-bottom: 8px">
                     <div class="col-md-1  col-sm-1 ">
-                        Sequence
+                        <div class="required">Text</div>
                     </div>
                     <div class="col-md-5  col-sm-5 ">
-                        <input placeholder = 'Sequence' type="text" class="form-control" ng-model="input.dt.dosage.sequence"/>
+                        <textarea class="form-control" ng-model="input.dt.dosage.text"
+                                  placeholder="Enter the textual description of the dose. This is displayed in the form."
+                        ></textarea>
                     </div>
                     <div class="col-md-1  col-sm-1 ">
-
+                        Patient Instructions
                     </div>
                     <div class="col-md-5  col-sm-5 ">
-
+                        <textarea class="form-control" ng-model="input.dt.dosage.patientInstructions"></textarea>
                     </div>
                 </div>
 
@@ -249,35 +249,18 @@
                 </div>
 
 
-                <div class="row" style="margin-bottom: 8px">
-                    <div class="col-md-1  col-sm-1 ">
-                        <div class="required">Text</div>
-                    </div>
-                    <div class="col-md-5  col-sm-5 ">
-                        <textarea class="form-control" ng-model="input.dt.dosage.text"
-                            placeholder="Enter the textual description of the dose. This is displayed in the form."
-                        ></textarea>
-                    </div>
-                    <div class="col-md-1  col-sm-1 ">
-                        Patient Instructions
-                    </div>
-                    <div class="col-md-5  col-sm-5 ">
-                        <textarea class="form-control" ng-model="input.dt.dosage.patientInstructions"></textarea>
-                    </div>
-                </div>
-
                 <div class="row">
                     <div class="col-md-1  col-sm-1 ">
-                        Timing
+                        Selector
                     </div>
                     <div class="col-md-5  col-sm-5 ">
 
                         <div>
 
                             <div class="row" style="margin-bottom: 8px">
-                                <div class="col-md-3 col-sm-3">Selector</div>
-                                <div class="col-md-9 col-sm-9">
 
+                                <div class="col-md-9 col-sm-9">
+                                    <div class="col-md-3 col-sm-3"></div>
 
                                     <select class="form-control" ng-model="input.dosageTiming"
                                             ng-change="updateTimingDetails(input.dosageTiming)"
@@ -294,53 +277,7 @@
 
 
 
-                            <div class="row">
-                                <div class="col-md-3 col-sm-3">Duration</div>
-                                <div class="col-md-3 col-sm-3">Units</div>
-                                <div class="col-md-3 col-sm-3">freq</div>
-                                <div class="col-md-3 col-sm-3">freqMax</div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-md-3 col-sm-3">
-                                    <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.duration"/>
-                                </div>
-                                <div class="col-md-3 col-sm-3">
-                                    <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.units"/>
-                                </div>
-                                <div class="col-md-3 col-sm-3">
-                                    <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.freq"/>
-                                </div>
-                                <div class="col-md-3 col-sm-3">
-                                    <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.freq_max"/>
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-
-                                <div class="col-md-3 col-sm-3">Period</div>
-                                <div class="col-md-3 col-sm-3">PeriodMax</div>
-                                <div class="col-md-3 col-sm-3">Units</div>
-                                <div class="col-md-3 col-sm-3">When</div>
-
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-3 col-sm-3">
-                                    <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.period"/>
-                                </div>
-                                <div class="col-md-3 col-sm-3">
-                                    <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.period_max"/>
-                                </div>
-                                <div class="col-md-3 col-sm-3">
-                                    <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.period_units"/>
-                                </div>
-                                <div class="col-md-3 col-sm-3">
-                                    <input type="text" class="form-control" ng-model="input.dt.dosage.timing.when"/>
-                                </div>
-
-                            </div>
 
                         </div>
 
@@ -357,11 +294,76 @@
 
 
 
-                <div class="row">
+                <hr/>
+
+                <div class="row" style="margin-bottom: 8px">
+                    <div class="col-md-1  col-sm-1 ">
+                        Sequence
+                    </div>
+                    <div class="col-md-5  col-sm-5 ">
+                        <input placeholder = 'Sequence (if multiple Dosages)' type="text" class="form-control" ng-model="input.dt.dosage.sequence"/>
+                    </div>
                     <div class="col-md-1  col-sm-1 ">
 
                     </div>
                     <div class="col-md-5  col-sm-5 ">
+
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-1  col-sm-1 ">
+                        Timing
+                    </div>
+                    <div class="col-md-5  col-sm-5 ">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3">Duration</div>
+                            <div class="col-md-3 col-sm-3">Units</div>
+                            <div class="col-md-3 col-sm-3">freq</div>
+                            <div class="col-md-3 col-sm-3">freqMax</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3">
+                                <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.duration"/>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.units"/>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.freq"/>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.freq_max"/>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-3 col-sm-3">Period</div>
+                            <div class="col-md-3 col-sm-3">PeriodMax</div>
+                            <div class="col-md-3 col-sm-3">Units</div>
+                            <div class="col-md-3 col-sm-3">When</div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3">
+                                <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.period"/>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.period_max"/>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <input type="text" class="form-control"  ng-model="input.dt.dosage.timing.period_units"/>
+                            </div>
+                            <div class="col-md-3 col-sm-3">
+                                <input type="text" class="form-control" ng-model="input.dt.dosage.timing.when"/>
+                            </div>
+
+                        </div>
 
                     </div>
                     <div class="col-md-1  col-sm-1 ">

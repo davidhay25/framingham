@@ -9,6 +9,39 @@
             overflow-y: scroll;
         }
 
+/*  http://maxdesign.com.au/jobs/sample-fixed-thead/index.htm
+        table
+        {
+            width: 500px;
+            border-collapse: collapse;
+        }
+
+        thead
+        {
+            display: block;
+            width: 500px;
+            overflow: auto;
+            color: #fff;
+            background: #000;
+        }
+
+        tbody
+        {
+            display: block;
+            width: 500px;
+            height: 200px;
+            background: pink;
+            overflow: auto;
+        }
+
+        th,td
+        {
+            padding: .5em 1em;
+            text-align: left;
+            vertical-align: top;
+            border-left: 1px solid #fff;
+        }
+*/
     </style>
 
 
@@ -82,17 +115,26 @@
             </div>
 
 
+            <div ng-show="showWarning">
+                <div class="alert alert-warning" role="alert">Creating the summary of comments.
+                    Please wait as this can take a few seconds...</div>
+            </div>
 
             <div class="row">
                 <div class="col-sm-12 col-md-12">
-                    <table ng-show="allScenarioLMSummary" class="table table-bordered">
-                        <tr>
-                            <th>Path</th>
-                            <th ng-repeat="person in allScenarioLMSummary.persons track by $index">
-                                {{person.name}}
 
-                            </th>
-                        </tr>
+                        <table ng-show="allScenarioLMSummary" class="fixed_headers table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Path</th>
+                                <th ng-repeat="person in allScenarioLMSummary.persons track by $index">
+                                    {{person.name}}
+
+                                </th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
 
                         <tr>
                             <td>Overall Comment</td>
@@ -110,7 +152,11 @@
 
                             </td>
                         </tr>
+
+                            </tbody>
                     </table>
+
+
                 </div>
             </div>
 

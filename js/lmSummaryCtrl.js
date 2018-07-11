@@ -66,7 +66,7 @@ angular.module("sampleApp")
 
 
                 });
-                //console.log(lmSummary)
+
 
 
                 return lmSummary;
@@ -92,6 +92,8 @@ angular.module("sampleApp")
             $scope.refreshAll = function() {
                 var url = '/lmCheckTrack/'+$scope.selectedTrack.id;
 
+                $scope.showWarning = true;
+                delete $scope.allScenarioLMSummary;
                 $http.get(url).then(
                     function(data) {
                         console.log(data.data)
@@ -99,6 +101,13 @@ angular.module("sampleApp")
 
                         console.log($scope.allScenarioLMSummary)
 
+                    },
+                    function(err) {
+                        console.log(err)
+                    }
+                ).finally(
+                    function () {
+                        delete $scope.showWarning
                     }
                 )
             }
