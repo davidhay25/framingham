@@ -153,8 +153,6 @@ angular.module("sampleApp")
             $scope.termServer = "https://ontoserver.csiro.au/stu3-latest/"; //for the vs viewer directive...
             //$scope.showVSViewerDialog = {};
 
-
-
             //save the current example. $scope.item is the object that the directive is updating...
             $scope.saveExample = function (hideNotification) {
 
@@ -164,13 +162,12 @@ angular.module("sampleApp")
                     saveObject.userid = user.id;
                     saveObject.userName = user.name;
                     saveObject.scenarioid = $scope.lmScenario.id;
+                    saveObject.trackId = $scope.selectedTrack.id;
                     saveObject.id = user.id + "-" + $scope.lmScenario.id;
                     saveObject.reviewComment = $scope.input.reviewComment;
                     saveObject.table = $scope.item.table;       //the list of rows...
                     saveObject.sample = $scope.item.sample;    //the sample data (hash by row id)
                     saveObject.notes = $scope.item.notes;       //notes (hash by row id)
-
-
 
                     $scope.waiting = true;
                     $http.put("/lmCheck",saveObject).then(

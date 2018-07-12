@@ -1,0 +1,65 @@
+<div>
+
+
+    <div class="modal-header">
+
+        <div class="row">
+            <div class="col-md-8 col-sm-8">
+                <h3 class="modal-title">Comments on {{path}}</h3>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div class="pull-right">
+                    <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    </div>
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div><strong>Notes by {{author.name}}</strong></div>
+               <div class="rounded-box-filled">
+                   <div ng-repeat="note in notes">
+                       {{note.value}}
+                   </div>
+               </div>
+
+
+
+                <div><strong>Comments:</strong></div>
+                <table class="table table-bordered">
+                    <tr ng-repeat="comment in comments">
+                        <td>{{comment.user.name}}</td>
+                        <td>{{comment.date | getAgeSeconds}}</td>
+
+                        <td>{{comment.comment}}</td>
+                    </tr>
+
+                    <tr>
+                        <td>{{user.name}}</td>
+                        <td>Now</td>
+
+                        <td><textarea class="form-control" ng-model="input.newComment"></textarea> </td>
+                    </tr>
+                </table>
+
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6 col-md-6">
+
+            </div>
+            <div class="col-sm-6 col-md-6">
+                <button ng-show="input.newComment" class="btn btn-primary pull-right" ng-click="save()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -756,7 +756,6 @@ app.put('/scenarioGraphComment',function(req,res) {
     var comment = req.body;
     comment.date = new Date();
 
-
     var collection = req.selectedDbCon.collection('scenarioGraph')
     collection.update({id:comment.graphid}, {$push: {comments:comment}},function(err,result){
         if (err) {
@@ -768,9 +767,8 @@ app.put('/scenarioGraphComment',function(req,res) {
     })
 
 
-
     }
-)
+);
 
 
 //add/update a lmCheck (Logical Model) result
@@ -783,6 +781,8 @@ app.put('/lmCheck',function(req,res){
 });
 
 
+
+
 function clinicalUpdate(collection,data,res) {
     collection.update({id:data.id},data,{upsert:true},function(err,result){
         if (err) {
@@ -793,7 +793,7 @@ function clinicalUpdate(collection,data,res) {
     })
 }
 
-//get a specicif lmCheck for a user and a scenario. Should only be 1...
+//get a specific lmCheck for a user and a scenario. Should only be 1...
 app.get('/lmCheck/:userid/:scenarioid',function(req,res) {
 
     var userId = req.params.userid;
@@ -862,6 +862,24 @@ app.get('/lmCheckTrack/:trackId',function(req,res) {
 });
 
 
+app.post('/lmCheckComment',function(req,res) {
+        var comment = req.body;
+        comment.date = new Date();
+        var lmCheckId = comment.lmCheckId;
+
+        console.log(comment)
+
+        var collection = req.selectedDbCon.collection('lmCheck')
+        collection.update({id:lmCheckId}, {$push: {comments:comment}},function(err,result){
+            if (err) {
+                console.log(err)
+                res.status(500).send(err);
+            } else {
+                res.send();
+            }
+        })
+    }
+);
 
 
 //=============== config items tracks, scenarios, roles

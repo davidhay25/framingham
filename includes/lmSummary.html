@@ -47,6 +47,87 @@
 
 
     <uib-tabset>
+        <uib-tab heading="All scenarios">
+            <div class="row">
+                <div class="col-sm-6 col-md-6">
+
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <button class="btn btn-primary pull-right" ng-click="refreshAll()">Refresh all summaries</button>
+                </div>
+            </div>
+
+
+            <div ng-show="showWarning">
+                <div class="alert alert-warning" role="alert">Creating the summary of comments.
+                    Please wait as this can take a few seconds...</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+
+                    <table ng-show="allScenarioLMSummary" class="fixed_headers table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Path</th>
+                            <th ng-repeat="person in allScenarioLMSummary.persons track by $index">
+                                {{person.name}}
+
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr>
+                            <td>Overall Comment</td>
+                            <td ng-repeat="person in allScenarioLMSummary.persons track by $index">
+
+                                <div ng-click="editComment('reviewComment',person.id)">
+                                    <p ng-bind-html="allScenarioLMSummary.data['reviewComment-' +person.id] | markDown"></p>
+
+                                </div>
+
+                            </td>
+                        </tr>
+
+                        <tr ng-repeat = 'fld in allScenarioLMSummary.fields track by $index'>
+                            <td>{{fld}}</td>
+
+                            <div>
+                                <td ng-repeat="person in allScenarioLMSummary.persons track by $index">
+                                    <div ng-click="editComment(fld,person.id)">
+                                        <span class="pull-right badge">{{getComments(fld,person.id).length}}</span>
+
+                                        <div uib-popover-html="getCommentsHTML(fld,person.id)"
+                                            popover-placement="top"
+                                            popover-trigger="'mouseenter'">
+
+
+                                        <div ng-repeat="note in getNoteFromAll(fld,person.id)">
+                                            {{note.value}}
+                                        </div>
+                                        </div>
+                                        <!--<p ng-bind-html="getNoteFromAll(fld,person.id) | markDown"></p>
+
+                                        <pre>{{getComments(fld,person.id)}}</pre> -->
+                                    </div>
+
+                                </td>
+                            </div>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+
+
+
+        </uib-tab>
+
         <uib-tab heading="Summary by Scenario">
             <br/>
             <div class="row" ng-show="selectedTrack">
@@ -85,6 +166,7 @@
                         <tr>
                             <td>Overall Comment</td>
                             <td ng-repeat="person in lmSummary.persons">
+
                                 <p ng-bind-html="lmSummary.data['reviewComment-' +person.id] | markDown"></p>
 
                             </td>
@@ -94,7 +176,22 @@
                             <td>{{fld}}</td>
 
                             <td ng-repeat="person in lmSummary.persons">
+
+                                <div ng-click="editComment(fld,person.id)">
+                                    <span class="pull-right badge">{{getComments(fld,person.id).length}}</span>
+
+                                    <div uib-popover-html="getCommentsHTML(fld,person.id)"
+                                         popover-placement="top"
+                                         popover-trigger="'mouseenter'">
+
+                                <div ng-repeat="note in getNote(fld,person.id)">
+                                    {{note.value}}
+                                </div>
+                                    </div>
+                                </div>
+<!--
                                 <p ng-bind-html="getNote(fld,person.id) | markDown"></p>
+-->
 
                             </td>
                         </tr>
@@ -104,65 +201,7 @@
 
 
         </uib-tab>
-        <uib-tab heading="All scenarios">
-            <div class="row">
-                <div class="col-sm-6 col-md-6">
 
-                </div>
-                <div class="col-sm-6 col-md-6">
-                    <button class="btn btn-primary pull-right" ng-click="refreshAll()">Refresh all summaries</button>
-                </div>
-            </div>
-
-
-            <div ng-show="showWarning">
-                <div class="alert alert-warning" role="alert">Creating the summary of comments.
-                    Please wait as this can take a few seconds...</div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-12 col-md-12">
-
-                        <table ng-show="allScenarioLMSummary" class="fixed_headers table table-bordered">
-                            <thead>
-                            <tr>
-                                <th>Path</th>
-                                <th ng-repeat="person in allScenarioLMSummary.persons track by $index">
-                                    {{person.name}}
-
-                                </th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-
-                        <tr>
-                            <td>Overall Comment</td>
-                            <td ng-repeat="person in allScenarioLMSummary.persons track by $index">
-                                <p ng-bind-html="allScenarioLMSummary.data['reviewComment-' +person.id] | markDown"></p>
-
-                            </td>
-                        </tr>
-
-                        <tr ng-repeat = 'fld in allScenarioLMSummary.fields track by $index'>
-                            <td>{{fld}}</td>
-
-                            <td ng-repeat="person in allScenarioLMSummary.persons track by $index">
-                                <p ng-bind-html="getNoteFromAll(fld,person.id) | markDown"></p>
-
-                            </td>
-                        </tr>
-
-                            </tbody>
-                    </table>
-
-
-                </div>
-            </div>
-
-
-
-        </uib-tab>
     </uib-tabset>
 
 

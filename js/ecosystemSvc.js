@@ -26,9 +26,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
     };
 
 
-
-
-
     var extDescriptionUrl = "http://clinfhir.com/StructureDefinition/cf-eco-description";
     var extRoleUrl = "http://clinfhir.com/StructureDefinition/cf-eco-role";
     var extNoteUrl = 'http://clinfhir.com/StructureDefinition/cf-eco-note';
