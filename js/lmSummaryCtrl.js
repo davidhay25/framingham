@@ -7,6 +7,13 @@ angular.module("sampleApp")
             var hashComments;      //hash of comments, keyed by {path}-{userid) (where userid is the userid of the report being commented on)
 
 
+            $scope.commentStatus=[];
+            $scope.commentStatus.push({code:'new',display:'New'});
+            $scope.commentStatus.push({code:'change',display:'Closed, change made'});
+            $scope.commentStatus.push({code:'nochange',display:'Closed no change'});
+
+            $scope.showCommentsInLine = true;   //display the comments in the 'All scenarios' display
+
             function makeSummary(arReview) {
                 //construct a hash of path vs id (a single id can have multiple paths).
                 //each review represents a sample form for a single LM by a single user...

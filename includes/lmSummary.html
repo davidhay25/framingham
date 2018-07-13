@@ -49,11 +49,22 @@
     <uib-tabset>
         <uib-tab heading="All scenarios">
             <div class="row">
-                <div class="col-sm-6 col-md-6">
+                <div class="col-sm-8 col-md-8">
 
                 </div>
-                <div class="col-sm-6 col-md-6">
-                    <button class="btn btn-primary pull-right" ng-click="refreshAll()">Refresh all summaries</button>
+                <div class="col-sm-4 col-md-4">
+
+                    <div style="margin: 8px" >
+                        <span ng-show="allScenarioLMSummary">
+                             <checkbox ng-model="showCommentsInLine"/>Show comments in-line
+                        </span>
+
+                        <button  class="btn btn-primary pull-right" ng-click="refreshAll()">Refresh all summaries</button>
+
+                    </div>
+
+
+
                 </div>
             </div>
 
@@ -104,9 +115,16 @@
                                             popover-trigger="'mouseenter'">
 
 
-                                        <div ng-repeat="note in getNoteFromAll(fld,person.id)">
-                                            {{note.value}}
-                                        </div>
+                                            <div ng-repeat="note in getNoteFromAll(fld,person.id)">
+                                                {{note.value}}
+                                            </div>
+
+                                            <div ng-show="showCommentsInLine">
+                                                <div ng-repeat="comment in getComments(fld,person.id)">
+                                                    <div style="padding-left: 8px">{{comment.comment}}</div>
+                                                </div>
+                                            </div>
+
                                         </div>
                                         <!--<p ng-bind-html="getNoteFromAll(fld,person.id) | markDown"></p>
 
@@ -125,6 +143,70 @@
             </div>
 
 
+
+        </uib-tab>
+
+        <uib-tab heading="Manage comments" ng-show="allScenarioLMSummary">
+
+
+            <div class="row">
+                <div class="col-sm-1 col-md-1">
+                    <h4>Path</h4>
+                </div>
+                <div class="col-sm-1 col-md-1">
+                    <h4>Note</h4>
+                </div>
+                <div class="col-sm-1 col-md-1">
+                    <h4>Comments</h4>
+                </div>
+            </div>
+
+
+
+            <div ng-repeat="fld in allScenarioLMSummary.fields track by $index">
+                <strong>{{fld}}</strong>
+                <div ng-repeat="person in allScenarioLMSummary.persons track by $index">
+
+                    <div ng-repeat="note in getNoteFromAll(fld,person.id)">
+                        <div class="row">
+                            <div class="col-sm-1 col-md-1">
+
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                {{note.value}} ({{person.name}})
+                            </div>
+
+                            <div class="col-sm-1 col-md-1">
+                                {{}}
+                                <div ng-show=""></div>
+
+                                <select class="form-control"></select>
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="row" ng-repeat="comment in getComments(fld,person.id)">
+                            <div class="col-sm-2 col-md-2">
+
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                {{comment.comment}} ({{comment.user.name}})
+                            </div>
+                        </div>
+
+
+
+
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
 
         </uib-tab>
 
@@ -184,10 +266,17 @@
                                          popover-placement="top"
                                          popover-trigger="'mouseenter'">
 
-                                <div ng-repeat="note in getNote(fld,person.id)">
-                                    {{note.value}}
-                                </div>
+                                        <div ng-repeat="note in getNote(fld,person.id)">
+                                            {{note.value}}
+                                        </div>
                                     </div>
+
+                                    <div ng-show="showCommentsInLine">
+                                        <div ng-repeat="comment in getComments(fld,person.id)">
+                                            <div style="padding-left: 8px">{{comment.comment}}</div>
+                                        </div>
+                                    </div>
+
                                 </div>
 <!--
                                 <p ng-bind-html="getNote(fld,person.id) | markDown"></p>
