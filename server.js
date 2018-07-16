@@ -8,6 +8,7 @@ var async = require('async');
 var express = require('express');
 var request = require('request');
 var session = require('express-session');
+var fs = require('fs');
 var _ = require('lodash');
 
 var framingham = require(__dirname + "/framingham.js");     //perform the actual calculations...
@@ -863,6 +864,19 @@ app.post('/orion/fhir/Observation',function(req,res){
 
 });
 
-app.listen(port);
 
-console.log('server listening on port ' + port);
+//https://aghassi.github.io/ssl-using-express-4/
+var https = require('https');
+var sslOptions = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem'),
+    passphrase:'ne11ieh@y'
+};
+
+
+https.createServer(sslOptions, app).listen(3000)
+console.log('server listening via SSL on port 3000');
+
+//app.listen(port);
+
+//console.log('server listening on port ' + port);
