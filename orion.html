@@ -37,18 +37,6 @@
 
     <script src="js/libs/vis.min.js"></script>
 
-    <!--
-     <script src="js/resourceCreatorSvc.js"></script>
-    <script src="js/rbServices.js"></script>
-
-    <script src="js/profileCreatorSvc.js"></script>
-    <script src="js/resourceSvc.js"></script>
-    <script src="js/builderSvc.js"></script>
-     <script src="js/services.js"></script>
-     <script src="js/appConfigSvc.js"></script>
-    <script src="js/libs/ngStorage.min.js"></script>
-    <script src="js/libs/jstree.min.js"></script>
-    -->
 
     <style>
         #resourceGraph {
@@ -304,7 +292,8 @@
                                 <uib-tab heading="json">
                                     <pre>{{selectedDocRef | json}}</pre>
                                 </uib-tab>
-                                <uib-tab heading="Document Dtl">
+                                <uib-tab heading="Document Detail">
+                                    <div><strong>Attachments:</strong></div>
                                     <div ng-repeat="content in selectedDocRef.content">
                                         <div class="clickable" ng-click="selectDocument(content.attachment)">
                                             {{content.attachment.title}} ({{content.attachment.contentType}})

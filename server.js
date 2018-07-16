@@ -406,12 +406,11 @@ app.get('/orion/metadata',function(req,res){
             res.send(err,500)
         } else if (response && response.statusCode !== 200) {
             console.log(uri)
-            console.log(response.statusCode,body)
-            res.send(body,response.statusCode);//,'binary')
+            console.log(response.statusCode,body.toString())
+            res.send(body.toString(),response.statusCode);//,'binary')
         } else {
             console.log('body',body)
-            res.send(body);//,'binary')
-
+            res.send(body);
         }
     })
 });
@@ -420,11 +419,10 @@ app.get('/orion/getDocument',function(req,res){
 
     var urlToDoc = req.query['url'];
     var contentType = req.query['contentType'];
-    //console.log(urlToDoc,contentType)
 
     var access_token = req.session['accessToken'];
     var config = req.session["config"];     //retrieve the configuration from the session...
-    var uri =  "https://orionhealth-sandbox-bellatrix.apigee.net/" + urlToDoc;
+    var uri =  "https://orionhealth-sandbox-us-bellatrix.apigee.net" + urlToDoc;
 
     var options = {
         method: 'GET',
@@ -437,16 +435,13 @@ app.get('/orion/getDocument',function(req,res){
     request(options, function (error, response, body) {
 
         if (error || response.statusCode !== 200) {
-            console.log('err',response.statusCode,error)
+            console.log('err',uri, response.statusCode,error)
             var err = error || body;
             res.send(err,500)
         } else {
-
-            //console.log('body',body)
             res.setHeader('Content-disposition', 'inline');
             res.setHeader('content-type',contentType)
             res.send(body);//,'binary')
-
         }
     })
 });
@@ -475,8 +470,6 @@ app.get('/orion/currentPatient',function(req,res){
         } else {
             try {
                 var usr = JSON.parse(body);
-
-
                 res.json(usr)
             } catch (ex){
                 console.log('getpat',ex)
@@ -493,8 +486,6 @@ app.get('/orion/currentPatient',function(req,res){
 //return the current user - and the environment  (This is not a FHIR call)
 app.get('/orion/currentUser',function(req,res){
 
-
-    //      user/as/Patient
 
     var access_token = req.session['accessToken'];
     var config = req.session["config"];     //retrieve the configuration from the session...
@@ -517,7 +508,7 @@ app.get('/orion/currentUser',function(req,res){
             try {
                 var usr = JSON.parse(body);
 
-                var vo = {user:usr}
+                var vo = {user:usr};
                 req.session["userIdentifier"] = usr.primaryActor.resolvingIdentifier.id + "@"+ usr.primaryActor.resolvingIdentifier.namespace;
                 vo.env = {key:config.key,display:config.display}
                 res.json(vo)
@@ -823,7 +814,7 @@ function getAllData(identifier,access_token,config,callback) {
                 }
             } else {
                 console.log('------------')
-                console.log(response.statusCode)
+                console.log(response.statusCode, body.toString())
                 console.log(url)
                 console.log('------------')
                 cb('Status code:'+response.statusCode)

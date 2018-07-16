@@ -56,9 +56,10 @@ angular.module("sampleApp")
 
             $scope.selectDocRef = function (resource) {
                 $scope.selectedDocRef = resource
+                $scope.documentUrl =  'blank.html';
             };
 
-            //select a document from the list
+            //select a document from the list of attachments
             $scope.selectDocument = function(attachment) {
                 //convert the content type to a standard one...
                 var contentType = attachment.contentType;
@@ -120,7 +121,7 @@ angular.module("sampleApp")
 
                 },function(err) {
                     console.log(err)
-                    alert('Error getting conformance')
+                    alert('Error getting conformance resource:' + angular.toJson(err))
                 }
             );
 
@@ -176,6 +177,13 @@ angular.module("sampleApp")
                 delete $scope.assess;
                 delete $scope.missingData;
                 delete $scope.totalPoints;
+                delete $scope.docRef;
+
+                delete $scope.riskCalc;
+                delete $scope.selectedDocRef;
+               // delete $scope.documentUrl;
+
+                $scope.documentUrl =  'blank.html'; // 'about:blank';
 
                 $scope.selectedPatient = patient;
 
@@ -235,7 +243,7 @@ angular.module("sampleApp")
 
             };
 
-            //generate the result display in a more himan readible form...
+            //generate the result display in a more human readible form...
             $scope.getResultDisplay = function(key,value) {
 
                 var disp
@@ -260,7 +268,7 @@ angular.module("sampleApp")
                 }
                 return disp;
 
-            }
+            };
 
             //create a set of sample data for the currently selected patient...
             $scope.writeSample = function() {
