@@ -13,7 +13,6 @@ var _ = require('lodash');
 
 var framingham = require(__dirname + "/framingham.js");     //perform the actual calculations...
 var writeData = require(__dirname + "/writeData.js");       //write out some sample observations
-
 var localConfig = require(__dirname + '/config.json');
 
 var app = express();
@@ -25,7 +24,7 @@ app.use(session({
     secret: 'mySecret',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }   //For some reason, secure cookins are failing...
+    cookie: { secure: true }   //For some reason, secure cookins are failing...
 }));
 
 
@@ -419,7 +418,6 @@ app.get('/orion/getDocument',function(req,res){
 
     var urlToDoc = req.query['url'];
     var contentType = req.query['contentType'];
-
     var access_token = req.session['accessToken'];
     var config = req.session["config"];     //retrieve the configuration from the session...
     var uri =  "https://orionhealth-sandbox-us-bellatrix.apigee.net" + urlToDoc;
@@ -436,11 +434,27 @@ app.get('/orion/getDocument',function(req,res){
 
         if (error || response.statusCode !== 200) {
             console.log('err',uri, response.statusCode,error)
+            console.log(error);
+            console.log(response.headers['content-type']);
             var err = error || body;
+
+            res.setHeader('Content-disposition', 'inline');
+            if (response.headers) {
+                res.setHeader('content-type',response.headers['content-type'])
+            }
+
             res.send(err,500)
         } else {
+
             res.setHeader('Content-disposition', 'inline');
             res.setHeader('content-type',contentType)
+            /* - using the returned content-type sometimes causes a download,,,
+            if (response.headers) {
+                res.setHeader('content-type',response.headers['content-type'])
+            } else {
+                res.setHeader('content-type',contentType)
+            }
+*/
             res.send(body);//,'binary')
         }
     })
@@ -854,6 +868,8 @@ app.post('/orion/fhir/Observation',function(req,res){
     })
 
 });
+
+
 
 
 //https://aghassi.github.io/ssl-using-express-4/
