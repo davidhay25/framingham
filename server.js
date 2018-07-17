@@ -870,15 +870,43 @@ app.post('/orion/fhir/Observation',function(req,res){
 });
 
 
+//decide whic certificate to use. Assume that if there is a port specified it is running locally. Otherwise on the
+//snapp server. There will be better ways than this...
+var sslOptions;
+
+if (process.env.port) {
+    sslOptions = {
+        key: fs.readFileSync('key.pem'),
+        cert: fs.readFileSync('cert.pem'),
+        passphrase:'ne11ieh@y'
+    };
+} else {
+    sslOptions = {
+        key: fs.readFileSync('/etc/letsencrypt/live/snapp.clinfhir.com/privkey.pem'),
+        cert: fs.readFileSync('/etc/letsencrypt/live/snapp.clinfhir.com/fullchain.pem'),
+        passphrase:'ne11ieh@y'
+    };
+}
+
+/* Congratulations! Your certificate and chain have been saved at:
+   /etc/letsencrypt/live/snapp.clinfhir.com/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/snapp.clinfhir.com/privkey.pem
+   Your cert will expire on 2018-10-15. To obtain a new or tweaked
+   version of this certificate in the future, simply run certbot
+   again. To non-interactively renew *all* of your certificates, run
+   "certbot renew"*/
+
+
+//   /etc/letsencrypt/live/snapp.clinfhir.com/fullchain.pem
+//   /etc/letsencrypt/live/snapp.clinfhir.com/privkey.pem
 
 
 //https://aghassi.github.io/ssl-using-express-4/
 var https = require('https');
-var sslOptions = {
-    key: fs.readFileSync('key.pem'),
-    cert: fs.readFileSync('cert.pem'),
-    passphrase:'ne11ieh@y'
-};
+
+
+
 
 
 https.createServer(sslOptions, app).listen(3000)
