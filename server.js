@@ -17,7 +17,7 @@ var localConfig = require(__dirname + '/config.json');
 
 var app = express();
 
-var showLog = true;         //for debugging...
+var showLog = false;         //for debugging...
 
 //initialize the session...
 app.use(session({
@@ -875,12 +875,14 @@ app.post('/orion/fhir/Observation',function(req,res){
 var sslOptions;
 
 if (process.env.port) {
+    console.log('Using self signed certificate...')
     sslOptions = {
         key: fs.readFileSync('key.pem'),
         cert: fs.readFileSync('cert.pem'),
         passphrase:'ne11ieh@y'
     };
 } else {
+    console.log("Using let's encrypt certificate")
     sslOptions = {
         key: fs.readFileSync('/etc/letsencrypt/live/snapp.clinfhir.com/privkey.pem'),
         cert: fs.readFileSync('/etc/letsencrypt/live/snapp.clinfhir.com/fullchain.pem'),

@@ -172,7 +172,7 @@
             </div>
 
 
-            <uib-tabset>
+            <uib-tabset ng-show="selectedPatient">
                 <uib-tab heading="Framingham Risk">
 
                     <div ng-show="missingData">
@@ -279,7 +279,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <ul class="list-group">
-                                <li class="list-group-item" ng-repeat = 'entry in docRef.entry'
+                                <li class="list-group-item clickable" ng-repeat = 'entry in docRef.entry'
                                     ng-click="selectDocRef(entry.resource)">
                                     {{entry.resource.class.coding[0].display}}
 
@@ -289,20 +289,31 @@
                         </div>
                         <div class="col-md-9 col-sm-9">
                             <uib-tabset>
-                                <uib-tab heading="json">
-                                    <pre>{{selectedDocRef | json}}</pre>
-                                </uib-tab>
+
                                 <uib-tab heading="Document Detail">
-                                    <div><strong>Attachments:</strong></div>
-                                    <div ng-repeat="content in selectedDocRef.content">
-                                        <div class="clickable" ng-click="selectDocument(content.attachment)">
-                                            {{content.attachment.title}} ({{content.attachment.contentType}})
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-3">
+                                            <em>Click on the attachment to display</em>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6">
+                                            <div><strong>Attachments:</strong></div>
+                                            <div ng-repeat="content in selectedDocRef.content">
+                                                <div class="clickable" ng-click="selectDocument(content.attachment)">
+                                                    {{content.attachment.title}} ({{content.attachment.contentType}})
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+
+
 
                                     <iframe id="myFrame" width="100%" ng-src="{{documentUrl}}" height='600px'/>
                                 </uib-tab>
 
+                                <uib-tab heading="Json">
+                                    <p>This is the Json version of DocumentReference resource</p>
+                                    <pre>{{selectedDocRef | json}}</pre>
+                                </uib-tab>
 
                             </uib-tabset>
 
