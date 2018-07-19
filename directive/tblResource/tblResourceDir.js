@@ -656,8 +656,13 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             function makeJson() {
 
                 var vo = ecosystemSvc.makeResourceJson($scope.input.baseType, $scope.input.id,$scope.input.table);
-                $scope.resourceJson()({resource: vo.resource, raw: vo.data});
-                return vo.resource;
+                if (vo) {
+                    $scope.resourceJson()({resource: vo.resource, raw: vo.data});
+                    return vo.resource;
+                } else {
+                    return {error:'Error building Json'}
+                }
+
 
 
             }

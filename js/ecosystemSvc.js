@@ -786,6 +786,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         },
         updatePerson : function(person) {
             var deferred = $q.defer();
+            delete person.tokens;                           //authtokens - like touchstone
             $http.post("/person",person).then(
                 function(data){
                     //now add (or update) the client to the cached list...

@@ -172,6 +172,7 @@ app.use(function (req, res, next) {
         //are we in a user session?
 
         var config = req.session['config'];         //the configuration for this user
+
         if (config && config.key) {
             //yep - there is a session...
             //there is a config and a key - this user
@@ -307,25 +308,14 @@ app.post('/public/setEvent',function(req,res) {
     console.log(event)
     if (hashDataBases[event.key]) {
         req.session['config'] = {key: event.key};      //record the database key in the session
+
         res.json({});
     } else {
         res.status(400).send({msg:'Invalid event key:'+event.key})
     }
 });
 
-//login to an event
-app.post('/public/loginDEP',function(req,res){
 
-    var body = req.body;
-
-    if (body) {
-        //the userid and database key were sent in - ie the client is wanting to initialize the session from browser storage
-        session['config'] = body;
-
-
-    }
-
-});
 
 
 //get all access records. todo This could become an AuditEvent in the future...

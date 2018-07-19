@@ -30,6 +30,7 @@ angular.module("sampleApp")
                 inputPerson = person;
                 $scope.input.name = person.name;
                 $scope.input.organization = person.organization;
+                $scope.input.touchStoneUser = person.touchStoneUser;
                 person.contact = person.contact || []
                 person.contact.forEach(function (c) {
                     switch (c.type) {
@@ -75,6 +76,8 @@ angular.module("sampleApp")
 
                 inputPerson.name = $scope.input.name;
                 inputPerson.organization = $scope.input.organization;
+                inputPerson.touchStoneUser = $scope.input.touchStoneUser;
+
                 inputPerson.contact.length = 0;
                 inputPerson.contact.push({type:'email',value: $scope.input.email});
 

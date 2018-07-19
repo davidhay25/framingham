@@ -167,9 +167,7 @@ angular.module("sampleApp")
                         ecosystemSvc.updatePerson(vo.newUser).then(
                             function(data) {
                                 ecosystemSvc.setCurrentUser(vo.newUser);
-                                //ecosystemSvc.setCurrentUserAndDb({event:vo.event,person:vo.newPerson});
-                               // $scope.input.currentUser = vo.newPerson;
-                               // loadData();
+
                             }, function(err) {
                                 alert('Error saving person: '+ angular.toJson(err));
                             }
