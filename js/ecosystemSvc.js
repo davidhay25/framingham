@@ -252,11 +252,15 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             function getEntry(item){
                 if (item) {
                     var vo = that.makeResourceJson(item.baseType,item.id,item.table);
+                    if (vo) {
+                        var url = "http://clinfhir.com/fhir/"+item.baseType + "/"+item.id;
+                        var entry = {fullUrl:url};
+                        entry.resource = vo.resource;
+                        return entry;
+                    } else {
+                        return {resourceType:item.baseType,error:'Error creating Json'}
+                    }
 
-                    var url = "http://clinfhir.com/fhir/"+item.baseType + "/"+item.id;
-                    var entry = {fullUrl:url};
-                    entry.resource = vo.resource;
-                    return entry;
                 }
             }
 

@@ -61,19 +61,24 @@ angular.module("sampleApp")
 
                     var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,item.table);
                     //console.log(vo.resource)
-                    var dateValidated = new Date()
+                    if (vo) {
+                        var dateValidated = new Date()
 
-                    arQuery.push (cofSvc.validateResource(vo.resource,$scope.selectedTrack).then(
-                        function(data) {
-                            item.validation={isValid:'yes',oo:data,date:dateValidated}
-                            console.log('valid')
-                        },
-                        function(err) {
+                        arQuery.push (cofSvc.validateResource(vo.resource,$scope.selectedTrack).then(
+                            function(data) {
+                                item.validation={isValid:'yes',oo:data,date:dateValidated}
+                                console.log('valid')
+                            },
+                            function(err) {
 
-                            item.validation={isValid:'no',oo:err,date:dateValidated}
-                            console.log('invalid')
-                        }
-                    ))
+                                item.validation={isValid:'no',oo:err,date:dateValidated}
+                                console.log('invalid')
+                            }
+                        ))
+                    } else {
+                        console.log("Cant get Json for "+item.id);
+                    }
+
 
                 })
 

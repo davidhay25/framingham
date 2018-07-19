@@ -9,7 +9,7 @@ angular.module("sampleApp")
 
 
             $scope.selectItem = function(item) {
-                console.log(item)
+                //console.log(item)
                 $scope.selectedItem = item;
                 $scope.elements = [];
                 item.table.forEach(function (row) {

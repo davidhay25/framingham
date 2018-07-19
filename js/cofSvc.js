@@ -226,10 +226,14 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
             lst.forEach(function(item) {
                 var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,item.table);  //create the json for a single entry
                 //console.log(vo.resource)
+                if (vo) {
+                    var transEntry = {resource:vo.resource};
+                    transEntry.request = {method:'PUT',url:vo.resource.resourceType+'/'+vo.resource.id}
+                    transBundle.entry.push(transEntry)
+                } else {
+                    console.log("Can't get Json for "+item.id)
+                }
 
-                var transEntry = {resource:vo.resource};
-                transEntry.request = {method:'PUT',url:vo.resource.resourceType+'/'+vo.resource.id}
-                transBundle.entry.push(transEntry)
 
 
             });
