@@ -789,10 +789,12 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             //delete $localStorage.ecoCurrentUserAndDb;
         },
         updatePerson : function(person) {
+            var that = this;
             var deferred = $q.defer();
             delete person.tokens;                           //authtokens - like touchstone
             $http.post("/person",person).then(
                 function(data){
+
                     //now add (or update) the client to the cached list...
                     var inx = -1;
                     allPersons.forEach(function (p,pos) {
@@ -804,6 +806,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                         allPersons.splice(inx,1)
                     }
                     allPersons.push(person);
+                    that.setCurrentUser(person);     //update the copy in $localStorage this is a top level property
+
 
                     allPersons.sort(function(a,b){
                         if (a.name < b.name) {

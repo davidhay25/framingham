@@ -34,8 +34,8 @@ angular.module("sampleApp")
                     $scope.col3Class = 'col-sm-4 col-md-4';
                     $scope.col4Class = 'col-sm-4 col-md-4';
                 }
+            };
 
-            }
             $scope.toggleSize();
 
 

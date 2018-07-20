@@ -512,6 +512,9 @@ angular.module("sampleApp")
                     }
                 }).result.then(function(vo){
                     $scope.selectPerson(vo);
+
+                    //setCurrentUser
+
                 });
             };
 

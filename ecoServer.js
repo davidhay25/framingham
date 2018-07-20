@@ -7,9 +7,13 @@ var request = require('request');
 var session = require('express-session');
 var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
+
+var touchStone = require('myModules/touchstoneModule');
+
 var fs = require('fs');
 
 var manageMod = require('./ecoModule');
+
 
 var hashDataBases = {};         //hash for all connected databases
 
@@ -39,6 +43,9 @@ var hashScenario = {};      //a hash of all the scenarios...
 var hashTrack = {};         //a hash of all the tracks
 
 var app = express();
+
+
+
 //to serve up the static web pages - particularly the login page if no page is specified...
 //Order of app.use() is important as we need to increase the size limit for json parsing...
 app.use('/', express.static(__dirname,{index:'/connectathon.html'}));
@@ -200,6 +207,8 @@ var urlencodedParser = bodyParser.urlencoded({ extended:true,limit:'50mb',type:'
 //https://stackoverflow.com/questions/29939852/mean-io-error-request-entity-too-large-how-to-increase-bodyparser-limit-ou
 app.use(jsonParser);
 app.use(urlencodedParser);
+
+touchStone.setup(app);      //initialize the routes in touchstone
 
 
 
