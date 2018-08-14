@@ -2,6 +2,11 @@ angular.module("sampleApp")
     .controller('touchStoneCtrl',
         function ($scope,$http,$uibModal) {
 
+//https://touchstone.aegis.net/touchstone/userguide/html/continuous-integration/api.html.
+
+            //User: rettema@gmail.com
+
+            //Password: FH!Rt34t
 
             $scope.authenticate = function(user) {
                 console.log(user)
@@ -44,12 +49,7 @@ angular.module("sampleApp")
                             console.log(err.data)
                         }
                     )
-
                 });
-
-
-
-
 
             };
 
