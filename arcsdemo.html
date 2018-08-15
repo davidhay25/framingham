@@ -9,8 +9,7 @@
 
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
-
-
+    <script src="js/libs/moment.min.js"></script>
 
     <script>
         angular.module("demoApp",['ui.bootstrap']).config(function($locationProvider) {
@@ -19,9 +18,11 @@
             $locationProvider.html5Mode(true);
             $locationProvider.hashPrefix('!');
         });
+        angular.module("demoApp").constant("moment", moment);
 
 
     </script>
+
     <script src="js/arcsdemo.js"></script>
 
 </head>
@@ -40,8 +41,14 @@
 
     <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
         <div class="container">
+            <br/>
             <button class="btn btn-default" ng-click="showLog()">Log</button>
             <button class="btn btn-default" ng-click="searchPatient()">Find Patient</button>
+            <button ng-show="patient"
+                    class="btn btn-default" ng-click="state='summary'">Show Patient</button>
+
+            <button ng-show="patient"
+                    class="btn btn-default pull-right" ng-click="state='newar'">Add reaction</button>
         </div>
     </nav>
 
@@ -74,12 +81,34 @@
 
     </div>
 
+    <div ng-show="state=='newar'">
+        <div class="banner">Add new Adverse Event</div>
+        <h4>Description</h4>
+        <textarea class="form-control" ng-model="input.new.description"></textarea>
+        <h4>When did it occur</h4>
+        <input type="date" ng-model="input.new.date"/>
+
+        <div ng-show="input.new.date && input.new.description">
+            <button class="btn btn-danger pull-right" ng-click="saveAE()">Add</button>
+        </div>
+
+    </div>
+
     <div ng-show="state=='summary'">
         <div class="banner">
-            <div ng-repeat="name in patient.name">
-                <div>{{name.text}}</div>
-            </div>
+            Adverse reactions for
+            <span ng-repeat="name in patient.name">
+                <span>{{name.text}}</span>
+            </span>
         </div>
+
+        <div class="list-group">
+            <li ng-repeat="entry in adverseEvents.entry" class="list-group-item">
+                {{entry.resource.description}}
+                <div><em>{{entry.resource.date}}</em></div>
+            </li>
+        </div>
+
 
     </div>
 
@@ -88,6 +117,7 @@
         <div class="list-group">
             <li ng-repeat="logEntry in log" class="list-group-item">
                 {{logEntry.method}}:{{logEntry.url}}
+
 
             </li>
         </div>
