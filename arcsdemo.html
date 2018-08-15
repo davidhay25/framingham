@@ -33,17 +33,21 @@
 
 <body style="padding:8px;padding-bottom: 70px">
 
-<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
-    <div class="container">
-        Options
-    </div>
-</nav>
+
 
 
 <div ng-app="demoApp" ng-controller="demoCtrl">
 
+    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+        <div class="container">
+            <button class="btn btn-default" ng-click="showLog()">Log</button>
+            <button class="btn btn-default" ng-click="searchPatient()">Find Patient</button>
+        </div>
+    </nav>
+
     <div ng-show="state=='search'">
-    <h4>Name </h4>
+        <h4>Name </h4>
+        <br/>
         <div class="row">
             <div class="col-xs-8">
 
@@ -77,6 +81,16 @@
             </div>
         </div>
 
+    </div>
+
+    <div ng-show="state=='showlog'">
+        <div class="banner">Log of REST calls</div>
+        <div class="list-group">
+            <li ng-repeat="logEntry in log" class="list-group-item">
+                {{logEntry.method}}:{{logEntry.url}}
+
+            </li>
+        </div>
     </div>
 
 </div>
