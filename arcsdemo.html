@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARCS Demo</title>
+    <script src="js/libs/angular.min1-5.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+
+
+    <script>
+        angular.module("demoApp",['ui.bootstrap']).config(function($locationProvider) {
+
+            // enable html5Mode for pushstate ('#'-less URLs)
+            $locationProvider.html5Mode(true);
+            $locationProvider.hashPrefix('!');
+        });
+
+
+    </script>
+    <script src="js/arcsdemo.js"></script>
+
+</head>
+<style>
+
+</style>
+
+
+
+<body style="padding:8px;padding-bottom: 70px">
+
+<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <div class="container">
+        Options
+    </div>
+</nav>
+
+
+<div ng-app="demoApp" ng-controller="demoCtrl">
+
+    <div ng-show="state=='search'">
+    <h4>Name </h4>
+        <div class="row">
+            <div class="col-xs-8">
+
+                <input type="text" class="form-control" ng-model="input.name"/>
+            </div>
+            <div class="col-xs-2">
+                <button class="btn btn-primary" ng-click="findPatient(input.name)">Find</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-8">
+                <div class="list-group">
+                    <li ng-repeat="entry in patients.entry" class="list-group-item">
+                        <div ng-repeat="name in entry.resource.name">
+                            <div ng-click="selectEntry(entry)">{{name.text}}</div>
+                        </div>
+
+                    </li>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div ng-show="state=='summary'">
+        <div class="banner">
+            <div ng-repeat="name in patient.name">
+                <div>{{name.text}}</div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+</body>
+</html>
