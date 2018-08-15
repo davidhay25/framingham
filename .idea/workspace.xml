@@ -32,24 +32,27 @@
         <counts>
           <entry key="css" value="1" />
           <entry key="html" value="2" />
+          <entry key="js" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="CSS" value="1" />
           <entry key="HTML" value="2" />
+          <entry key="JavaScript" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="html" value="172" />
+          <entry key="html" value="625" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="HTML" value="172" />
+          <entry key="HTML" value="625" />
         </counts>
       </usages-collector>
+      <usages-collector id="statistics.js.language.service.starts" />
     </session>
   </component>
   <component name="FileEditorManager">
@@ -57,8 +60,30 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/arcsDemo.html">
           <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="379">
+              <caret line="75" column="18" selection-start-line="75" selection-start-column="18" selection-end-line="75" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/cofCtrl.js">
+          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="60">
-              <caret line="4" column="72" selection-start-line="4" selection-start-column="72" selection-end-line="4" selection-end-column="72" />
+              <caret line="4" lean-forward="true" selection-start-line="1" selection-end-line="4" />
+              <folding>
+                <element signature="e#672#1703#0" />
+                <element signature="e#3463#4559#0" />
+                <element signature="e#4819#6546#0" />
+                <element signature="e#6960#7655#0" />
+                <element signature="e#7787#8527#0" />
+                <element signature="e#12979#14664#0" />
+                <element signature="e#15811#16565#0" />
+                <element signature="e#19682#21311#0" />
+                <element signature="e#22304#24304#0" />
+                <element signature="e#24416#29528#0" />
+                <element signature="e#34449#36055#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -66,8 +91,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/finance.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="13" lean-forward="true" selection-start-line="5" selection-start-column="3" selection-end-line="19" selection-end-column="13" />
+            <state relative-caret-position="381">
+              <caret line="29" column="50" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -429,11 +454,6 @@
             <path>
               <item name="ecosystem" type="b2602c69:ProjectViewProjectNode" />
               <item name="ecosystem" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ecosystem" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ecosystem" type="462c0819:PsiDirectoryNode" />
               <item name="directive" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -441,6 +461,11 @@
               <item name="ecosystem" type="462c0819:PsiDirectoryNode" />
               <item name="directive" type="462c0819:PsiDirectoryNode" />
               <item name="tblResource" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ecosystem" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ecosystem" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ecosystem" type="b2602c69:ProjectViewProjectNode" />
@@ -928,18 +953,18 @@
       <workItem from="1531690744939" duration="32233000" />
       <workItem from="1532294714350" duration="391000" />
       <workItem from="1532398101954" duration="15866000" />
-      <workItem from="1534289108991" duration="1472000" />
+      <workItem from="1534289108991" duration="2278000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1733775000" />
+    <option name="totallyTimeSpent" value="1734581000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="285" y="1237" width="1405" height="819" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23121387" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2998555" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
@@ -1182,26 +1207,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="112">
           <caret line="657" column="38" selection-start-line="657" selection-start-column="38" selection-end-line="657" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/cofCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="401" column="42" selection-start-line="401" selection-start-column="42" selection-end-line="401" selection-end-column="42" />
-          <folding>
-            <element signature="e#672#1703#0" />
-            <element signature="e#3463#4559#0" />
-            <element signature="e#4819#6546#0" />
-            <element signature="e#6960#7655#0" />
-            <element signature="e#7787#8527#0" />
-            <element signature="e#12979#14664#0" />
-            <element signature="e#15811#16565#0" />
-            <element signature="e#19682#21311#0" />
-            <element signature="e#22304#24304#0" />
-            <element signature="e#24416#29528#0" />
-            <element signature="e#34449#36055#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1575,20 +1580,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/finance.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="13" lean-forward="true" selection-start-line="5" selection-start-column="3" selection-end-line="19" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/css/bootstrap.min.css">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/arcsDemo.html">
+    <entry file="file://$PROJECT_DIR$/js/cofCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
-          <caret line="4" column="72" selection-start-line="4" selection-start-column="72" selection-end-line="4" selection-end-column="72" />
+          <caret line="4" lean-forward="true" selection-start-line="1" selection-end-line="4" />
+          <folding>
+            <element signature="e#672#1703#0" />
+            <element signature="e#3463#4559#0" />
+            <element signature="e#4819#6546#0" />
+            <element signature="e#6960#7655#0" />
+            <element signature="e#7787#8527#0" />
+            <element signature="e#12979#14664#0" />
+            <element signature="e#15811#16565#0" />
+            <element signature="e#19682#21311#0" />
+            <element signature="e#22304#24304#0" />
+            <element signature="e#24416#29528#0" />
+            <element signature="e#34449#36055#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/finance.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="381">
+          <caret line="29" column="50" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arcsDemo.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="379">
+          <caret line="75" column="18" selection-start-line="75" selection-start-column="18" selection-end-line="75" selection-end-column="18" />
         </state>
       </provider>
     </entry>
