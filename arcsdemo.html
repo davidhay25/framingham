@@ -41,18 +41,48 @@
 
     <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
         <div class="container">
+
+            <!--
             <br/>
             <button class="btn btn-default" ng-click="showLog()">Log</button>
-            <button class="btn btn-default" ng-click="searchPatient()">Find Patient</button>
-            <button ng-show="patient"
-                    class="btn btn-default" ng-click="state='summary'">Show Patient</button>
+-->
+            <i class="glyphicon glyphicon-th-list" ng-click="showLog()"></i>
 
+            <i ng-show="patient" class="glyphicon glyphicon-search" ng-click="searchPatient()"></i>
+
+            <!--
+            <button class="btn btn-default" ng-click="searchPatient()">Find Patient</button>
+
+            -->
+
+            <div ng-hide="state=='summary'">
+                <button ng-show="patient"
+                        class="btn btn-default" ng-click="state='summary'">Show Patient</button>
+            </div>
+
+
+            <i ng-show="patient" class="clickable glyphicon glyphicon-plus pull-right" ng-click="state='newar'">
+
+            </i>
+
+<!--
             <button ng-show="patient"
                     class="btn btn-default pull-right" ng-click="state='newar'">Add reaction</button>
+            -->
         </div>
     </nav>
 
+
+
     <div ng-show="state=='search'">
+
+
+        <div style="margin: auto">
+
+        </div>
+
+
+
         <h4>Name </h4>
         <br/>
         <div class="row">
@@ -64,6 +94,12 @@
                 <button class="btn btn-primary" ng-click="findPatient(input.name)">Find</button>
             </div>
         </div>
+
+        <div ng-hide="patients" style="margin-top: 20px">
+            <em >Enter the name of the patient you wish to display, then press the Find button</em>
+        </div>
+
+        <img  src="artifacts/arcs1.png"/>
 
         <div class="row">
             <div class="col-xs-8">
@@ -86,7 +122,40 @@
         <h4>Description</h4>
         <textarea class="form-control" ng-model="input.new.description"></textarea>
         <h4>When did it occur</h4>
-        <input type="date" ng-model="input.new.date"/>
+        <input class="form-control" type="date" ng-model="input.new.date"/>
+
+
+        <h4>Substance (if a reaction)</h4>
+        <div class="row">
+            <div class="col-sm-10 col-md-10">
+                <input class="form-control" type="text" placeholder="Enter substance, if known" ng-model="input.new.substance"/>
+
+
+                <div class="row">
+                    <div class="col-sm-2 col-md-2">
+
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <div ng-show="substances">
+                            <h5>Matching substances. Tap to select</h5>
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="item in substances"
+
+                            ng-click="selectSubstance(item)">
+                                {{item.display}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="col-sm-2 col-md-2">
+                <button class="btn btn-primary pull-right" ng-click="findSubstance(input.new.substance)">Find</button>
+            </div>
+        </div>
 
         <div ng-show="input.new.date && input.new.description">
             <button class="btn btn-danger pull-right" ng-click="saveAE()">Add</button>

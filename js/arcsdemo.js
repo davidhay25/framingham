@@ -7,6 +7,34 @@ angular.module("demoApp",[])
             $scope.input = {new:{}};
             $scope.input.name = 'hay';
             $scope.serverUrl = "http://snapp.clinfhir.com:8081/baseDstu3/";
+            $scope.terminologyUrl = 'https://ontoserver.csiro.au/stu3-latest/';
+
+            $scope.findSubstance = function(filter){
+                //use the conditon.code VS - http://hl7.org/fhir/ValueSet/substance-code
+                delete $scope.substances;
+                var vs = 'http://hl7.org/fhir/ValueSet/substance-code';
+                var url = $scope.terminologyUrl + 'ValueSet/$expand?url='+vs + '&filter=' + filter
+                $scope.log.push({method:'GET',url:url})
+                $http.get(url).then(
+                    function(data) {
+                        console.log(data.data);
+                        var expansion = data.data.expansion;
+                        if (expansion) {
+                            $scope.substances = expansion.contains;
+                        }
+
+
+                    }, function(err) {
+                        alert(err.data)
+                    }
+                )
+            };
+
+            $scope.selectSubstance = function(concept) {
+                $scope.input.new.substanceConcept = concept;
+                delete $scope.substances;
+                $scope.input.new.substance = concept.display
+            }
 
             $scope.saveAE = function(){
                 var ae = {resourceType:'AdverseEvent'};
