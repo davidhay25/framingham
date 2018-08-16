@@ -6,6 +6,7 @@
 
     <title>ARCS Demo</title>
     <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
@@ -25,7 +26,7 @@
 
     <style>
         .iconSpacing {
-            /*  left and right spacing for icons in a horizontalbar */
+
             padding : 15px
         }
     </style>
@@ -41,9 +42,6 @@
 
 <body style="padding:8px;padding-bottom: 70px">
 
-
-
-
 <div ng-app="demoApp" ng-controller="demoCtrl">
 
     <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
@@ -53,7 +51,7 @@
             <br/>
             <button class="btn btn-default" ng-click="showLog()">Log</button>
 -->
-            <i class="glyphicon glyphicon-th-list iconSpacing" ng-click="showLog()"></i>
+            <i ng-hide="state=='showlog'" class="glyphicon glyphicon-book iconSpacing" ng-click="showLog()"></i>
 
             <i ng-show="patient" class="glyphicon glyphicon-search iconSpacing" ng-click="searchPatient()"></i>
 
@@ -62,15 +60,17 @@
 
             -->
 
-            <div ng-hide="state=='summary'">
+
+
+                <i ng-show="patient && !(state=='summary')" class="glyphicon glyphicon-user iconSpacing" ng-click="state='summary'"></i>
+                <!--
                 <button ng-show="patient"
                         class="btn btn-default" ng-click="state='summary'">Show Patient</button>
-            </div>
+                -->
 
 
-            <i ng-show="patient" class="clickable glyphicon glyphicon-plus pull-right iconSpacing" ng-click="state='newar'">
 
-            </i>
+            <i ng-show="patient" class="glyphicon glyphicon-plus pull-right iconSpacing" ng-click="state='newar'"></i>
 
 <!--
             <button ng-show="patient"
@@ -84,11 +84,13 @@
     <div ng-show="state=='search'">
 
 
-        <div style="margin: auto">
 
-        </div>
+        <h1>ARCS Demo application</h1>
 
-
+        <p>This is a small application developed for the ARCC conference to demonstrate how easy it is to
+        write FHIR clients - at least non complex ones. The architecture is deliberately kept simple, being a Single Page Web Application and does
+        not include any authentication - though that would be straightforward to add.</p>
+        <p>The time budget to develop the application was 1 day - 8 hours.</p>
 
         <h4>Name </h4>
         <br/>
@@ -106,7 +108,7 @@
             <em >Enter the name of the patient you wish to display, then press the Find button</em>
         </div>
 
-        <img  src="artifacts/arcs1.png"/>
+        <h3 ng-show="patients" style="margin-top: 20px">Matching patients</h3>
 
         <div class="row">
             <div class="col-xs-8">
@@ -121,6 +123,15 @@
 
             </div>
         </div>
+
+
+
+        <h4>Icons</h4>
+        <div><i class="glyphicon glyphicon-book iconSpacing" ></i>Show Log</div>
+        <div><i class="glyphicon glyphicon-search iconSpacing" ></i>Find Patient</div>
+        <div><i class="glyphicon glyphicon-user iconSpacing" ></i>Patient Summary</div>
+        <div><i class="glyphicon glyphicon-plus iconSpacing" ></i>Add Adverse Event</div>
+
 
     </div>
 
@@ -171,20 +182,43 @@
     </div>
 
     <div ng-show="state=='summary'">
+
+
         <div class="banner">
-            Adverse reactions for
+            Clinical data for
             <span ng-repeat="name in patient.name">
                 <span>{{name.text}}</span>
             </span>
         </div>
 
-        <div class="list-group">
+        <uib-accordion close-others="oneAtATime">
+            <div uib-accordion-group class="panel-default" heading="Custom template" >
+                Hello
+            </div>
+            <div uib-accordion-group class="panel-default" heading="Custom template" >
+                Hello
+            </div>
+        </uib-accordion>
+
+
+
+        <h5 ng-click="show.ar = !show.ar">Adverse Reactions ({{adverseEvents.entry.length}})</h5>
+
+        <div class="list-group" ng-show="show.ar">
             <li ng-repeat="entry in adverseEvents.entry" class="list-group-item">
                 {{entry.resource.description}}
                 <div><em>{{entry.resource.date}}</em></div>
             </li>
         </div>
 
+
+        <h5 ng-click="show.condition = !show.condition">Problem list({{conditions.entry.length}})</h5>
+
+        <div class="list-group" ng-show="show.condition">
+            <li ng-repeat="entry in conditions.entry" class="list-group-item">
+                {{entry.resource.code.text}}
+            </li>
+        </div>
 
     </div>
 

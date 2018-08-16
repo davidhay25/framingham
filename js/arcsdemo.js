@@ -6,6 +6,8 @@ angular.module("demoApp",[])
             $scope.state = 'search';
             $scope.input = {new:{}};
             $scope.input.name = 'hay';
+
+            $scope.show = {ar:true,condition:false,medication:false}
             $scope.serverUrl = "http://snapp.clinfhir.com:8081/baseDstu3/";
             $scope.terminologyUrl = 'https://ontoserver.csiro.au/stu3-latest/';
 
@@ -34,7 +36,7 @@ angular.module("demoApp",[])
                 $scope.input.new.substanceConcept = concept;
                 delete $scope.substances;
                 $scope.input.new.substance = concept.display
-            }
+            };
 
             $scope.saveAE = function(){
                 var ae = {resourceType:'AdverseEvent'};
@@ -43,6 +45,12 @@ angular.module("demoApp",[])
                 var date = moment($scope.input.new.date).format();
 
                 ae.date =moment($scope.input.new.date).format();
+
+                if ($scope.input.new.substanceConcept) {
+
+                }
+
+
                 console.log(ae)
 
                 var url = $scope.serverUrl + "AdverseEvent";
@@ -55,6 +63,7 @@ angular.module("demoApp",[])
                         if ($scope.adverseEvents) {
                             $scope.adverseEvents.entry = $scope.adverseReactions.entry || []
                             $scope.adverseEvents.entry.push({resource:ae})
+                            $scope.state = 'summary';
                         }
 
                     },
@@ -79,7 +88,20 @@ angular.module("demoApp",[])
                     }, function(err) {
                         alert(err.data)
                     }
+                );
+
+                var url = $scope.serverUrl + "Condition?subject=Patient/"+$scope.patient.id;
+                $scope.log.push({method:'GET',url:url})
+                $http.get(url).then(
+                    function(data) {
+                        $scope.conditions = data.data;
+                        console.log($scope.conditions)
+                    }, function(err) {
+                        alert(err.data)
+                    }
                 )
+
+
             };
 
             $scope.showLog = function() {
@@ -89,6 +111,8 @@ angular.module("demoApp",[])
             $scope.searchPatient = function(){
                 delete $scope.patient;
                 delete $scope.adverseReactions;
+                delete $scope.substances;
+                delete $scope.input.new.substance;
                 $scope.state = 'search'
             };
 
