@@ -6,14 +6,15 @@
 
     <title>ARCS Demo</title>
     <script src="js/libs/angular.min1-5.js"></script>
-    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+
+
 
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
     <script src="js/libs/moment.min.js"></script>
 
     <script>
-        angular.module("demoApp",['ui.bootstrap']).config(function($locationProvider) {
+        angular.module("demoApp",[]).config(function($locationProvider) {
 
             // enable html5Mode for pushstate ('#'-less URLs)
             $locationProvider.html5Mode(true);
@@ -88,8 +89,7 @@
         <h1>ARCS Demo application</h1>
 
         <p>This is a small application developed for the ARCC conference to demonstrate how easy it is to
-        write FHIR clients - at least non complex ones. The architecture is deliberately kept simple, being a Single Page Web Application and does
-        not include any authentication - though that would be straightforward to add.</p>
+        write FHIR clients - at least non complex ones.</p>
         <p>The time budget to develop the application was 1 day - 8 hours.</p>
 
         <h4>Name </h4>
@@ -191,32 +191,38 @@
             </span>
         </div>
 
-        <uib-accordion close-others="oneAtATime">
-            <div uib-accordion-group class="panel-default" heading="Custom template" >
-                Hello
-            </div>
-            <div uib-accordion-group class="panel-default" heading="Custom template" >
-                Hello
-            </div>
-        </uib-accordion>
-
-
 
         <h5 ng-click="show.ar = !show.ar">Adverse Reactions ({{adverseEvents.entry.length}})</h5>
 
         <div class="list-group" ng-show="show.ar">
             <li ng-repeat="entry in adverseEvents.entry" class="list-group-item">
                 {{entry.resource.description}}
-                <div><em>{{entry.resource.date}}</em></div>
+                <div ng-show="entry.resource.contained">
+                    <!-- I can only do this because I know there's only a single contained entry, and what it is...-->
+                    (Substance: {{entry.resource.contained[0].code.coding[0].display}}}
+                </div>
+                <div><em>{{entry.resource.date | date:short}}</em></div>
             </li>
         </div>
 
 
-        <h5 ng-click="show.condition = !show.condition">Problem list({{conditions.entry.length}})</h5>
+        <h5 ng-click="show.condition = !show.condition">Problem list ({{conditions.entry.length}})</h5>
 
         <div class="list-group" ng-show="show.condition">
             <li ng-repeat="entry in conditions.entry" class="list-group-item">
                 {{entry.resource.code.text}}
+            </li>
+        </div>
+
+        <h5 ng-click="show.med = !show.med">Medications ({{meds.entry.length}})</h5>
+
+        <div class="list-group" ng-show="show.med">
+            <li ng-repeat="entry in meds.entry" class="list-group-item">
+                {{entry.resource.medicationCodeableConcept.text}}
+                {{entry.resource.medicationReference.display}}
+                <div>
+                    <em>{{entry.resource.dosage[0].text}}</em>
+                </div>
             </li>
         </div>
 

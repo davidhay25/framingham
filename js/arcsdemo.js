@@ -7,7 +7,7 @@ angular.module("demoApp",[])
             $scope.input = {new:{}};
             $scope.input.name = 'hay';
 
-            $scope.show = {ar:true,condition:false,medication:false}
+            $scope.show = {ar:true,condition:false,med:false}
             $scope.serverUrl = "http://snapp.clinfhir.com:8081/baseDstu3/";
             $scope.terminologyUrl = 'https://ontoserver.csiro.au/stu3-latest/';
 
@@ -47,7 +47,14 @@ angular.module("demoApp",[])
                 ae.date =moment($scope.input.new.date).format();
 
                 if ($scope.input.new.substanceConcept) {
-
+                    var condition = {resourceType:'Condition'};
+                    condition.subject={reference:'Patient/'+$scope.patient.id};
+                    condition.code = {coding:[]};
+                    condition.code.coding.push($scope.input.new.substanceConcept)
+                    condition.id = 't'+new Date().getTime();
+                    ae.contained = []
+                    ae.contained.push(condition)
+                    ae.suspectEntity = [{instance:{reference:'#'+condition.id}}];
                 }
 
 
@@ -79,8 +86,8 @@ angular.module("demoApp",[])
                 $scope.patient = entry.resource;
                 $scope.state = 'summary';
 
-                var url = $scope.serverUrl + "AdverseEvent?subject=Patient/"+$scope.patient.id;
-                $scope.log.push({method:'GET',url:"AdverseEvent?subject=Patient/"+$scope.patient.id})
+                var url = $scope.serverUrl + "AdverseEvent?subject=Patient/"+$scope.patient.id+ "&_count=50";
+                $scope.log.push({method:'GET',url:url})
                 $http.get(url).then(
                     function(data) {
                         $scope.adverseEvents = data.data;
@@ -90,7 +97,7 @@ angular.module("demoApp",[])
                     }
                 );
 
-                var url = $scope.serverUrl + "Condition?subject=Patient/"+$scope.patient.id;
+                var url = $scope.serverUrl + "Condition?subject=Patient/"+$scope.patient.id+ "&_count=50";
                 $scope.log.push({method:'GET',url:url})
                 $http.get(url).then(
                     function(data) {
@@ -99,8 +106,38 @@ angular.module("demoApp",[])
                     }, function(err) {
                         alert(err.data)
                     }
-                )
+                );
 
+                var url = $scope.serverUrl + "MedicationStatement?subject=Patient/"+$scope.patient.id + "&_count=50";
+                $scope.log.push({method:'GET',url:url})
+                $http.get(url).then(
+                    function(data) {
+                        $scope.meds = data.data;
+
+                        $scope.meds.entry.sort(function(a,b){
+                            var d1 = getDrugName(a.resource);
+                            var d2 = getDrugName(b.resource);
+                            if (d1 > d2) {
+                                return 1
+                            }  else {
+                                return -1
+                            }
+                        });
+
+
+                        console.log($scope.meds)
+                    }, function(err) {
+                        alert(err.data)
+                    }
+                );
+
+                function getDrugName(drug) {
+                    if (drug.medicationReference) {
+                        return drug.medicationReference.display;
+                    } else if (drug.medicationCodeableConcept) {
+                        return drug.medicationCodeableConcept.text;
+                    }
+                }
 
             };
 
