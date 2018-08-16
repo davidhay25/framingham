@@ -14,6 +14,7 @@ angular.module("demoApp",[])
             $scope.findSubstance = function(filter){
                 //use the conditon.code VS - http://hl7.org/fhir/ValueSet/substance-code
                 delete $scope.substances;
+                delete $scope.noSubstanceMatch;
                 var vs = 'http://hl7.org/fhir/ValueSet/substance-code';
                 var url = $scope.terminologyUrl + 'ValueSet/$expand?url='+vs + '&filter=' + filter
                 $scope.log.push({method:'GET',url:url})
@@ -22,7 +23,12 @@ angular.module("demoApp",[])
                         console.log(data.data);
                         var expansion = data.data.expansion;
                         if (expansion) {
-                            $scope.substances = expansion.contains;
+                            if (expansion.contains) {
+                                $scope.substances = expansion.contains;
+                            } else {
+                                $scope.noSubstanceMatch = true;
+                            }
+
                         }
 
 
@@ -68,7 +74,7 @@ angular.module("demoApp",[])
 
                         //add to the local list of Adverse Events so that the display is updated
                         if ($scope.adverseEvents) {
-                            $scope.adverseEvents.entry = $scope.adverseReactions.entry || []
+                            $scope.adverseEvents.entry = $scope.adverseEvents.entry || []
                             $scope.adverseEvents.entry.push({resource:ae})
                             $scope.state = 'summary';
                         }
@@ -114,15 +120,19 @@ angular.module("demoApp",[])
                     function(data) {
                         $scope.meds = data.data;
 
-                        $scope.meds.entry.sort(function(a,b){
-                            var d1 = getDrugName(a.resource);
-                            var d2 = getDrugName(b.resource);
-                            if (d1 > d2) {
-                                return 1
-                            }  else {
-                                return -1
-                            }
-                        });
+                        if ($scope.meds.entry) {
+                            $scope.meds.entry.sort(function(a,b){
+                                var d1 = getDrugName(a.resource).trim();
+                                var d2 = getDrugName(b.resource).trim();
+                                //console.log(d1,d2)
+                                if (d1 > d2) {
+                                    return 1
+                                }  else {
+                                    return -1
+                                }
+                            });
+                        }
+
 
 
                         console.log($scope.meds)

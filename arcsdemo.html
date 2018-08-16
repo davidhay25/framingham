@@ -35,11 +35,6 @@
     <script src="js/arcsdemo.js"></script>
 
 </head>
-<style>
-
-</style>
-
-
 
 <body style="padding:8px;padding-bottom: 70px">
 
@@ -80,20 +75,17 @@
         </div>
     </nav>
 
-
-
     <div ng-show="state=='search'">
-
-
-
         <h1>ARCS Demo app</h1>
 
-        <p>This is a small application developed for the ARCC conference to demonstrate how easy it is to
-        write FHIR clients - at least non complex ones.</p>
-        <p>The time budget to develop the application was 1 day - 8 hours.</p>
+        <div class="row">
+            <div class="xs-10">
+                <p>This is a small application developed for the ARCS conference to demonstrate how easy it is to
+                    write FHIR clients - at least non complex ones.</p>
+            </div>
+        </div>
 
         <h4>Name </h4>
-        <br/>
         <div class="row">
             <div class="col-xs-8">
 
@@ -105,7 +97,7 @@
         </div>
 
         <div ng-hide="patients" style="margin-top: 20px">
-            <em >Enter the name of the patient you wish to display, then press the Find button</em>
+            <em >Enter the name of the patient you wish to find</em>
         </div>
 
         <h3 ng-show="patients" style="margin-top: 20px">Matching patients</h3>
@@ -123,8 +115,6 @@
 
             </div>
         </div>
-
-
 
         <h4>Icons</h4>
         <div><i class="glyphicon glyphicon-book iconSpacing" ></i>Show Log</div>
@@ -154,6 +144,9 @@
 
                     </div>
                     <div class="col-xs-7">
+                        <div ng-show="noSubstanceMatch">
+                            <em>No matching substances found. Try again.</em>
+                        </div>
                         <div ng-show="substances">
                             <h5>Matching substances. Tap to select</h5>
                         </div>
