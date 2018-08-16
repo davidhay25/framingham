@@ -145,15 +145,15 @@
 
         <h4>Substance (if a reaction)</h4>
         <div class="row">
-            <div class="col-sm-10 col-md-10">
+            <div class="col-xs-10">
                 <input class="form-control" type="text" placeholder="Enter substance, if known" ng-model="input.new.substance"/>
 
 
                 <div class="row">
-                    <div class="col-sm-2 col-md-2">
+                    <div class="col-xs-2">
 
                     </div>
-                    <div class="col-sm-6 col-md-6">
+                    <div class="col-xs-6">
                         <div ng-show="substances">
                             <h5>Matching substances. Tap to select</h5>
                         </div>
@@ -170,13 +170,13 @@
 
 
             </div>
-            <div class="col-sm-2 col-md-2">
+            <div class="col-xs-2">
                 <button class="btn btn-primary pull-right" ng-click="findSubstance(input.new.substance)">Find</button>
             </div>
         </div>
 
         <div ng-show="input.new.date && input.new.description">
-            <button class="btn btn-danger pull-right" ng-click="saveAE()">Add</button>
+            <button class="btn btn-danger" ng-click="saveAE()">Add</button>
         </div>
 
     </div>
