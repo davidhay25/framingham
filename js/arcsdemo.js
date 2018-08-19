@@ -8,8 +8,29 @@ angular.module("demoApp",[])
             $scope.input.name = 'hay';
 
             $scope.show = {ar:true,condition:false,med:false}
-            $scope.serverUrl = "http://snapp.clinfhir.com:8081/baseDstu3/";
+            //$scope.serverUrl = "http://snapp.clinfhir.com:8081/baseDstu3/";
             $scope.terminologyUrl = 'https://ontoserver.csiro.au/stu3-latest/';
+
+            $scope.dataServers = []
+            $scope.dataServers.push({display:'clinFHIR',url:'http://snapp.clinfhir.com:8081/baseDstu3/'});
+            $scope.dataServers.push({display:'Hapi R3',url:'http://fhirtest.uhn.ca/baseDstu3/'});
+
+            $scope.getName = function(name){
+                if (name) {
+                    if (name.text) {
+                        return name.text
+                    }
+                    var display = ""
+                    if (name.given) {
+                        display = name.given[0]
+                    }
+                    display += " "+name.family;
+                    return display;
+                }
+
+            }
+
+            $scope.input.dataServer = $scope.dataServers[0];
 
             $scope.findSubstance = function(filter){
                 //use the conditon.code VS - http://hl7.org/fhir/ValueSet/substance-code
@@ -66,7 +87,7 @@ angular.module("demoApp",[])
 
                 console.log(ae)
 
-                var url = $scope.serverUrl + "AdverseEvent";
+                var url = $scope.input.dataServer.url + "AdverseEvent";
                 $scope.log.push({method:'POST',url:"AdverseEvent"});
                 $http.post(url,ae).then(
                     function(data) {
@@ -92,7 +113,7 @@ angular.module("demoApp",[])
                 $scope.patient = entry.resource;
                 $scope.state = 'summary';
 
-                var url = $scope.serverUrl + "AdverseEvent?subject=Patient/"+$scope.patient.id+ "&_count=50";
+                var url = $scope.input.dataServer.url + "AdverseEvent?subject=Patient/"+$scope.patient.id+ "&_count=50";
                 $scope.log.push({method:'GET',url:url})
                 $http.get(url).then(
                     function(data) {
@@ -103,7 +124,7 @@ angular.module("demoApp",[])
                     }
                 );
 
-                var url = $scope.serverUrl + "Condition?subject=Patient/"+$scope.patient.id+ "&_count=50";
+                var url = $scope.input.dataServer.url + "Condition?subject=Patient/"+$scope.patient.id+ "&_count=50";
                 $scope.log.push({method:'GET',url:url})
                 $http.get(url).then(
                     function(data) {
@@ -114,7 +135,7 @@ angular.module("demoApp",[])
                     }
                 );
 
-                var url = $scope.serverUrl + "MedicationStatement?subject=Patient/"+$scope.patient.id + "&_count=50";
+                var url = $scope.input.dataServer.url + "MedicationStatement?subject=Patient/"+$scope.patient.id + "&_count=50";
                 $scope.log.push({method:'GET',url:url})
                 $http.get(url).then(
                     function(data) {
@@ -164,8 +185,9 @@ angular.module("demoApp",[])
             };
 
             $scope.findPatient = function(name) {
-                var url = $scope.serverUrl + "Patient?name="+name;
+                var url = $scope.input.dataServer.url + "Patient?name="+name;
                 $scope.log.push({method:'GET',url:"Patient?name="+name})
+                $scope.waiting = true;
                 $http.get(url).then(
                     function(data) {
                         $scope.patients = data.data;
@@ -173,6 +195,8 @@ angular.module("demoApp",[])
                     }, function(err) {
                         alert(err.data)
                     }
-                )
+                ).finally(function () {
+                    $scope.waiting = false;
+                })
             }
         });

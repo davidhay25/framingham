@@ -51,8 +51,21 @@
 
             <i ng-show="patient" class="glyphicon glyphicon-plus pull-right iconSpacing" ng-click="state='newar'"></i>
 
+            <i class="glyphicon glyphicon-cog  iconSpacing" ng-click="state='config'"></i>
+
         </div>
     </nav>
+
+    <div ng-show="state=='config'">
+        <h3>Config</h3>
+
+        <h4>Data Server</h4>
+        <select class="form-control" ng-model="input.dataServer"
+                ng-options = "svr.display for svr in dataServers">
+
+        </select>
+    </div>
+
 
     <div ng-show="state=='search'">
         <h1>ARCS Demo app</h1>
@@ -66,13 +79,17 @@
 
         <h4>Name </h4>
         <div class="row">
-            <div class="col-xs-8">
-
+            <div class="col-xs-6">
                 <input type="text" class="form-control" ng-model="input.name"/>
             </div>
             <div class="col-xs-2">
+                <img ng-show="waiting" src="css/ajax_loader_blue_32.gif"/>
+            </div>
+
+            <div class="col-xs-2">
                 <button class="btn btn-primary" ng-click="findPatient(input.name)">Find</button>
             </div>
+
         </div>
 
         <div ng-hide="patients" style="margin-top: 20px">
@@ -86,7 +103,14 @@
                 <div class="list-group">
                     <li ng-repeat="entry in patients.entry" class="list-group-item">
                         <div ng-repeat="name in entry.resource.name">
-                            <div ng-click="selectEntry(entry)">{{name.text}}</div>
+                            <div ng-click="selectEntry(entry)">
+
+                                {{getName(name)}}
+                            <!--    <div ng-show="name.text">{{name.text}}</div>
+                                <div ng-hide="name.text">
+                                    {{name.given[0]}} {{name.family}}
+                                </div>-->
+                            </div>
                         </div>
 
                     </li>
@@ -96,10 +120,19 @@
         </div>
 
         <h4>Icons</h4>
-        <div><i class="glyphicon glyphicon-book iconSpacing" ></i>Show Log</div>
-        <div><i class="glyphicon glyphicon-search iconSpacing" ></i>Find Patient</div>
-        <div><i class="glyphicon glyphicon-user iconSpacing" ></i>Patient Summary</div>
-        <div><i class="glyphicon glyphicon-plus iconSpacing" ></i>Add Adverse Event</div>
+
+        <div class="row">
+            <div class="col-xs-6 col-xs-6">
+                <div><i class="glyphicon glyphicon-book iconSpacing" ></i>Show Log</div>
+                <div><i class="glyphicon glyphicon-search iconSpacing" ></i>Find Patient</div>
+                <div><i class="glyphicon glyphicon-user iconSpacing" ></i>Patient Summary</div>
+            </div>
+            <div class="col-xs-6 col-xs-6">
+                <div><i class="glyphicon glyphicon-cog iconSpacing" ></i>Config</div>
+                <div><i class="glyphicon glyphicon-plus iconSpacing" ></i>Add Adverse Event</div>
+            </div>
+        </div>
+
 
 
     </div>
@@ -158,9 +191,10 @@
 
         <div class="banner">
             Clinical data for
-            <span ng-repeat="name in patient.name">
+            {{getName(patient.name[0])}}
+            <!--<span ng-repeat="name in patient.name">
                 <span>{{name.text}}</span>
-            </span>
+            </span> -->
         </div>
 
 
@@ -175,7 +209,7 @@
                 {{entry.resource.description}}
                 <div ng-show="entry.resource.contained">
                     <!-- I can only do this because I know there's only a single contained entry, and what it is...-->
-                    (Substance: {{entry.resource.contained[0].code.coding[0].display}}}
+                    (Substance: {{entry.resource.contained[0].code.coding[0].display}})
                 </div>
                 <div><em>{{entry.resource.date | date:short}}</em></div>
             </li>
