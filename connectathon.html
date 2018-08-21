@@ -1175,7 +1175,8 @@
                                 <ul class="list-group">
                                     <li ng-class="{'list-group-item':1,'listItemSelected':selectedTrack.id == track.id}" style="cursor: pointer"
                                         ng-repeat="track in tracks  | orderBy: 'name' "
-                                        ng-click="selectTrack(track)">
+                                        ng-click="selectTrack(track)"
+                                        ng-show="track.trackType == 'technical'">
                                         {{track.name}}
                                         <div><em>({{track.trackType}})</em></div>
                                     </li>

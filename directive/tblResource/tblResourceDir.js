@@ -139,7 +139,6 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     $scope.input.table.forEach(function(row){
                         row.lastHiddenStatus = row.isHidden;        //save what the hide status was, so we can restore it...
                         if (! row.isReference) {
-
                             row.isHidden = true;
                         } else {
                             //this is a reference. need to also show all the parents...

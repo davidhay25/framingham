@@ -5,7 +5,7 @@ angular.module("demoApp",[])
             $scope.log = [];
             $scope.state = 'search';
             $scope.input = {new:{}};
-            $scope.input.name = 'hay';
+            $scope.input.name = '';
 
             $scope.show = {ar:true,condition:false,med:false}
             //$scope.serverUrl = "http://snapp.clinfhir.com:8081/baseDstu3/";
@@ -102,7 +102,7 @@ angular.module("demoApp",[])
 
                     },
                     function(err) {
-                        alert('There was an error: '+angular.toJson(ae))
+                        alert('There was an error: '+angular.toJson(err))
                     }
                 )
 
@@ -112,6 +112,7 @@ angular.module("demoApp",[])
             $scope.selectEntry = function(entry){
                 $scope.patient = entry.resource;
                 $scope.state = 'summary';
+                delete $scope.patients;
 
                 var url = $scope.input.dataServer.url + "AdverseEvent?subject=Patient/"+$scope.patient.id+ "&_count=50";
                 $scope.log.push({method:'GET',url:url})

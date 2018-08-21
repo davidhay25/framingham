@@ -29,7 +29,6 @@
   {"name": "OperationOutcome","reference":true},
   {"name": "Conformance","reference":true},
   {"name": "FamilyMemberHistory"},
-  {"name": "NamingSystem","reference":true},
   {"name": "Media"},
   {"name": "Binary"},
   {"name": "HealthcareService","reference":true},
@@ -120,7 +119,38 @@
   {"name": "StructureMap","reference":false,"version":"2.1"},
   {"name": "Task","reference":false,"version":"2.1"},
   {"name": "TestReport","reference":false,"version":"2.1"},
-  {"name": "ActivityDefinition","reference":false,"version":"2.1"},
-  {"name": "CodeSystem","reference":true}
+  {"name": "ActivityDefinition","reference":true,"version":"2.1"},
+  {"name": "CodeSystem","reference":true},
+  {"name": "BiologicallyDerivedProduct","reference":true},
+  {"name": "CapabilityStatement","reference":true},
+  {"name": "EntryDefinition","reference":true},
+  {"name": "EventDefinition","reference":true},
+  {"name": "ExampleScenario","reference":true},
+  {"name": "GraphDefinition","reference":true},
+  {"name": "ImmunizationEvaluation"},
+  {"name": "ImmunizationRecommendation"},
+  {"name": "ImplementationGuideInput","reference":true},
+  {"name": "ImplementationGuideOutput","reference":true},
+  {"name": "ItemInstance","reference":true},
+  {"name": "ObservationDefinition","reference":true},
+  {"name": "OccupationalData","reference":true},
+  {"name": "SpecimenDefinition","reference":true},
+  {"name": "SubstancePolymer","reference":true},
+  {"name": "SubstanceReferenceInformation","reference":true},
+  {"name": "SubstanceSpecification","reference":true},
+  {"name": "TerminologyCapabilities","reference":true},
+  {"name": "UserSession","reference":true},
+  {"name": "VerificationResult","reference":true},
+  {"name": "MedicinalProduct","reference":true},
+  {"name": "MedicinalProductAuthorization","reference":true},
+  {"name": "MedicinalProductClinicals","reference":true},
+  {"name": "MedicinalProductDeviceSpec","reference":true},
+  {"name": "MedicinalProductIngredient","reference":true},
+  {"name": "MedicinalProductPackaged","reference":true},
+  {"name": "MedicinalProductPharmaceutical","reference":true}
+
+
+
+
 ]
 
