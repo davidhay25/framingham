@@ -2,7 +2,7 @@
 
 angular.module("sampleApp")
     .controller('ecosystemCtrl',
-        function ($rootScope,$scope,$http,modalService,ecosystemSvc,$window,$localStorage,$uibModal,ecoUtilitiesSvc) {
+        function ($rootScope,$scope,$http,modalService,ecosystemSvc,$window,$localStorage,$uibModal,ecoUtilitiesSvc,$filter) {
 
 
 
@@ -10,7 +10,7 @@ angular.module("sampleApp")
             $scope.ecosystemSvc = ecosystemSvc;
             $scope.input = {};
 
-
+/*
             var req = {
                 method: 'GET',
                 url: 'https://hof.smilecdr.com:8000/Patient/t100',
@@ -28,6 +28,8 @@ angular.module("sampleApp")
                     console.log(data)
                 }
             )
+
+            */
 
             /*
 
@@ -208,7 +210,6 @@ angular.module("sampleApp")
             Chart.defaults.global.colors = ['#00cc00','#cc3300','#ffff99','#6E94FF']; //for the stacked bar chart...
 
 
-
             //a list of all resources... Used for the scenario definition...
             $http.get('/artifacts/allResources.json').then(
                 function(data) {
@@ -226,6 +227,9 @@ angular.module("sampleApp")
             );
 
 
+            $scope.getScenarioDescription = function(scenario) {
+                return $filter('markDown')(scenario.description)
+            };
 
             //login is called when there is no configured user. the call GET config/admin/ will return a list of connectathon events...
             function loginDEP(err){
@@ -478,8 +482,6 @@ angular.module("sampleApp")
                 }
             };
 
-            //$scope.wikiPageUrl = "http://wiki.hl7.org/index.php?title=FHIR_Connectathon_17";
-
             $scope.makeEventReport = function() {
                 $scope.eventReport = ecosystemSvc.makeEventReport($scope.tracks)
             };
@@ -517,7 +519,6 @@ angular.module("sampleApp")
 
                 });
             };
-
 
             $scope.addTrack = function(){
                 var track = {id: 'id'+new Date().getTime(),name:'New Track',roles:[],scenarioIds:[]};

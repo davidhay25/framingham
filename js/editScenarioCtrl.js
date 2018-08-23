@@ -267,7 +267,25 @@ angular.module("sampleApp")
                 });
 
                 if (scenario.roleIds.length == 0 && track.trackType == 'technical') {
-                    alert("You haven't selected any roles. You need to do this before you can record any test results for this scenario. ")
+
+
+                    var msg = "###No roles selected. \n You haven't selected any roles. You need to do this before you can record any test results for this scenario. "
+                    msg += 'Generally, you need at least 2 roles - the client and the server. \n \n  Roles are common across all ' +
+                        'scenarios in the event, so you can either select existing ones, or create ones specific to this ' +
+                        'scenario/track.'
+
+                    var modalOptions = {
+                        closeButtonText: "No, I changed my mind",
+                        headerText: "Delect track",
+                        actionButtonText: 'Yes, please remove',
+                        bodyText: 'Are you sure you wish to remove this Scenario? After this, it will no longer be listed or available.'
+                    };
+
+                    modalService.showModal({}, {bodyText:msg})
+
+
+                    //alert("You haven't selected any roles. You need to do this before you can record any test results for this scenario. ")
+                    return;
                 }
 
                 if (scenario.scenarioTypes) {

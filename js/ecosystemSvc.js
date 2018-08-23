@@ -1360,8 +1360,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             var deferred = $q.defer();
 
             //create a link object to save on the server
-           // var link = {active:true,id:'id'+new Date().getTime(),type:'server',serverid:server.id,scenarioid:scenario.id};
-           // link.roleid = role.id;
 
             //make sure the server is not already in this scenario in the given role
             var ar = [];    //this will contain all the scenarios where this server is not actually included
@@ -1380,6 +1378,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     ar.push(scenario)
                 }
             });
+
+
 
             if (ar.length > 0) {
                 var query = [];     //an array of scenarios to be linked
@@ -1541,6 +1541,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             //get scenarios
             var deferred = $q.defer();
 
+
+
             var urls = []
             //urls.push({url:'artifacts/scenarios.json?_dummy='+new Date(),"name":"scenarios"});
             //urls.push({url:'artifacts/roles.json',"name":"roles"});
@@ -1591,8 +1593,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     ciSort(allPersons,'name');
 
 
-
-
                     hashAllPersons = {};
                     allPersons.forEach(function(p){
                         hashAllPersons[p.id] = p;
@@ -1629,6 +1629,12 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                     //create scenario hash
                     var hashScenario = {};
                     vo.scenarios.forEach(function (scenario) {
+
+
+                        //the scenario object in the server can have a stale copy of the servers & clients associated with it...
+                        delete scenario.servers;
+                        delete scenario.clients;
+
                         hashScenario[scenario.id] = scenario
                     });
 
@@ -1747,11 +1753,14 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                         } else {
                                             scenario.clients = scenario.clients || []
                                             scenario.clients.push({client:client,role:role,link:link});
+
+
+
                                         }
 
                                     }
                                 } else {
-                                    console.log('no scenario with the id '+ link.scenarioid)
+                                    console.log('missing link or scenario')
                                 }
                             });
 
@@ -1822,7 +1831,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                             result.key = key;       //we need this for the delete...
 
 
-                                                allResults[key] = result;
+                                            allResults[key] = result;
 
 
                                             //now update the track totals
@@ -1836,6 +1845,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                         }
 
                                     });
+
+                                    
                                     deferred.resolve(vo);
                                 },
                                 function(err){
@@ -1848,6 +1859,10 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                             alert('error loading links: '+ angular.toJson(err))
                         }
                     );
+
+
+
+
 
                 }
             );

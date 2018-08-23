@@ -254,9 +254,9 @@
 
 
                                         {{track.name}}
-                                        <!-- Is this confusing?
-                                        <div><em>({{track.trackType}})</em></div>
-                                        -->
+
+                                        <div><em class="center-text">({{track.trackType}})</em></div>
+
                                     </li>
                                 </ul>
 
@@ -1170,7 +1170,9 @@
                     <br/>
 
                     <div class="row">
+                        <!--
                         <div class="col-sm-2 col-md-2">
+                            <div class="center-text"><strong >Technical tracks</strong></div>
                             <div class="trackScroll">
                                 <ul class="list-group">
                                     <li ng-class="{'list-group-item':1,'listItemSelected':selectedTrack.id == track.id}" style="cursor: pointer"
@@ -1183,22 +1185,34 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="col-sm-10 col-md-10">
+
+                        -->
+                        <div class="col-sm-12 col-md-12">
                             <uib-tabset>
                                 <uib-tab heading="Client/Server">
                                     <br/>
                                     <p class="banner">This is used when a scenario only uses 2 participants - a client and a server</p>
                                     <div ng-repeat="scenario in selectedTrack.scenarios track by $index">
 
-                                        <div class="banner" style="height: 40px">{{scenario.name}}
+                                        <div class="banner" style="height: 40px">
+
+
+                                            <span uib-popover-html=getScenarioDescription(scenario)
+                                                  popover-placement="top"
+                                                  popover-trigger="'mouseenter'">
+
+                                                 {{scenario.name}}
+                                            </span>
+
+
 
                                             <span class="pull-left">
-                                    <button class="btn btn-link" ng-click="addClientToScenario(scenario)">Add Client</button>
-                                </span>
+                                                <button class="btn btn-link" ng-click="addClientToScenario(scenario)">Add Client</button>
+                                            </span>
 
                                             <span class="pull-right">
-                                    <button class="btn btn-link" ng-click="addServerToScenario(scenario)">Add Server</button>
-                                </span>
+                                                 <button class="btn btn-link" ng-click="addServerToScenario(scenario)">Add Server</button>
+                                            </span>
 
                                         </div>
                                         <!--
@@ -1238,7 +1252,7 @@
                                                     </tr>
 
                                                     <tr ng-repeat="client in scenario.clients">
-                                                        <td ><strong>
+                                                        <td><strong>
                                                             {{client.client.name}}
                                                             <div><em>({{client.role.name}})</em>
                                                                 <i class="clickable glyphicon glyphicon-remove-sign"
@@ -1251,7 +1265,7 @@
                                                             <a href="#" ng-click="addTestResult(selectedTrack,scenario,client,server)">
 
                                                                 <span uib-popover-html=showTestResultNote(scenario,client,server)
-                                                                      popover-placement="left"
+                                                                      popover-placement="top"
                                                                       popover-trigger="'mouseenter'">
                                                                     <p ng-bind-html="showTestResult(scenario,client,server)"></p>
                                                                 </span>

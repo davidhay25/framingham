@@ -3,7 +3,9 @@
 </div>
 
 <div class="modal-body">
-    <p>{{modalOptions.bodyText}}</p>
+
+    <p ng-bind-html="modalOptions.bodyText | markDown"></p>
+   <!-- <p>{{modalOptions.bodyText}}</p>-->
     <br/>
     <div>{{modalOptions.secondaryText}}</div>
 

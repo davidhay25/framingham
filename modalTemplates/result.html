@@ -66,12 +66,54 @@
                 </div>
                 <br/>
 
-                <textarea class="form-control" ng-model="input.note"></textarea>
+                <textarea placeholder="Enter any notes" class="form-control" ng-model="input.note"></textarea>
 
 
 
 
             </uib-tab>
+
+            <uib-tab heading="Link to TouchStone">
+                <div ng-controller="touchStoneCtrl">
+
+                    {{ecosystemSvc.getCurrentUser()}}
+
+
+                    <div class="pull-right">
+                        <button
+                                ng-click="authenticate(ecosystemSvc.getCurrentUser())"
+                                class="btn btn-warning">Login</button>
+                        <button
+                                ng-click="getTestResults()"
+                                class="btn btn-primary">Retrieve</button>
+                    </div>
+<!--
+
+                    <div class="row">
+
+                        <div class="col-md-3 col-sm-3">
+                            <ul class="list-group">
+                                <li ng-class="{'list-group-item':1,
+                                                    'listItemSelected':selectedScenarioDirect.id == scenario.id}"
+                                    style="cursor: pointer"
+                                    ng-repeat="scenario in selectedTrack.scenarios"
+                                    ng-click="selectScenarioDirect(scenario)">
+                                    {{scenario.name}}
+
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+
+                        </div>
+                    </div>
+
+                    -->
+                </div>
+
+            </uib-tab>
+
             <uib-tab>
                 <uib-tab-heading>
                     Trackers &nbsp;&nbsp;

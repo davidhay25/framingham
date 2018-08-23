@@ -1,6 +1,6 @@
 angular.module("sampleApp")
     .controller('touchStoneCtrl',
-        function ($scope,$http,$uibModal) {
+        function ($scope,$http,$uibModal,ecosystemSvc) {
 
 //https://touchstone.aegis.net/touchstone/userguide/html/continuous-integration/api.html.
 
@@ -8,8 +8,11 @@ angular.module("sampleApp")
 
             //Password: FH!Rt34t
 
-            $scope.authenticate = function(user) {
-                console.log(user)
+            $scope.authenticate = function() {
+
+                var user = ecosystemSvc.getCurrentUser()
+
+
 
                 var email;
                 if (user.contact) {
@@ -29,6 +32,7 @@ angular.module("sampleApp")
                     templateUrl: 'modalTemplates/touchStonelogin.html',
                     controller: function($scope){
 
+                        $scope.password = "FH!Rt34t";       //just while developing...
 
                         $scope.login = function(){
                             $scope.$close($scope.password)
@@ -44,8 +48,11 @@ angular.module("sampleApp")
                     $http.post(url,body).then(
                         function(data) {
                             console.log(data.data)
+                            $scope.apiKey = data.data['API-Key']
+
                         },
                         function(err) {
+                            alert('Sorry, that password was incorrect')
                             console.log(err.data)
                         }
                     )
@@ -54,8 +61,9 @@ angular.module("sampleApp")
             };
 
             //retrieve the results for the current user from touchstone
-            $scope.getTestResults = function() {
+            var getTestResults = function() {
                 //get the results from touchstone. locate the server based on the IP
+
 
 
 
