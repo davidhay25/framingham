@@ -13,6 +13,8 @@ angular.module("sampleApp")
             $scope.input = {roles:{}};
             $scope.track = track;
 
+            $scope.input.roleType = 'client';       //when adding a new role
+
             if (scenario && scenario.roleIds) {
                 scenario.roleIds.forEach(function (id) {
 
@@ -22,9 +24,24 @@ angular.module("sampleApp")
 
             $scope.allRoles = ecosystemSvc.getAllRoles();
 
-            $scope.addNewRole = function(name,description) {
+            $scope.allRoles.sort(function(a,b){
+                try {
+                    if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                        return 1
+                    } else {
+                        return -1
+                    }
+                } catch(ex) {
+                    return 0
+                }
+
+
+            })
+
+
+            $scope.addNewRole = function(name,description,type) {
                 if (name) {
-                    ecosystemSvc.addNewRole(name,description).then(
+                    ecosystemSvc.addNewRole(name,description,type,$scope.track).then(
                         function(role){
                             //so the role has been added - link it to the current scenario
                             scenario.roleIds = scenario.roleIds || [];

@@ -353,12 +353,14 @@
                         </uib-tab-heading>
                         <br/>
                         <div ng-repeat = "role in allRoles">
-                            <div class="row">
+
+                            <div class="row" ng-show="!role.trackId || role.trackId == track.id">
                                 <div class="col-md-2 col-sm-2">
                                     <checkbox ng-model="input.roles[role.id]" ng-change="updateScenarioRoles()"></checkbox>
                                 </div>
                                 <div class="col-md-10 col-sm-10">
                                     {{role.name}}
+                                    <span ng-show="role.role">  ({{role.role}})</span>
                                 </div>
                             </div>
 
@@ -367,13 +369,23 @@
                         <hr/>
                         <div class="row">
 
-                            <div class="col-sm-6 col-md-6">
+                            <div class="col-sm-5 col-md-5">
                                 <input class="form-control" ng-model="input.newRoleName" placeholder="New role name"/>
                             </div>
 
+                            <div class="col-sm-5 col-md-5">
+
+                                <div class="btn-group" ng-show="input.newRoleName">
+                                    <label class="btn btn-default" ng-model="input.roleType" uib-btn-radio="'client'">Client</label>
+                                    <label class="btn btn-default" ng-model="input.roleType" uib-btn-radio="'server'">Server</label>
+
+                                </div>
+                            </div>
+
+
                             <div class="col-sm-1 col-md-1">
                                 <button ng-show="input.newRoleName" class="btn btn-link"
-                                        ng-click="addNewRole(input.newRoleName,input.newRoleName)">Add</button>
+                                        ng-click="addNewRole(input.newRoleName,input.newRoleName,input.roleType)">Add</button>
                             </div>
                         </div>
 

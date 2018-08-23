@@ -646,9 +646,15 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             })
 
         },
-        addNewRole : function(roleName,roleDescription) {
+        addNewRole : function(roleName,roleDescription,type,track) {
             var deferred = $q.defer();
-            var role = {name:roleName,description:roleDescription, id:'role-'+new Date().getTime()}
+            var role = {name:roleName,description:roleDescription, id:'role-'+new Date().getTime()};
+            role.role=type;
+
+            if (track) {
+                role.trackId = track.id;
+            }
+            //console.log(role)
 
             $http.post("/config/role",role).then(
                 function(data){
@@ -1846,7 +1852,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                                     });
 
-                                    
+
                                     deferred.resolve(vo);
                                 },
                                 function(err){
