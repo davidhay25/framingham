@@ -512,7 +512,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                 var vo = hashScenarioId[graph.scenarioid];
 
-                graph.user = that.getPersonWithId(graph.userid);
+               // graph.user = that.getPersonWithId(graph.userid);
 
 
                 if (vo) {
@@ -594,6 +594,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                 $http.get(url).then(
                     function(data) {
                         var completeGraph = data.data;  //includes the items...
+                        completeGraph.user = that.getPersonWithId(graph.userid);
                         updateSummary(completeGraph,vo);
                         deferred.resolve();
                     }, function(err) {
