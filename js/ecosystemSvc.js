@@ -487,14 +487,14 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         },
 
         makeAllScenarioSummary : function(allScenarioGraphs,tracks) {
-
+            //allScenarioGraphs are and index of all the graphs in the database collection 'scenarioGraph'. Only has id, name, userdid & scenarioid
+            var deferred = $q.defer();
             var that = this;
 
 
-            //construct a hash of scenarioId...
+            //construct a hash of scenarioId from the tracks...
             var hashScenarioId = {};
             tracks.forEach(function (track) {
-
                 track.scenarios.forEach(function (scenario) {
                     hashScenarioId[scenario.id] = {track:track,scenario:scenario}
                 })
@@ -502,14 +502,114 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
 
 
+
+            var queries = []
+
+
             //now construct the summary object...
             var hashResourceType = {};
             allScenarioGraphs.forEach(function (graph) {
+
                 var vo = hashScenarioId[graph.scenarioid];
+
                 graph.user = that.getPersonWithId(graph.userid);
 
-                if (vo && graph.items) {
-                    graph.items.forEach(function(item){
+
+                if (vo) {
+
+                    queries.push(processOneGraph(graph,vo))
+
+                    /*
+                    if (graph.items) {
+                        graph.items.forEach(function (item) {
+                            hashResourceType[item.type] = hashResourceType[item.type] || [];
+
+                            if (item.notes && item.table) {
+                                //there are notes for this item (== resource)
+                                //create a hash of id for this item
+                                var hashId = {};
+                                item.table.forEach(function (row) {
+                                    hashId[row.id] = row;
+                                });
+
+                                angular.forEach(item.notes, function (note, id) {
+
+                                    var lne = {
+                                        user: graph.user,
+                                        path: hashId[id].path,
+                                        note: note,
+                                        scenario: vo.scenario,
+                                        track: vo.track
+                                    };
+                                    hashResourceType[item.type].push(lne)
+                                })
+
+                            }
+
+                        })
+                    } */
+                }
+            });
+
+
+
+
+            if (queries.length > 0) {
+                //hashResourceType gets updated by processOneGraph()
+                $q.all(queries).then(
+                    function(){
+                        angular.forEach(hashResourceType,function(value,key){
+                            value.sort(function(a,b){
+                                if (a.path < b.path) {
+                                    return -1
+                                } else {return 1}
+                            })
+                        })
+                        deferred.resolve(hashResourceType)
+                    },
+                    function(err) {
+                        //shouldn't be any errors ATM
+                        deferred.resolve(hashResourceType)
+                    }
+                )
+
+
+
+
+            } else {
+                deferred.resolve(hashResourceType)
+            }
+
+
+
+
+
+            return deferred.promise;
+
+            //return hashResourceType;
+
+            function processOneGraph(graph,vo) {
+                var deferred = $q.defer();
+                var url = "oneScenarioGraph/"+graph.id;
+                $http.get(url).then(
+                    function(data) {
+                        var completeGraph = data.data;  //includes the items...
+                        updateSummary(completeGraph,vo);
+                        deferred.resolve();
+                    }, function(err) {
+                        //just swallow errors for now
+                        deferred.resolve();
+                    }
+                )
+
+
+                return deferred.promise;
+
+            }
+
+            function updateSummary(graph,vo) {
+                if (graph.items) {
+                    graph.items.forEach(function (item) {
                         hashResourceType[item.type] = hashResourceType[item.type] || [];
 
                         if (item.notes && item.table) {
@@ -520,9 +620,15 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                 hashId[row.id] = row;
                             });
 
-                            angular.forEach(item.notes,function(note,id){
+                            angular.forEach(item.notes, function (note, id) {
 
-                                var lne = {user:graph.user,path:hashId[id].path,note:note,scenario:vo.scenario,track:vo.track};
+                                var lne = {
+                                    user: graph.user,
+                                    path: hashId[id].path,
+                                    note: note,
+                                    scenario: vo.scenario,
+                                    track: vo.track
+                                };
                                 hashResourceType[item.type].push(lne)
                             })
 
@@ -530,20 +636,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                     })
                 }
-            });
-
-
-
-            angular.forEach(hashResourceType,function(value,key){
-                value.sort(function(a,b){
-                    if (a.path < b.path) {
-                        return -1
-                    } else {return 1}
-                })
-            })
-
-            return hashResourceType;
-
+            }
 
 
         },

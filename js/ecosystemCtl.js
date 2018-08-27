@@ -439,13 +439,24 @@ angular.module("sampleApp")
                 })
             };
 
+
             //load all the configuration & results for the current event...
             var loadData = function(cb){
                 ecosystemSvc.getConnectathonResources().then(
                     function(vo) {
 
+                        ecosystemSvc.makeAllScenarioSummary(vo.scenarioGraph,vo.tracks).then(
+                            function(data) {
+                                $scope.hashAllScenarioNotes = data;
 
-                        $scope.hashAllScenarioNotes = ecosystemSvc.makeAllScenarioSummary(vo.scenarioGraph,vo.tracks);
+                                //save these for the refresh
+                                //$scope.allScenarioGraphIndex = vo.scenarioGraph;
+
+
+                            }
+                        );
+
+
 
                         console.log(ecoUtilitiesSvc.getObjectSize(vo));
 
@@ -465,6 +476,27 @@ angular.module("sampleApp")
                     }
                 );
             };
+
+
+            //refresh the 'all notes function.
+            $scope.refreshAllNotesSummary = function(){
+                var url = '/scenarioGraph'
+                $http.get(url).then(
+                    function(data) {
+                        var allScenarioGraphs = data.data;
+                        ecosystemSvc.makeAllScenarioSummary(allScenarioGraphs,$scope.tracks).then(
+                            function(data) {
+                                $scope.hashAllScenarioNotes = data;
+
+                                //save these for the refresh
+                                //$scope.allScenarioGraphIndex = vo.scenarioGraph;
+
+
+                            }
+                        );
+
+                    } )} ;
+
 
             $scope.canShowPerson = function(person,filter) {
                 var name = person.name;
