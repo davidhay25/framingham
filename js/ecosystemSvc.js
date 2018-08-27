@@ -263,7 +263,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                 }
             }
-
         },
 
         makeResourceJson : function (type,id,table) {
@@ -302,12 +301,12 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                 //check for an extension off the root
                                 if (row.fhirMapping && row.fhirMapping.map) {
 
-                                    var ar = row.fhirMapping.map.split('.')
+                                    var ar = row.fhirMapping.map.split('.');
                                     if (ar[0] == 'extension') {
                                     //if (row.ed.meta && row.ed.meta.isExtension){
 
                                         //this is an extension
-                                        resource.extension = resource.extension || []
+                                        resource.extension = resource.extension || [];
                                         var ext = {}
                                         ext.url = row.fhirMapping.url
                                         var dt = row.type[0].code;
@@ -319,7 +318,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                         if (row.max == 1) {
                                             resource[eleName] = parentElement;
                                         } else {
-
                                             resource[eleName] = resource[eleName] || [];
                                             resource[eleName].push(parentElement)
                                         }
@@ -340,11 +338,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                             resource[eleName].push(parentElement)
                                         }
                                     }
-
-
-
-
-
                                 }
 
                                 break;
