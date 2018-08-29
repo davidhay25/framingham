@@ -263,10 +263,86 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                 }
             }
+        },
+
+
+        makeResourceJson : function (type,id,table) {
+            var resource = {resourceType: type, id: id};
+            var currentParent = resource;   //where the new item will be attached
+            //var current
+            if (! table) {
+                return {}
+            }
+
+            return {}
+
+            var insertPoint = resource;     //where to insert a new element
+
+            var data = []
+            var potentialL2Parent;      //
+            table.forEach(function (row, index) {
+                var structuredData = row.structuredData;
+                if (structuredData) {
+                    data.push(row);
+
+                    var newPath = row.path;     //the path where this item sits
+                    var ar = newPath.split('.');
+
+
+                    switch (ar.length) {
+                        case 2 :
+                            //get the last
+                            var eleName = ar[1];
+                            if (eleName.indexOf('[x]') > -1) {
+                                eleName = eleName.substr(0, eleName.length - 3) + _capitalize(row.sdDt);
+                            }
+                            potentialL2Parent[eleName] = structuredData;
+
+
+                            break;
+                        case 1 :
+                            //this is off the root - easy!
+
+                            var eleName = ar[0];
+                            if (eleName.indexOf('[x]') > -1) {
+                                eleName = eleName.substr(0, eleName.length - 3) + _capitalize(row.sdDt);
+                            }
+
+                            potentialL2Parent = structuredData;//angular.copy(structuredData)
+
+                            if (row.max == '1') {
+                                //this is a single value
+                                insertPoint[eleName] = potentialL2Parent
+                            } else {
+                                //this is a multiple element
+                                insertPoint[eleName] = insertPoint[eleName] || []
+                                insertPoint[eleName].push(potentialL2Parent)
+                            }
+
+                            //potentialL2Parent = structuredData;
+
+                        break;
+
+
+
+                    }
+
+                }
+
+
+            })
+
+
+            return {resource : resource}
+
+            function _capitalize(str) {
+                return (str.charAt(0).toUpperCase() + str.slice(1));
+            }
 
         },
 
-        makeResourceJson : function (type,id,table) {
+
+        makeResourceJsonV1 : function (type,id,table) {
             //construct the json for a single resource based on the table from the tblResourceDir
 
             if (! table) {
@@ -286,8 +362,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                         data.push(row);
 
                         var structuredDataClone =row.structuredData;// angular.copy(row.structuredData);
-
-
                         var path = row.realPath || row.path;
                         var ar = path.split('.');
                         switch (ar.length) {
@@ -302,12 +376,12 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                 //check for an extension off the root
                                 if (row.fhirMapping && row.fhirMapping.map) {
 
-                                    var ar = row.fhirMapping.map.split('.')
+                                    var ar = row.fhirMapping.map.split('.');
                                     if (ar[0] == 'extension') {
                                     //if (row.ed.meta && row.ed.meta.isExtension){
 
                                         //this is an extension
-                                        resource.extension = resource.extension || []
+                                        resource.extension = resource.extension || [];
                                         var ext = {}
                                         ext.url = row.fhirMapping.url
                                         var dt = row.type[0].code;
@@ -319,7 +393,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                         if (row.max == 1) {
                                             resource[eleName] = parentElement;
                                         } else {
-
                                             resource[eleName] = resource[eleName] || [];
                                             resource[eleName].push(parentElement)
                                         }
@@ -340,11 +413,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                             resource[eleName].push(parentElement)
                                         }
                                     }
-
-
-
-
-
                                 }
 
                                 break;
@@ -406,7 +474,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
             } catch (ex) {
                 console.log(ex)
-                return null;
+                return {error: ex}
             }
 
             function _capitalize(str) {
@@ -494,14 +562,14 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         },
 
         makeAllScenarioSummary : function(allScenarioGraphs,tracks) {
-
+            //allScenarioGraphs are and index of all the graphs in the database collection 'scenarioGraph'. Only has id, name, userdid & scenarioid
+            var deferred = $q.defer();
             var that = this;
 
 
-            //construct a hash of scenarioId...
+            //construct a hash of scenarioId from the tracks...
             var hashScenarioId = {};
             tracks.forEach(function (track) {
-
                 track.scenarios.forEach(function (scenario) {
                     hashScenarioId[scenario.id] = {track:track,scenario:scenario}
                 })
@@ -509,14 +577,115 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
 
 
+
+            var queries = []
+
+
             //now construct the summary object...
             var hashResourceType = {};
             allScenarioGraphs.forEach(function (graph) {
-                var vo = hashScenarioId[graph.scenarioid];
-                graph.user = that.getPersonWithId(graph.userid);
 
-                if (vo && graph.items) {
-                    graph.items.forEach(function(item){
+                var vo = hashScenarioId[graph.scenarioid];
+
+               // graph.user = that.getPersonWithId(graph.userid);
+
+
+                if (vo) {
+
+                    queries.push(processOneGraph(graph,vo))
+
+                    /*
+                    if (graph.items) {
+                        graph.items.forEach(function (item) {
+                            hashResourceType[item.type] = hashResourceType[item.type] || [];
+
+                            if (item.notes && item.table) {
+                                //there are notes for this item (== resource)
+                                //create a hash of id for this item
+                                var hashId = {};
+                                item.table.forEach(function (row) {
+                                    hashId[row.id] = row;
+                                });
+
+                                angular.forEach(item.notes, function (note, id) {
+
+                                    var lne = {
+                                        user: graph.user,
+                                        path: hashId[id].path,
+                                        note: note,
+                                        scenario: vo.scenario,
+                                        track: vo.track
+                                    };
+                                    hashResourceType[item.type].push(lne)
+                                })
+
+                            }
+
+                        })
+                    } */
+                }
+            });
+
+
+
+
+            if (queries.length > 0) {
+                //hashResourceType gets updated by processOneGraph()
+                $q.all(queries).then(
+                    function(){
+                        angular.forEach(hashResourceType,function(value,key){
+                            value.sort(function(a,b){
+                                if (a.path < b.path) {
+                                    return -1
+                                } else {return 1}
+                            })
+                        })
+                        deferred.resolve(hashResourceType)
+                    },
+                    function(err) {
+                        //shouldn't be any errors ATM
+                        deferred.resolve(hashResourceType)
+                    }
+                )
+
+
+
+
+            } else {
+                deferred.resolve(hashResourceType)
+            }
+
+
+
+
+
+            return deferred.promise;
+
+            //return hashResourceType;
+
+            function processOneGraph(graph,vo) {
+                var deferred = $q.defer();
+                var url = "oneScenarioGraph/"+graph.id;
+                $http.get(url).then(
+                    function(data) {
+                        var completeGraph = data.data;  //includes the items...
+                        completeGraph.user = that.getPersonWithId(graph.userid);
+                        updateSummary(completeGraph,vo);
+                        deferred.resolve();
+                    }, function(err) {
+                        //just swallow errors for now
+                        deferred.resolve();
+                    }
+                );
+
+
+                return deferred.promise;
+
+            }
+
+            function updateSummary(graph,vo) {
+                if (graph.items) {
+                    graph.items.forEach(function (item) {
                         hashResourceType[item.type] = hashResourceType[item.type] || [];
 
                         if (item.notes && item.table) {
@@ -527,9 +696,15 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                                 hashId[row.id] = row;
                             });
 
-                            angular.forEach(item.notes,function(note,id){
+                            angular.forEach(item.notes, function (note, id) {
 
-                                var lne = {user:graph.user,path:hashId[id].path,note:note,scenario:vo.scenario,track:vo.track};
+                                var lne = {
+                                    user: graph.user,
+                                    path: hashId[id].path,
+                                    note: note,
+                                    scenario: vo.scenario,
+                                    track: vo.track
+                                };
                                 hashResourceType[item.type].push(lne)
                             })
 
@@ -537,20 +712,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                     })
                 }
-            });
-
-
-
-            angular.forEach(hashResourceType,function(value,key){
-                value.sort(function(a,b){
-                    if (a.path < b.path) {
-                        return -1
-                    } else {return 1}
-                })
-            })
-
-            return hashResourceType;
-
+            }
 
 
         },

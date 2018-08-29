@@ -702,7 +702,7 @@ app.get('/scenarioGraph',function(req,res) {
 
 
     var collection = req.selectedDbCon.collection('scenarioGraph')
-
+// collection.find({},{projection:{id:1,name:1,userid:1,scenarioid:1}}).toArray(function (err, result) {
     collection.find({},{projection:{id:1,name:1,userid:1,scenarioid:1}}).toArray(function (err, result) {
         if (err) {
             res.send(err,500)

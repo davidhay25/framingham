@@ -3,11 +3,14 @@
     <div class="banner">
         Displays a summary of all the Notes made by users for all Tracks and all Scenarios in this event.
         The summary is aggregated by resource type (including LM).
+        <span class="pull-right clickable" style="font-weight: normal" ng-click="refreshAllNotesSummary()">Refresh</span>
     </div>
 
 
 <div class="row">
     <div class="col-sm-3 col-md-3">
+
+
         <ul class="list-group">
             <li ng-repeat="(k,v) in hashAllScenarioNotes"
                 ng-class="{'list-group-item':true,active : k == oneTypeAllNotesType}"

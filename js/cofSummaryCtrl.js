@@ -104,6 +104,7 @@ angular.module("sampleApp")
 
                 $http.get(url).then(
                     function(data) {
+
                         $scope.selectedGraph = angular.copy(data.data); //not saving the graph back, but you never know...
                         makeGraph($scope.selectedGraph.items);
 
@@ -159,8 +160,15 @@ angular.module("sampleApp")
             //select an item/resource from the graph
             $scope.selectItem = function(item) {
 
-
+                delete $scope.itemResourceJson;
                 $scope.item = item;     //the item (containing the resourcce)
+
+                var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,item.table);
+                if (vo && vo.resource) {
+                    $scope.itemResourceJson = vo.resource;
+                }
+
+
 
                 $scope.commentItem = angular.copy(item);        //will add all the comments to this object...
 
@@ -211,6 +219,8 @@ angular.module("sampleApp")
                                 t.notes.push(v)
                             })
                         }
+
+
 
 
                         if (item.sample) {
@@ -362,6 +372,8 @@ angular.module("sampleApp")
                     var node = graphData.nodes.get(nodeId);
                     var item = node.item;
                     if (item) {
+
+                        //console.log(item)
                         $scope.selectItem(item);
                         $scope.$digest();
                     }
