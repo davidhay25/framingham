@@ -766,12 +766,18 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
         },
         makeTree : function(table) {
             var arTree = [];
+            var pathHash = {};      //the most recent id for each hash
+
+            //assume that the tree is in
 
             table.forEach(function (row) {
                 var path = row.path;     //this is always unique in a logical model...
                 var arPath = path.split('.');
                 var item = {data:row};
-                item.id = path;
+                var newId = new Date().getTime() + '-' + 1000 * Math.random();
+                pathHash[path] = newId;         //save the most recent id for this path. (will overwrite old with new - we want that...)
+
+                item.id = newId;//path;
 
                 item.text = arPath[arPath.length-1];
                 if (row.structuredData) {
@@ -799,7 +805,11 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                     item.parent = '#'
                 } else {
                     arPath.pop();//
-                    item.parent = arPath.join('.');
+                    //item.parent = arPath.join('.');
+                    item.parent = pathHash[arPath.join('.')];   //this will be the most recent element with this path
+
+
+
                 }
                 arTree.push(item)
             });

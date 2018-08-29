@@ -265,7 +265,84 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             }
         },
 
+
         makeResourceJson : function (type,id,table) {
+            var resource = {resourceType: type, id: id};
+            var currentParent = resource;   //where the new item will be attached
+            //var current
+            if (! table) {
+                return {}
+            }
+
+            return {}
+
+            var insertPoint = resource;     //where to insert a new element
+
+            var data = []
+            var potentialL2Parent;      //
+            table.forEach(function (row, index) {
+                var structuredData = row.structuredData;
+                if (structuredData) {
+                    data.push(row);
+
+                    var newPath = row.path;     //the path where this item sits
+                    var ar = newPath.split('.');
+
+
+                    switch (ar.length) {
+                        case 2 :
+                            //get the last
+                            var eleName = ar[1];
+                            if (eleName.indexOf('[x]') > -1) {
+                                eleName = eleName.substr(0, eleName.length - 3) + _capitalize(row.sdDt);
+                            }
+                            potentialL2Parent[eleName] = structuredData;
+
+
+                            break;
+                        case 1 :
+                            //this is off the root - easy!
+
+                            var eleName = ar[0];
+                            if (eleName.indexOf('[x]') > -1) {
+                                eleName = eleName.substr(0, eleName.length - 3) + _capitalize(row.sdDt);
+                            }
+
+                            potentialL2Parent = structuredData;//angular.copy(structuredData)
+
+                            if (row.max == '1') {
+                                //this is a single value
+                                insertPoint[eleName] = potentialL2Parent
+                            } else {
+                                //this is a multiple element
+                                insertPoint[eleName] = insertPoint[eleName] || []
+                                insertPoint[eleName].push(potentialL2Parent)
+                            }
+
+                            //potentialL2Parent = structuredData;
+
+                        break;
+
+
+
+                    }
+
+                }
+
+
+            })
+
+
+            return {resource : resource}
+
+            function _capitalize(str) {
+                return (str.charAt(0).toUpperCase() + str.slice(1));
+            }
+
+        },
+
+
+        makeResourceJsonV1 : function (type,id,table) {
             //construct the json for a single resource based on the table from the tblResourceDir
 
             if (! table) {
@@ -285,8 +362,6 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                         data.push(row);
 
                         var structuredDataClone =row.structuredData;// angular.copy(row.structuredData);
-
-
                         var path = row.realPath || row.path;
                         var ar = path.split('.');
                         switch (ar.length) {
@@ -399,7 +474,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
             } catch (ex) {
                 console.log(ex)
-                return null;
+                return {error: ex}
             }
 
             function _capitalize(str) {
@@ -601,7 +676,7 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
                         //just swallow errors for now
                         deferred.resolve();
                     }
-                )
+                );
 
 
                 return deferred.promise;

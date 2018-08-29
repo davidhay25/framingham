@@ -233,8 +233,25 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 })
             };
 
-            function checkParentHasStructuredData(row,inx){
+            function checkParentHasStructuredData(row,inxDEP){
+
+                return;     //disable for the moment
                 //if not off the root, walk back up the list of elements to make sure that the parent has a structuredData element. The Json build needs this...
+                //find out where this row is in the tree (based on the id)
+                var inx=-1;
+                for (var i=0; i < $scope.input.table.length; i++) {
+                    if (row.id == $scope.input.table[i].id) {
+                        inx = i;
+                        break
+                    }
+                }
+                if (inx == -1) {
+                    alert('error setting parent');
+                    return;
+                }
+
+
+
                 var ar = row.path.split('.');
                 var eleDepth = ar.length;       //the depth of the element...
                 if (eleDepth > 1) {

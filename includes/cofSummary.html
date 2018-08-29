@@ -69,38 +69,19 @@
                         <span style="padding: 8px" ng-hide="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Set focus</span>
                         <span style="padding: 8px" ng-show="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Show all</span>
                     </div>
+                    <br/>
 
                     <div id="sumCofGraph"></div>
                 </div>
                 <div class="col-sm-6 col-md-6">
                     <uib-tabset>
-                        <uib-tab heading ='All Resources'>
-                            <div class="row">
-                                <div class="col-sm-4 col-md-4"><h4>Path</h4></div>
-                                <div class="col-sm-4 col-md-4">Sample</div>
-                                <div class="col-sm-4 col-md-4">Note</div>
-
-                            </div>
-
-                            <div ng-repeat="summary in allHashPathSummaries">
-                                <strong>{{summary.type}}</strong>
-                                <div class='row' ng-repeat="(k,v) in summary.summary">
-                                    <div class="col-md-4 col-sm-4">
-                                        {{v.path}}
-                                    </div>
-                                    <div class="col-md-4 col-sm-4">
-                                        <div ng-repeat = "sample in v.sample track by $index">{{sample}}</div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-4">
-                                        <div ng-repeat = "note in v.notes track by $index">{{note}}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </uib-tab>
                         <uib-tab heading ='Selected Resource'>
 
                             <uib-tabset>
                                 <br/>
+                                <uib-tab heading="Resource Json">
+                                    <pre>{{itemResourceJson | json}}</pre>
+                                </uib-tab>
                                 <uib-tab heading="Data & Notes">
                                     <h4>{{item.type}}</h4>
                                     <table class="table">
@@ -112,6 +93,34 @@
                                         </tr>
                                     </table>
                                 </uib-tab>
+
+
+                                <!--
+                                                                <uib-tab heading="raw graph">
+                                                                    <pre>{{selectedGraph | json}}</pre>
+                                                                </uib-tab>
+
+                                                               -->
+
+
+
+                                <uib-tab heading="structuredData">
+                                    <div>
+                                        <button class="btn btn-link pull-right" ng-click="input.showAllRows = !input.showAllRows">Toggle show all</button>
+                                    </div>
+                                    <table class="table">
+                                        <tr ng-repeat="row in item.table" ng-show="input.showAllRows || row.structuredData">
+                                            <td>{{row.path}}</td>
+                                            <td>{{row.structuredData}}</td>
+                                        </tr>
+                                    </table>
+
+                                </uib-tab>
+
+                                <uib-tab heading="selected item (dev)">
+                                    <pre>{{item | json}}</pre>
+                                </uib-tab>
+
                                 <uib-tab>
                                     <uib-tab-heading>
                                         All comments <span class="badge">{{selectedGraph.comments.length}}</span>
@@ -141,6 +150,30 @@
 
 
                         </uib-tab>
+                        <uib-tab heading ='All Resources'>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4"><h4>Path</h4></div>
+                                <div class="col-sm-4 col-md-4">Sample</div>
+                                <div class="col-sm-4 col-md-4">Note</div>
+
+                            </div>
+
+                            <div ng-repeat="summary in allHashPathSummaries">
+                                <strong>{{summary.type}}</strong>
+                                <div class='row' ng-repeat="(k,v) in summary.summary">
+                                    <div class="col-md-4 col-sm-4">
+                                        {{v.path}}
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <div ng-repeat = "sample in v.sample track by $index">{{sample}}</div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <div ng-repeat = "note in v.notes track by $index">{{note}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </uib-tab>
+
                     </uib-tabset>
                 </div>
             </div>

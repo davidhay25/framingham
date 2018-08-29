@@ -370,6 +370,23 @@
 
 
                         </uib-tab>
+                        <uib-tab heading="Raw data">
+                            <div>
+                                <button class="btn btn-link pull-right" ng-click="input.showAllRaw = ! input.showAllRaw">Toggle show all</button>
+
+                            </div>
+
+                            <table class="table">
+
+
+                                <tr ng-repeat="row in currentItem.table" ng-show="input.showAllRaw || row.structuredData">
+                                    <td>{{row.path}}</td>
+                                    <td>{{row.structuredData}}</td>
+                                </tr>
+                            </table>
+
+
+                        </uib-tab>
                     </uib-tabset>
 
                     <!--
