@@ -74,17 +74,31 @@ angular.module("sampleApp")
                 console.log(hashBranch)
 
 
-                var displayObj = angular.copy(hashBranch)
-                
+                //create a display for the object passed to the rendering routine...
+                $scope.displayList =[]
+                angular.forEach(hashBranch,function(v,k){
+                    var item = {id:v.id,path:v.branch.text,children:[]}
+                    v.children.forEach(function(child){
+
+                        var o = hashBranch[child.id]
+
+                        item.children.push({id:child.id,path:o.branch.text})
+
+
+                    })
+                    $scope.displayList.push(item)
                 })
+                
+               // })
 
 
+                //render the resource
                 var resource = {resourceType:resourceType}
                 addChildren(resource,hashBranch['#']);
                 $scope.itemResourceJson = resource;
                 
                 function addChildren(obj,node) {
-
+                    console.log('invoking function',node.branch.text, obj,node)
                     if (node.branch && node.branch.data && node.branch.data.path) {
                         //if (node.branch && node.branch.data && node.branch.data.path && node.branch.data.structuredData) {
                         var ar = node.branch.data.path.split('.')
@@ -94,8 +108,8 @@ angular.module("sampleApp")
                     }
 
                     if (node.children.length > 0) {
-                        node.children.forEach(function (child) {
-
+                        node.children.forEach(function (child,inx) {
+                            console.log('processing child#' + inx,child)
                             var ar = child.branch.data.path.split('.')
                             var eleName = ar[ar.length-1]; //child.branch.data.path;
 
@@ -128,28 +142,17 @@ angular.module("sampleApp")
 
                                     if (child.children.length > 0) {
                                         child.children.forEach(function (newChild,inx) {
-                                           // var ar = obj[eleName]
-                                          //  var newObj = ar[inx]
-
-                                            //console.log('53',structuredData,newChild)
                                             addChildren(structuredData,newChild)
 
                                         })
                                     }
 
                                 } else {
-                                    //console.log('60',obj,eleName)
                                     obj[eleName] = structuredData;
                                     //addChildren(structuredData,newChild)
                                 }
 
                             }
-
-
-
-
-
-
 
 
                         })
