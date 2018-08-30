@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resource test</title>
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+    <script src="js/libs/moment.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+    <script src="js/libs/ngStorage.min.js"></script>
+    <script>
+        angular.module("sampleApp",['ui.bootstrap','ngSanitize','ngStorage'])
+        angular.module("sampleApp").constant("moment", moment);
+
+
+
+
+    </script>
+
+    <script src="js/ecosystemSvc.js"></script>
+    <script src="js/modalDialogSvc.js"></script>
+    <script src="js/ecoUtilitiesSvc.js"></script>
+    <script src="js/cofSvc.js"></script>
+    <script src="js/jsonTestNew.js"></script>
+
+</head>
+<body style="padding: 8px;padding-top: 80px" >
+
+<nav class="navbar navbar-default navbar-fixed-top" ng-style="navBarStyle" role="navigation">
+
+    <div class="container-fluid row">
+        <div class="col-md-7 col-sm-7">
+            <a class="navbar-brand" href="#">
+                Json resource test
+            </a>
+        </div>
+
+    </div>
+</nav>
+
+<div ng-app="sampleApp" ng-controller="jsonTestCtrl" class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-2 col-md-2">
+            <ul class="list-group">
+                <li style="cursor: pointer" ng-click = 'showGraph(grph)'
+                    ng-class="{'list-group-item': true,active:graph.id == grph.id}"
+                    ng-repeat="grph in graphs">
+                    {{grph.user.name}}
+                    <div><em>{{grph.scenario.name}}</em></div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-sm-2 col-md-2">
+            <ul class="list-group">
+                <li style="cursor: pointer" ng-click = 'showItem(item)'
+                    ng-class="{'list-group-item':true,active:currentItem.id == item.id}"
+                    ng-repeat="item in graph.items">
+                    {{item.description}}
+                    <div><em>{{item.baseType}}</em></div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-sm-5 col-md-5">
+            <div>
+                <button class="btn btn-link" ng-click="input.showAll = !input.showAll">Toggle show all</button>
+            </div>
+            <table class="table table-bordered">
+                <tr ng-repeat="row in currentItem.table" ng-show="row.structuredData || input.showAll">
+                    <td>{{row.path}}</td>
+                    <td>{{row.structuredData}}
+                    <td>{{row.max}}</td>
+                </tr>
+            </table>
+
+
+        </div>
+
+        <div class="col-sm-3 col-md-3">
+            <pre>{{ itemResourceJson| json}}</pre>
+
+            <p>{{error.message | json}}</p>
+
+            <div ng-repeat="line in error.arTrace">{{line}}</div>
+        </div>
+    </div>
+
+</div>
+
+<script src="js/libs/angular-sanitize.js"></script>
+
+
+<script src="js/libs/showdown.min.js"></script>
+
+
+<script src="js/filters.js"></script>
+
+</body>
+</html>
