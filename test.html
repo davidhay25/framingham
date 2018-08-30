@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <base href="/" />
+    <meta charset="UTF-8">
+    <script src="js/libs/jquery-1.9.0.min.js"></script>
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/vis.min.css"/>
+
+    <script src="js/libs/moment.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+
+    <script src="js/libs/angular-sanitize.js"></script>
+    <script src="js/libs/ngStorage.min.js"></script>
+
+    <script>
+        angular.module("testApp",['ui.bootstrap','ngStorage']).config(function($locationProvider) {
+
+            // enable html5Mode for pushstate ('#'-less URLs)  -- ,'ngStorage'
+            $locationProvider.html5Mode(true);
+            $locationProvider.hashPrefix('!');
+        });
+        angular.module("testApp").constant("moment", moment);
+
+        angular.module("testApp")
+            .controller('testCtrl',
+                function ($scope,$q,$http) {
+
+                    //var url = "http://snapp.clinfhir.com:8081/baseDstu3/Patient/cf-1494177505991";
+                    var url = "http://snapp.clinfhir.com:8081/baseDstu3/Patient?name=hay";
+
+                    //https://hackernoon.com/6-reasons-why-javascripts-async-await-blows-promises-away-tutorial-c7ec10518dd9
+
+                    const makeRequest = async () => {
+                        const data = await $http.get(url);
+                        console.log(data.data)
+                        $scope.patient = data.data;
+
+                        var url1 = "http://snapp.clinfhir.com:8081/baseDstu3/Condition?subject="+$scope.patient.entry[0].resource.id;
+
+                        const data1 = await $http.get(url1);
+                        console.log(data1.data)
+                        $scope.conditions = data1.data
+                        console.log($scope.conditions)
+
+                        //return "done"
+                        $scope.$digest()
+                    };
+
+                    $scope.testAwait = function(){
+
+                        makeRequest()
+                        console.log('after call')
+
+
+                    }
+
+
+
+
+                })
+
+    </script>
+
+    <title>Testing page</title>
+
+</head>
+
+
+<body style="padding-top: 80px">
+
+<div ng-app="testApp" ng-controller="testCtrl" class="container-fluid">
+
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+        <div class="container-fluid">
+            <div class="col-md-3 col-sm-3">
+                <span class="navbar-brand" href="#">
+                    Testing page
+                </span>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+
+            </div>
+
+
+
+        </div>
+    </nav>
+
+
+    <button class="btn btn-primary" ng-click="testAwait()">Test</button>
+
+    <div class="row">
+        <div class="col-sm-6 col-md-6">
+            <pre>{{patient | json}}</pre>
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <pre>{{conditions | json}}</pre>
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+</body>
+</html>
