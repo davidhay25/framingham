@@ -5,13 +5,35 @@ angular.module("sampleApp")
 
             $scope.input = {};
             var hashPersons = {}
-            var hashScenario = {}
+            var hashScenario = {};
+
+            $scope.validate = function(){
+                delete $scope.success;
+                delete $scope.error;
+                var json = $scope.itemResourceJson;
+                //temp: to fix narrative generation
+                if (json.text) {
+                    json.text.div = "<div xmlns='http://www.w3.org/1999/xhtml'>"+ json.text.div + "</div>"
+                }
+
+                var url = "http://fhirtest.uhn.ca/baseDstu3/"+$scope.itemResourceJson.resourceType + "/$validate";
+                var options = {headers:{'content-type':'application/json+fhir'}}
+                $http.post(url,json).then(
+                    function(data) {
+                        console.log(data.data)
+                        $scope.success = data.data;
+                    },function(err) {
+                        console.log (err.data)
+                        $scope.error = err.data;
+                    }
+                )
+            };
 
 
 
             var makeResource = function(inTree,resourceType) {
                 var hashBranch = {};    //will be a hierarchical tree
-                hashBranch['#'] = {id:'#',branch:{},children:[]};
+                hashBranch['#'] = {id:'#',branch:{data:{}},children:[]};
 
                 //work on a copy as the tree is mutated...
                 var tree = angular.copy(inTree);
@@ -23,7 +45,7 @@ angular.module("sampleApp")
                 var cnt = 0;        //a safety mechanism to avoid getting locked in a loop
                 while (cleaning) {
                     var hashBranch = {};    //will be a hierarchical tree
-                    hashBranch['#'] = {id:'#',branch:{},children:[]};
+                    hashBranch['#'] = {id:'#',branch:{data:{}},children:[]};
 
                     cleaning = false;
                     cnt++;
@@ -89,15 +111,48 @@ angular.module("sampleApp")
                     $scope.displayList.push(item)
                 })
                 
-               // })
+
 
 
                 //render the resource
                 var resource = {resourceType:resourceType}
                 addChildren(resource,hashBranch['#']);
+
                 $scope.itemResourceJson = resource;
-                
+
+
                 function addChildren(obj,node) {
+
+                    console.log('invoking function',node.branch.text, obj,node)
+
+                    var structuredData = angular.copy(node.branch.data.structuredData) || {}
+                    topEleName = node.branch.text
+                    console.log(obj,topEleName)
+                    //If there is no "node.branch.text", then this is the first invokation - the resource root.
+                    //set the "structuredData" object to the root, so that subsequent children are added to it directly...
+                    if (topEleName) {
+                        if (node.branch.data.isMultiple) {
+                            obj[topEleName] = obj[topEleName] || []
+                            obj[topEleName].push(structuredData)
+
+                        } else {
+                            obj[topEleName] = structuredData;
+                            //addChildren(structuredData,newChild)
+                        }
+                    } else {
+                        structuredData = obj
+                    }
+                    if (node.children.length > 0) {
+                        node.children.forEach(function (child,inx) {
+                            console.log('processing child#' + inx,child)
+                            addChildren(structuredData,child)
+
+                        })
+                    }
+                }
+
+
+                function addChildrenDEP(obj,node) {
                     console.log('invoking function',node.branch.text, obj,node)
                     if (node.branch && node.branch.data && node.branch.data.path) {
                         //if (node.branch && node.branch.data && node.branch.data.path && node.branch.data.structuredData) {
@@ -166,7 +221,8 @@ angular.module("sampleApp")
             $scope.showItem = function(item) {
                 console.log(item)
                 delete $scope.itemResourceJson;
-                delete $scope.error
+                delete $scope.success;
+                delete $scope.error;
                 $scope.currentItem = item;
 
 

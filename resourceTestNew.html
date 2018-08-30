@@ -65,7 +65,7 @@
             </ul>
         </div>
 
-        <div class="col-sm-5 col-md-5">
+        <div class="col-sm-4 col-md-4">
             <div>
                 <button class="btn btn-link" ng-click="input.showAll = !input.showAll">Toggle show all</button>
             </div>
@@ -81,8 +81,24 @@
 
         </div>
 
-        <div class="col-sm-3 col-md-3">
-            <pre>{{ itemResourceJson| json}}</pre>
+        <div class="col-sm-4 col-md-4">
+            <div>
+                <button class="btn btn-link pull-right" ng-click="validate()">Validate</button>
+            </div>
+            <div class="clearfix"></div>
+
+            <div ng-show="error" class="alert alert-danger">
+                <pre>{{error | json}}</pre>
+            </div>
+            <div ng-show="success" class="alert alert-success">
+                <pre>{{success | json}}</pre>
+            </div>
+
+
+            <div>
+                <pre>{{ itemResourceJson| json}}</pre>
+
+            </div>
 
             <p>{{error.message | json}}</p>
 

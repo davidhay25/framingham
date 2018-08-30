@@ -184,10 +184,10 @@ angular.module("sampleApp")
                     }, function (err) {
                         deferred.reject(err)
                     }
-                )
+                );
                 return deferred.promise;
 
-            }
+            };
             //split the part array into an object...
             var condensePart = function(part) {
                 var obj = {};
@@ -202,7 +202,7 @@ angular.module("sampleApp")
 
             $scope.ccSelectedFromList = function(concept) {
                 console.log(concept)
-                $scope.selectedConceptValue = {value:{Coding:[concept]},text:concept.display}
+                $scope.selectedConceptValue = {value:{coding:[concept]},text:concept.display}
             };
 
 
