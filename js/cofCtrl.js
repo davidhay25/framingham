@@ -851,6 +851,11 @@ angular.module("sampleApp")
                         }
                     })
 
+
+                    $scope.resourceTree = $('#lmTreeView').jstree(true).get_json('#', {flat:false})
+
+console.log($scope.resourceTree)
+
                 }
 
             }

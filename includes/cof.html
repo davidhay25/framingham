@@ -302,6 +302,9 @@
                             <uib-tabset>
                                 <uib-tab heading = 'Data'>
                                     <pre ng-show="selectedTreeNode">{{selectedTreeNode.data.structuredData | json}}</pre>
+
+                                    <pre>{{resourceTree | json}}</pre>
+
                                 </uib-tab>
                                 <uib-tab heading = 'Json'>
                                     <pre ng-show="selectedTreeNode">{{selectedTreeNode.data | json}}</pre>
