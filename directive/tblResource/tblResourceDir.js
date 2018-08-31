@@ -10,19 +10,37 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             fnshownotes : '&',
             showvsviewerdialog : '=',
             resourceJson : '&',
-            updated : '&'
+            updated : '&',
+            control : '='
         },
         templateUrl: '../directive/tblResource/tblResourceDir.html',
 
         link : function ($scope, element, attrs) {
 
+            //https://stackoverflow.com/questions/16881478/how-to-call-a-method-defined-in-an-angularjs-directive
+            $scope.internalControl = $scope.control || {};
+            $scope.internalControl.addSample=function(id,dt) {
+                //when the addSample is invoked from outside the directive
+
+                //find the row...
+                for (var i=0; i < $scope.input.table.length; i++) {
+                    var row = $scope.input.table[i]
+                    if (row.id == id) {
+                        $scope.editSample(row,dt);
+                        break;
+                    }
+                }
+
+
+
+                //
+                alert(id)
+            };
+
             $scope.fhirBasePath = "http://hl7.org/fhir/";       //root of the spec.
 
             $scope.internalControl = $scope.trigger || {};
             $scope.showOnlyPopulated = false;       //true if only elements with data are being displayed...
-
-
-
 
 
             //this function is called to display a specific resource;

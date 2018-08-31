@@ -13,6 +13,13 @@ angular.module("sampleApp")
             var allScenarios = {};
 
 
+            //the variable to access methods in the directive...
+            $scope.formControl = {};
+
+            $scope.addSample = function(id,dt){
+                $scope.formControl.addSample(id,dt);
+            };
+
             //save the resources to the data server. This can only be called when a data server is defined in the track
             $scope.saveToFHIRServer = function(cofTypeList){
 

@@ -146,6 +146,11 @@
     </div>
     <hr/>
 
+
+
+
+<button ng-click="test()">Test</button>
+
     <div class="row">
         <div ng-class="leftPane">
             <uib-tabset>
@@ -292,7 +297,10 @@
                     <tbl-resource trigger="showResourceTable" reference="cofAddReference"
                                   resource-json="fnResourceJson"
                                   updated="formWasUpdated"
-                                  fnshownotes="setShowNotes"></tbl-resource>
+                                  control="formControl"
+                                  fnshownotes="setShowNotes">
+
+                    </tbl-resource>
                 </uib-tab>
 
                 <!-- Think about designer use... -->
@@ -317,7 +325,36 @@
                                 <uib-tab heading = 'Data'>
                                     <pre ng-show="selectedTreeNode">{{selectedTreeNode.data.structuredData | json}}</pre>
 
-                                    <pre>{{resourceTree | json}}</pre>
+
+
+
+                                    <div ng-show="selectedTreeNode">
+                                        <br/>
+                                        <strong>Edit options</strong>
+                                        <div ng-repeat="type in selectedTreeNode.data.ed.type">
+                                            <div ng-hide="type.code == 'Reference'">
+                                                <div class="btn btn-link"
+                                                     ng-click="addSample(selectedTreeNode.data.id,type.code)">
+                                                    {{type.code}}
+                                                </div>
+
+
+                                            </div>
+
+                                            <span ng-show="type.code == 'Reference'">
+                                            --> <span class="clickable" ng-click="addReference(row,type,sectionIndex)">
+                                            {{type.targetProfile | referenceType}}</span>
+
+                                            <a class="pull-right" target="_blank" ng-href="{{fhirBasePath}}{{type.targetProfile | referenceType | lowercase}}.html">
+                                                <i class="clickable glyphicon glyphicon-question-sign">
+                                                </i>
+                                            </a>
+
+                                        </span>
+                                        </div>
+                                    </div>
+
+
 
 
 
