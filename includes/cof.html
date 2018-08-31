@@ -35,6 +35,18 @@
         <div class="col-sm-3 col-md-3">
             <div><strong>Scenario description</strong></div>
 
+
+
+
+
+            <div>
+                <i class="clickable glyphicon glyphicon-eye-open pull-right"
+                 title="Edit scenario" ng-click="editScenario(cofScenario,true)">
+                 </i>
+             </div>
+
+
+
             <div class="scrollScenarioDescription">
                 <p ng-bind-html="cofScenario.description | markDown"></p>
             </div>

@@ -306,7 +306,7 @@ angular.module("sampleApp")
                 });
             };
 
-            $scope.editScenario = function(scenario) {
+            $scope.editScenario = function(scenario,readOnly) {
                 $uibModal.open({
                     templateUrl: 'modalTemplates/editScenario.html',
                     size : 'lg',
@@ -322,6 +322,8 @@ angular.module("sampleApp")
                             return false
                         }, track : function(){
                             return $scope.selectedTrack
+                        }, readOnly : function(){
+                            return readOnly
                         }
                     }
                 }).result.then(function(editedScenario){

@@ -1,6 +1,6 @@
 angular.module("sampleApp")
     .controller('editScenarioCtrl',
-        function ($scope,ecosystemSvc,scenario,modalService,allResourceTypes,library,$uibModal,isNew,track) {
+        function ($scope,ecosystemSvc,scenario,modalService,allResourceTypes,library,$uibModal,isNew,track,readOnly) {
 
 
             $scope.saveText = 'Update';
@@ -12,6 +12,8 @@ angular.module("sampleApp")
             $scope.library = library;
             $scope.input = {roles:{}};
             $scope.track = track;
+
+            $scope.readOnly = readOnly;
 
             $scope.input.roleType = 'client';       //when adding a new role
 

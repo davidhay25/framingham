@@ -17,8 +17,9 @@
 
             <div class="col-md-4 col-sm-4">
                 <div class="pull-right">
-                    <button class="btn btn-primary pull-right" ng-click="updateScenario()">{{saveText}}</button>
-                    <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
+                    <button ng-hide = "readOnly" class="btn btn-primary pull-right" ng-click="updateScenario()">{{saveText}}</button>
+                    <button ng-hide = "readOnly" class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
+                    <button ng-show = "readOnly"  class="btn btn-link pull-right" ng-click="$dismiss()">Close</button>
                 </div>
             </div>
         </div>
@@ -84,7 +85,7 @@
                             </li>
                         </ul>
 
-                        <div class="row">
+                        <div class="row" ng-hide="readOnly">
                             <div class="col-sm-10 col-md-10">
                             </div>
                             <div class="col-sm-2 col-md-2">
@@ -137,7 +138,7 @@
                                             <div class="col-md-10 col-sm-10">
                                                 {{type}}
                                             </div>
-                                            <div class="col-md-2 col-sm-2">
+                                            <div class="col-md-2 col-sm-2" ng-hide="readOnly">
                                                 <i class="clickable glyphicon glyphicon-remove-sign pull-right"
                                                    uib-popover="Click to remove"
                                                    popover-placement="top"
@@ -149,14 +150,14 @@
 
                                     </li>
                                 </ul>
-                                <select ng-model="input.resource" class="form-control"
+                                <select ng-hide="readOnly" ng-model="input.resource" class="form-control"
                                         ng-change="addType(input.resource,$index)"
                                         ng-options = "type.name for type in allResourceTypes"></select>
                             </div>
                         </div>
 
 
-                        <div ng-show=" track.IG">
+                        <div ng-show="track.IG && ! readOnly">
 
                             <div class="row">
                                 <div class="col-sm-10 col-md-10">
@@ -262,7 +263,7 @@
                                     </li>
                                 </ul>
 
-                                <div class="row">
+                                <div class="row" ng-hide="readOnly">
                                     <div class="col-sm-10 col-md-10">
                                     </div>
                                     <div class="col-sm-2 col-md-2">
@@ -304,13 +305,16 @@
                             <li ng-repeat="step in scenario.steps">
 
                                     <div class="rounded-box">
-                                        <i class="clickable glyphicon glyphicon-remove-sign pull-right"
+                                        <i ng-hide="readOnly"
+                                           class="clickable glyphicon glyphicon-remove-sign pull-right"
                                            title="Edit scenario" ng-click="deleteStep($index)">
                                         </i>
-                                        <i class="glyphicon glyphicon-arrow-up clickable pull-right"
+                                        <i ng-hide="readOnly"
+                                           class="glyphicon glyphicon-arrow-up clickable pull-right"
                                            ng-hide = "$index == 0"
                                            ng-click="moveStepUp($index)"></i>
-                                        <i class="glyphicon glyphicon-arrow-down clickable pull-right"
+                                        <i ng-hide="readOnly"
+                                           class="glyphicon glyphicon-arrow-down clickable pull-right"
                                            ng-hide = "$index == (scenario.steps.length -1)"
                                            ng-click="moveStepDn($index)"></i>
 
@@ -324,7 +328,7 @@
                         </ol>
 
                         <hr/>
-                        <div class="row">
+                        <div class="row" ng-hide="readOnly">
                             <div class="col-md-1 col-sm-1">
                             </div>
                             <div class="col-md-10 col-sm-10">
@@ -410,10 +414,6 @@
 
                 </uib-tabset>
 
-
-
-
-
             </div>
         </div>
     </div>
@@ -432,7 +432,7 @@
                 </a>
                 <em>(Markdown is a way to format text with bullets, headings and test formatting by putting specific characters in the text)</em>
 
-                <div ng-show="! isNew">
+                <div ng-show="! isNew && ! readOnly">
                     <button class="btn btn-danger" ng-click="deleteScenario()">Delete</button>
                     <button style="padding-left: 10px" class="btn btn-warning" ng-click="archiveScenario()">Archive</button>
                 </div>

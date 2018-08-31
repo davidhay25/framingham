@@ -61,7 +61,7 @@
                         </ul>
                     </div>
 
-                    <p ng-bind-html="selectedGraph.scenarioNotes | markDown"></p>
+
                 </div>
 
                 <div class="col-sm-4 col-md-4">
@@ -70,11 +70,47 @@
                         <span style="padding: 8px" ng-show="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Show all</span>
                     </div>
                     <br/>
-
+                    <div class="clearfix"></div>
                     <div id="sumCofGraph"></div>
                 </div>
                 <div class="col-sm-6 col-md-6">
                     <uib-tabset>
+                        <uib-tab heading ='All Resources'>
+
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4"><strong>All notes</strong></div>
+                                <div class="col-sm-8 col-md-8"><p ng-bind-html="selectedGraph.scenarioNotes | markDown"></p></div>
+
+                            </div>
+
+
+
+
+
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4"><h4>Path</h4></div>
+                                <div class="col-sm-4 col-md-4">Sample</div>
+                                <div class="col-sm-4 col-md-4">Note</div>
+
+                            </div>
+
+                            <div ng-repeat="summary in allHashPathSummaries">
+                                <strong>{{summary.type}}</strong>
+                                <div class='row' ng-repeat="(k,v) in summary.summary">
+                                    <div class="col-md-4 col-sm-4">
+                                        {{v.path}}
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <div ng-repeat = "sample in v.sample track by $index">{{sample}}</div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <div ng-repeat = "note in v.notes track by $index">{{note}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </uib-tab>
+
+
                         <uib-tab heading ='Selected Resource'>
 
                             <uib-tabset>
@@ -150,29 +186,7 @@
 
 
                         </uib-tab>
-                        <uib-tab heading ='All Resources'>
-                            <div class="row">
-                                <div class="col-sm-4 col-md-4"><h4>Path</h4></div>
-                                <div class="col-sm-4 col-md-4">Sample</div>
-                                <div class="col-sm-4 col-md-4">Note</div>
 
-                            </div>
-
-                            <div ng-repeat="summary in allHashPathSummaries">
-                                <strong>{{summary.type}}</strong>
-                                <div class='row' ng-repeat="(k,v) in summary.summary">
-                                    <div class="col-md-4 col-sm-4">
-                                        {{v.path}}
-                                    </div>
-                                    <div class="col-md-4 col-sm-4">
-                                        <div ng-repeat = "sample in v.sample track by $index">{{sample}}</div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-4">
-                                        <div ng-repeat = "note in v.notes track by $index">{{note}}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </uib-tab>
 
                     </uib-tabset>
                 </div>
