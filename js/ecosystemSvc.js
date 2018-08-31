@@ -379,7 +379,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                 topEleName = node.branch.text
 
                 if (topEleName && topEleName.indexOf('[x]') > -1) {
-console.log('>>> ',node.branch.data)
+                    //console.log('>>> ',node.branch.data)
                     topEleName = topEleName.substr(0, topEleName.length - 3) + _capitalize(node.branch.data.sdDt);
                 }
 
@@ -409,7 +409,10 @@ console.log('>>> ',node.branch.data)
             }
 
             function _capitalize(str) {
-                return (str.charAt(0).toUpperCase() + str.slice(1));
+                if (str) {
+                    return (str.charAt(0).toUpperCase() + str.slice(1));
+                }
+
             }
 
         },
