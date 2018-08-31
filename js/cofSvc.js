@@ -793,6 +793,9 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
             var arTree = [];
             var pathHash = {};      //the most recent id for each hash
 
+            if (! table) {
+                return;
+            }
             //assume that the tree is in
 
             table.forEach(function (row) {

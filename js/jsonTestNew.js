@@ -107,7 +107,6 @@ angular.module("sampleApp")
 
                 console.log(hashBranch)
 
-
                 //create a display for the object passed to the rendering routine...
                 $scope.displayList =[]
                 angular.forEach(hashBranch,function(v,k){

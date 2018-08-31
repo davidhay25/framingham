@@ -163,7 +163,8 @@ angular.module("sampleApp")
                 delete $scope.itemResourceJson;
                 $scope.item = item;     //the item (containing the resourcce)
 
-                var treeData = cofSvc.makeTree($scope.input.table);
+
+                var treeData = cofSvc.makeTree(item.table);
                 var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);
                 if (vo && vo.resource) {
                     $scope.itemResourceJson = vo.resource;
