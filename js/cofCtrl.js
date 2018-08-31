@@ -34,6 +34,7 @@ angular.module("sampleApp")
                                alert('Resources saved.')
                            },
                            function (err) {
+                               alert(angular.toJson(err))
                                console.log(err)
                            }
                        )
@@ -44,24 +45,45 @@ angular.module("sampleApp")
 
             };
 
-            $scope.clearValidationResult = function(){
+
+            $scope.showOOSummary = function(oo) {
+                var display = ""
+                display = "<strong>Validation Results</strong>"
+                if (oo.issue) {
+                    display += '<ul>';
+                    oo.issue.forEach(function (iss) {
+
+                        display += "<li><strong>"+ iss.severity + ":</strong> "+  iss.diagnostics + '</li>'
+                    })
+                    display += '</ul>';
+                }
+
+
+
+                return display
+
+
+            }
+            $scope.clearValidationResultDEP = function(){
                 clearValidation()
             };
 
             //validate all the resource instances - update the server model
             $scope.validateAll = function(lstItem){
 
+                //reset all the validation results...
                 lstItem.forEach(function (item) {
                     item.validation={isValid:'unknown'}
                 });
                 var arQuery = [];
 
                 lstItem.forEach(function (item) {
-                    //console.log(item)
 
-                    var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,item.table);
+                    var treeData = cofSvc.makeTree(item.table);
+                    var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);
+
                     //console.log(vo.resource)
-                    if (vo) {
+                    if (vo && vo.resource) {
                         var dateValidated = new Date()
 
                         arQuery.push (cofSvc.validateResource(vo.resource,$scope.selectedTrack).then(
@@ -70,9 +92,7 @@ angular.module("sampleApp")
                                 console.log('valid')
                             },
                             function(err) {
-
                                 item.validation={isValid:'no',oo:err,date:dateValidated}
-                                console.log('invalid')
                             }
                         ))
                     } else {
@@ -80,7 +100,7 @@ angular.module("sampleApp")
                     }
 
 
-                })
+                });
 
 
                 $q.all(arQuery).then(function(data){
@@ -100,23 +120,15 @@ angular.module("sampleApp")
                     return;
                 }
 
-
-                clearValidation();
+                //clearValidation();
                 var dateValidated = new Date();
                 cofSvc.validateResource(resource,$scope.selectedTrack).then(
                     function(data) {
-                       // $scope.validationResult = data;
-                       // $scope.validationSuccess = true;
-
                         $scope.currentItem.validation={isValid:'yes',oo:data,date:dateValidated}
                         console.log(data)
                     },
                     function(err) {
-                     //   $scope.validationResult = err;
-                     //   $scope.validationSuccess = false;
                         $scope.currentItem.validation={isValid:'no',oo:err,date:dateValidated}
-
-                        console.log(err)
                     }
                 ).finally(
                     function(){
@@ -126,7 +138,7 @@ angular.module("sampleApp")
 
             }
 
-            function clearValidation() {
+            function clearValidationDEP() {
                 delete $scope.validationResult;
                 delete $scope.validationSuccess;
             }
@@ -270,9 +282,6 @@ angular.module("sampleApp")
 
                                 }
                             )
-
-
-
                         }
                     )
                 }
@@ -323,7 +332,7 @@ angular.module("sampleApp")
                 makeGraph();
 
 
-            }
+            };
 
 
             $scope.fhirBasePath = "http://hl7.org/fhir/";       //root of the spec.
@@ -397,8 +406,11 @@ angular.module("sampleApp")
             //called when the form is updated
             $scope.formWasUpdated = function(table) {
 
+                /* don't delete yet - not sure if we want the text to be automatically updated
+                console.log($scope.currentItem);
 
                 if ($scope.currentItem.narrativeStatus == 'generated') {
+
                     var vo = ecosystemSvc.makeResourceJson($scope.currentItem.baseType,$scope.currentItem.id,$scope.currentItem.table);
                     if (vo && vo.resource) {
 
@@ -406,11 +418,19 @@ angular.module("sampleApp")
                         console.log(text);
                         if (text) {
                             $scope.currentItem.sample['text'] = text;
+
+
+                            //$scope.currentItem.table['text']
+                            //structuredData
+
                         }
 
                     }
 
                 }
+
+                */
+
                 $scope.saveGraph(true);     //save the graph without showing
                 if (table) {
                     drawTree(table)
@@ -428,11 +448,39 @@ angular.module("sampleApp")
                     templateUrl: 'modalTemplates/selectCoreType.html',
                     size : 'lg',
                     controller: function($scope,lst) {
-                        $scope.lst = lst;//[];
+                        var fullList = angular.copy(lst)
+
+                        $scope.lst = angular.copy(fullList);//[];
+
+                        $scope.input = {};
+                        $scope.setFilter = function(filter) {
+                            if (filter !== "") {
+                                filter = filter.toLowerCase()
+
+                                $scope.lst.length = 0;
+                                fullList.forEach(function (item) {
+                                    var name = item.name.toLowerCase();
+                                    if (name.indexOf(filter) > -1) {
+                                        $scope.lst.push(item)
+                                    }
+                                })
+                            } else {
+                                $scope.lst.length = 0;
+                                fullList.forEach(function (item) {
+
+                                    $scope.lst.push(item)
+                                })
+
+                            }
+
+                        };
 
                         $scope.select=function(item){
                             $scope.$close(item)
                         }
+
+
+
 
                     },
                     resolve : {
@@ -774,7 +822,7 @@ angular.module("sampleApp")
 
             //select an item from the list of items (resource instances already addre). The SD may have been loaded for this type (async) into profilesCache
             $scope.selectItem = function(item) {
-                clearValidation();
+               // clearValidation();
                 $scope.currentItem = item;
 
                 var type = item.type;

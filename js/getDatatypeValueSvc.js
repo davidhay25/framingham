@@ -27,7 +27,14 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
                         break;
 
                     case 'Narrative' :
-                        v = {div:value.narrative.div,status:'additional'};
+
+                        var narrativeText = value.narrative.div;
+                        narrativeText = "<div xmlns='http://www.w3.org/1999/xhtml'>"+ narrativeText + "</div>"
+                        v = {div:narrativeText,status:'additional'};
+
+console.log(v);
+
+
                         text = value.narrative.div;
                         break;
                     case 'instant' :

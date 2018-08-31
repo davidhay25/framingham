@@ -222,19 +222,22 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
         sendToFHIRServer : function(lst,track) {
             var deferred = $q.defer();
             var transBundle = {resourceType:'Bundle',type:'transaction',entry:[]}
+            var that = this;
 
             lst.forEach(function(item) {
-                var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,item.table);  //create the json for a single entry
-                //console.log(vo.resource)
-                if (vo) {
-                    var transEntry = {resource:vo.resource};
-                    transEntry.request = {method:'PUT',url:vo.resource.resourceType+'/'+vo.resource.id}
-                    transBundle.entry.push(transEntry)
-                } else {
-                    console.log("Can't get Json for "+item.id)
+                console.log(item)
+                if (item.table) {
+                    var treeData = that.makeTree(item.table);
+                    var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);  //create the json for a single entry
+                    //console.log(vo.resource)
+                    if (vo && vo.resource) {
+                        var transEntry = {resource:vo.resource};
+                        transEntry.request = {method:'PUT',url:vo.resource.resourceType+'/'+vo.resource.id}
+                        transBundle.entry.push(transEntry)
+                    } else {
+                        console.log("Can't get Json for "+item.id + '. Not added to bundle')
+                    }
                 }
-
-
 
             });
 
@@ -342,15 +345,37 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
         validateResource: function(resource,track) {
             var deferred = $q.defer();
 
-            if (!track.dataServer || !resource || ! resource.resourceType) {
+            if (!track.confServer || !resource || ! resource.resourceType) {
                 deferred.reject({msg:'Validation needs the dataServer configured in the track and a minimal resource'})
             }
 
 
-            var url = track.dataServer + resource.resourceType + '/$validate'
+            var url = track.confServer + resource.resourceType + '/$validate'
             $http.post(url,resource).then(
                 function(data){
-                    deferred.resolve(data.data)
+                    //see if there are any 'error' issues - if so, then reject...
+                    var valid = true;
+                    var oo = data.data; //returns an OperationOutcome
+
+
+                    if (oo.issue) {
+                        oo.issue.forEach(function (iss) {
+                            if (iss.severity == 'error' || iss.severity == 'fatal') {
+                                valid = false;
+                            }
+
+                        })
+                    }
+
+                    if (valid) {
+                        deferred.resolve(oo)
+                    } else {
+                        deferred.reject(oo)
+                    }
+
+
+
+
                 },
                 function(err) {
                     console.log(err)

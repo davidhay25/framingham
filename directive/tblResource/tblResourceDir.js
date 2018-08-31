@@ -1,6 +1,6 @@
 //directile to render a UI for a profile.
 //adapted from clinfhir resourcebuilder
-angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal, ecosystemSvc ) {
+angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal, ecosystemSvc, cofSvc ) {
     return {
         restrict: 'E',
         scope: {
@@ -124,13 +124,14 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     if (target) {
                         row.structuredData = {reference: target.type + "/"+ target.id};     //needed for building the resource
                         row.structuredData.display = target.description;
-                        checkParentHasStructuredData(row,inx)
+                        row.sdDt = 'Reference';
+                        //checkParentHasStructuredData(row,inx)
                         makeJson();
                     }
                 });
             };
 
-            //if referenceOnly is true, show only references - and pareents of references
+            //if referenceOnly is true, show only references - and parents of references
             $scope.onlyRefsShown = false
             $scope.toggleReferences = function() {
                 var parents = {}
@@ -178,8 +179,6 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             $scope.radio = {};
 
             $scope.editSample = function(row,dt,inx) {
-
-
                 var datatype = row.type[0].code;
 
                 if (row.type.length > 1) {
@@ -218,14 +217,27 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         'item' : function() {
                             return $scope.input;
                         }
-
                     }}
                 ).result.then(function(vo) {
                     $scope.input.sample[row.id] = vo.text;
-                    row.structuredData = vo.value;
-                    row.sdDt = dt;      //the selected datatype
 
-                    checkParentHasStructuredData(row,inx); //if not off the root, walk back up the list of elements to make sure that the parent has a structuredData element. The Json build needs this...
+                    console.log(row)
+                    if (dt == 'Narrative') {
+                        row.structuredData = vo.value;
+                    } else {
+                        row.structuredData = vo.value;
+                    }
+
+
+
+                    row.sdDt = dt;      //the selected datatype
+                    delete row.validation;      //will need to be re-validated...
+
+
+
+
+
+                    //checkParentHasStructuredData(row,inx); //if not off the root, walk back up the list of elements to make sure that the parent has a structuredData element. The Json build needs this...
                     makeJson ();
 
                     $scope.updated()($scope.input.table);          //send the updated table to the host...
@@ -233,7 +245,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 })
             };
 
-            function checkParentHasStructuredData(row,inxDEP){
+            function checkParentHasStructuredDataDEP(row,inxDEP){
 
                 return;     //disable for the moment
                 //if not off the root, walk back up the list of elements to make sure that the parent has a structuredData element. The Json build needs this...
@@ -670,8 +682,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
 
             function makeJson() {
-
-                var vo = ecosystemSvc.makeResourceJson($scope.input.baseType, $scope.input.id,$scope.input.table);
+                var treeData = cofSvc.makeTree($scope.input.table);
+                var vo = ecosystemSvc.makeResourceJson($scope.input.baseType, $scope.input.id,treeData);
                 if (vo) {
                     $scope.resourceJson()({resource: vo.resource, raw: vo.data});
                     return vo.resource;

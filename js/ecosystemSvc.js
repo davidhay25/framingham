@@ -1,4 +1,5 @@
-angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalService,$localStorage,ecoUtilitiesSvc,$filter,moment) {
+angular.module("sampleApp").service('ecosystemSvc',
+    function($q,$http,modalService,$localStorage,ecoUtilitiesSvc,$filter,moment) {
 
     var serverIP = "http://localhost:8080/baseDstu3/";    //hard code to local server for now...
     var addExtension =  function(resource,url,value) {
@@ -232,6 +233,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
         },
 
         makeDocumentBundle : function(document) {
+            //alert('need to fix resource creation' - circular dependencies error...)
+            return;
             //construct a document bundle
             var clinFHIRRoot = 'http://clinfhir.com/fhir/';
             var that = this;
@@ -251,7 +254,8 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
             function getEntry(item){
                 if (item) {
-                    var vo = that.makeResourceJson(item.baseType,item.id,item.table);
+                    var treeData = cofSvc.makeTree($scope.input.table);
+                    var vo = that.makeResourceJson(item.baseType,item.id,treeData);
                     if (vo) {
                         var url = "http://clinfhir.com/fhir/"+item.baseType + "/"+item.id;
                         var entry = {fullUrl:url};
@@ -265,79 +269,283 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
             }
         },
 
+        makeResourceJson : function (resourceType,id,inTree) {
+            //note: calling returns must call var treeData = cofSvc.makeTree($scope.input.table); first!!
 
-        makeResourceJson : function (type,id,table) {
-            var resource = {resourceType: type, id: id};
-            var currentParent = resource;   //where the new item will be attached
-            //var current
-            if (! table) {
-                return {}
+            if (!inTree) {
+                return {};
             }
 
-            return {}
+            var showLog = false;        //for debugging...
 
-            var insertPoint = resource;     //where to insert a new element
+            var hashBranch = {};    //will be a hierarchical tree
 
-            var data = []
-            var potentialL2Parent;      //
-            table.forEach(function (row, index) {
-                var structuredData = row.structuredData;
-                if (structuredData) {
-                    data.push(row);
+            //work on a copy as the tree is mutated...
+            var tree = angular.copy(inTree);
 
-                    var newPath = row.path;     //the path where this item sits
-                    var ar = newPath.split('.');
+            //run through a pattern of creating a hierarchy, then removing all empty leaf nodes.
+            //need to complete until all leaf nodes are removed (can take multiple iterations
+            var cleaning = true;
+            var cnt = 0;        //a safety mechanism to avoid getting locked in a loop
+            while (cleaning) {
+                hashBranch = {};    //will be a hierarchical tree
+                hashBranch['#'] = {id:'#',branch:{data:{}},children:[]};
 
+                cleaning = false;
+                cnt++;
 
-                    switch (ar.length) {
-                        case 2 :
-                            //get the last
-                            var eleName = ar[1];
-                            if (eleName.indexOf('[x]') > -1) {
-                                eleName = eleName.substr(0, eleName.length - 3) + _capitalize(row.sdDt);
-                            }
-                            potentialL2Parent[eleName] = structuredData;
-
-
-                            break;
-                        case 1 :
-                            //this is off the root - easy!
-
-                            var eleName = ar[0];
-                            if (eleName.indexOf('[x]') > -1) {
-                                eleName = eleName.substr(0, eleName.length - 3) + _capitalize(row.sdDt);
-                            }
-
-                            potentialL2Parent = structuredData;//angular.copy(structuredData)
-
-                            if (row.max == '1') {
-                                //this is a single value
-                                insertPoint[eleName] = potentialL2Parent
-                            } else {
-                                //this is a multiple element
-                                insertPoint[eleName] = insertPoint[eleName] || []
-                                insertPoint[eleName].push(potentialL2Parent)
-                            }
-
-                            //potentialL2Parent = structuredData;
-
-                        break;
-
-
-
+                //build a version of the hierarchy...
+                tree.forEach(function (branch) {
+                    var branchEntry= {id:branch.id,branch:branch,children:[]};
+                    hashBranch[branch.id] = branchEntry;
+                    if (branch.parent) {
+                        var parent = hashBranch[branch.parent];
+                        parent.children.push(branchEntry)
                     }
+                });
 
+                //now create a hash of all empty leaf nodes...
+                var idsToDelete = {}
+                angular.forEach(hashBranch,function(v,k){
+
+                    //todo text node doesn't have data for some reason....
+                    v.branch.data = v.branch.data || {};
+                    if (v.children.length == 0 && ! v.branch.data.structuredData) {
+                        if (k !== '#') {
+                            idsToDelete[k] = true;
+                            cleaning = true;    //if any are found, then re-set the flag so there will be another iteration
+                        }
+                    }
+                });
+
+                //if there were any leaf nodes found, build a new table with non-empty nodes
+                if (cleaning) {
+                    var newTree = [];
+                    tree.forEach(function (branch) {
+                        if (! idsToDelete[branch.id]) {
+                            newTree.push(branch)
+                        }
+                    });
+                    tree = newTree;
+                }
+
+                //the safety...
+                if (cnt > 10) {
+                    cleaning = false;
+                    console.log('forced quit...')
+                }
+            }
+
+
+            if (showLog) {console.log(hashBranch)}
+
+            var displayList =[];
+
+            /* Don't delete for the moment - may be useful in debugging...
+
+            //create a display for the object passed to the rendering routine...
+
+            angular.forEach(hashBranch,function(v,k){
+                var item = {id:v.id,path:v.branch.text,children:[]}
+                v.children.forEach(function(child){
+
+                    var o = hashBranch[child.id]
+
+                    item.children.push({id:child.id,path:o.branch.text})
+
+
+                })
+                displayList.push(item)
+            })
+
+*/
+
+
+            //render the resource
+            var resource = {resourceType:resourceType}
+            if (id) {
+                resource.id = id;
+            }
+            addChildren(resource,hashBranch['#']);
+
+            return {resource: resource,displayList:displayList};
+
+
+            function addChildren(obj,node) {
+
+                if (showLog) {console.log('invoking function',node.branch.text, obj,node)}
+
+                var structuredData = angular.copy(node.branch.data.structuredData) || {}
+                topEleName = node.branch.text
+
+                if (topEleName && topEleName.indexOf('[x]') > -1) {
+console.log('>>> ',node.branch.data)
+                    topEleName = topEleName.substr(0, topEleName.length - 3) + _capitalize(node.branch.data.sdDt);
                 }
 
 
-            })
+                if (showLog) {console.log(obj,topEleName)};
+                //If there is no "node.branch.text", then this is the first invokation - the resource root.
+                //set the "structuredData" object to the root, so that subsequent children are added to it directly...
+                if (topEleName) {
+                    if (node.branch.data.isMultiple) {
+                        obj[topEleName] = obj[topEleName] || []
+                        obj[topEleName].push(structuredData)
 
+                    } else {
+                        obj[topEleName] = structuredData;
+                        //addChildren(structuredData,newChild)
+                    }
+                } else {
+                    structuredData = obj
+                }
+                if (node.children.length > 0) {
+                    node.children.forEach(function (child,inx) {
+                        if (showLog) {console.log('processing child#' + inx,child)};
+                        addChildren(structuredData,child)
 
-            return {resource : resource}
+                    })
+                }
+            }
 
             function _capitalize(str) {
                 return (str.charAt(0).toUpperCase() + str.slice(1));
             }
+
+        },
+
+
+
+        makeResourceJsonV2 : function (resourceType,id,inTree) {
+            var showLog = true;        //for debugging...
+
+            var hashBranch = {};    //will be a hierarchical tree
+            hashBranch['#'] = {id:'#',branch:{data:{}},children:[]};
+
+            //work on a copy as the tree is mutated...
+            var tree = angular.copy(inTree);
+
+            //run through a pattern of creating a hierarchy, then removing all empty leaf nodes.
+            //need to complete until all leaf nodes are removed (can take multiple iterations
+            var cleaning = true;
+            var cnt = 0;        //a safety mechanism to avoid getting locked in a loop
+            while (cleaning) {
+                var hashBranch = {};    //will be a hierarchical tree
+                hashBranch['#'] = {id:'#',branch:{data:{}},children:[]};
+
+                cleaning = false;
+                cnt++;
+
+                //build a version of the hierarchy...
+                tree.forEach(function (branch) {
+                    var branchEntry= {id:branch.id,branch:branch,children:[]};
+                    hashBranch[branch.id] = branchEntry;
+                    if (branch.parent) {
+                        var parent = hashBranch[branch.parent];
+                        parent.children.push(branchEntry)
+                    }
+                });
+
+
+
+                //now create a hash of all empty leaf nodes...
+                var idsToDelete = {}
+                angular.forEach(hashBranch,function(v,k){
+                    console.log(v.branch)
+                    //todo text node doesn't have data for some reason....
+                   // v.branch.data = v.branch.data || {}
+
+                    if (v.children.length == 0 && ! v.branch.data.structuredData) {
+                        if (k !== '#') {
+                            idsToDelete[k] = true;
+                            cleaning = true;    //if any are found, then re-set the flag so there will be another iteration
+                        }
+                    }
+                });
+
+
+
+                //if there were any leaf nodes found, build a new table with non-empty nodes
+                if (cleaning) {
+                    var newTree = [];
+                    tree.forEach(function (branch) {
+                        if (! idsToDelete[branch.id]) {
+                            newTree.push(branch)
+                        }
+                    });
+                    tree = newTree;
+                }
+
+                //the safety...
+                if (cnt > 10) {
+                    cleaning = false;
+                    console.log('forced quit...')
+                }
+            }
+
+
+            if (showLog) {console.log(hashBranch)}
+
+            var displayList =[]
+            /* Don't delete for the moment - may be useful in debugging...
+
+            //create a display for the object passed to the rendering routine...
+
+            angular.forEach(hashBranch,function(v,k){
+                var item = {id:v.id,path:v.branch.text,children:[]}
+                v.children.forEach(function(child){
+
+                    var o = hashBranch[child.id]
+
+                    item.children.push({id:child.id,path:o.branch.text})
+
+
+                })
+                displayList.push(item)
+            })
+
+*/
+
+
+            //render the resource
+            var resource = {resourceType:resourceType}
+            addChildren(resource,hashBranch['#']);
+
+            return {resource: resource,displayList:displayList};
+
+
+
+
+
+                function addChildren(obj,node) {
+
+                    if (showLog) {console.log('invoking function',node.branch.text, obj,node)}
+
+                    var structuredData = angular.copy(node.branch.data.structuredData) || {}
+                    topEleName = node.branch.text
+                    if (showLog) {console.log(obj,topEleName)};
+                    //If there is no "node.branch.text", then this is the first invokation - the resource root.
+                    //set the "structuredData" object to the root, so that subsequent children are added to it directly...
+                    if (topEleName) {
+                        if (node.branch.data.isMultiple) {
+                            obj[topEleName] = obj[topEleName] || []
+                            obj[topEleName].push(structuredData)
+
+                        } else {
+                            obj[topEleName] = structuredData;
+                            //addChildren(structuredData,newChild)
+                        }
+                    } else {
+                        structuredData = obj
+                    }
+                    if (node.children.length > 0) {
+                        node.children.forEach(function (child,inx) {
+                            if (showLog) {console.log('processing child#' + inx,child)};
+                            addChildren(structuredData,child)
+
+                        })
+                    }
+                }
 
         },
 
@@ -507,8 +715,12 @@ angular.module("sampleApp").service('ecosystemSvc', function($q,$http,modalServi
 
                 var text = arDisplay.join('\n');
 
+               // text = "<div xmlns='http://www.w3.org/1999/xhtml'>"+ text + "</div>"
 
                 console.log(text)
+
+
+
                 return text;
 
                 function fromDT(dt,v) {

@@ -26,8 +26,8 @@ angular.module("sampleApp")
 
                     var treeData = cofSvc.makeTree(item.table);
                     console.log(treeData)
-
-                    let vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,item.table);
+                    var treeData = cofSvc.makeTree($scope.input.table);
+                    let vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);
 
                     console.log(vo)
                     if (vo && vo.resource) {

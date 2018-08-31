@@ -30,8 +30,20 @@ angular.module("sampleApp")
             };
 
 
-
             var makeResource = function(inTree,resourceType) {
+
+                var treeData = cofSvc.makeTree(inTree);
+                var vo =  ecosystemSvc.makeResourceJson(resourceType,'a1',treeData)
+
+                $scope.itemResourceJson = vo.resource;
+                $scope.displayList = vo.displayList;
+
+
+            };
+
+
+
+            var makeResourceDEP = function(inTree,resourceType) {
                 var hashBranch = {};    //will be a hierarchical tree
                 hashBranch['#'] = {id:'#',branch:{data:{}},children:[]};
 
@@ -229,12 +241,16 @@ angular.module("sampleApp")
 
                 if (item.table) {
 
-                    var treeData = cofSvc.makeTree(item.table);
-                    makeResource(treeData,item.baseType)
+
+                    makeResource(item.table,item.baseType)
+
+
+                   // var treeData = cofSvc.makeTree();
+                   // makeResource(treeData,item.baseType)
                     //console.log(treeData)
 
-                    let vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,item.table);
-
+                   // let vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,item.table);
+/*
                     //console.log(vo)
                     if (vo && vo.resource) {
                         $scope.itemResourceJson = vo.resource;
@@ -246,6 +262,8 @@ angular.module("sampleApp")
                         //console.log($scope.error)
 
                     }
+
+                    */
                 } else {
                     $scope.error = {message : "No elements"}
                 }
