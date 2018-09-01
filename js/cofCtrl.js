@@ -461,6 +461,10 @@ angular.module("sampleApp")
                 $scope.saveGraph(true)
             };
 
+
+
+
+
             //called when the form is updated
             $scope.formWasUpdated = function(table,row) {
 
@@ -500,9 +504,10 @@ angular.module("sampleApp")
                     //update the structured data in teh selected node - this is just for the display actually...
                     if ($scope.selectedTreeNode) {
                         $scope.selectedTreeNode.data.structuredData = row.structuredData;
-                        //selectedTreeNode.data.structuredData
+
 
                     }
+
 
                     makeDocumentDisplay();
                 }
@@ -566,9 +571,25 @@ angular.module("sampleApp")
                 });
             };
 
+            //a function that generates a tree view of a resource...
+            function drawResourceTree(resource) {
+                var treeData = cofSvc.makeResourceTree(resource);
+
+                $('#graphResourceTree').jstree('destroy');
+                $('#graphResourceTree').jstree(
+                    {'core': {'multiple': false, 'data': treeData, 'themes': {name: 'proton', responsive: true}}}
+                )
+
+            }
+
             //when the directive is updated with structured data, this function is called with the json version of the resource...
             $scope.fnResourceJson = function(json) {
                 $scope.resourceJson = json;
+                if (json) {
+                    drawResourceTree($scope.resourceJson.resource)
+                }
+
+
 
             };
 

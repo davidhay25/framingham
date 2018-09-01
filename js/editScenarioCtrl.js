@@ -14,6 +14,9 @@ angular.module("sampleApp")
             $scope.track = track;
 
             $scope.readOnly = readOnly;
+            if (readOnly) {
+                $scope.saveText = 'View';
+            }
 
             $scope.input.roleType = 'client';       //when adding a new role
 

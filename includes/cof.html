@@ -33,30 +33,18 @@
 
         </div>
         <div class="col-sm-3 col-md-3">
-            <div><strong>Scenario description</strong></div>
-
-
-
-
-
             <div>
-                <i class="clickable glyphicon glyphicon-eye-open pull-right"
-                 title="Edit scenario" ng-click="editScenario(cofScenario,true)">
-                 </i>
-             </div>
-
+                <i class="clickable glyphicon glyphicon-eye-open"
+                   title="Edit scenario" ng-click="editScenario(cofScenario,true)">
+                </i>
+                <strong>Scenario description</strong>
+            </div>
 
 
             <div class="scrollScenarioDescription">
                 <p ng-bind-html="cofScenario.description | markDown"></p>
             </div>
-            <!--
-            <p uib-popover-html=showDescription(cofScenario.description)
-               popover-placement="right"
-               popover-trigger="'mouseenter'"
-                    ng-bind-html="cofScenario.description | markDown | limitTo:120"></p>
-
-            -->
+            
         </div>
 
         <div class="col-sm-2 col-md-2">
@@ -308,9 +296,6 @@
                             <uib-tabset>
                                 <uib-tab heading = 'Data'>
 
-
-
-
                                     <div ng-show="selectedTreeNode">
 
                                         <div>
@@ -378,42 +363,53 @@
                 <uib-tab heading="Resource instance">
                     <br/>
 
-                    <div>
-                        <button class="btn btn-link pull-right" ng-click="validateResource(resourceJson.resource)">Validate</button>
-                    </div>
-                    <div class="clearfix"></div>
+                    <uib-tabset>
+                        <uib-tab heading="Json">
+                            <div>
+                                <button class="btn btn-link pull-right" ng-click="validateResource(resourceJson.resource)">Validate</button>
+                            </div>
+                            <div class="clearfix"></div>
 
 
 
-                    <div ng-show="currentItem.validation">
-                        <div ng-class="{alert:true,'alert-success':currentItem.validation.isValid=='yes',
+                            <div ng-show="currentItem.validation">
+                                <div ng-class="{alert:true,'alert-success':currentItem.validation.isValid=='yes',
                             'alert-danger':currentItem.validation.isValid=='no'}">
-                            <div><strong>Date Validated:</strong> {{currentItem.validation.date | date:'d/M/yy H:mm' }}
-                                ({{currentItem.validation.date | getAgeSeconds}})
+                                    <div><strong>Date Validated:</strong> {{currentItem.validation.date | date:'d/M/yy H:mm' }}
+                                        ({{currentItem.validation.date | getAgeSeconds}})
+
+                                    </div>
+                                    <table class="table table-sm table-bordered">
+                                        <tr><th>Severity</th><th>Description</th><th>Location</th></tr>
+                                        <tr ng-repeat="iss in currentItem.validation.oo.issue">
+                                            <td>{{iss.severity}}</td>
+                                            <td>{{iss.diagnostics}}
+                                                <div>{{iss.details.text}}</div>
+
+                                            </td>
+                                            <td>
+                                                <div ng-repeat="loc in iss.location">
+                                                    {{loc}}
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </div>
 
                             </div>
-                            <table class="table table-sm table-bordered">
-                                <tr><th>Severity</th><th>Description</th><th>Location</th></tr>
-                                <tr ng-repeat="iss in currentItem.validation.oo.issue">
-                                    <td>{{iss.severity}}</td>
-                                    <td>{{iss.diagnostics}}
-                                        <div>{{iss.details.text}}</div>
-
-                                    </td>
-                                    <td>
-                                        <div ng-repeat="loc in iss.location">
-                                            {{loc}}
-                                        </div>
-                                    </td>
-
-                                </tr>
-                            </table>
-                        </div>
-
-                    </div>
 
 
-                    <pre>{{resourceJson.resource | json}}</pre>
+                            <pre>{{resourceJson.resource | json}}</pre>
+
+                        </uib-tab>
+                        <uib-tab heading="Tree">
+                            <div id="graphResourceTree"></div>
+                        </uib-tab>
+                    </uib-tabset>
+
+
+
 
 
 
