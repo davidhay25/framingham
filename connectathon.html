@@ -584,6 +584,24 @@
                                                                 </div>
                                                             </div>
 
+
+                                                            <div class="row"ng-show="selectedScenario.scenarioTypes.length > 0">
+                                                                <div class="col-sm-3 col-md-3">
+                                                                    <strong>Resource Types</strong>
+                                                                </div>
+                                                                <div class="col-sm-9 col-md-9">
+                                                                    <ol>
+                                                                        <li ng-repeat="type in selectedScenario.scenarioTypes">
+
+                                                                            {{type}}
+
+                                                                            <!--{{step}}-->
+                                                                        </li>
+                                                                    </ol>
+                                                                </div>
+                                                            </div>
+
+
                                                             <div class="row"ng-show="selectedScenario.steps.length > 0">
                                                                 <div class="col-sm-3 col-md-3">
                                                                     <strong>Steps</strong>

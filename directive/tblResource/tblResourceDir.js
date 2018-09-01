@@ -119,7 +119,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
             $scope.getPopoverText = function(row) {
                 var text = "";
-                if (ed) {
+                if (row) {
                     if (row.definition) {
                         text = row.definition
                     }
