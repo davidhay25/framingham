@@ -6,18 +6,27 @@ angular.module("sampleApp")
             $scope.input = {};
             $scope.cofTypeList = [];
 
-            //var objColoursDEP = ecosystemSvc.objColours();
 
-            var elementsByType = {};        //hash of all elements for a given type
+            //var elementsByType = {};        //hash of all elements for a given type
             var profilesCache = {};          //cache for SDsss
             var allScenarios = {};
-
 
             //the variable to access methods in the directive...
             $scope.formControl = {};
 
-            $scope.addSample = function(id,dt){
+            //invoke the addSample method in the directive from the tree
+            $scope.addSampleFromTree = function(id,dt){
                 $scope.formControl.addSample(id,dt);
+            };
+
+            $scope.addReferenceFromTree = function(id,type){
+                //var rType = $filter('referenceType')(type.targetProfile);
+                //alert(rType)
+                $scope.formControl.addReference(id,type);
+            };
+
+            $scope.duplicateFromTree = function(id){
+                $scope.formControl.duplicateRow(id);
             };
 
             //save the resources to the data server. This can only be called when a data server is defined in the track
@@ -411,7 +420,11 @@ angular.module("sampleApp")
             };
 
             //called when the form is updated
-            $scope.formWasUpdated = function(table) {
+            $scope.formWasUpdated = function(table,row) {
+
+
+
+                //$scope.selectedTreeNode
 
                 /* don't delete yet - not sure if we want the text to be automatically updated
                 console.log($scope.currentItem);
@@ -439,8 +452,16 @@ angular.module("sampleApp")
                 */
 
                 $scope.saveGraph(true);     //save the graph without showing
+
                 if (table) {
                     drawTree(table)
+                    //update the structured data in teh selected node - this is just for the display actually...
+                    if ($scope.selectedTreeNode) {
+                        $scope.selectedTreeNode.data.structuredData = row.structuredData;
+                        //selectedTreeNode.data.structuredData
+
+                    }
+
                     makeDocumentDisplay();
                 }
 
@@ -686,7 +707,6 @@ angular.module("sampleApp")
                         $scope.saveGraph(true);
                     }
                 )
-
             };
 
             //add a reference to another resource
@@ -899,17 +919,30 @@ angular.module("sampleApp")
                     $('#lmTreeView').jstree(
                         {'core': {'multiple': false, 'data': treeData, 'themes': {name: 'proton', responsive: true}}}
                     ).on('changed.jstree', function (e, data) {
-                        //seems to be the node selection event...;
                         if (data.node) {
                             $scope.selectedTreeNode = data.node;
+
+                            //get the row that corresponds to this node. Used by the tree to decide if the row can be dupliacted...
+                            delete $scope.selectedTreeRow;
+                            if ($scope.currentItem.table) {
+                                $scope.currentItem.table.forEach(function (row) {
+                                    if (row.id == $scope.selectedTreeNode.data.id) {
+                                        $scope.selectedTreeRow = row;
+                                    }
+                                })
+                            }
+
+                            //console.log($scope.currentItem.table);
+
+
                             $scope.$digest();
                         }
                     })
 
 
-                    $scope.resourceTree = $('#lmTreeView').jstree(true).get_json('#', {flat:false})
+                    //$scope.resourceTree = $('#lmTreeView').jstree(true).get_json('#', {flat:false})
 
-console.log($scope.resourceTree)
+//console.log($scope.resourceTree)
 
                 }
 

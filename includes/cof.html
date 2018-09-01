@@ -70,7 +70,7 @@
 
             <div ng-show="writeNotification">
                 <span style="background-color: #00A000; color: white; padding: 5px"
-                                                   class="rounded-box pull-right">
+                    class="rounded-box pull-right">
                     {{writeNotification}}
                 </span>
             </div>
@@ -124,7 +124,6 @@
                             <span ng-click="selectCofProfile(profile)"  style="cursor:pointer">{{profile.name}}</span>
                         </div>
 
-                        <!--<div class="col-sm-4 clickable" ng-click="alert('not yet enabled')">&gt;Select Direct&lt;</div>-->
                     </div>
 
 
@@ -133,23 +132,11 @@
                 </uib-tab>
             </uib-tabset>
         </div>
-        <!--
-        <div class="col-sm-1 col-md-1">
-
-
-            <div ng-show="writeNotification"><span style="background-color: #00A000; color: white; padding: 5px"
-                    class="rounded-box pull-right">{{writeNotification}}</span></div>
-
-
-        </div>
--->
     </div>
     <hr/>
 
 
 
-
-<button ng-click="test()">Test</button>
 
     <div class="row">
         <div ng-class="leftPane">
@@ -323,9 +310,8 @@
                         <div class="col-sm-8 col-md-8">
                             <uib-tabset>
                                 <uib-tab heading = 'Data'>
+
                                     <pre ng-show="selectedTreeNode">{{selectedTreeNode.data.structuredData | json}}</pre>
-
-
 
 
                                     <div ng-show="selectedTreeNode">
@@ -334,30 +320,28 @@
                                         <div ng-repeat="type in selectedTreeNode.data.ed.type">
                                             <div ng-hide="type.code == 'Reference'">
                                                 <div class="btn btn-link"
-                                                     ng-click="addSample(selectedTreeNode.data.id,type.code)">
+                                                     ng-click="addSampleFromTree(selectedTreeNode.data.id,type.code)">
                                                     {{type.code}}
                                                 </div>
-
-
                                             </div>
 
                                             <span ng-show="type.code == 'Reference'">
-                                            --> <span class="clickable" ng-click="addReference(row,type,sectionIndex)">
-                                            {{type.targetProfile | referenceType}}</span>
+                                            --> <span class="clickable" ng-click="addReferenceFromTree(selectedTreeNode.data.id,type)">
+                                            {{type.targetProfile | referenceType}}
+                                            </span>
 
                                             <a class="pull-right" target="_blank" ng-href="{{fhirBasePath}}{{type.targetProfile | referenceType | lowercase}}.html">
                                                 <i class="clickable glyphicon glyphicon-question-sign">
                                                 </i>
                                             </a>
-
                                         </span>
                                         </div>
                                     </div>
 
 
-
-
-
+                                    <div ng-show="selectedTreeNode.data.isMultiple && selectedTreeNode.data.isOriginal"
+                                       class="clickable" ng-click="duplicateFromTree(selectedTreeNode.data.id)">Duplicate row (and children)
+                                    </div>
 
                                 </uib-tab>
                                 <uib-tab heading = 'Json'>

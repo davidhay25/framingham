@@ -23,6 +23,11 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 //when the addSample is invoked from outside the directive
 
                 //find the row...
+                var row = findRow(id);
+                if (row) {
+                    $scope.editSample(row,dt);
+                }
+                /*
                 for (var i=0; i < $scope.input.table.length; i++) {
                     var row = $scope.input.table[i]
                     if (row.id == id) {
@@ -30,12 +35,48 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         break;
                     }
                 }
-
-
-
-                //
-                alert(id)
+                */
             };
+
+            $scope.internalControl.addReference=function(id,rType) {
+                //find the row...
+                var row = findRow(id);
+                if (row) {
+                    $scope.addReference(row,rType);
+                }
+                /*
+                for (var i=0; i < $scope.input.table.length; i++) {
+                    var row = $scope.input.table[i]
+                    if (row.id == id) {
+                        $scope.addReference(row,rType);
+                        break;
+                    }
+                }
+                */
+            }
+
+            $scope.internalControl.duplicateRow=function(id,rType) {
+                //find the row...
+                var row = findRow(id);
+                if (row) {
+                    $scope.duplicate(row);
+                }
+            }
+
+
+
+            function findRow(id) {
+                for (var i=0; i < $scope.input.table.length; i++) {
+                    var row = $scope.input.table[i]
+                    if (row.id == id) {
+                        return row
+                        break;
+                    }
+                }
+            }
+
+            //$scope.addReference = function(row,type,inx){
+
 
             $scope.fhirBasePath = "http://hl7.org/fhir/";       //root of the spec.
 
@@ -149,6 +190,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 });
             };
 
+
+
             //if referenceOnly is true, show only references - and parents of references
             $scope.onlyRefsShown = false
             $scope.toggleReferences = function() {
@@ -246,19 +289,14 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         row.structuredData = vo.value;
                     }
 
-
-
                     row.sdDt = dt;      //the selected datatype
                     delete row.validation;      //will need to be re-validated...
-
-
-
 
 
                     //checkParentHasStructuredData(row,inx); //if not off the root, walk back up the list of elements to make sure that the parent has a structuredData element. The Json build needs this...
                     makeJson ();
 
-                    $scope.updated()($scope.input.table);          //send the updated table to the host...
+                    $scope.updated()($scope.input.table,row);          //send the updated table to the host...
 
                 })
             };

@@ -110,9 +110,11 @@
                 </td>
                 <td>
 
-                    <div ng-show="row.canDelete"><i class="clickable glyphicon glyphicon-minus-sign pull-right"
-                                                    title="Delete" ng-click="deleteDuplicate($index,row)">
-                    </i></div>
+                    <div ng-show="row.canDelete">
+                        <i class="clickable glyphicon glyphicon-minus-sign pull-right"
+                           title="Delete" ng-click="deleteDuplicate($index,row)">
+                    </i>
+                    </div>
 
                     <i ng-show="row.isMultiple && row.isOriginal" class="clickable glyphicon glyphicon-plus-sign pull-right"
                        title="Add new row" ng-click="duplicate(row)">
@@ -166,7 +168,8 @@
                             --> <span class="clickable" ng-click="addReference(row,type,sectionIndex)">
                             {{type.targetProfile | referenceType}}</span>
 
-                            <a class="pull-right" target="_blank" ng-href="{{fhirBasePath}}{{type.targetProfile | referenceType | lowercase}}.html">
+                            <a class="pull-right" target="_blank"
+                               ng-href="{{fhirBasePath}}{{type.targetProfile | referenceType | lowercase}}.html">
                                         <i class="clickable glyphicon glyphicon-question-sign">
                                         </i>
                                     </a>
