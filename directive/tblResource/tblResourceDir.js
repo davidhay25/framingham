@@ -27,15 +27,6 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 if (row) {
                     $scope.editSample(row,dt);
                 }
-                /*
-                for (var i=0; i < $scope.input.table.length; i++) {
-                    var row = $scope.input.table[i]
-                    if (row.id == id) {
-                        $scope.editSample(row,dt);
-                        break;
-                    }
-                }
-                */
             };
 
             $scope.internalControl.addReference=function(id,rType) {
@@ -44,16 +35,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 if (row) {
                     $scope.addReference(row,rType);
                 }
-                /*
-                for (var i=0; i < $scope.input.table.length; i++) {
-                    var row = $scope.input.table[i]
-                    if (row.id == id) {
-                        $scope.addReference(row,rType);
-                        break;
-                    }
-                }
-                */
-            }
+            };
 
             $scope.internalControl.duplicateRow=function(id,rType) {
                 //find the row...
@@ -61,21 +43,18 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 if (row) {
                     $scope.duplicate(row);
                 }
-            }
-
+            };
 
 
             function findRow(id) {
                 for (var i=0; i < $scope.input.table.length; i++) {
                     var row = $scope.input.table[i]
                     if (row.id == id) {
-                        return row
+                        return row;
                         break;
                     }
                 }
             }
-
-            //$scope.addReference = function(row,type,inx){
 
 
             $scope.fhirBasePath = "http://hl7.org/fhir/";       //root of the spec.
@@ -140,20 +119,23 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
             $scope.getPopoverText = function(row) {
                 var text = "";
-                if (row.definition) {
-                    text = row.definition
-                }
+                if (ed) {
+                    if (row.definition) {
+                        text = row.definition
+                    }
 
-                if (row.comment) {
-                    text += '<br/><br/>'+row.comment
-                }
+                    if (row.comment) {
+                        text += '<br/><br/>'+row.comment
+                    }
 
-                if (row.clinDesc) {
-                    text += '<br/><br/>'+row.clinDesc
-                }
+                    if (row.clinDesc) {
+                        text += '<br/><br/>'+row.clinDesc
+                    }
 
-                if (row.binding && row.binding.url) {
-                    text += '<br/><br/>'+row.binding.url
+                    if (row.binding && row.binding.url) {
+                        text += '<br/><br/>'+row.binding.url
+                    }
+
                 }
 
 

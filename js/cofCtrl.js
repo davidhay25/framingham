@@ -11,6 +11,10 @@ angular.module("sampleApp")
             var profilesCache = {};          //cache for SDsss
             var allScenarios = {};
 
+
+
+
+
             //the variable to access methods in the directive...
             $scope.formControl = {};
 
@@ -27,6 +31,44 @@ angular.module("sampleApp")
 
             $scope.duplicateFromTree = function(id){
                 $scope.formControl.duplicateRow(id);
+            };
+
+
+
+            $scope.getTreeDescription = function(ed) {
+                var text = "";
+                if (ed) {
+                    if (ed.definition) {
+                        text = ed.definition
+                    }
+
+                    if (ed.comment) {
+                        text += '<br/><br/>'+ed.comment
+                    }
+
+                    if (ed.clinDesc) {
+                        text += '<br/><br/>'+ed.clinDesc
+                    }
+
+                    if (ed.binding) {
+                        if (ed.binding.valueSetReference) {
+                            text += '<br/><br/><strong>ValueSet:</strong> '+ed.binding.valueSetReference.reference
+                        }
+                        if (ed.binding.valueSetUrl) {
+                            text += '<br/><br/><strong>ValueSet: </strong>'+ed.binding.valueSetUrl
+                        }
+
+                        if (ed.binding.strength) {
+                            text += "  ("+ed.binding.strength + ")"
+                        }
+
+                    }
+                }
+
+
+
+
+                return text
             };
 
             //save the resources to the data server. This can only be called when a data server is defined in the track

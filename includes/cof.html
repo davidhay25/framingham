@@ -126,9 +126,6 @@
 
                     </div>
 
-
-
-
                 </uib-tab>
             </uib-tabset>
         </div>
@@ -185,16 +182,16 @@
                         <span style="padding: 8px" ng-hide="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Set focus</span>
                         <span style="padding: 8px" ng-show="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Show all</span>
                     </div>
+                    <div class="clearfix"/>
                     <div id="cofGraph"></div>
                 </uib-tab>
                 <uib-tab heading="Notes on scenario" deselect="resourceNoteUpdated()">
 
                          <form name="form">
                             <markdown-editor ng-model="input.scenarioNotes"
-
-                                             rows="10"
-                                             placeholder="Enter any comments you have about this scenario"
-                                             options="mdOptions" >
+                                 rows="10"
+                                 placeholder="Enter any comments you have about this scenario"
+                                 options="mdOptions" >
                             </markdown-editor>
                             <div><strong><em>Please select another tab after updating to ensure notes are saved. This is a limitation being worked on.</em></strong></div>
                         </form>
@@ -311,37 +308,60 @@
                             <uib-tabset>
                                 <uib-tab heading = 'Data'>
 
-                                    <pre ng-show="selectedTreeNode">{{selectedTreeNode.data.structuredData | json}}</pre>
+
 
 
                                     <div ng-show="selectedTreeNode">
+
+                                        <div>
+                                            <button class="btn btn-danger pull-right" ng-show="selectedTreeNode.data.isMultiple && selectedTreeNode.data.isOriginal"
+                                                    class="clickable" ng-click="duplicateFromTree(selectedTreeNode.data.id)">Duplicate row (and children)
+                                            </button>
+                                        </div>
+
+                                        <pre >{{selectedTreeNode.data.structuredData | json}}</pre>
+
                                         <br/>
                                         <strong>Edit options</strong>
-                                        <div ng-repeat="type in selectedTreeNode.data.ed.type">
-                                            <div ng-hide="type.code == 'Reference'">
-                                                <div class="btn btn-link"
-                                                     ng-click="addSampleFromTree(selectedTreeNode.data.id,type.code)">
-                                                    {{type.code}}
-                                                </div>
-                                            </div>
+                                        <ul class="list-unstyled" style="margin-left: 20px">
 
-                                            <span ng-show="type.code == 'Reference'">
-                                            --> <span class="clickable" ng-click="addReferenceFromTree(selectedTreeNode.data.id,type)">
-                                            {{type.targetProfile | referenceType}}
+
+                                            <li ng-repeat="type in selectedTreeNode.data.ed.type">
+                                                <span ng-hide="type.code == 'Reference'">
+                                                    <span class="clickable"
+                                                         ng-click="addSampleFromTree(selectedTreeNode.data.id,type.code)">
+                                                        {{type.code}}
+                                                    </span>
+                                                </span>
+
+                                                <span ng-show="type.code == 'Reference'">
+
+                                                --> <span class="clickable" ng-click="addReferenceFromTree(selectedTreeNode.data.id,type)">
+                                                {{type.targetProfile | referenceType}}
+                                                </span>
+
+                                                <a class="pull-right" target="_blank" ng-href="{{fhirBasePath}}{{type.targetProfile | referenceType | lowercase}}.html">
+                                                    <i class="clickable glyphicon glyphicon-question-sign">
+                                                    </i>
+                                                </a>
+
                                             </span>
+                                            </li>
 
-                                            <a class="pull-right" target="_blank" ng-href="{{fhirBasePath}}{{type.targetProfile | referenceType | lowercase}}.html">
-                                                <i class="clickable glyphicon glyphicon-question-sign">
-                                                </i>
-                                            </a>
-                                        </span>
-                                        </div>
+
+                                        </ul>
+
+
+
+                                        <strong>Description</strong>
+                                        <br/>
+                                        <p ng-bind-html="getTreeDescription(selectedTreeNode.data.ed)"></p>
+
+
                                     </div>
 
 
-                                    <div ng-show="selectedTreeNode.data.isMultiple && selectedTreeNode.data.isOriginal"
-                                       class="clickable" ng-click="duplicateFromTree(selectedTreeNode.data.id)">Duplicate row (and children)
-                                    </div>
+
 
                                 </uib-tab>
                                 <uib-tab heading = 'Json'>
@@ -402,7 +422,7 @@
                     <ng-include src="'includes/document.html'"></ng-include>
 
                 </uib-tab>
-                <uib-tab heading="Json">
+                <uib-tab heading="Json" ng-show="1==2">
 
                     <div class="row">
                         <div class="col-sm-3 col-md-3">
@@ -428,12 +448,7 @@
                 <uib-tab  ng-hide='true' heading="Item Json">
                     <pre>{{resourceJson.raw | json}}</pre>
                 </uib-tab>
-<!--
-                <uib-tab heading="Validate">
-                    <pre>{{resourceJson.raw | json}}</pre>
-                </uib-tab>
 
-                -->
 
             </uib-tabset>
 
