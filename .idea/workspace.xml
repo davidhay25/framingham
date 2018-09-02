@@ -8,7 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0a6e7d6f-aa6e-405d-9d94-d3543d427d97" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/connectathon.html" beforeDir="false" afterPath="$PROJECT_DIR$/connectathon.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/artifacts/docs.html" beforeDir="false" afterPath="$PROJECT_DIR$/artifacts/docs.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -113,25 +113,25 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="html" value="9" />
+          <entry key="html" value="10" />
           <entry key="js" value="13" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="HTML" value="9" />
+          <entry key="HTML" value="10" />
           <entry key="JavaScript" value="13" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="html" value="787" />
+          <entry key="html" value="965" />
           <entry key="js" value="2077" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="HTML" value="787" />
+          <entry key="HTML" value="965" />
           <entry key="JavaScript" value="2077" />
         </counts>
       </usages-collector>
@@ -312,11 +312,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/connectathon.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="282">
-              <caret line="591" column="76" selection-start-line="591" selection-start-column="76" selection-end-line="591" selection-end-column="76" />
+            <state relative-caret-position="189">
+              <caret line="1793" column="41" selection-start-line="1793" selection-start-column="34" selection-end-line="1793" selection-end-column="41" />
+              <folding>
+                <element signature="n#div#0;n#div#6;n#uib-tab#0;n#uib-tabset#0;n#div#1;n#div#0;n#uib-tab#0;n#uib-tabset#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/artifacts/docs.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="427">
+              <caret line="52" column="14" lean-forward="true" selection-start-line="52" selection-start-column="14" selection-end-line="52" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -555,15 +567,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/includes/cofSummary.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="89" column="40" selection-start-line="89" selection-start-column="28" selection-end-line="89" selection-end-column="40" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/cofSvc.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="118">
@@ -738,7 +741,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>validate</find>
       <find>clearValidation</find>
       <find>select dir</find>
       <find>clearValidationResult</find>
@@ -768,6 +770,7 @@
       <find>read</find>
       <find>eye</find>
       <find>getPopoverText</find>
+      <find>documen</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -793,7 +796,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/js/addProfileToScenario.js" />
         <option value="$PROJECT_DIR$/jsonTest.html" />
         <option value="$PROJECT_DIR$/includes/lmCheck.html" />
         <option value="$PROJECT_DIR$/js/lmCheckCtrl.js" />
@@ -844,6 +846,7 @@
         <option value="$PROJECT_DIR$/includes/cof.html" />
         <option value="$PROJECT_DIR$/directive/tblResource/tblResourceDir.js" />
         <option value="$PROJECT_DIR$/connectathon.html" />
+        <option value="$PROJECT_DIR$/artifacts/docs.html" />
       </list>
     </option>
   </component>
@@ -1080,6 +1083,11 @@
             <path>
               <item name="framingham" type="b2602c69:ProjectViewProjectNode" />
               <item name="framingham" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="framingham" type="b2602c69:ProjectViewProjectNode" />
+              <item name="framingham" type="462c0819:PsiDirectoryNode" />
+              <item name="artifacts" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="framingham" type="b2602c69:ProjectViewProjectNode" />
@@ -1582,7 +1590,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1854153000" />
+    <option name="totallyTimeSpent" value="1858197000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="86" width="1444" height="762" extended-state="0" />
@@ -1666,13 +1674,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/artifacts/smartProfiles.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="47" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ecoModule.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -2514,8 +2515,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/connectathon.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="591" column="76" selection-start-line="591" selection-start-column="76" selection-end-line="591" selection-end-column="76" />
+        <state relative-caret-position="189">
+          <caret line="1793" column="41" selection-start-line="1793" selection-start-column="34" selection-end-line="1793" selection-end-column="41" />
+          <folding>
+            <element signature="n#div#0;n#div#6;n#uib-tab#0;n#uib-tabset#0;n#div#1;n#div#0;n#uib-tab#0;n#uib-tabset#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/artifacts/docs.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="427">
+          <caret line="52" column="14" lean-forward="true" selection-start-line="52" selection-start-column="14" selection-end-line="52" selection-end-column="14" />
         </state>
       </provider>
     </entry>
