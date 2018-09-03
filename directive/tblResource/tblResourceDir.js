@@ -375,16 +375,14 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         inx++;
                     }
 
-                })
+                });
+
+                $scope.updated()();
             };
 
             //remove a deleted row...
-<<<<<<< HEAD
-            $scope.deleteDuplicate = function(inx,row) {
-=======
-            $scope.deleteDuplicate = function(row) {
->>>>>>> 3e43c93fa914812144777f5aa746879ce958cc79
 
+            $scope.deleteDuplicate = function(row) {
 
                 var rootParentId = row.rootParentId;        //if this element has children, then they will have the rootParentId
 
@@ -411,7 +409,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         $scope.input.table = newTable;
                     }
 
-
+                    $scope.updated()();
                 }
 
 
@@ -487,6 +485,11 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 var ar = path.split('.');
                 var arPathLength = ar.length +1;
 
+                //if we're showing a parent off the root, then collapse the tree
+                if (arPathLength == 2) {
+                    $scope.collapse();
+                }
+
                 item.childrenHidden = false;
                 var startShow = false;
 
@@ -514,10 +517,6 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                             if (! row.isLeaf) {
                                 row.childrenHidden = true;
                             }
-
-                          //  if (!row.isLeaf) {
-                            //    startShow = false;
-                           // }
 
 
                         } else {

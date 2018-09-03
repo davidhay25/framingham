@@ -482,9 +482,6 @@ angular.module("sampleApp")
             };
 
 
-
-
-
             //called when the form is updated
             $scope.formWasUpdated = function(table,row) {
 
