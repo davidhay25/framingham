@@ -299,17 +299,37 @@ angular.module("sampleApp")
 
             };
 
+            //filter graph by setting focus
             $scope.filteredGraph = false;
             $scope.setFocus = function() {
                 $scope.filteredGraph = ! $scope.filteredGraph
 
+
+
                 console.log($scope.currentItem);
                 if ($scope.filteredGraph) {
-                    makeGraph($scope.currentItem.id)
+                    makeGraph($scope.currentItem.id,$scope.hiddenPatient)
                 } else {
-                    makeGraph()
+                    makeGraph(null,$scope.hiddenPatient)
+                }
+            };
+
+            //filter graph by hide patient
+            $scope.hiddenPatient = false;
+            $scope.hidePatient = function() {
+                $scope.hiddenPatient = ! $scope.hiddenPatient
+
+                var focusId = null;
+                if ($scope.currentItem && $scope.filteredGraph) {
+                    focusId = $scope.currentItem.id;
                 }
 
+
+                if ($scope.hiddenPatient) {
+                    makeGraph(focusId,true)
+                } else {
+                    makeGraph(focusId)
+                }
             };
 
             //when a profile is selected from the list of scenario.selectedProfiles
@@ -468,7 +488,7 @@ angular.module("sampleApp")
             //called when the form is updated
             $scope.formWasUpdated = function(table,row) {
 
-
+                delete $scope.currentItem.validation;
 
                 //$scope.selectedTreeNode
 
@@ -504,8 +524,6 @@ angular.module("sampleApp")
                     //update the structured data in teh selected node - this is just for the display actually...
                     if ($scope.selectedTreeNode) {
                         $scope.selectedTreeNode.data.structuredData = row.structuredData;
-
-
                     }
 
 
@@ -668,6 +686,7 @@ angular.module("sampleApp")
                     var saveObject = {};
                     saveObject.userid = user.id;
                     saveObject.scenarioid = $scope.cofScenario.id;
+                    saveObject.trackid = $scope.selectedTrack.id;
                     saveObject.id = user.id + "-" + $scope.cofScenario.id;
                     saveObject.items = $scope.cofTypeList;      //all of the items (ie the resource instances
                     saveObject.scenarioNotes = $scope.input.scenarioNotes;
@@ -896,6 +915,16 @@ angular.module("sampleApp")
             $scope.removeReference = function(row,inx){
 
                 row.references.splice(inx,1);
+
+                var treeData = cofSvc.makeTree(item.table);
+                var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);
+                if (vo) {
+                    $scope.resourceJson()({resource: vo.resource, raw: vo.data});
+                    return vo.resource;
+                } else {
+                    return {error:'Error building Json'}
+                }
+
                 makeGraph();
                 $scope.saveGraph(true);
 
@@ -1157,9 +1186,9 @@ angular.module("sampleApp")
 
             };
 
-            function makeGraph(focusResourceId) {
+            function makeGraph(focusResourceId,hidePatient) {
 
-                var vo = cofSvc.makeGraph($scope.cofTypeList,focusResourceId);
+                var vo = cofSvc.makeGraph($scope.cofTypeList,focusResourceId,hidePatient);
                 var graphData = vo.graphData;
 
                 var container = document.getElementById('cofGraph');

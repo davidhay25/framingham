@@ -272,7 +272,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     }
 
                     row.sdDt = dt;      //the selected datatype
-                    delete row.validation;      //will need to be re-validated...
+                    //delete row.validation;      //will need to be re-validated...
 
 
                     //checkParentHasStructuredData(row,inx); //if not off the root, walk back up the list of elements to make sure that the parent has a structuredData element. The Json build needs this...
@@ -324,20 +324,15 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                                 parentFound = true
                             }
                         }
-
-
-
-
                     }
-
                 }
             }
 
             //called by onBlur from adding a note
             $scope.noteAdded = function(){
                 $scope.updated()($scope.input.table);
-                //console.log('note')
-            }
+
+            };
 
             //called by the vsViewer when a concept is selected form an expansion...
             $scope.conceptSelectedDEP = function(concept) {
@@ -385,6 +380,10 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
             //remove a deleted row...
             $scope.deleteDuplicate = function(inx,row) {
+
+                
+
+
                 var rootParentId = row.rootParentId;        //if this element has children, then they will have the rootParentId
                 $scope.input.table.splice(inx,1);
 

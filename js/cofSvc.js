@@ -793,11 +793,25 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
 
         },
-        makeGraph: function (lst,focusResourceId) {
+        makeGraph: function (lst,focusResourceId,hidePatient) {
             //if focusResourceId, then only show resources with a directreference to that one
+            //if hidePatient then don't show patient
             var arNodes = [], arEdges = [];
             var objColours = ecosystemSvc.objColours();
             var nodesWithReferenceFromFocus = {}
+
+            var patientNodeId = null;
+            if (hidePatient) {
+                //find patient node
+                lst.forEach(function(item) {
+                    if (item.baseType == 'Patient') {
+                        patientNodeId = item.id
+                        console.log(patientNodeId)
+                    }
+
+
+                })
+            }
 
             lst.forEach(function (item) {
 
@@ -808,13 +822,16 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                     node.color = objColours[item.baseType];
                 }
 
-
-
                 //add the focus node to the hash of nodes to keep...
                 if (focusResourceId && item.id == focusResourceId) {
                     nodesWithReferenceFromFocus[item.id] = item;
                 }
-                arNodes.push(node);
+
+                if (patientNodeId && node.id == patientNodeId) {
+
+                } else {
+                    arNodes.push(node);
+                }
 
 
 
@@ -834,25 +851,34 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                                     //if this resorcce (item) has a reference to the target
                                     if  (ref.targetItem.id == focusResourceId) {
                                         nodesWithReferenceFromFocus[item.id] = item;
-                                        arEdges.push(edge)
+                                        if (! isHiddenPatientReference(patientNodeId,edge)) {
+                                            arEdges.push(edge)
+                                        }
+
                                     }
 
                                     //if this is the focus, then include all the resources that it references
                                     if (item.id == focusResourceId) {
                                         nodesWithReferenceFromFocus[ref.targetItem.id] = "x";
-                                        arEdges.push(edge)
+                                        if (! isHiddenPatientReference(patientNodeId,edge)) {
+                                            arEdges.push(edge)
+                                        }
                                     }
 
 
 
                                 } else {
-                                    arEdges.push(edge)
+                                    if (! isHiddenPatientReference(patientNodeId,edge)) {
+                                        arEdges.push(edge)
+                                    }
                                 }
                             })
                         }
                     });
                 }
             });
+
+
 
             //now, hide all the nodes that aren't referenced by the focus
             if (focusResourceId) {
@@ -869,6 +895,10 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
             }
 
 
+
+
+
+
             var nodes = new vis.DataSet(arNodes);
 
 
@@ -881,6 +911,15 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
             };
 
             return {graphData: graphData};
+
+            //return true if this edge is to a hidden patient
+            function isHiddenPatientReference(patientNodeId,edge) {
+                if (! patientNodeId) {return false};        //patient is not hidden
+                if (edge.from == patientNodeId || edge.to == patientNodeId) {
+                    return true
+                }
+
+            }
 
         },
         makeTree : function(table) {

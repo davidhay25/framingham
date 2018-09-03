@@ -139,12 +139,18 @@ angular.module("sampleApp")
             $scope.import = function(){
 
                 //remove all the samples and comments....
+                //updated - only remove the notes...
+
                 delete $scope.selectedGraph.scenarioNotes;
                 delete $scope.selectedGraph.comments;
+
+
+
                 if ($scope.selectedGraph.items) {
                     $scope.selectedGraph.items.forEach(function(item){
-                        item.sample = [];
-                        item.notes = [];
+
+                        //item.sample = [];
+                        item.notes = {};
 
                     })
                 }

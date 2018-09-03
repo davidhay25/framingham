@@ -166,9 +166,14 @@
 
                 </uib-tab>
                 <uib-tab heading="Graph" select = "fitGraph()">
-                    <div ng-show="currentItem">
+                    <div>
                         <span style="padding: 8px" ng-hide="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Set focus</span>
                         <span style="padding: 8px" ng-show="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Show all</span>
+
+                        <span style="padding: 8px" ng-hide="hiddenPatient" class="pull-right clickable" ng-click="hidePatient()">Hide Patient</span>
+                        <span style="padding: 8px" ng-show="hiddenPatient" class="pull-right clickable" ng-click="hidePatient()">Include Patient</span>
+
+
                     </div>
                     <div class="clearfix"/>
                     <div id="cofGraph"></div>

@@ -119,9 +119,12 @@
                     <i ng-show="row.isMultiple && row.isOriginal" class="clickable glyphicon glyphicon-plus-sign pull-right"
                        title="Add new row" ng-click="duplicate(row)">
                     </i>
+                    <!--
 
-
-
+                     <i ng-show="row.isMultiple" class="clickable glyphicon glyphicon-plus-sign pull-right"
+                        title="Add new row" ng-click="duplicate(row)">
+                     </i>
+  -->
                     <div ng-style="{'padding-left': ((row.path | pathindent) -10)*1.5 +'px'}"
                          uib-popover-html=getPopoverText(row)
                          ng-class="{required:row.isRequired,extension:row.ed.meta.isExtension}"

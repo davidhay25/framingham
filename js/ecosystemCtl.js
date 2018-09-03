@@ -287,6 +287,8 @@ angular.module("sampleApp")
                             return true
                         }, track : function(){
                             return $scope.selectedTrack
+                        }, readOnly : function(){
+                            return false
                         }
                     }
                 }).result.then(function(scenario){
