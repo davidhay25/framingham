@@ -381,8 +381,6 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             //remove a deleted row...
             $scope.deleteDuplicate = function(inx,row) {
 
-                
-
 
                 var rootParentId = row.rootParentId;        //if this element has children, then they will have the rootParentId
                 $scope.input.table.splice(inx,1);
