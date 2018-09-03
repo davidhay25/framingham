@@ -379,34 +379,57 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             };
 
             //remove a deleted row...
+<<<<<<< HEAD
             $scope.deleteDuplicate = function(inx,row) {
+=======
+            $scope.deleteDuplicate = function(row) {
+>>>>>>> 3e43c93fa914812144777f5aa746879ce958cc79
 
 
                 var rootParentId = row.rootParentId;        //if this element has children, then they will have the rootParentId
-                $scope.input.table.splice(inx,1);
 
-                //now, delete any child elements
-                if (rootParentId) {
-                    var newTable = []
-                    $scope.input.table.forEach(function(item){
+                var inx = findIndexById($scope.input.table,row)
 
-                        if (! item.rootParentId) {
-                            //not the child of a duplicated element
-                            newTable.push(item)
-                        } else {
-                            if (item.rootParentId !== rootParentId) {
+                if (inx > -1) {
+                    $scope.input.table.splice(inx,1);
+
+                    //now, delete any child elements
+                    if (rootParentId) {
+                        var newTable = []
+                        $scope.input.table.forEach(function(item){
+
+                            if (! item.rootParentId) {
+                                //not the child of a duplicated element
                                 newTable.push(item)
+                            } else {
+                                if (item.rootParentId !== rootParentId) {
+                                    newTable.push(item)
+                                }
                             }
-                        }
+
+                        });
+                        $scope.input.table = newTable;
+                    }
 
 
-
-                    });
-                    $scope.input.table = newTable;
                 }
 
 
             };
+
+            function findIndexById(table,row) {
+                var inx = -1;
+                if (row && row.id) {
+                    for (var i=0; i<table.length;i++) {
+                        var r = table[i]
+                        if (r.id == row.id) {
+                            inx = i;
+                            break;
+                        }
+                    }
+                }
+                return inx
+            }
 
             //$scope.hideWOSampleDisplay = true;
             $scope.hideAllWithoutSample = function() {
@@ -459,6 +482,11 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             //show children based on the path... todo - ?hide based on parent/child? more complicated...
             $scope.showChildren = function(item) {
                 var path = item.path;       //path to duplicate (along with children)
+
+                //will only show immediate children
+                var ar = path.split('.');
+                var arPathLength = ar.length +1;
+
                 item.childrenHidden = false;
                 var startShow = false;
 
@@ -468,21 +496,35 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     if (row.id == item.id) {
                         startShow = true;
                     }
-               // }
-               // $scope.input.table.forEach(function(row,pos){
+
                     if (startShow && row.id !== item.id) {
                         //we've started the show. As soon as the paths no longer match, then exit...
                        // if (row.path.length > path.length) {
-                            if (row.path.startsWith(path) && (row.path !== path)) {
-                                //this is a child - unhide it
-                                row.isHidden = false;
-                            } else {
-                                //past the child nodes - stop the show
-                                startShow = false;
-                                break;
-                            }
-                       // }
+                        if (row.path.startsWith(path) && (row.path !== path)) {
+                            //this is a child - unhide it
+                            row.isHidden = false;
 
+                            //hide below immediate children
+                            var ar = row.path.split('.');
+                            if (ar.length > arPathLength) {
+                                row.isHidden = true;
+                            }
+
+                            //indicate that any children are hidden...
+                            if (! row.isLeaf) {
+                                row.childrenHidden = true;
+                            }
+
+                          //  if (!row.isLeaf) {
+                            //    startShow = false;
+                           // }
+
+
+                        } else {
+                            //past the child nodes - stop the show
+                            startShow = false;
+                            break;
+                        }
 
                     }
 
