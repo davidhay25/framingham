@@ -33,8 +33,6 @@ angular.module("sampleApp")
                 $scope.formControl.duplicateRow(id);
             };
 
-
-
             $scope.getTreeDescription = function(ed) {
                 var text = "";
                 if (ed) {
@@ -102,7 +100,6 @@ angular.module("sampleApp")
 
 
             };
-
 
             $scope.showOOSummary = function(oo) {
                 var display = ""
@@ -412,9 +409,7 @@ angular.module("sampleApp")
 
             };
 
-
             $scope.fhirBasePath = "http://hl7.org/fhir/";       //root of the spec.
-
 
             $http.get('/artifacts/allResources.json').then(
                 function(data) {
@@ -481,7 +476,6 @@ angular.module("sampleApp")
                 $scope.saveGraph(true)
             };
 
-
             //called when the form is updated
             $scope.formWasUpdated = function(table,row) {
 
@@ -516,14 +510,14 @@ angular.module("sampleApp")
 
                 $scope.saveGraph(true);     //save the graph without showing
 
+                //drawTree(table);            //update the tree view
+
                 if (table) {
                     drawTree(table)
                     //update the structured data in teh selected node - this is just for the display actually...
                     if ($scope.selectedTreeNode) {
                         $scope.selectedTreeNode.data.structuredData = row.structuredData;
                     }
-
-
                     makeDocumentDisplay();
                 }
 

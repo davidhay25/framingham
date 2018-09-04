@@ -341,6 +341,10 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
             };
 
+
+
+
+
             //make a copy of an item
             $scope.duplicate = function(item) {
                 var path = item.path;       //path to duplicate (along with children)
@@ -357,27 +361,36 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 var clone = angular.copy($scope.input.table);
                 clone.forEach(function(row){
                     //if (row.path.startsWith(path)) {
+
+
+                    //this is the the original 'parent' that is being duplicated. Construct an od for it
+                    if (row.path ==path && row.isOriginal) {
+                        newParentId = 'id' + new Date().getTime() + Math.floor(Math.random()*1000);
+                    }
+
                     if (row.path.startsWith(path) && row.isOriginal) {
-                        row.id = 'id' + new Date().getTime() + Math.floor(Math.random()*1000)
+                        var newParentId;
+                        if (row.path ==path) {
+                            //this is the the original 'parent' that is being duplicated. Construct an od for it
+                            newParentId = 'id' + new Date().getTime() + Math.floor(Math.random()*1000);
+                            row.id = newParentId
+                        } else {
+                            //this is a child...
+                            row.id = 'id' + new Date().getTime() + Math.floor(Math.random()*1000)
+                        }
+
                         delete row.isOriginal;
                         delete row.references;
                         delete row.structuredData;
                         row.canDelete = true;
-                        row.rootParentId = item.id;     //the parent off the root...
+                        row.rootParentId = newParentId;     //the parent off the root...
                         //now change the path in the row by incrementing the suffix..
-                      /*  var newPath = row.path;
-                        var ar = newPath.split('_');
-                        ar[1]++;        //we assume that the last character is a number
-                        row.path = ar.join('_');
-
-*/
                         $scope.input.table.splice(inx,0,row);
                         inx++;
                     }
-
                 });
 
-                $scope.updated()();
+                $scope.updated()($scope.input.table);
             };
 
             //remove a deleted row...
@@ -391,7 +404,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 if (inx > -1) {
                     $scope.input.table.splice(inx,1);
 
-                    //now, delete any child elements
+                    //now, delete any child elements (which have the same rootParentId
                     if (rootParentId) {
                         var newTable = []
                         $scope.input.table.forEach(function(item){
@@ -409,7 +422,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         $scope.input.table = newTable;
                     }
 
-                    $scope.updated()();
+                    $scope.updated()($scope.input.table);
                 }
 
 
@@ -567,8 +580,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             //construct the initial table from the SD...
             function makeTableArray(SD,track){
                 var that = this;
-                //var ignoreAll=['id','meta','implicitRules','contained','extension','modifierExtension']
-                var ignoreAll=['id','meta','implicitRules','contained','modifierExtension']
+                var ignoreAll=['id','meta','implicitRules','contained','extension','modifierExtension']
+                //var ignoreAll=['id','meta','implicitRules','contained','modifierExtension']
                 var ignoreRoot = ['language','text'];   //ignore if on the root...
                 var ar = [];
 
