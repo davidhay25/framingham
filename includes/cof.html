@@ -270,7 +270,7 @@
         </div>
         <div ng-class="rightPane">
             <uib-tabset ng-show="currentItem">
-                <uib-tab heading="Table">
+                <uib-tab heading="Table editor">
                     <tbl-resource trigger="showResourceTable" reference="cofAddReference"
                                   resource-json="fnResourceJson"
                                   updated="formWasUpdated"
@@ -288,17 +288,18 @@
 
                 </uib-tab>
 
-                <uib-tab heading="Tree">
+                <uib-tab heading="Tree editor">
                     <br/>
                     <div class="row">
                         <div class="col-sm-4 col-md-4">
-                            <div class="scrollTable">
+                            <div class="scrollTable rounded-box" >
                                 <div id="lmTreeView"></div>
                             </div>
 
                         </div>
                         <div class="col-sm-8 col-md-8">
-                            <uib-tabset>
+                            <div ng-show="selectedTreeNode" class="banner">{{selectedTreeNode.data.path}}</div>
+                            <uib-tabset ng-show="selectedTreeNode">
                                 <uib-tab heading = 'Data'>
 
                                     <div ng-show="selectedTreeNode">
@@ -457,6 +458,7 @@
 
         </div>
     </div>
+
 
 
 </div>
