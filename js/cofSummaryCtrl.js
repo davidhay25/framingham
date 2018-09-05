@@ -3,6 +3,48 @@ angular.module("sampleApp")
         function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc) {
 
             $scope.input = {};
+            $scope.showAllScenarios = false
+
+            $scope.selectAllScenarios = function(flag){
+                $scope.showAllScenarios = flag
+
+
+                if (flag) {
+
+                    //get all scenarios in this track
+                    var hashScenario = {}
+                    $scope.selectedTrack.scenarios.forEach( function (scenario) {
+                        hashScenario[scenario.id] = scenario;
+                    });
+
+                    // selectedTrack.scenarios
+                    $http.get('/scenarioGraph').then(
+                        function(data) {
+                            $scope.graphs.length = 0;
+
+                            data.data.forEach(function (graph) {
+                                var t = hashScenario[graph.scenarioid]
+                                if (t) {
+                                    graph.scenario = t;
+                                    graph.user = ecosystemSvc.getPersonWithId(graph.userid);
+
+                                    $scope.graphs.push(graph)
+                                }
+
+                            })
+
+                            console.log($scope.graphs)
+                        }
+                    );
+
+
+                } else {
+                    $scope.sumSelectScenario($scope.selectedScenario)
+                }
+
+            };
+
+
 
 
             $scope.selectResourceSummary = function(type,summary) {
@@ -246,6 +288,10 @@ angular.module("sampleApp")
                 return hashPathSummary;
             }
 
+
+
+
+
             //a scenario is selected (from the top selection box)...
             $scope.sumSelectScenario = function(scenario) {
                 if ($scope.graph) {
@@ -338,6 +384,10 @@ angular.module("sampleApp")
                             })
                         }
                     });
+
+
+
+
 
 
                     $scope.sumSelectScenario(track.scenarios[0]);

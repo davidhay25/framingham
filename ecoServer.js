@@ -717,6 +717,29 @@ app.get('/scenarioGraph',function(req,res) {
     })
 });
 
+/* not storing trackid for all graphs...
+//get all the graph indexes for a  specific track
+app.get('/scenarioGraphForTrack/:trackid',function(req,res) {
+
+    var trackId = req.params.trackid;
+    //console.log(userid,scenarioid)
+    var collection = req.selectedDbCon.collection('scenarioGraph')
+
+    collection.find({trackid:trackId},{projection:{id:1,name:1,userid:1,scenarioid:1}}).toArray(function (err, result) {
+        if (err) {
+            res.send(err,500)
+        } else {
+            if (result.length > 0) {
+                res.send(result)
+            } else {
+                res.send([])
+            }
+        }
+    })
+});
+*/
+
+
 //get all the graph indexes for a  specific scenario
 app.get('/scenarioGraph/:scenarioid',function(req,res) {
 

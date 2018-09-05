@@ -26,11 +26,13 @@
     <div class="row" ng-show="selectedTrack">
         <div class="col-sm-2 col-md-2">
 
-            <select class="form-control" ng-model="input.scenario"
+            <select class="form-control" ng-model="input.scenario" ng-disabled = "showAllScenarios"
                     ng-change="sumSelectScenario(input.scenario)"
                     ng-options="scenario.name for scenario in selectedTrack.scenarios"></select>
 
             <div>
+                <input type="checkbox" ng-model="input.allScenarios" ng-change="selectAllScenarios(input.allScenarios)"/>
+                All Scenarios this Track
                 <button class="btn btn-link pull-right" ng-click="refreshSummaryList()">Refresh</button>
             </div>
 
@@ -57,6 +59,8 @@
                                 ng-show="graph.user"
                                 ng-class="{'list-group-item':true,active:graph.id == selectedGraph.id}" ng-click="selectGraph(graph)">
                                 <div class="clickable">{{graph.user.name}}</div>
+                                <div class="pull-right">{{graph.scenario.name}}</div>
+                                <div class="clearfix"/>
                             </li>
                         </ul>
                     </div>
