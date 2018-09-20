@@ -359,7 +359,7 @@ app.get('/proxyfhir/*',function(req,res) {
         encoding : null
     };
 
-    options.headers={accept:'fhir+json'};
+    options.headers={accept:'application/fhir+json'};
 
     request(options, function (error, response, body) {
         if (error) {

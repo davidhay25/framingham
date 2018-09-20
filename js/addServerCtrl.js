@@ -99,6 +99,8 @@ angular.module("sampleApp")
 
                 //url = $scope.input.address + 'metadata';
                 $scope.waiting = true;
+
+
                 $http.get(url).then(
                     function(data) {
                         modalService.showModal({},{bodyText:"The CapabilityStatement was returned, so we can update the server specific information"});
