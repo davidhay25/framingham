@@ -95,7 +95,7 @@ angular.module("sampleApp")
                                         }
 
                                     } else {
-                                        alert('This event is not defined')
+                                        alert("This event is not defined (or there is no 'admin' collection in the database)")
                                     }
 
 

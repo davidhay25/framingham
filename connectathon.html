@@ -181,10 +181,13 @@
     <nav class="navbar navbar-default navbar-fixed-top" ng-style="navBarStyle" role="navigation">
 
         <div class="container-fluid row">
-            <div class="col-md-7 col-sm-7">
+            <div class="col-md-8 col-sm-8">
                 <a class="navbar-brand" href="#">
                     ConMan: {{eventConfig.name}} <span ng-hide="eventConfig">No event specified.</span>
+                    <span ng-show="selectedTrack"><strong>({{selectedTrack.name}} track)</strong></span>
                 </a>
+
+
             </div>
 
             <div class="col-md-3 col-sm-3">
@@ -210,11 +213,14 @@
                 </div>
 
             </div>
-            <div class="col-md-2 col-sm-2">
+            <div class="col-md-1 col-sm-1">
                 <div class="navbar-text pull-right">
+                    <!--
                     <div class="pull-right">
                         <div ng-show="library">*</div>
                     </div>
+                    -->
+
                     <button ng-show="selectedTrack.trackType == 'technical'" class="btn btn-primary pull-right" ng-click="refresh()">Refresh</button>
 
                 </div>

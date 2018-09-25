@@ -103,7 +103,7 @@ angular.module("sampleApp")
 
                 $http.get(url).then(
                     function(data) {
-                        modalService.showModal({},{bodyText:"The CapabilityStatement was returned, so we can update the server specific information"});
+                        modalService.showModal({},{bodyText:"The CapabilityStatement was returned, so we can update the server specific information. See the 'Server Details' tab"});
                         serverExists = true;
                         //console.log(data.data);
                         var cs = data.data;
@@ -113,7 +113,6 @@ angular.module("sampleApp")
 
 
                         getSMARTEndpoints($scope.SMART,cs);
-                        //console.log(SMART)
 
 
                         //extract key data from the CapabilityStatement
@@ -211,9 +210,14 @@ angular.module("sampleApp")
                         }
                     });
 
+
+                    //dont't save the server details - makes the resource large
+                    delete server.serverDetails;
+                    /*
                     if ($scope.serverDetails) {
                         server.serverDetails = $scope.serverDetails;
                     }
+                    */
 
                     if ($scope.allHooks) {
                         server.allHooks = $scope.allHooks;
