@@ -10,6 +10,11 @@ angular.module("sampleApp")
             $scope.ecosystemSvc = ecosystemSvc;
             $scope.input = {};
 
+            $scope.trackTypeDisplay = {};
+            $scope.trackTypeDisplay.technical = "Technical";
+            $scope.trackTypeDisplay.lmreview = "Logical Model Review";
+            $scope.trackTypeDisplay.scenario = "Scenario graph";
+
 /*
             var req = {
                 method: 'GET',

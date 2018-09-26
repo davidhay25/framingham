@@ -61,7 +61,7 @@
                 <div class="btn-group">
                     <label class="btn btn-primary" ng-model="track.trackType" uib-btn-radio="'technical'">Technical</label>
                     <label class="btn btn-primary" ng-model="track.trackType" uib-btn-radio="'lmreview'">Logical Model Review</label>
-                    <label class="btn btn-primary" ng-model="track.trackType" uib-btn-radio="'scenario'">Scenario</label>
+                    <label class="btn btn-primary" ng-model="track.trackType" uib-btn-radio="'scenario'">Resource Graph</label>
 
                 </div>
                 <div>{{trackTypes[track.trackType]}}</div>
@@ -70,6 +70,21 @@
         </div>
         <br/>
 
+        <div class="row" ng-show="track.trackType == 'technical'">
+            <div class="col-md-2 col-sm-2">
+                Allow Graphs
+            </div>
+            <div class="col-md-1 col-sm-1" >
+                <checkbox ng-model="track.allowGraph"></checkbox>
+            </div>
+            <div class="col-md-9 col-sm-9" >
+                <p>If checked, the Graph tabs are shown as well as the technical testing tabs. This allows
+                users to create resource graphs - and view those that others have created. (This is not needed
+                when the track type is 'scenario')</p>
+            </div>
+        </div>
+
+        <br/>
         <div class="row" ng-show="track.trackType !== 'technical'">
             <div class="col-sm-2 col-md-2">
                 Allow direct sample
