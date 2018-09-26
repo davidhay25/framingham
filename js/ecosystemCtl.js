@@ -10,10 +10,32 @@ angular.module("sampleApp")
             $scope.ecosystemSvc = ecosystemSvc;
             $scope.input = {};
 
+            //which track type to display
+            $scope.input.trackListDisplay = 'all';
+
+            $scope.showTrack = function(track) {
+
+                if ($scope.input.trackListDisplay == 'all') {
+                    return true;
+                } else if ($scope.input.trackListDisplay == 'clinical') {
+                    if (track.trackType == 'lmreview' || track.trackType == 'scenario' ) {
+                        return true
+                    }
+
+                }
+                else if ($scope.input.trackListDisplay == 'technical') {
+                    if (track.trackType == 'technical'  ) {
+                        return true
+                    }
+                }
+            }
+
+            //so the display of the track type can be different to the code
             $scope.trackTypeDisplay = {};
             $scope.trackTypeDisplay.technical = "Technical";
             $scope.trackTypeDisplay.lmreview = "Logical Model Review";
             $scope.trackTypeDisplay.scenario = "Scenario graph";
+
 
 /*
             var req = {
