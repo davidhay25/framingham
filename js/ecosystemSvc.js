@@ -179,7 +179,8 @@ angular.module("sampleApp").service('ecosystemSvc',
     objColours.MedicationDispense = '#FFFFCC';
     objColours.Composition = '#FFFFCC';
     objColours.Medication = '#FF9900';
-
+    objColours.ActivityDefinition = '#FF9990';
+    objColours.PlanDefinition = '#93FF1A';
 
     //logical models (like Dosage). Might extend to complex datatypes for expanding logical models later on...
     var typeChildren = {}

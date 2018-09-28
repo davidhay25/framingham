@@ -1,0 +1,38 @@
+<div>
+    <div class="modal-header">
+
+        <div class="row">
+            <div class="col-md-8 col-sm-8">
+                <h3 class="modal-title">Named Servers</h3>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div class="pull-right">
+                    <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+
+            <div class="col-md-10 col-sm-10">
+               <div class="list-group">
+                   <li class="list-group-item" style="cursor: pointer" ng-repeat="svr in servers" ng-click="select(svr)">
+                       {{svr.name}}
+                   </li>
+               </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+
+            </div>
+
+        </div>
+    </div>
+</div>

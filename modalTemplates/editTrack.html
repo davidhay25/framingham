@@ -55,6 +55,17 @@
 
         <div class="row">
             <div class="col-sm-2 col-md-2">
+                Event chat
+            </div>
+            <div class="col-sm-10 col-md-10">
+                <input class="form-control" ng-model="track.chat" placeholder="Full url (including http://.. to the event chat">
+            </div>
+        </div>
+        <br/>
+
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
                 Track type
             </div>
             <div class="col-sm-10 col-md-10">
@@ -106,7 +117,7 @@
                 <br/>
                 <form name="form">
                     <markdown-editor ng-model="track.description"
-                                     rows="5"
+                                     rows="4"
                                      placeholder="Enter the description of this track"
                                      options="mdOptions" >
                     </markdown-editor>
@@ -171,30 +182,45 @@
                 </table>
 
             </uib-tab>
-            <uib-tab heading='Track configuration'  ng-hide="track.trackType == 'technical'">
+            <uib-tab heading='Track servers'  ng-hide="track.trackType == 'technical' && ! track.allowGraph">
                 <br/>
                 <div class="row">
                     <div class="col-sm-3 col-md-3">
                         Terminology Server
                     </div>
-                    <div class="col-sm-9 col-md-9">
+                    <div class="col-sm-8 col-md-8">
                         <input class="form-control" ng-model="input.termServer"/>
+                    </div>
+                    <div class="col-sm-1 col-md-1">
+                        <i class="clickable glyphicon glyphicon-option-horizontal"
+                           title="Select server" ng-click="selectServer('termServer')">
+                        </i>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-3 col-md-3" >
                         Conformance Server
                     </div>
-                    <div class="col-sm-9 col-md-9">
+                    <div class="col-sm-8 col-md-8">
                         <input class="form-control" ng-model="input.confServer" ng-blur="findIGs(input.confServer)"/>
+                    </div>
+                    <div class="col-sm-1 col-md-1">
+                        <i class="clickable glyphicon glyphicon-option-horizontal"
+                           title="Select server" ng-click="selectServer('confServer')">
+                        </i>
                     </div>
                 </div>
                 <div class="row" ng-hide="track.allowDirectSample">
                     <div class="col-sm-3 col-md-3">
                         Data Server
                     </div>
-                    <div class="col-sm-9 col-md-9">
+                    <div class="col-sm-8 col-md-8">
                         <input class="form-control" ng-model="input.dataServer"/>
+                    </div>
+                    <div class="col-sm-1 col-md-1">
+                        <i class="clickable glyphicon glyphicon-option-horizontal"
+                           title="Select server" ng-click="selectServer('dataServer')">
+                        </i>
                     </div>
                 </div>
                 <div class="row"  ng-show="track.trackType == 'lmreview'">
@@ -205,16 +231,22 @@
                         <input class="form-control" ng-model="input.LM"/>
                     </div>
                 </div>
+
                 <div class="row"  ng-show="track.trackType == 'scenario'">
                     <div class="col-sm-3 col-md-3">
                         Implementation Guide
                         <div>(for profiles)</div>
                     </div>
-                    <div class="col-sm-9 col-md-9">
+                    <div class="col-sm-8 col-md-8">
                         <select class="form-control" ng-model="input.IG"
                             ng-options="ig.name+ig.description for ig in IGs">
 
                         </select>
+                    </div>
+                    <div class="col-sm-1 col-md-1">
+                        <i class="clickable glyphicon glyphicon-option-horizontal"
+                           title="Select server" ng-click="selectServer('termServer')">
+                        </i>
                     </div>
                 </div>
             </uib-tab>

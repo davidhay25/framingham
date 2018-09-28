@@ -1,6 +1,6 @@
 angular.module("sampleApp")
     .controller('editTrackCtrl',
-        function ($scope,ecosystemSvc,track,allPersons,modalService,isNew,trackTypes,$uibModal) {
+        function ($scope,ecosystemSvc,track,allPersons,modalService,isNew,trackTypes,$uibModal,$http) {
 
             $scope.currentUser = ecosystemSvc.getCurrentUser();
             $scope.allPersons = allPersons;
@@ -11,13 +11,50 @@ angular.module("sampleApp")
 
             //$scope.IGs = ecosystemSvc.getIGs()
 
+            //default servers...
             $scope.input.termServer = "https://ontoserver.csiro.au/stu3-latest/";
             $scope.input.confServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
             $scope.input.dataServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
 
 
 
-            console.log($scope.allRoles)
+            $http.get('./artifacts/servers.json').then(
+                function(data) {
+                    console.log(data.data)
+                    $scope.servers = data.data
+                }
+            )
+
+
+            $scope.selectServer = function(key){
+
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/namedServerList.html',
+                    //size: 'lg',
+                    controller: function($scope,servers){
+                        $scope.servers = servers;
+                        $scope.select = function(svr) {
+
+                            $scope.$close(svr);
+                        }
+                    },
+                    resolve : {
+                        servers: function () {          //the default config
+
+                            return $scope.servers
+                        }
+                    }
+                }).result.then(
+                    function(data) {
+                        console.log(data)
+                        $scope.input[key] = data.url;
+                    }
+                )
+
+            }
+
+
+            //console.log($scope.allRoles)
             //$scope.mdOptions = {iconlibrary:'glyph'}
 
             $scope.canSave = true;

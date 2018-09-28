@@ -1,6 +1,13 @@
-{
-  "servers": [
-    {"id":"svr1","name": "Grahame-3","address":"http://test.fhir.org/r3/"},
-    {"id":"svr2","name": "HAPI-3","address":"http://fhirtest.uhn.ca/baseDstu3/"}
-  ]
-}
+[
+  {"name": "Grahame-3","url":"http://test.fhir.org/r3/"},
+  {"name": "HAPI-3","url":"http://fhirtest.uhn.ca/baseDstu3/"},
+  {"name":"Vonk-3","url":"http://vonk.fire.ly/"},
+  {"name":"HealthConnex STU3 server","url":"http://sqlonfhir-stu3.azurewebsites.net/fhir/"},
+  {"name":"Local HAPI STU3 server","url":"http://localhost:8080/baseDstu3/"},
+  {"name":"clinFHIR R3","url":"http://snapp.clinfhir.com:8081/baseDstu3/"},
+  {"name":"Ontoserver (terminology)","url":"https://ontoserver.csiro.au/stu3-latest/"},
+  {"name":"hofSmile","url":"https://hof.smilecdr.com:8000/"}
+]
+
+
+
