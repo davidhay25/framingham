@@ -590,14 +590,14 @@ angular.module("sampleApp")
 
                 } */
 
-                $scope.partChartOptions = {legend:{display:true}};
+                $scope.partChartOptions = {legend:{display:true,position:'left'}};
                 $scope.partChartData = [];
                 $scope.partChartLabels = []
                 $scope.eventReport.tracks.forEach(function(track){
                     var primary = track.persons;
                     if (primary > 0) {
                         $scope.partChartData.push(primary);
-                        $scope.partChartLabels.push(track.name);
+                        $scope.partChartLabels.push(track.name + " ("+primary + ")");
                     } else {
                         //create  a list of empty tracks here
                     }
