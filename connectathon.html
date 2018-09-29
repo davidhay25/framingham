@@ -1805,18 +1805,18 @@
                                 </div>
                             </div>
                         </uib-tab>
-                        <uib-tab heading="Summary">
-
+                        <uib-tab heading="Summary - Primary only">
                             <canvas id="participationBar" class="chart chart-horizontal-bar" chart-options="barOptions"
                                     chart-data="partChartData" chart-labels="partChartLabels">
                             </canvas>
 
-                            <!--
-                            <canvas id="participationPie" class="chart chart-pie"
-                                    chart-data="partChartData" chart-labels="partChartLabels"
-                                    chart-options="partChartOptions" chart-colors="chartColors">
+
+                        </uib-tab>
+                        <uib-tab heading="Summary - Primary and watchers">
+                            <canvas id="participationBarAll" class="chart chart-horizontal-bar" chart-options="barOptions"
+                                    chart-data="partChartDataAll" chart-labels="partChartLabelsAll">
                             </canvas>
-                            -->
+
 
                         </uib-tab>
                     </uib-tabset>

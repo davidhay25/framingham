@@ -591,10 +591,10 @@ angular.module("sampleApp")
                 } */
 
                 $scope.partChartOptions = {legend:{display:true,position:'left'}};
+
+                //sorting by primary only
                 $scope.partChartData = [];
-                $scope.partChartLabels = []
-
-
+                $scope.partChartLabels = [];
                 var clone = angular.copy($scope.eventReport.tracks);
                 clone.sort(function(a,b){
                     if (a.persons == b.persons) {
@@ -608,16 +608,43 @@ angular.module("sampleApp")
 
                 clone.forEach(function(track){
                     var primary = track.persons;
-                   // if (primary > 0) {
                         $scope.partChartData.push(primary);
                         $scope.partChartLabels.push(track.name + " ("+primary + ")");
-                  //  } else {
-                        //create  a list of empty tracks here
-                  //  }
 
                 });
 
                 console.log( $scope.partChartData)
+
+                //primary plus watchers
+                $scope.partChartDataAll = [];
+                $scope.partChartLabelsAll = [];
+                var cloneAll = angular.copy($scope.eventReport.tracks);
+
+
+                cloneAll.forEach(function(track){
+                    track.all = track.persons + track.watchers;
+                })
+
+                cloneAll.sort(function(a,b){
+                    if (a.all == b.all) {
+                        return 0
+                    } else if (a.all > b.all) {
+                        return -1
+                    } else {
+                        return 1
+                    }
+                })
+
+                cloneAll.forEach(function(track){
+                    var all = track.all;
+                    $scope.partChartDataAll.push(all);
+                    $scope.partChartLabelsAll.push(track.name + " ("+all + ")");
+
+                });
+
+
+
+
               //  $scope.partChartLabels.sort();
 
             };
