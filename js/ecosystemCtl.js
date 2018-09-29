@@ -264,7 +264,18 @@ angular.module("sampleApp")
             );
 
 
-            $scope.getScenarioDescription = function(scenario) {
+
+            $scope.chartLabels = [];
+            $scope.chartData = [];
+            $scope.chartColors = []; //'#00cc00', '#cc3300', '#ffff99']
+            $scope.chartOptions = {legend:{display:true}};
+
+
+
+
+
+
+                    $scope.getScenarioDescription = function(scenario) {
                 return $filter('markDown')(scenario.description)
             };
 
@@ -557,6 +568,43 @@ angular.module("sampleApp")
 
             $scope.makeEventReport = function() {
                 $scope.eventReport = ecosystemSvc.makeEventReport($scope.tracks)
+
+                console.log($scope.eventReport)
+
+/*
+
+                function makePartPie() {
+
+
+                    var summary = $scope.resultsSummary.scenario[scenario.name];
+                    if (summary) {
+                        if (summary.pass > 0) {
+                            $scope.chartLabels.push('pass ');// + summary.pass);
+                            $scope.chartData.push(summary.pass)
+                            $scope.chartColors.push('#00cc00')
+                        }
+                        if (summary.fail > 0) {
+
+                        }
+                    }
+
+                } */
+
+                $scope.partChartOptions = {legend:{display:true}};
+                $scope.partChartData = [];
+                $scope.partChartLabels = []
+                $scope.eventReport.tracks.forEach(function(track){
+                    var primary = track.persons;
+                    if (primary > 0) {
+                        $scope.partChartData.push(primary);
+                        $scope.partChartLabels.push(track.name);
+                    } else {
+                        //create  a list of empty tracks here
+                    }
+
+                })
+
+
             };
 
             $scope.selectServerRole = function(serverRole){

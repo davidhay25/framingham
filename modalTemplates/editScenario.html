@@ -360,7 +360,7 @@
                         </uib-tab-heading>
                         <br/>
                         <div ng-repeat = "role in allRoles">
-
+                            <!-- If a role is added as part of a track, then only show for that track -->
                             <div class="row" ng-show="!role.trackId || role.trackId == track.id">
                                 <div class="col-md-2 col-sm-2">
                                     <checkbox ng-model="input.roles[role.id]" ng-change="updateScenarioRoles()"></checkbox>

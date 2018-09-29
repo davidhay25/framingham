@@ -1696,111 +1696,124 @@
 
                 <uib-tab heading="Participation report" select="makeEventReport()">
                     <br/>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-6">
-                            <div class="trackScroll">
-                            <table class="table table-bordered">
-                                <tr><th>Track</th><th>Primary</th><th>Watchers</th><th>Clients</th><th>Servers</th>
-                                    <th>Results</th></tr>
-                                <tr ng-repeat="track in eventReport.tracks | orderBy: 'name' ">
-                                    <td><div class="clickable" ng-click="input.partTrack = track">{{track.name}}</div></td>
-                                    <td width="70px"><span ng-show="track.persons">{{track.persons}}</span></td>
 
-                                    <td width="70px"><span ng-show="track.watchers">{{track.watchers}}</span></td>
+                    <uib-tabset>
+                        <uib-tab heading="Individual">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="trackScroll">
+                                        <table class="table table-bordered">
+                                            <tr><th>Track</th><th>Primary</th><th>Watchers</th><th>Clients</th><th>Servers</th>
+                                                <th>Results</th></tr>
+                                            <tr ng-repeat="track in eventReport.tracks | orderBy: 'name' ">
+                                                <td><div class="clickable" ng-click="input.partTrack = track">{{track.name}}</div></td>
+                                                <td width="70px"><span ng-show="track.persons">{{track.persons}}</span></td>
+
+                                                <td width="70px"><span ng-show="track.watchers">{{track.watchers}}</span></td>
 
 
-                                    <td width="70px"><span ng-show="track.clients.length > 0">{{track.clients.length}}</span></td>
-                                    <td width="70px"><span ng-show="track.servers.length > 0">{{track.servers.length}}</span></td>
+                                                <td width="70px"><span ng-show="track.clients.length > 0">{{track.clients.length}}</span></td>
+                                                <td width="70px"><span ng-show="track.servers.length > 0">{{track.servers.length}}</span></td>
 
-                                    <td width="70px"><span ng-show="track.results.total">{{track.results.total}}</span></td>
+                                                <td width="70px"><span ng-show="track.results.total">{{track.results.total}}</span></td>
 
-                                </tr>
-                                <tr><th></th><th>{{eventReport.totalPersons}}</th><th>{{eventReport.totalWatchers}}</th><th></th>
-                                    <th></th><th>{{eventReport.totalResults}}</th></tr>
-                            </table>
+                                            </tr>
+                                            <tr><th></th><th>{{eventReport.totalPersons}}</th><th>{{eventReport.totalWatchers}}</th><th></th>
+                                                <th></th><th>{{eventReport.totalResults}}</th></tr>
+                                        </table>
 
-                                <!--
-                                <table class="table table-bordered">
-                                <tr><th>Track</th><th>Primary</th><th>%</th><th>Watchers</th><th>%</th><th>Clients</th><th>Servers</th>
-                                    <th>Results</th><th>%</th></tr>
-                                <tr ng-repeat="track in eventReport.tracks | orderBy: 'name' ">
-                                    <td><div class="clickable" ng-click="input.partTrack = track">{{track.name}}</div></td>
-                                    <td width="70px"><span ng-show="track.persons">{{track.persons}}</span></td>
-                                    <td width="70px"><span ng-show="track.persons">{{(track.persons/eventReport.totalPersons)*100 | number:0}}%</span></td>
-                                    <td width="70px"><span ng-show="track.watchers">{{track.watchers}}</span></td>
-                                    <td width="70px"><span ng-show="track.watchers">{{(track.watchers/eventReport.totalWatchers)*100 | number:0}}%</span></td>
+                                        <!--
+                                        <table class="table table-bordered">
+                                        <tr><th>Track</th><th>Primary</th><th>%</th><th>Watchers</th><th>%</th><th>Clients</th><th>Servers</th>
+                                            <th>Results</th><th>%</th></tr>
+                                        <tr ng-repeat="track in eventReport.tracks | orderBy: 'name' ">
+                                            <td><div class="clickable" ng-click="input.partTrack = track">{{track.name}}</div></td>
+                                            <td width="70px"><span ng-show="track.persons">{{track.persons}}</span></td>
+                                            <td width="70px"><span ng-show="track.persons">{{(track.persons/eventReport.totalPersons)*100 | number:0}}%</span></td>
+                                            <td width="70px"><span ng-show="track.watchers">{{track.watchers}}</span></td>
+                                            <td width="70px"><span ng-show="track.watchers">{{(track.watchers/eventReport.totalWatchers)*100 | number:0}}%</span></td>
 
-                                    <td width="70px"><span ng-show="track.watchers">{{track.clients.length}}</span></td>
-                                    <td width="70px"><span ng-show="track.watchers">{{track.servers.length}}</span></td>
+                                            <td width="70px"><span ng-show="track.watchers">{{track.clients.length}}</span></td>
+                                            <td width="70px"><span ng-show="track.watchers">{{track.servers.length}}</span></td>
 
-                                    <td width="70px"><span ng-show="track.results.total">{{track.results.total}}</span></td>
-                                    <td width="70px"><span ng-show="track.results.total">{{(track.results.total/eventReport.totalResults)*100 | number:0}}%</span></td>
-                                </tr>
-                                <tr><th></th><th>{{eventReport.totalPersons}}</th><th></th><th>{{eventReport.totalWatchers}}</th><th></th>
-                                    <th></th><th>{{eventReport.totalResults}}</th></tr>
-                            </table>
-                                -->
+                                            <td width="70px"><span ng-show="track.results.total">{{track.results.total}}</span></td>
+                                            <td width="70px"><span ng-show="track.results.total">{{(track.results.total/eventReport.totalResults)*100 | number:0}}%</span></td>
+                                        </tr>
+                                        <tr><th></th><th>{{eventReport.totalPersons}}</th><th></th><th>{{eventReport.totalWatchers}}</th><th></th>
+                                            <th></th><th>{{eventReport.totalResults}}</th></tr>
+                                    </table>
+                                        -->
 
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
 
-                            <div ng-hide="input.partTrack">
-                                Select a Track in the table to view the participants
-                            </div>
+                                    <div ng-hide="input.partTrack">
+                                        Select a Track in the table to view the participants
+                                    </div>
 
-                            <div ng-show="input.partTrack">
-                                <div class="banner">{{input.partTrack.name}}</div>
-                                <h4>Primary Participants
-                                    <span ng-show="input.partTrack.personsList.length > 0" class="badge">
+                                    <div ng-show="input.partTrack">
+                                        <div class="banner">{{input.partTrack.name}}</div>
+                                        <h4>Primary Participants
+                                            <span ng-show="input.partTrack.personsList.length > 0" class="badge">
                                         {{input.partTrack.personsList.length}}</span>
-                                </h4>
-                                <ul>
-                                    <li ng-repeat="person in input.partTrack.personsList">
-                                        {{person.name}}
-                                    </li>
-                                </ul>
+                                        </h4>
+                                        <ul>
+                                            <li ng-repeat="person in input.partTrack.personsList">
+                                                {{person.name}}
+                                            </li>
+                                        </ul>
 
-                                <h4>Watchers
-                                    <span ng-show="input.partTrack.watchersList.length > 0" class="badge">
+                                        <h4>Watchers
+                                            <span ng-show="input.partTrack.watchersList.length > 0" class="badge">
                                         {{input.partTrack.watchersList.length}}</span>
-                                </h4>
-                                <ul>
-                                    <li ng-repeat="person in input.partTrack.watchersList">
-                                        {{person.name}}
-                                    </li>
-                                </ul>
+                                        </h4>
+                                        <ul>
+                                            <li ng-repeat="person in input.partTrack.watchersList">
+                                                {{person.name}}
+                                            </li>
+                                        </ul>
 
-                                <h4>Clients (in any scenario)
-                                    <span ng-show="input.partTrack.clients.length > 0" class="badge">
+                                        <h4>Clients (in any scenario)
+                                            <span ng-show="input.partTrack.clients.length > 0" class="badge">
                                         {{input.partTrack.clients.length}}</span>
-                                </h4>
-                                <ul>
-                                    <li ng-repeat="client in input.partTrack.clients">
-                                        {{client.client.name}} ({{client.client.contact[0].name}})
+                                        </h4>
+                                        <ul>
+                                            <li ng-repeat="client in input.partTrack.clients">
+                                                {{client.client.name}} ({{client.client.contact[0].name}})
 
-                                    </li>
-                                </ul>
+                                            </li>
+                                        </ul>
 
-                                <h4>Servers (in any scenario)
-                                    <span ng-show="input.partTrack.servers.length > 0" class="badge">
+                                        <h4>Servers (in any scenario)
+                                            <span ng-show="input.partTrack.servers.length > 0" class="badge">
                                         {{input.partTrack.servers.length}}</span>
-                                </h4>
-                                <ul>
-                                    <li ng-repeat="server in input.partTrack.servers">
-                                        {{server.server.name}} ({{server.server.contact[0].name}})
-                                    </li>
-                                </ul>
+                                        </h4>
+                                        <ul>
+                                            <li ng-repeat="server in input.partTrack.servers">
+                                                {{server.server.name}} ({{server.server.contact[0].name}})
+                                            </li>
+                                        </ul>
 
+                                    </div>
+
+                                    <!--                         <pre>
+                                                                 {{input.partTrack | json}}
+                                                             </pre>
+                                 -->
+
+                                </div>
                             </div>
+                        </uib-tab>
+                        <uib-tab heading="Summary">
+                            <canvas id="participationPie" class="chart chart-pie"
+                                    chart-data="partChartData" chart-labels="partChartLabels"
+                                    chart-options="partChartOptions" chart-colors="chartColors">
+                            </canvas>
 
-   <!--                         <pre>
-                                {{input.partTrack | json}}
-                            </pre>
--->
+                        </uib-tab>
+                    </uib-tabset>
 
-                        </div>
-                    </div>
 
 
 
