@@ -617,6 +617,7 @@ angular.module("sampleApp")
 
                 });
 
+                console.log( $scope.partChartData)
               //  $scope.partChartLabels.sort();
 
             };
