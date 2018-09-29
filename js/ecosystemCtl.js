@@ -597,7 +597,9 @@ angular.module("sampleApp")
 
                 var clone = angular.copy($scope.eventReport.tracks);
                 clone.sort(function(a,b){
-                    if (a.primary > b.primary) {
+                    if (a.primary == b.primary) {
+                        return 0
+                    } else if (a.primary > b.primary) {
                         return 1
                     } else {
                         return -1
