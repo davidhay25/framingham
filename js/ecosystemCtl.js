@@ -593,7 +593,18 @@ angular.module("sampleApp")
                 $scope.partChartOptions = {legend:{display:true,position:'left'}};
                 $scope.partChartData = [];
                 $scope.partChartLabels = []
-                $scope.eventReport.tracks.forEach(function(track){
+
+
+                var clone = angular.copy($scope.eventReport.tracks);
+                clone.sort(function(a,b){
+                    if (a.primary > b.primary) {
+                        return 1
+                    } else {
+                        return -1
+                    }
+                })
+
+                clone.forEach(function(track){
                     var primary = track.persons;
                    // if (primary > 0) {
                         $scope.partChartData.push(primary);
@@ -604,7 +615,7 @@ angular.module("sampleApp")
 
                 });
 
-               // $scope.partChartLabels.sort();
+              //  $scope.partChartLabels.sort();
 
             };
 
