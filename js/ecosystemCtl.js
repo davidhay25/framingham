@@ -595,16 +595,16 @@ angular.module("sampleApp")
                 $scope.partChartLabels = []
                 $scope.eventReport.tracks.forEach(function(track){
                     var primary = track.persons;
-                    if (primary > 0) {
+                   // if (primary > 0) {
                         $scope.partChartData.push(primary);
                         $scope.partChartLabels.push(track.name + " ("+primary + ")");
-                    } else {
+                  //  } else {
                         //create  a list of empty tracks here
-                    }
+                  //  }
 
                 });
 
-                $scope.partChartLabels.sort();
+               // $scope.partChartLabels.sort();
 
             };
 

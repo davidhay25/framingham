@@ -1806,10 +1806,17 @@
                             </div>
                         </uib-tab>
                         <uib-tab heading="Summary">
+
+                            <canvas id="participationBar" class="chart chart-bar" chart-options="barOptions"
+                                    chart-data="partChartData" chart-labels="partChartLabels">
+                            </canvas>
+
+                            <!--
                             <canvas id="participationPie" class="chart chart-pie"
                                     chart-data="partChartData" chart-labels="partChartLabels"
                                     chart-options="partChartOptions" chart-colors="chartColors">
                             </canvas>
+                            -->
 
                         </uib-tab>
                     </uib-tabset>
