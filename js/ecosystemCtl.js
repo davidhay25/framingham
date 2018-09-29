@@ -600,9 +600,9 @@ angular.module("sampleApp")
                     if (a.persons == b.persons) {
                         return 0
                     } else if (a.persons > b.persons) {
-                        return 1
-                    } else {
                         return -1
+                    } else {
+                        return 1
                     }
                 })
 
