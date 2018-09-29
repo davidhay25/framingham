@@ -602,8 +602,9 @@ angular.module("sampleApp")
                         //create  a list of empty tracks here
                     }
 
-                })
+                });
 
+                $scope.partChartLabels.sort();
 
             };
 
