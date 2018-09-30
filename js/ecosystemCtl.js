@@ -633,12 +633,12 @@ angular.module("sampleApp")
                     } else {
                         return 1
                     }
-                })
+                });
 
                 cloneAll.forEach(function(track){
                     var all = track.all;
                     $scope.partChartDataAll.push(all);
-                    $scope.partChartLabelsAll.push(track.name + " ("+all + ")");
+                    $scope.partChartLabelsAll.push(track.name + " ("+track.persons + ' / ' + track.watchers + ")");
 
                 });
 

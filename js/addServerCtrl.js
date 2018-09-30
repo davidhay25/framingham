@@ -16,6 +16,7 @@ angular.module("sampleApp")
 
             if (existingServer) {
                 //this is an edit
+                $scope.serverId = existingServer.id;
                 $scope.editingServer = true;
                 serverExists = true;
                 $scope.saveText = "Update server";//+ existingServer.name;
