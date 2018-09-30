@@ -1567,9 +1567,16 @@
                                     <uib-tabset ng-show="selectedTrackSummary">
                                         <uib-tab heading="All scenarios summary">
                                             <br/>
+                                            <!--
                                             <canvas id="bar" class="chart chart-bar" chart-options="barOptions"
                                                     chart-data="barData" chart-labels="barLabels" chart-series="barSeries">
                                             </canvas>
+                                            -->
+
+                                            <canvas id="bar" class="chart chart-horizontal-bar" chart-options="barOptions"
+                                                    chart-data="barData" chart-labels="barLabels" chart-series="barSeries">
+                                            </canvas>
+
                                         </uib-tab>
                                         <uib-tab heading="Summary by Scenario">
                                             <br/>
