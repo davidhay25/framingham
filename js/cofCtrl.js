@@ -1,7 +1,8 @@
 
 angular.module("sampleApp")
     .controller('cofCtrl',
-        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc,modalService,$q) {
+        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc,
+                  modalService,$q) {
 
             $scope.input = {};
             $scope.cofTypeList = [];
@@ -229,14 +230,6 @@ angular.module("sampleApp")
 
 
 
-            /*
-             .backgroundColor('white')
-            .nodeThreeObject(function(node){
-                        const sprite = new SpriteText(node.name);
-                        sprite.color = node.color;
-                        sprite.textHeight = 8;
-                        return sprite;
-                    })*/
 
 
             //the variable to access methods in the directive...
@@ -304,17 +297,17 @@ angular.module("sampleApp")
                     secondaryText :" Server Url: "+ $scope.selectedTrack.dataServer
                 };
 
-
                 modalService.showModal({}, modalOptions).then(
                     function(){
-
                        cofSvc.sendToFHIRServer(cofTypeList,$scope.selectedTrack ).then(
                            function (data) {
                                console.log(data)
                                alert('Resources saved.')
+                               $scope.isDirty = false;
+                               $scope.saveGraph(true);  //updates the isDirty   flag
                            },
                            function (err) {
-                               alert(angular.toJson(err))
+                               alert(angular.toJson(err.data))      //todo - actually should be an OO
                                console.log(err)
                            }
                        )
@@ -897,10 +890,12 @@ angular.module("sampleApp")
             $scope.showResourceTable = {};
 
             $scope.saveGraph = function (hideNotification) {
-
+                $scope.isDirty = true;
                 var user = ecosystemSvc.getCurrentUser();
                 if (user) {
+                   // $scope.currentItem.dirty = true;
                     var saveObject = {};
+                    saveObject.isDirty = $scope.isDirty;
                     saveObject.userid = user.id;
                     saveObject.scenarioid = $scope.cofScenario.id;
                     saveObject.trackid = $scope.selectedTrack.id;
@@ -948,12 +943,12 @@ angular.module("sampleApp")
                         function (data) {
 
                             var vo = data.data;
-
+                            $scope.isDirty = vo.isDirty;
                             if (vo && vo.items) {
                                 $scope.cofTypeList = vo.items;
                                 $scope.input.scenarioNotes = vo.scenarioNotes;
 
-                                //now see if there is a linked patient. If there is, we'll show a tab that allows their resources to be linked
+                                //now see if there is a linked patient. If there is, we'll add a link that allows their resources to be linked as well
 
                                 vo.items.forEach(function (item) {
                                     if (item.baseType == 'Patient' && item.linked) {
@@ -1344,7 +1339,7 @@ angular.module("sampleApp")
                         allScenarios[$scope.cofScenario.id] = $scope.cofScenario
                     }
 
-                    //is the new scenario already have data
+                    //does the new scenario already have data
                     if (allScenarios[scenario.id]) {
                         $scope.cofScenario = allScenarios[scenario.id]
                     } else {

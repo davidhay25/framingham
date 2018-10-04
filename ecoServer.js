@@ -644,9 +644,8 @@ app.put('/scenarioGraph',function(req,res){
     data.issued = new Date();
     var collection = req.selectedDbCon.collection('scenarioGraph')
 
-
-
-    collection.update({id:data.id},{$set: {items:data.items,scenarioNotes:data.scenarioNotes}},function(err,result){
+    collection.update({id:data.id},
+        {$set: {isDirty:data.isDirty,items:data.items,scenarioNotes:data.scenarioNotes}},function(err,result){
         if (err) {
             console.log(err)
             res.send(err,500)
