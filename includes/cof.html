@@ -72,13 +72,59 @@
 
 
                     </uib-tab-heading>
+                   
                     <div class="row">
                         <div class="col-sm-3 clickable" ng-repeat="type in cofScenario.scenarioTypes">
                             <span ng-click="selectCofType(type)"  style="cursor:pointer">{{type}}</span>
                         </div>
                         <div class="col-sm-3 clickable" ng-click="selectCoreType()">&gt;Select Direct&lt;</div>
+
+                        <div class="col-sm-3 clickable" ng-show="graphHasLinkedPatient"
+                             ng-click="selectPatientInstanceResource()">&gt;Select from Patient&lt;
+                        </div>
+
+
                     </div>
                 </uib-tab>
+
+
+                <uib-tab>
+                    <uib-tab-heading>
+                        Select Patient
+                    </uib-tab-heading>
+                    <div class="row">
+                        <div class="col-sm-3 col-md-3">
+                            <input class="form-control" type="text" ng-model="input.selectPatientName"/>
+                        </div>
+                        <div class="col-sm-2 col-md-2">
+                            <button class="btn btn-link" ng-click="findPatient(input.selectPatientName)">Search</button>
+
+                        </div>
+                        <div class="col-sm-7 col-md-7">
+                            <div class="list-group">
+                                <div ng-repeat="item in lstSelectedPatients">
+                                    <div class="row">
+                                        <div class="col-sm-8 col-md-8">
+                                            {{item.name}}
+                                        </div>
+                                        <div class="col-sm-4 col-md-4">
+                                            <button class="btn btn-link" ng-click="selectPatient(item)">Select</button>
+                                        </div>
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <!--
+                <uib-tab ng-show="graphHasLinkedPatient" heading="Link resource">
+                    <button class="btn btn-link" ng-click="loadPatientResources()">Load resources</button>
+                </uib-tab>
+                -->
                 <uib-tab >
                     <uib-tab-heading>
                         Logical Models
@@ -140,7 +186,11 @@
                                     </a>
 
                                 </td>
-                                <th>{{item.category}}</th>
+                                <th>{{item.category}}
+
+                                    <span ng-show="item.linked"> (Linked) </span>
+
+                                </th>
                                 <td><span class="clickable" ng-click="editDescription(item)"> {{item.description}}</span></td>
                                 <td>
                                     <div ng-repeat="row in item.table">
@@ -178,6 +228,11 @@
                     <div class="clearfix"/>
                     <div id="cofGraph"></div>
                 </uib-tab>
+                <uib-tab heading="3D Graph" select = "fit3DGraph()" ng-show="1==2">
+                    <div class="clearfix"/>
+                    <div id="3d-graph" style="height: 200px;width: 200px;border: #2b2b2b;border-width: medium"></div>
+                </uib-tab>
+
                 <uib-tab heading="Notes on scenario" deselect="resourceNoteUpdated()">
 
                          <form name="form">
@@ -218,11 +273,16 @@
                                         <span class="clickable" ng-click="selectItem(item)"> {{item.type}}</span>
                                     </td>
                                     <td><span class="clickable" ng-click="editDescription(item)"> {{item.description}}</span></td>
-                                    <td>{{item.id}}</td>
+                                    <td>{{item.id}}
+                                        <span ng-show="item.linked"> (linked) </span>
+                                    </td>
                                     <td width="10%">
 
+                                        <div ng-show="item.linked">
+                                            Not Checked
+                                        </div>
 
-                                        <div  ng-hide="entry.isLogical" ng-switch on="item.validation.isValid">
+                                        <div  ng-hide="item.isLogical || item.linked" ng-switch on="item.validation.isValid">
                                             <div ng-switch-when="yes">
                                                 <i class="glyphicon glyphicon-ok clickable pass"
                                                    title="Resource is valid">
@@ -271,6 +331,13 @@
         <div ng-class="rightPane">
             <uib-tabset ng-show="currentItem">
                 <uib-tab heading="Table editor">
+
+                    <div ng-show="linkedItemDisplay">
+                        <strong>{{linkedItemDisplay}}</strong>
+                    </div>
+
+                    <pre ng-show="linkedItemResource">{{linkedItemResource | json}}</pre>
+
                     <tbl-resource trigger="showResourceTable" reference="cofAddReference"
                                   resource-json="fnResourceJson"
                                   updated="formWasUpdated"
@@ -366,7 +433,7 @@
 
 
                 </uib-tab>
-                <uib-tab heading="Resource instance">
+                <uib-tab heading="Resource instance (including validation errors">
                     <br/>
 
                     <uib-tabset>

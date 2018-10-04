@@ -320,7 +320,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
             lst.forEach(function(item) {
                 console.log(item)
-                if (item.table) {
+                if (item.table && ! item.linked) {      //items must have data and be linked...
                     var treeData = that.makeTree(item.table);
                     var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);  //create the json for a single entry
                     //console.log(vo.resource)
@@ -808,8 +808,6 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                         patientNodeId = item.id
                         console.log(patientNodeId)
                     }
-
-
                 })
             }
 

@@ -188,7 +188,7 @@
                     <div class="col-sm-3 col-md-3">
                         Terminology Server
                     </div>
-                    <div class="col-sm-8 col-md-8">
+                    <div class="col-sm-8 col-md-8" >
                         <input class="form-control" ng-model="input.termServer"/>
                     </div>
                     <div class="col-sm-1 col-md-1">
@@ -197,7 +197,7 @@
                         </i>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" ng-hide="track.trackType == 'lmreview'">
                     <div class="col-sm-3 col-md-3" >
                         Conformance Server
                     </div>
@@ -210,7 +210,7 @@
                         </i>
                     </div>
                 </div>
-                <div class="row" ng-hide="track.allowDirectSample">
+                <div class="row" ng-hide="track.allowDirectSample || track.trackType == 'lmreview'">
                     <div class="col-sm-3 col-md-3">
                         Data Server
                     </div>
@@ -228,10 +228,10 @@
                         Logical Model
                     </div>
                     <div class="col-sm-9 col-md-9">
-                        <input class="form-control" ng-model="input.LM"/>
+                        <input class="form-control"  placeholder="Direct URL to model" ng-model="input.LM"/>
                     </div>
                 </div>
-
+<!--
                 <div class="row"  ng-show="track.trackType == 'scenario'">
                     <div class="col-sm-3 col-md-3">
                         Implementation Guide
@@ -249,6 +249,7 @@
                         </i>
                     </div>
                 </div>
+                -->
             </uib-tab>
         </uib-tabset>
     </div>

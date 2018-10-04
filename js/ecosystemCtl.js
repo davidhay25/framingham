@@ -11,7 +11,7 @@ angular.module("sampleApp")
             $scope.input = {};
 
             //which track type to display
-            $scope.input.trackListDisplay = 'all';
+            $scope.input.trackListDisplay = 'clinical';     //<< change back to 'all' after connectathon
 
             $scope.showTrack = function(track) {
 
@@ -34,7 +34,7 @@ angular.module("sampleApp")
             $scope.trackTypeDisplay = {};
             $scope.trackTypeDisplay.technical = "Technical";
             $scope.trackTypeDisplay.lmreview = "Logical Model Review";
-            $scope.trackTypeDisplay.scenario = "Scenario graph";
+            $scope.trackTypeDisplay.scenario = "Resource graph";
 
 
 /*

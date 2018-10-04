@@ -12,7 +12,231 @@ angular.module("sampleApp")
             var allScenarios = {};
 
 
+            $scope.findPatient = function(name) {
+                $scope.lstSelectedPatients = []
+                var svr = $scope.selectedTrack.dataServer;
+                var url = svr + "Patient?name="+name
+                $http.get(url).then(
+                    function(data) {
+                        console.log(data)
 
+                        if (data.data.entry) {
+                            data.data.entry.forEach(function(entry) {
+                                var resource = entry.resource;
+                                if (resource.name) {
+                                    var name = resource.name[0].text;
+                                    if (!name) {
+                                        name = "";
+                                        if (resource.name[0].given) {
+                                            resource.name[0].given.forEach(function(gName){
+                                                name += gName + " ";
+                                            });
+                                            if (resource.name[0].family) {
+                                                name += resource.name[0].family;
+                                            }
+
+                                        }
+
+                                    }
+
+
+                                    $scope.lstSelectedPatients.push({name:name,resource:resource})
+                                }
+                            })
+                        }
+                    }
+                )
+            };
+
+            //when a patient is selected from the server. consider it linked, and don't allow changes
+            $scope.selectPatient = function(itemPatient) {
+//console.log(itemPatient)
+                var item = {id : itemPatient.resource.id, type:'Patient'}
+                item.baseType = 'Patient';
+                item.category = 'core';
+                item.narrativeStatus = 'generated';     //default to automatically building the text...
+                item.description = itemPatient.name;
+                item.linked = true;     //so this won;t be updated to the server
+                item.linkedResource = itemPatient.resource;
+                $scope.graphHasLinkedPatient = true;
+
+                $scope.cofTypeList.push(item)
+                makeGraph();
+
+                //makeDocumentDisplay();  //if there is a Composition, sets up the document tab...
+
+                $scope.saveGraph(true);
+                $scope.lstSelectedPatients = []
+
+
+            }
+
+
+            //Select an instance for the patient. Assume there is only 1.
+            $scope.selectPatientInstanceResource = function(){
+
+                //find the linked patient
+                var patientItem;       //a
+                var patientResource;
+                $scope.cofTypeList.forEach(function (item) {
+                    if (item.baseType == 'Patient' && item.linked) {
+                        patientResource = item.linkedResource;
+                        patientItem = item;
+                        console.log(patientResource)
+                    }
+                });
+
+                if (patientResource) {
+
+                    var url = $scope.selectedTrack.dataServer + "Patient/"+patientResource.id + '/$everything';
+                    $http.get(url).then(
+                        function(data) {
+                            console.log(data.data)
+                            $uibModal.open({
+                                templateUrl: 'modalTemplates/selectPatientResource.html',
+                                size: 'lg',
+                                controller: 'selectPatientResourceCtrl',
+                                resolve: {
+                                    patient: function () {
+                                        return patient
+                                    },
+                                    allResources: function () {
+                                        return data.data
+                                    }
+                                }
+                            }).result.then(function (resource) {
+                                console.log(resource)
+
+                                var item = {id : resource.id, type:resource.resourceType}
+                                item.baseType = resource.resourceType;
+                                item.category = 'core';
+                                item.narrativeStatus = 'generated';     //default to automatically building the text...
+                                item.description = resource.resourceType;
+                                item.linked = true;     //so this won;t be updated to the server
+                                item.linkedResource = resource;
+
+                                var row = {references:[]};
+                                var ref = {};
+                                ref.targetItem = {id:patientResource.id};
+                                ref.sourcePath = "Subject";     //todo may not be correct...
+                                row.references.push(ref)
+                                item.table = [row];
+
+
+                                $scope.cofTypeList.push(item);
+
+
+                                //there must be a reference to the Patient (or it would not have been in the list
+
+                                /*
+                                if (item.table) {
+                    item.table.forEach(function (row) {
+                        if (row.references) {
+                            row.references.forEach(function (ref) {
+                                var edge = {
+                                    id: 'e' + arEdges.length + 1, from: item.id, to: ref.targetItem.id,
+                                    label: ref.sourcePath, arrows: {to: true}
+                                };
+
+
+                                * */
+
+
+
+
+                                makeGraph();
+
+                                //makeDocumentDisplay();  //if there is a Composition, sets up the document tab...
+
+                                $scope.saveGraph(true);
+                                $scope.lstSelectedPatients = []
+                            });
+
+                        }
+                    )
+
+
+
+
+                }
+
+
+                //find the linked patient
+                var patient;
+                $scope.cofTypeList.forEach(function (item) {
+                    if (item.baseType == 'Patient' && item.linked) {
+                        patient = item.linkedResource;
+                        console.log(patient)
+                    }
+
+                })
+
+                if (patient) {
+                    var url = $scope.selectedTrack.dataServer + "Patient/"+patient.id + '/$everything';
+                    $http.get(url).then(
+                        function(data) {
+                            console.log(data.data)
+                        }
+                    )
+                }
+
+
+            }
+
+
+            $scope.fit3DGraphNOTUSED = function() {
+
+                var vo = cofSvc.makeGraph($scope.cofTypeList);
+                console.log(vo)
+                var graphData = vo.graphData;
+
+                console.log(graphData)
+                var Graph = ForceGraph3D()
+                (document.getElementById("3d-graph"));
+
+                var nodes = []// [{"id": "Myriel", "group": 1}, {"id": "Napoleon", "group": 2}]
+                var links = []//[{source: "Myriel", target: "Napoleon", value: 10}]
+
+                angular.forEach(graphData.nodes._data,function(node){
+
+                    nodes.push({id:node.id,name:node.label})
+                });
+
+                // $scope.graphData.nodes._data['0'] = "Patient";
+                angular.forEach(graphData.edges._data,function(edge){
+                    if (graphData.nodes._data[edge.to]){
+                        links.push({source:edge.from,target:edge.to})
+                    }
+
+                });
+
+                links[0].linkOpacity = 1;
+
+                console.log(nodes,links)
+
+                Graph
+                    .cooldownTicks(300)
+                    .nodeLabel('name')
+                    .linkLabel('label')
+                    .nodeAutoColorBy('group')
+                    .forceEngine('ngraph')
+                    .linkOpacity(1)
+                    .nodeResolution(4)
+
+                    .graphData({nodes: nodes, links: links});
+
+            }
+
+
+
+            /*
+             .backgroundColor('white')
+            .nodeThreeObject(function(node){
+                        const sprite = new SpriteText(node.name);
+                        sprite.color = node.color;
+                        sprite.textHeight = 8;
+                        return sprite;
+                    })*/
 
 
             //the variable to access methods in the directive...
@@ -133,25 +357,27 @@ angular.module("sampleApp")
                 var arQuery = [];
 
                 lstItem.forEach(function (item) {
+                    if (! item.linked) {    //linked items are not checked or updated
+                        var treeData = cofSvc.makeTree(item.table);
+                        var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);
 
-                    var treeData = cofSvc.makeTree(item.table);
-                    var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);
+                        //console.log(vo.resource)
+                        if (vo && vo.resource) {
+                            var dateValidated = new Date()
 
-                    //console.log(vo.resource)
-                    if (vo && vo.resource) {
-                        var dateValidated = new Date()
+                            arQuery.push (cofSvc.validateResource(vo.resource,$scope.selectedTrack).then(
+                                function(data) {
+                                    item.validation={isValid:'yes',oo:data,date:dateValidated}
+                                    console.log('valid')
+                                },
+                                function(err) {
+                                    item.validation={isValid:'no',oo:err,date:dateValidated}
+                                }
+                            ))
+                        } else {
+                            console.log("Cant get Json for "+item.id);
+                        }
 
-                        arQuery.push (cofSvc.validateResource(vo.resource,$scope.selectedTrack).then(
-                            function(data) {
-                                item.validation={isValid:'yes',oo:data,date:dateValidated}
-                                console.log('valid')
-                            },
-                            function(err) {
-                                item.validation={isValid:'no',oo:err,date:dateValidated}
-                            }
-                        ))
-                    } else {
-                        console.log("Cant get Json for "+item.id);
                     }
 
 
@@ -714,6 +940,7 @@ angular.module("sampleApp")
             //the scenarioGraph is the set of resources chosen by the user for this scenario...
             function loadScenarioGraph(cb) {
                 var user = ecosystemSvc.getCurrentUser();
+                delete $scope.graphHasLinkedPatient;
                 if (user && user.id && $scope.cofScenario) {
                     var url = '/scenarioGraph/' + user.id + "/" + $scope.cofScenario.id;
 
@@ -725,6 +952,16 @@ angular.module("sampleApp")
                             if (vo && vo.items) {
                                 $scope.cofTypeList = vo.items;
                                 $scope.input.scenarioNotes = vo.scenarioNotes;
+
+                                //now see if there is a linked patient. If there is, we'll show a tab that allows their resources to be linked
+
+                                vo.items.forEach(function (item) {
+                                    if (item.baseType == 'Patient' && item.linked) {
+                                        $scope.graphHasLinkedPatient = true;
+                                    }
+                                });
+
+
 
                                 makeDocumentDisplay();
 
@@ -930,10 +1167,19 @@ angular.module("sampleApp")
                 }
             };
 
-            //select an item from the list of items (resource instances already addre). The SD may have been loaded for this type (async) into profilesCache
+            //select an item from the list of items (resource instances already added). The SD may have been loaded for this type (async) into profilesCache
             $scope.selectItem = function(item) {
                // clearValidation();
+                delete $scope.linkedItemDisplay;
+                delete $scope.linkedItemResource;
                 $scope.currentItem = item;
+
+                if (item.linked) {      //an item linked from the server. not editable.
+                    $scope.showResourceTable.open();        //will reset the table display
+                    $scope.linkedItemDisplay = "This is a linked item and cannot be edited"
+                    $scope.linkedItemResource = item.linkedResource;
+                    return;
+                }
 
                 var type = item.type;
 
@@ -1088,6 +1334,7 @@ angular.module("sampleApp")
             //select a scenario...
             $scope.cofSelectScenario = function(scenario) {
                 delete $scope.cofType;
+
                 $scope.showResourceTable.open();        //will reset the table display
                 $scope.cofTypeList.length = 0;
 

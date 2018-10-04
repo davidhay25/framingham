@@ -72,7 +72,6 @@ angular.module("sampleApp")
                 } else {
                     makeGraph($scope.selectedGraph.items)
                 }
-
             };
 
             //add a comment to the selected item (from the graph)
@@ -205,14 +204,11 @@ angular.module("sampleApp")
                 delete $scope.itemResourceJson;
                 $scope.item = item;     //the item (containing the resourcce)
 
-
                 var treeData = cofSvc.makeTree(item.table);
                 var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);
                 if (vo && vo.resource) {
                     $scope.itemResourceJson = vo.resource;
                 }
-
-
 
                 $scope.commentItem = angular.copy(item);        //will add all the comments to this object...
 
