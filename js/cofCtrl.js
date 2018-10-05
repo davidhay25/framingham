@@ -228,10 +228,6 @@ angular.module("sampleApp")
 
             }
 
-
-
-
-
             //the variable to access methods in the directive...
             $scope.formControl = {};
 
@@ -289,11 +285,24 @@ angular.module("sampleApp")
             //save the resources to the data server. This can only be called when a data server is defined in the track
             $scope.saveToFHIRServer = function(cofTypeList){
 
+                var cnt = 0;
+                cofTypeList.forEach(function (item) {
+                    if (! item.linked) {
+                        cnt++
+                    }
+                });
+
+                if (cnt == 0) {
+                    modalService.showModal({}, {bodyText:'Sorry, there are no resources you can save'})
+                    return;
+                }
+
+
                 var modalOptions = {
                     closeButtonText: "No, I changed my mind",
                     headerText: "Store resource instances on data server",
                     actionButtonText: "Yes, let's do this!",
-                    bodyText: 'Are you sure you wish to save these '+cofTypeList.length+' resources on the data server',
+                    bodyText: 'Are you sure you wish to save these '+cnt+' resources on the data server',
                     secondaryText :" Server Url: "+ $scope.selectedTrack.dataServer
                 };
 
@@ -903,13 +912,15 @@ angular.module("sampleApp")
                     saveObject.items = $scope.cofTypeList;      //all of the items (ie the resource instances
                     saveObject.scenarioNotes = $scope.input.scenarioNotes;
 
+                    //can produce a circular structure error. why am I doing this anyway?
+                    /*
                     try {
                         var t = angular.toJson(saveObject)
                     } catch (ex) {
                         alert("There was a problem serializing the graph, and it wasn't saved. Can you please tell David Hay about this? and preferably a screen dump of the List tab")
                         return;
                     }
-
+*/
                     $http.put("/scenarioGraph",saveObject).then(
                         function(){
                             if (! hideNotification) {
@@ -1138,18 +1149,28 @@ angular.module("sampleApp")
             $scope.removeReference = function(row,inx){
 
                 row.references.splice(inx,1);
+                var item = $scope.currentItem;
+                if (item) {
+                    if (item.table) {
+                        var treeData = cofSvc.makeTree(item.table);
 
-                var treeData = cofSvc.makeTree(item.table);
-                var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);
-                if (vo) {
-                    $scope.resourceJson()({resource: vo.resource, raw: vo.data});
-                    return vo.resource;
-                } else {
-                    return {error:'Error building Json'}
+                    }
+                    makeGraph();
+                    $scope.saveGraph(true);
+
+                    var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);
+                    if (vo) {
+                        $scope.resourceJson()({resource: vo.resource, raw: vo.data});
+                        return vo.resource;
+                    } else {
+                        return {error:'Error building Json'}
+                    }
                 }
 
-                makeGraph();
-                $scope.saveGraph(true);
+
+
+
+
 
             };
 

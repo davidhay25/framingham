@@ -650,7 +650,6 @@ app.put('/scenarioGraph',function(req,res){
             console.log(err)
             res.send(err,500)
         } else {
-
             if (result.result.n == 0) {     //no matches found
                 //no updates, this is a new document
                 console.log('inserting...')
@@ -661,17 +660,12 @@ app.put('/scenarioGraph',function(req,res){
                         res.send(result)
                     }
                 })
-
-
             } else {
                 //this is an update
                 res.send(result)
             }
-
         }
     })
-
-
 });
 
 //get a single scenarioGraph by Id
@@ -939,6 +933,7 @@ app.post('/addScenarioToTrack/:track',function(req,res){
         if (err) {
             res.send(err,500)
         } else {
+
             req.selectedDbCon.collection('track').update({id:trackId},{$addToSet:{scenarioIds:scenario.id}},function(err,result){
                 if (err) {
                     res.send(err,500)
@@ -950,6 +945,57 @@ app.post('/addScenarioToTrack/:track',function(req,res){
     })
 });
 
+//add/update a track (Logical Model) result
+app.post('/track',function(req,res){
+
+    var data = req.body;
+    data.issued = new Date();
+    var collection = req.selectedDbCon.collection('track')
+
+    console.log('track',data)
+
+    var fieldsToUpdate = {};        //basically everything except scenarioIds
+    fieldsToUpdate.name = data.name;
+    fieldsToUpdate.roles = data.roles;
+    fieldsToUpdate.trackType = data.trackType;
+    fieldsToUpdate.allowGraph = data.allowGraph;
+    fieldsToUpdate.allowDirectSample = data.allowDirectSample;
+    fieldsToUpdate.termServer = data.termServer;
+    fieldsToUpdate.confServer = data.confServer;
+    fieldsToUpdate.dataServer = data.dataServer;
+    fieldsToUpdate.resultRotals = data.name;
+    fieldsToUpdate.persons = data.persons;
+    fieldsToUpdate.toi = data.toi;
+    fieldsToUpdate.chat = data.chat;
+
+
+
+    //{$set: {name:data.name,roles:data.roles,trackType:data.trackType}},function(err,result){
+
+    collection.update({id:data.id},
+        {$set: fieldsToUpdate},function(err,result){
+            if (err) {
+                console.log(err)
+                res.send(err,500)
+            } else {
+                console.log(result.result.n)
+                if (result.result.n == 0) {     //no matches found
+                    //no updates, this is a new document
+                    console.log('inserting...')
+                    collection.insertOne(data,function(err,result){
+                        if (err) {
+                            res.send(err,501)
+                        } else {
+                            res.send(result)
+                        }
+                    })
+                } else {
+                    //this is an update
+                    res.send(result)
+                }
+            }
+        })
+});
 
 
 

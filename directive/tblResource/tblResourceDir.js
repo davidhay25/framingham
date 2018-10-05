@@ -84,6 +84,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 $scope.scenario = scenario;
                 if (item) {
                     $scope.input = item;
+                    //makeTableArray(SD,track)    //<<<< temp!!!
                     $scope.input.table = $scope.input.table || makeTableArray(SD,track);
                     if (cb) {
                         cb($scope.input.table);
@@ -687,7 +688,17 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
 
                                 var type = $filter('getLogicalID')(ed.type[0].targetProfile)
+
+                                //for linkage
+                                if (! type) {
+                                    ed.type = ed.type || []
+                                    ed.type[0].targetProfile = "http://hl7.org/fhir/StructureDefinition/Resource";
+                                }
+
+                                console.log('type='+type)
+                                type = type || 'Resource';
                                 item.referenceDisplay = '--> ' + type;
+
                             }
 
                             //use in Logical models...

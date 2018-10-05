@@ -742,7 +742,9 @@ angular.module("sampleApp")
                         }
                     }
                 }).result.then(function(vo){
-                    var url = "/config/track";
+                    //var url = "/config/track";
+                    var url = "/track";     //this will only update selected fields to avoid clobbering the scenario list
+
                     var clone = angular.copy(vo.track);
                     delete clone._id;
                     delete clone.scenarios;

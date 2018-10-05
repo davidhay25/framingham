@@ -64,50 +64,8 @@ angular.module("sampleApp")
             };
 
 
-/*
-            if (scenario && library && scenario.cfScenario) {
-                for (var i=0; i<library.length;i++) {
-                    var item = library[i];
-                    if (item.name == $scope.scenario.cfScenario.name) {
-                        $scope.input.selectedLibraryItem = item;
-                        $scope.selectedLibrary = item;
-                        break;
-                    }
-                }
-            }
-            */
-
-            $scope.libraryItemSelectedDEP = function(item){
-
-                $scope.selectedLibrary = item;
-                $scope.scenario.cfScenario = {name:item.name};
-            };
-
-            $scope.selectHxItemDEP = function(hx) {
-
-
-                var vo = ecosystemSvc.makeGraph(hx.bundle);
-
-
-                var container = document.getElementById('resourceGraph');
-                var options = {
-                    physics: {
-                        enabled: true,
-                        barnesHut: {
-                            gravitationalConstant: -10000,
-                        }
-                    }
-                };
-
-                $scope.graph = new vis.Network(container, vo.graphData, options);
-
-
-            };
-
             scenario.scenarioTypes = scenario.scenarioTypes || []
             scenario.links = scenario.links || []
-
-
 
             $scope.allResourceTypes = angular.copy(allResourceTypes);
 
@@ -295,14 +253,14 @@ angular.module("sampleApp")
                     msg += 'Generally, you need at least 2 roles - the client and the server. \n \n  Roles are common across all ' +
                         'scenarios in the event, so you can either select existing ones, or create ones specific to this ' +
                         'scenario/track.'
-
+/*
                     var modalOptions = {
                         closeButtonText: "No, I changed my mind",
                         headerText: "Delect track",
                         actionButtonText: 'Yes, please remove',
                         bodyText: 'Are you sure you wish to remove this Scenario? After this, it will no longer be listed or available.'
                     };
-
+*/
                     modalService.showModal({}, {bodyText:msg})
 
 
@@ -317,11 +275,7 @@ angular.module("sampleApp")
                 $scope.$close(scenario)
             };
 
-            $scope.makeExampleDEP = function() {
-                $scope.exampleScenario = {resourceType:'ExampleScenario',process:[{step:[]}]}
 
-
-            };
 
             $scope.deleteScenario = function(){
                 var modalOptions = {
@@ -357,7 +311,7 @@ angular.module("sampleApp")
                 )
             }
 
-            function cfLibraryHistorySummary(hx){
+            function cfLibraryHistorySummaryDEP(hx){
                 $scope.hxSummary = []
                 hx.forEach(function (item) {
                     var hashResource = {}
