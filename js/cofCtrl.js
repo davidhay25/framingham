@@ -297,7 +297,6 @@ angular.module("sampleApp")
                     return;
                 }
 
-
                 var modalOptions = {
                     closeButtonText: "No, I changed my mind",
                     headerText: "Store resource instances on data server",
@@ -311,21 +310,25 @@ angular.module("sampleApp")
                        cofSvc.sendToFHIRServer(cofTypeList,$scope.selectedTrack ).then(
                            function (data) {
                                console.log(data)
-                               alert('Resources saved.')
+                               alert('Resources saved. (Note that even resources that failed validation may be partially saved)');
                                $scope.isDirty = false;
                                $scope.saveGraph(true);  //updates the isDirty   flag
                            },
-                           function (err) {
-                               alert(angular.toJson(err.data))      //todo - actually should be an OO
-                               console.log(err)
+                           function (oo) {
+                               //returns an OperationOutcome
+                                $scope.submitErrorOO = oo;
+                               //alert(angular.toJson(err.data))      //todo - actually should be an OO
+                               console.log(oo)
                            }
                        )
                     }
                 )
 
-
-
             };
+
+            $scope.dismissError = function(){
+                delete $scope.submitErrorOO;
+            }
 
             $scope.showOOSummary = function(oo) {
                 var display = ""
@@ -363,7 +366,7 @@ angular.module("sampleApp")
                         var treeData = cofSvc.makeTree(item.table);
                         var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);
 
-                        //console.log(vo.resource)
+                        console.log(item.baseType,vo.resource)
                         if (vo && vo.resource) {
                             var dateValidated = new Date()
 
@@ -825,9 +828,6 @@ angular.module("sampleApp")
                 if (json) {
                     drawResourceTree($scope.resourceJson.resource)
                 }
-
-
-
             };
 
             //Select a logical model rather than a core resource type
@@ -912,15 +912,15 @@ angular.module("sampleApp")
                     saveObject.items = $scope.cofTypeList;      //all of the items (ie the resource instances
                     saveObject.scenarioNotes = $scope.input.scenarioNotes;
 
-                    //can produce a circular structure error. why am I doing this anyway?
-                    /*
+                    //can produce a circular structure error. why am I doing this anyway? (answer: as a check for later)
+                    /**/
                     try {
                         var t = angular.toJson(saveObject)
                     } catch (ex) {
                         alert("There was a problem serializing the graph, and it wasn't saved. Can you please tell David Hay about this? and preferably a screen dump of the List tab")
                         return;
                     }
-*/
+
                     $http.put("/scenarioGraph",saveObject).then(
                         function(){
                             if (! hideNotification) {

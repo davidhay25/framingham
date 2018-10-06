@@ -7,6 +7,42 @@ angular.module("sampleApp").service('getDatatypeValueSvc', function() {
                 switch (dt) {
 
 
+                    case 'Ratio' :
+                        v = {}
+                        try {
+                            if (value.ratio.numerator) {
+                                var numValue = parseFloat(value.ratio.numerator.value)
+                                var numUnits = value.ratio.numerator.units;
+                                var numSystem = value.ratio.numerator.system;
+                                text += numValue + numUnits;
+                                v.numerator = {value:numValue,unit:numUnits,system:numSystem};
+                            }
+
+                        } catch (ex) {
+                            //alert?? what to do?
+                            console.log('error parsing numerator:',ex)
+                        }
+
+                        try {
+                            if (value.ratio.denominator) {
+                                var denomValue = parseFloat(value.ratio.denominator.value)
+                                var denomUnits = value.ratio.denominator.units;
+                                var denomSystem = value.ratio.denominator.system;
+                                text += " / " + denomValue + denomUnits;
+                                v.denominator = {value:denomValue,unit:denomUnits,system:denomSystem};
+                            }
+
+                        } catch (ex) {
+                            //alert??  what to do?
+                            console.log('error parsing denominator:',ex)
+                        }
+
+
+
+
+
+
+                        break;
 
                     case 'positiveInt' :
                         v = parseInt(value.integer,10);

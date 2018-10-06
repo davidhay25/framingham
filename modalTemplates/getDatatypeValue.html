@@ -94,24 +94,43 @@
 
             <div ng-show="datatype == 'Ratio'">
                 <div class="row">
-                    <div class="col-md-3  col-sm-3 ">
-                        Title
+                    <div class="col-md-2  col-sm-2 ">
+                        Numerator
                     </div>
-                    <div class="col-md-6  col-sm-6 ">
-                        <input placeholder = 'Enter title' type="text" class="form-control"
-                               ng-model="input.dt.attachment.title"/>
+                    <div class="col-md-2  col-sm-2 ">
+                        <input placeholder = 'Value' type="text" class="form-control"
+                               ng-model="input.dt.ratio.numerator.value"/>
+                    </div>
+                    <div class="col-md-2  col-sm-2 ">
+                        <input placeholder = 'Units' type="text" class="form-control"
+                               ng-model="input.dt.ratio.numerator.units"/>
+                    </div>
+                    <div class="col-md-4  col-sm-4 ">
+                        <input placeholder = 'System' type="text" class="form-control"
+                               ng-model="input.dt.ratio.numerator.system"/>
                     </div>
                 </div>
-
 
                 <div class="row">
-                    <div class="col-md-3  col-sm-3 ">
-                        ContentType
+                    <div class="col-md-2  col-sm-2 ">
+                        Denominator
                     </div>
-                    <div class="col-md-6  col-sm-6 ">
-                        <input placeholder = 'Enter content type' type="text" class="form-control" ng-model="input.dt.attachment.contentType"/>
+                    <div class="col-md-2  col-sm-2 ">
+                        <input placeholder = 'Value' type="text" class="form-control"
+                               ng-model="input.dt.ratio.denominator.value"/>
+                    </div>
+                    <div class="col-md-2  col-sm-2 ">
+                        <input placeholder = 'Units' type="text" class="form-control"
+                               ng-model="input.dt.ratio.denominator.units"/>
+                    </div>
+                    <div class="col-md-4  col-sm-4 ">
+                        <input placeholder = 'System' type="text" class="form-control"
+                               ng-model="input.dt.ratio.denominator.system"/>
                     </div>
                 </div>
+
+
+
             </div>
 
 
@@ -1026,6 +1045,8 @@
 
     <div class="modal-header">
         <hr/>
+        <em>Note that this <strong>may</strong> correctly show the existing value for this element, but may not
+        be or may be incomplete. Working on it...</em>
         <div class="row">
             <div class="col-md-6 col-sm-6">
                 <div><strong>Scenario</strong></div>

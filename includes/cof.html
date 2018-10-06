@@ -272,6 +272,32 @@
                                 </div>
                             </div>
                             <hr/>
+                            <div ng-show="submitErrorOO">
+                                <!-- todo - should create a drective...-->
+                                <div class="alert alert-danger">
+                                    <table class="table table-sm table-bordered">
+                                        <tr><th>Severity</th><th>Description</th><th>Location</th></tr>
+                                        <tr ng-repeat="iss in submitErrorOO.issue">
+                                            <td>{{iss.severity}}</td>
+                                            <td>{{iss.diagnostics}}
+                                                <div>{{iss.details.text}}</div>
+
+                                            </td>
+                                            <td>
+                                                <div ng-repeat="loc in iss.location">
+                                                    {{loc}}
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                    <div class="clickable" ng-click="dismissError()">dismiss</div>
+                                </div>
+
+
+
+
+                            </div>
                             <table class="table table-bordered">
                                 <tr><th>Type</th><th>Title</th><th>Id</th><th>Valid</th></tr>
                                 <tr ng-repeat="item in cofTypeList" ng-class="{active:currentItem.id == item.id}">
