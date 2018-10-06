@@ -644,6 +644,10 @@ angular.module("sampleApp")
 
             $http.get('/artifacts/allResources.json').then(
                 function(data) {
+
+
+
+
                     $scope.allResourceTypes = data.data;
                     $scope.allResourceTypes.sort(function(a,b) {
                         if (a.name > b.name) {
@@ -1018,6 +1022,7 @@ angular.module("sampleApp")
                             }
 
                         });
+                        $scope.showResourceTable.open();    //clear the table display
 
                         makeGraph();
                         $scope.saveGraph(true);
