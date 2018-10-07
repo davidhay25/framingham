@@ -32,10 +32,11 @@
             <div class="col-md-6 col-sm-6">
                 <input type="text" class="form-control" ng-model="input.organization" placeholder="What Organization is represented."/>
             </div>
-
+<!--
             <div class="col-md-6 col-sm-6">
                 <input type="text" class="form-control" ng-model="input.touchstoneUser" placeholder="Touchstone user key."/>
             </div>
+            -->
         </div>
 
         <br/>
@@ -79,6 +80,19 @@
         </div>
 
         <br/>
+
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                Preferences
+            </div>
+            <div class="col-sm-10 col-md-10">
+                <div> <checkbox ng-model="input.preference.showExplanations"></checkbox>
+                    Show Explanations (eg in Resource Graph builder)</div>
+
+
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-md-6 col-sm-6">

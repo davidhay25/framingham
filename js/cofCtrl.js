@@ -7,12 +7,30 @@ angular.module("sampleApp")
             $scope.input = {};
             $scope.cofTypeList = [];
 
-
             //var elementsByType = {};        //hash of all elements for a given type
             var profilesCache = {};          //cache for SDsss
             var allScenarios = {};
 
 
+            $http.get('/artifacts/explanations.json').then(
+                function(data) {
+                    $scope.explanations = data.data;
+                });
+
+            $scope.dismissExplanation = function(){
+                delete $scope.explanation;
+            };
+
+            $scope.stopExplanations = function() {
+                alert('Sorry, not yet enabled...')
+            };
+
+            //allow any resource to be linked to the
+            $scope.linkToResource = function() {
+                alert('Sorry, not yet enabled...')
+            };
+
+            //allow a patient to be linked from the server
             $scope.findPatient = function(name) {
                 $scope.lstSelectedPatients = []
                 var svr = $scope.selectedTrack.dataServer;
@@ -72,24 +90,23 @@ angular.module("sampleApp")
 
             }
 
-
-            //Select an instance for the patient. Assume there is only 1.
+            //Link to an instance from the server that is linked to the patient. Assume there is only 1 Patient resource.
             $scope.selectPatientInstanceResource = function(){
 
                 //find the linked patient
                 var patientItem;       //a
-                var patientResource;
+                //var patientResource;
                 $scope.cofTypeList.forEach(function (item) {
-                    if (item.baseType == 'Patient' && item.linked) {
-                        patientResource = item.linkedResource;
+                    if (item.baseType == 'Patient' && item.linked && item.linkedResource) {
+                        //patientResource = item.linkedResource;
                         patientItem = item;
-                        console.log(patientResource)
+                        //console.log(patientResource)
                     }
                 });
 
-                if (patientResource) {
+                if (patientItem) {
 
-                    var url = $scope.selectedTrack.dataServer + "Patient/"+patientResource.id + '/$everything';
+                    var url = $scope.selectedTrack.dataServer + "Patient/"+patientItem.linkedResource.id + '/$everything';
                     $http.get(url).then(
                         function(data) {
                             console.log(data.data)
@@ -99,13 +116,14 @@ angular.module("sampleApp")
                                 controller: 'selectPatientResourceCtrl',
                                 resolve: {
                                     patient: function () {
-                                        return patient
+                                        return patientItem.linkedResource
                                     },
                                     allResources: function () {
                                         return data.data
                                     }
                                 }
                             }).result.then(function (resource) {
+                                //resource is the selected patient resource...
                                 console.log(resource)
 
                                 var item = {id : resource.id, type:resource.resourceType}
@@ -116,11 +134,13 @@ angular.module("sampleApp")
                                 item.linked = true;     //so this won;t be updated to the server
                                 item.linkedResource = resource;
 
+                                //create a row for the table to reference the Patient...
                                 var row = {references:[]};
                                 var ref = {};
-                                ref.targetItem = {id:patientResource.id};
+                                ref.targetItem = {id:patientItem.linkedResource.id,description:patientItem.description};
                                 ref.sourcePath = "Subject";     //todo may not be correct...
-                                row.references.push(ref)
+
+                                row.references.push(ref);
                                 item.table = [row];
 
 
@@ -161,7 +181,7 @@ angular.module("sampleApp")
 
                 }
 
-
+/*
                 //find the linked patient
                 var patient;
                 $scope.cofTypeList.forEach(function (item) {
@@ -181,7 +201,7 @@ angular.module("sampleApp")
                     )
                 }
 
-
+                */
             }
 
 
@@ -380,7 +400,11 @@ angular.module("sampleApp")
                                 }
                             ))
                         } else {
+                            //usually there is no data entered...
                             console.log("Cant get Json for "+item.id);
+
+                            item.validation={isValid:'nodata',date:dateValidated}
+
                         }
 
                     }
@@ -644,9 +668,6 @@ angular.module("sampleApp")
 
             $http.get('/artifacts/allResources.json').then(
                 function(data) {
-
-
-
 
                     $scope.allResourceTypes = data.data;
                     $scope.allResourceTypes.sort(function(a,b) {
@@ -1061,6 +1082,8 @@ angular.module("sampleApp")
                         var item = addItem(type)
                         var reference = internalAddReference(row,item);
                         $scope.saveGraph(true);
+                        $scope.explanation = $scope.explanations['resourceAdded']
+
                         if (cb) {cb(item)}
 
                         break;
@@ -1068,6 +1091,7 @@ angular.module("sampleApp")
                         //there's only one possible target - just refer to it;
                         var reference = internalAddReference(row,targets[0]);
                         $scope.saveGraph(true);
+                        $scope.explanation = $scope.explanations['connectToUnique']
                         if (cb) {cb(targets[0])}
                         break;
                     default:

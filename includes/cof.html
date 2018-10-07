@@ -32,7 +32,7 @@
             <div class="pull-right"><button class="btn btn-link" ng-click="importGraph()">Import</button> </div>
 
         </div>
-        <div class="col-sm-3 col-md-3">
+        <div class="col-sm-2 col-md-2">
             <div>
                 <i class="clickable glyphicon glyphicon-eye-open"
                    title="Edit scenario" ng-click="editScenario(cofScenario,true)">
@@ -47,11 +47,28 @@
 
         </div>
 
-        <div class="col-sm-2 col-md-2">
+        <div class="col-sm-3 col-md-3">
+            <div ng-show = 'explanation'>
+                <div class="row">
+                    <div class="col-sm-6 col-md-6">
+                        <div><strong>What just happened?</strong></div>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+
+                        <span class="pull-right clickable" ng-click="stopExplanations()">Stop showing explanations</span>
+                    </div>
+                </div>
+
+                {{explanation}}
+                <span class="pull-right clickable" ng-click="dismissExplanation()">Dismiss</span>
+            </div>
+
+            <!--
             <div><strong>Review Purpose</strong></div>
             <div class="scrollScenarioDescription">
                 <p ng-bind-html="cofScenario.reviewPurpose | markDown"></p>
             </div>
+            -->
 
         </div>
         <div class="col-sm-5 col-md-5">
@@ -213,6 +230,14 @@
                                 </td>
                             </tr>
                         </table>
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6">
+
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <button class="btn btn-link pull-right" ng-click="linkToResource()">Link</button>
+                            </div>
+                        </div>
                     </div>
 
                 </uib-tab>
@@ -315,6 +340,8 @@
                                             Not Checked
                                         </div>
 
+
+
                                         <div  ng-hide="item.isLogical || item.linked" ng-switch on="item.validation.isValid">
                                             <div ng-switch-when="yes">
                                                 <i class="glyphicon glyphicon-ok clickable pass"
@@ -327,6 +354,9 @@
                                                    popover-placement="top"
                                                    popover-trigger="'mouseenter'">
                                                 </i>
+                                            </div>
+                                            <div ng-switch-when="nodata">
+                                                Resource has no data
                                             </div>
 
                                             <div ng-switch-default>
