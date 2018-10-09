@@ -98,15 +98,6 @@ angular.module("sampleApp")
             if (eventCode) {
                 //the url specifies an event. Set the event in the server session so all subsequent queries go to that server...
 
-                //if it's not baltimore, raise a message
-                if (eventCode !== 'baltimore2018') {
-                    var msg = "You should be using 'baltimore2018' as the event code. I'll continue, but you may want to re-load with the correct code.";
-                    msg += "Also be careful not to have conMan running in multiple tabs. Odd things can happen."
-                    modalService.showModal({}, {bodyText:msg})
-
-                }
-
-
                 $http.post('/public/setEvent',{key:eventCode}).then(
                     function (data) {
                         //now get the event configuration from the event database (admin).
