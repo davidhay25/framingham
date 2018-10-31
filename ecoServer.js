@@ -967,6 +967,8 @@ app.post('/track',function(req,res){
     fieldsToUpdate.persons = data.persons;
     fieldsToUpdate.toi = data.toi;
     fieldsToUpdate.chat = data.chat;
+    fieldsToUpdate.LM = data.LM;
+    fieldsToUpdate.description = data.description;
 
 
 

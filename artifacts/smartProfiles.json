@@ -8,13 +8,7 @@
     "clientId" : "clinfhir-test",
     "secret": "mySecret",
     "clientIdConfig": "https://hof.smilecdr.com:9200/openid-configuration",
-    "defaultScope" :"openid patient/*.read",
-    "defaultQueries": [
-      {"display":"Procedures","url":"Patient/{patientId}/Procedure"},
-      {"display":"Medications","url":"Patient/{patientId}/MedicationStatement"},
-      {"display":"Patient","url":"Patient/{patientId}"},
-      {"display":"Conditions","url":"Patient/{patientId}/Condition"}
-    ]
+    "defaultScope" :"openid profile patient/*.read"
   },
   {
     "name" : "DHP-web",
@@ -87,19 +81,19 @@
   },
   {
     "name" : "SmartHealthIT - successful",
-    "description":"Calls the SMART sandbox provider standalone, with a practitioner on scope",
+    "description":"Calls the SMART sandbox provider standalone,",
     "fhirVersion" : "3",
     "baseUrl" : "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImkiOiIxIiwiZSI6InNtYXJ0LVByYWN0aXRpb25lci03MTAzMjcwMiJ9/fhir/",
     "callback" : "https://localhost:8443/callback",
     "clientId" : "d90584cc-3b0e-40db-8543-536df45a84f4",
     "secret": "a07NAYD7lnhfBh1b9614dPp_lZxyK5Hf7ImS8GJ2XnbD8SE-ZzAqJhyKykL7359ip0AG5bLC172_M5mhWxuRig",
     "clientIdConfig": "https://launch.smarthealthit.org/.well-known/openid-configuration",
-    "defaultScope" :"openid profile patient/*.*",
-    "defaultQueriesDisplay":"Query the server for Procedures, Medications and Conditions for the patient 'A01'"
+    "defaultScope" :"openid profile patient/*.*"
+
   },
   {
     "name" : "SmartHealthIT - invalid clientId",
-    "description":"Calls the SMART sandbox provider standalone, with a practitioner on scope, but an invalid clientId",
+    "description":"Calls the SMART sandbox provider standalone, with an invalid clientId",
     "fhirVersion" : "3",
     "baseUrl" : "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImQiOjAsImkiOiIxIiwiZSI6InNtYXJ0LVByYWN0aXRpb25lci03MTAzMjcwMiJ9/fhir",
     "callback" : "https://localhost:8443/callback",

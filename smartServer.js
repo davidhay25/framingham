@@ -181,7 +181,7 @@ app.get('/auth', function(req, res)  {
     //generate the uri to re-direct the browser to. This will be the login page for the system
     var authorizationUri = config.authorize;
 
-    console.log('original auth:',authorizationUri);
+  //  console.log('original auth:',authorizationUri);
 /*
     //smile is not specifying ssl in the SMART extensions
     authorizationUri = authorizationUri.replace('http://','https://')
@@ -189,7 +189,7 @@ app.get('/auth', function(req, res)  {
     authorizationUri = authorizationUri.replace('http://localhost:19200/oauth/authorize','https://hof.smilecdr.com:9200/oauth/authorize')
     authorizationUri = 'https://hof.smilecdr.com:9200/oauth/authorize';
 */
-    console.log('later auth:',authorizationUri);
+   // console.log('Auth Url:',authorizationUri);
 
     if (req.session.config.public) {
         //this is a public launch
@@ -210,7 +210,7 @@ app.get('/auth', function(req, res)  {
         authorizationUri += "&client_id="+config.clientId;
     }
 
-    if (1==1) {console.log('authUri=',authorizationUri)};
+    if (1==1) {console.log('authUrl=',authorizationUri)};
 
     //header
 
@@ -222,12 +222,12 @@ app.get('/auth', function(req, res)  {
 
 //after authentication the browser will be redirected by the auth server to this endpoint
 app.get('/callback', function(req, res) {
-console.log('Callback')
+    console.log('Callback invoked')
     //If authentication was successful, the Authorization Server will return a code which can be exchanged for an
     //access token. If there is no code, then authorization failed, and a redirect to an error page is returned.
     var code = req.query.code;
     if (showLog) {
-        console.log('/callback, query=', req.query);
+       // console.log('/callback, query=', req.query);
         console.log('/callback, code=' + code);
     }
 
@@ -252,7 +252,7 @@ console.log('Callback')
     };
 
     if (config.public) {
-        //a public client includes the client if, but no auth header
+        //a public client includes the client id, but no auth header
         options.body += '&client_id='+ config.clientId;
     } else {
         //a confidential client creates an Authorization header
@@ -263,11 +263,12 @@ console.log('Callback')
 
     //perform the request to get the auth token...
     request(options, function (error, response, body) {
-        if (showLog) {
+        if (showLog & 1==2) {
             console.log(' ----- after token call -------');
             console.log('body ', body);
             console.log('error ', error);
         }
+
         if (response && response.statusCode == 200) {
             //save the access token in the session cache. Note that this is NOT sent to the client
             var token = JSON.parse(body);
@@ -283,6 +284,17 @@ console.log('Callback')
             req.session.serverData.config = req.session["config"];
 
 
+
+            console.log('Access token decoded:')
+            try {
+                var at = jwt.decode(token['access_token'], {complete: true})
+                console.log(at)
+
+
+            } catch (ex) {
+                console.log('Access token is not a JWT token')
+            }
+            console.log('-----------')
             //an id token was returned
             if (token['id_token']) {
 
@@ -290,8 +302,9 @@ console.log('Callback')
 
                 var id_token = jwt.decode(token['id_token'], {complete: true});
                 req.session.serverData['idToken'] = id_token;
+                console.log('id_token')
                 console.log(id_token)
-
+                console.log('-----------')
                 //req.session.serverData.idToken = id_token;
 
                //this for DXE

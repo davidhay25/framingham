@@ -112,7 +112,7 @@
             <strong>Scopes granted</strong>
             <div>{{scope}}</div>
         </div>
-        <div class="col-sm-4 col-md-4">
+        <div class="col-sm-4 col-md-4" ng-show="1==2">
             <strong>Context</strong>
             <table>
                 <tr>
@@ -129,7 +129,7 @@
                 </tr>
             </table>
         </div>
-        <div class="col-sm-4 col-md-4">
+        <div class="col-sm-4 col-md-4"  ng-show="1==2">
             <strong>Patient</strong>
             <div>
                 <div class="row">
@@ -153,13 +153,32 @@
     <br/>
 
     <uib-tabset>
+
+        <uib-tab heading="Ad-hoc Query">
+            <br/>
+
+            <div class="row">
+                <div class="col-sm-1 col-md-1">
+                    Query
+                </div>
+                <div class="col-sm-5 col-md-5">
+                    <input class="form-control" ng-model="input.query"/>
+                </div>
+                <div class="col-sm-1 col-md-1">
+                    <button ng-disabled="waiting" class="btn btn-primary" ng-click="executeQuery(input.query)">Execute</button>
+                </div>
+            </div>
+
+            <pre ng-show="resultsBundle">{{resultsBundle | json}}</pre>
+        </uib-tab>
+
+
         <uib-tab heading="Standard Queries" ng-show="config.defaultQueries">
             <br/>
 
             <div>{{config.defaultQueriesDisplay}}</div>
             <br/>
-            <!--
-            <button ng-hide="sqComplete" class="btn btn-primary" ng-click="standardQueries('A01')">Execute</button>-->
+
             <button ng-hide="sqComplete" class="btn btn-primary" ng-click="standardQueries(input.patientId)">Execute</button>
 
             <div ng-show="execSQ">Executing Standard Queries, please wait...</div>
@@ -244,23 +263,8 @@
 
 
         </uib-tab>
-        <uib-tab heading="Ad-hoc Query">
-            <br/>
 
-            <div class="row">
-                <div class="col-sm-1 col-md-1">
-                    Query
-                </div>
-                <div class="col-sm-5 col-md-5">
-                    <input class="form-control" ng-model="input.query"/>
-                </div>
-                <div class="col-sm-1 col-md-1">
-                    <button ng-disabled="waiting" class="btn btn-primary" ng-click="executeQuery(input.query)">Execute</button>
-                </div>
-            </div>
 
-            <pre ng-show="resultsBundle">{{resultsBundle | json}}</pre>
-        </uib-tab>
 
         <uib-tab heading="Supported resources">
             <div class="row">
@@ -278,10 +282,11 @@
             </div>
         </uib-tab>
         <uib-tab heading="Tokens" ng-show="idToken || fullToken">
-            <h4>Auth token</h4>
+            <h4>Access token</h4>
             <input class="form-control" ng-model="fullToken['access_token']"/>
-            <h4>Server response to request for Auth Token</h4>
+            <h4>Server response to request for Access Token</h4>
             <pre>{{fullToken | json}}</pre>
+
             <h4>Id Token</h4>
             <pre>{{idToken | json}}</pre>
         </uib-tab>

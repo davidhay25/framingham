@@ -198,6 +198,13 @@ angular.module("sampleApp")
             $scope.lmCheckSelectScenario = function(scenario) {
 
 
+
+                if (! $scope.SD) {
+                    alert('No Logical model was configured in the Track!')
+                    return;
+                }
+
+
                 var type = $scope.SD.snapshot.element[0].path;
 
                 $scope.item = {type:type,showNotes:true};
