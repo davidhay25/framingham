@@ -377,6 +377,22 @@
 
 
                         </uib-tab>
+                        <uib-tab heading="View Transaction bundle">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link pull-right" ng-click="makeBundle()">Refresh bundle</button>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row" ng-show="sampleBundle">
+                                <div class="col-md-12">
+                                    <pre>{{sampleBundle | json}}</pre>
+                                </div>
+                            </div>
+
+                        </uib-tab>
                         <uib-tab heading="View on server">
 
                         </uib-tab>

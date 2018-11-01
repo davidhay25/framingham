@@ -1715,6 +1715,39 @@
                 </uib-tab>
 
 
+
+                <uib-tab heading="Logical Model Review" ng-show="selectedTrack.trackType == 'lmreview'">
+                    <br/>
+                    <div ng-controller="lmCheckCtrl">
+                        <ng-include src="'includes/lmCheck.html'"></ng-include>
+                    </div>
+                </uib-tab>
+
+                <uib-tab heading="Graph Builder" ng-show="selectedTrack.allowGraph ||  selectedTrack.trackType == 'scenario'">
+                    <br/>
+                    <div ng-controller="cofCtrl">
+                        <ng-include src="'includes/cof.html'"></ng-include>
+                    </div>
+                </uib-tab>
+
+                <uib-tab heading="Summary of graphs " ng-show="selectedTrack.allowGraph || selectedTrack.trackType == 'scenario'">
+                    <br/>
+                    <div ng-controller="cofSummaryCtrl">
+                        <ng-include src="'includes/cofSummary.html'"></ng-include>
+                    </div>
+                </uib-tab>
+
+                <uib-tab heading="All graph notes" ng-show="selectedTrack.allowGraph || selectedTrack.trackType == 'scenario'">
+                    <br/>
+
+
+                    <div ng-controller="allNotesCtrl">
+                        <ng-include src="'includes/allNotes.html'"></ng-include>
+                    </div>
+
+
+                </uib-tab>
+
                 <uib-tab heading="Participation report" select="makeEventReport()">
                     <br/>
 
@@ -1843,39 +1876,6 @@
                     </uib-tabset>
 
 
-
-
-                </uib-tab>
-
-
-                <uib-tab heading="Logical Model Review" ng-show="selectedTrack.trackType == 'lmreview'">
-                    <br/>
-                    <div ng-controller="lmCheckCtrl">
-                        <ng-include src="'includes/lmCheck.html'"></ng-include>
-                    </div>
-                </uib-tab>
-
-                <uib-tab heading="Graph Builder" ng-show="selectedTrack.allowGraph ||  selectedTrack.trackType == 'scenario'">
-                    <br/>
-                    <div ng-controller="cofCtrl">
-                        <ng-include src="'includes/cof.html'"></ng-include>
-                    </div>
-                </uib-tab>
-
-                <uib-tab heading="Summary of graphs " ng-show="selectedTrack.allowGraph || selectedTrack.trackType == 'scenario'">
-                    <br/>
-                    <div ng-controller="cofSummaryCtrl">
-                        <ng-include src="'includes/cofSummary.html'"></ng-include>
-                    </div>
-                </uib-tab>
-
-                <uib-tab heading="All graph notes" ng-show="selectedTrack.allowGraph || selectedTrack.trackType == 'scenario'">
-                    <br/>
-
-
-                    <div ng-controller="allNotesCtrl">
-                        <ng-include src="'includes/allNotes.html'"></ng-include>
-                    </div>
 
 
                 </uib-tab>

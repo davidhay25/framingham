@@ -302,6 +302,36 @@ angular.module("sampleApp")
                 return text
             };
 
+            //make a sample transction bundle
+            $scope.makeBundle = function() {
+
+                $scope.sampleBundle = cofSvc.makeBundle($scope.cofTypeList,'transaction',$scope.selectedTrack)
+
+
+                //copy to the clipboard
+                if ($scope.sampleBundle) {
+                    //https://stackoverflow.com/questions/29267589/angularjs-copy-to-clipboard
+                    var copyElement = document.createElement("span");
+                    copyElement.appendChild(document.createTextNode(angular.toJson($scope.sampleBundle),2));
+                    copyElement.id = 'tempCopyToClipboard';
+                    angular.element(document.body.append(copyElement));
+
+                    // select the text
+                    var range = document.createRange();
+                    range.selectNode(copyElement);
+                    window.getSelection().removeAllRanges();
+                    window.getSelection().addRange(range);
+
+                    // copy & cleanup
+                    document.execCommand('copy');
+                    window.getSelection().removeAllRanges();
+                    copyElement.remove();
+                }
+
+
+
+            }
+
             //save the resources to the data server. This can only be called when a data server is defined in the track
             $scope.saveToFHIRServer = function(cofTypeList){
 

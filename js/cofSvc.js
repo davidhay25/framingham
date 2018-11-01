@@ -313,7 +313,39 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
             }
 
         },
+        makeBundle : function(lst,type,track) {
+            //make a sample bundle that represents the resources in the graph
+            var that = this;
+            var bundle = {resourceType:'Bundle',type:type,entry:[]}
+
+            lst.forEach(function(item) {
+                console.log(item)
+                if (item.table && ! item.linked) {      //items must have data and not be linked...
+                    var treeData = that.makeTree(item.table);
+                    var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);  //create the json for a single entry
+                    //console.log(vo.resource)
+                    if (vo && vo.resource) {
+                        var entry = {};
+                        if (track.dataServer) {
+                            entry.fullUrl = track.dataServer + vo.resource.resourceType+'/'+vo.resource.id
+                        }
+
+                        entry.resource = vo.resource;
+                        entry.request = {method:'PUT',url:vo.resource.resourceType+'/'+vo.resource.id}
+
+                        bundle.entry.push(entry)
+                    } else {
+                        console.log("Can't get Json for "+item.id + '. Not added to bundle')
+                    }
+                }
+
+            });
+            return bundle;
+
+
+        },
         sendToFHIRServer : function(lst,track) {
+            //todo - refactor to use makeBundle
             var deferred = $q.defer();
             var transBundle = {resourceType:'Bundle',type:'transaction',entry:[]}
             var that = this;
@@ -349,6 +381,8 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
             return deferred.promise;
 
+/*
+            ??? None of this is actually being used
 
             //create a new bundle to submit as a transaction. excludes logical models
             var that=this;
@@ -416,6 +450,9 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
             return deferred.promise
 
+
+            
+
             //save the provenence resource and resolve the promise. Note that we resolve anyway
             //?? todo what to do if the provenance save fails??
             function saveProvenance(data,name,note,deferred) {
@@ -431,7 +468,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                     }
                 )
             }
-
+*/
 
         },
 
