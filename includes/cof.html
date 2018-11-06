@@ -264,7 +264,7 @@
                     <div id="3d-graph" style="height: 200px;width: 200px;border: #2b2b2b;border-width: medium"></div>
                 </uib-tab>
 
-                <uib-tab heading="Notes on scenario" deselect="resourceNoteUpdated()">
+                <uib-tab heading="Notes on scenario">
 
                          <form name="form">
                             <markdown-editor ng-model="input.scenarioNotes"
@@ -272,8 +272,14 @@
                                  placeholder="Enter any comments you have about this scenario"
                                  options="mdOptions" >
                             </markdown-editor>
-                            <div><strong><em>Please select another tab after updating to ensure notes are saved. This is a limitation being worked on.</em></strong></div>
+
+                            <div>
+                                <button class="btn btn-link pull-right" ng-click="resourceNoteUpdated()">Update Note</button>
+                                <strong><em>Please click the 'Update Note' link to the right to ensure notes are saved. This is a limitation being worked on. --></em></strong>
+                            </div>
                         </form>
+
+
 
                 </uib-tab>
                 <uib-tab ng-hide="selectedTrack.allowDirectSample">
