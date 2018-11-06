@@ -16,9 +16,11 @@ angular.module("sampleApp")
                     console.log(data.data);
                     $scope.scope = data.data.scope;
                     $scope.capStmt = data.data.capStmt
+
                     $scope.idToken = data.data.idToken;
                     $scope.fullToken = data.data.fullToken;
                     $scope.config = data.data.config;
+                    $scope.atDecoded = data.data.decodedAccessToken;
 
                     console.log($scope.config)
 

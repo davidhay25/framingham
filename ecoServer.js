@@ -1,6 +1,14 @@
 #!/usr/bin/env node
 //http://pm2.keymetrics.io/docs/usage/pm2-doc-single-page/#allow-pm2-to-bind-applications-on-ports-80-443-without-root
 
+
+/* To create a new event:
+* add the database with the new event code
+* add an 'admin' collection in the db with a document {key: name: }
+* update the artifacts/events.json doc (will rebuild the eventsDB collection on a new server from the doc)
+* restart the database
+* */
+
 var express = require('express');
 
 var request = require('request');
@@ -87,7 +95,7 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
                 } else {
 
                     dbKeys = result;
-
+console.log(result)
                     dbKeys.forEach(function(item){
                         hashDataBases[item.key] = client.db(item.key);
                     });

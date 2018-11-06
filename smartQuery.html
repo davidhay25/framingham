@@ -282,10 +282,15 @@
             </div>
         </uib-tab>
         <uib-tab heading="Tokens" ng-show="idToken || fullToken">
+            <!--
             <h4>Access token</h4>
             <input class="form-control" ng-model="fullToken['access_token']"/>
+            -->
             <h4>Server response to request for Access Token</h4>
             <pre>{{fullToken | json}}</pre>
+            <h4>Access token</h4>
+
+            <pre>{{atDecoded | json}}</pre>
 
             <h4>Id Token</h4>
             <pre>{{idToken | json}}</pre>

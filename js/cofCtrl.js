@@ -1409,7 +1409,7 @@ angular.module("sampleApp")
             //select a scenario...
             $scope.cofSelectScenario = function(scenario) {
                 delete $scope.cofType;
-
+                delete $scope.sampleBundle;
                 $scope.showResourceTable.open();        //will reset the table display
                 $scope.cofTypeList.length = 0;
 

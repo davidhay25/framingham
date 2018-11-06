@@ -71,7 +71,7 @@ console.log(req.session);
 
 
 
-})
+});
 
 
 
@@ -289,7 +289,7 @@ app.get('/callback', function(req, res) {
             try {
                 var at = jwt.decode(token['access_token'], {complete: true})
                 console.log(at)
-
+                req.session.serverData.decodedAccessToken = at
 
             } catch (ex) {
                 console.log('Access token is not a JWT token')
