@@ -897,10 +897,17 @@ angular.module("sampleApp")
                         var ext = getExtensionValue(SD,extUrl);
                         if (ext) {
                             var baseType = ext.valueString;
-                            var name = $filter('getLogicalID')(url) + '-'+baseType;
+
+                            var name = $filter('getLogicalID')(url); // + '-'+baseType; - too long
 
                             var item = {id : 'id'+new Date().getTime(), type:name};
+
                             item.description = 'LM';
+                            var description = $window.prompt("Enter a short description for this resource instance",item.description);
+                            if (description) {
+                                item.description = description;
+                            }
+
                             item.url = url;     //needed for LM
                             item.baseType = baseType;
                             item.category = 'logical'

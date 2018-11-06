@@ -11,7 +11,7 @@ angular.module("sampleApp")
             $scope.input = {};
 
             //which track type to display
-            $scope.input.trackListDisplay = 'clinical';     //<< change back to 'all' after connectathon
+            $scope.input.trackListDisplay = 'all';     //<< change back to 'all' after connectathon
 
             $scope.showTrack = function(track) {
 
@@ -262,11 +262,7 @@ angular.module("sampleApp")
             $scope.chartOptions = {legend:{display:true}};
 
 
-
-
-
-
-                    $scope.getScenarioDescription = function(scenario) {
+            $scope.getScenarioDescription = function(scenario) {
                 return $filter('markDown')(scenario.description)
             };
 
@@ -539,7 +535,6 @@ angular.module("sampleApp")
                         );
 
                     } )} ;
-
 
             $scope.canShowPerson = function(person,filter) {
                 var name = person.name;
