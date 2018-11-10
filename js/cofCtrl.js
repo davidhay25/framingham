@@ -21,6 +21,16 @@ angular.module("sampleApp")
                 delete $scope.explanation;
             };
 
+
+            //not using at present - seems a distraction...
+            $scope.getListDisplay = function(item) {
+                if (item.category == 'logical' || item.category == 'profile') {
+                   // return item.baseType;
+                }
+                console.log(item)
+               // return 'ok'
+            }
+
             $scope.stopExplanations = function() {
                 alert('Sorry, not yet enabled...')
             };
@@ -1100,14 +1110,15 @@ angular.module("sampleApp")
                 $scope.cofTypeList.forEach(function (item) {
                     if (item.id !== $scope.currentItem.id) {       //don't allow self references...
                         //core resource types...
-                        if (item.type == type || type == 'Resource') {
+                        //if (item.type == type || type == 'Resource') {
+                        if (item.baseType == type || type == 'Resource') {
                             targets.push(item)
                         } else {
                             //any Logical models?
-                            var ar = item.type.split('-');
-                            if (ar.length == 2 && ar[1] == type ) {
-                                targets.push(item)
-                            }
+                           // var ar = item.type.split('-');
+                           // if (ar.length == 2 && ar[1] == type ) {
+                           //     targets.push(item)
+                           // }
                         }
                     }
 
@@ -1467,6 +1478,8 @@ angular.module("sampleApp")
                     //https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Patient-1
 
 
+//+++++++++++++ todo  remove
+
 
 
 /*
@@ -1482,7 +1495,7 @@ angular.module("sampleApp")
                             }
                         );
 
-                    $http.get('http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/cc-Patient').then(
+ $http.get('http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/cc-Patient').then(
                         function(data) {
                             var SD = data.data;
                             cofSvc.makeLogicalModelFromSD(SD,track).then(
@@ -1493,6 +1506,8 @@ angular.module("sampleApp")
                             )
                         }
                     );
+
+
 */
 
                 }

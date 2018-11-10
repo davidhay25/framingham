@@ -1,11 +1,42 @@
 
 angular.module("sampleApp")
     .controller('jsonTestCtrl',
-        function ($scope,$http,ecosystemSvc) {
+        function ($scope,$http,ecosystemSvc,cofSvc) {
 
 
             var scenario = {}
             $scope.graphs = []
+
+
+            $scope.loadProfile = function(){
+                $http.get('http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/cc-Patient').then(
+                    function(data) {
+                        var SD = data.data;
+                        var track = {}
+                        var newId = 'ATest';
+                        cofSvc.makeLogicalModelFromSD(SD,track,newId).then(
+                            function(LM) {
+
+                                $scope.convertedProfile = LM;
+
+                                var url = 'http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/'+newId;
+                                $http.put(url,LM).then(
+                                    function(){
+                                        console.log('saved')
+                                    },
+                                    function(err){
+                                        console.log(err)
+                                    }
+                                )
+
+
+
+                            }
+                        )
+                    }
+                );
+
+            }
 
 
             $scope.selectItem = function(item) {
@@ -41,7 +72,12 @@ angular.module("sampleApp")
 
 
             $scope.makeJson = function() {
-                $scope.json = ecosystemSvc.makeResourceJson($scope.selectedItem.baseType, $scope.selectedItem.id, $scope.selectedItem.table).resource
+
+                var treeData = cofSvc.makeTree($scope.selectedItem.table)
+
+                $scope.json = ecosystemSvc.makeResourceJson($scope.selectedItem.baseType, $scope.selectedItem.id, treeData).resource
+
+                //$scope.json = ecosystemSvc.makeResourceJson($scope.selectedItem.baseType, $scope.selectedItem.id, $scope.selectedItem.table).resource
             };
 
             $scope.selectGraph = function (graph) {

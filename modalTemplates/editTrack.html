@@ -182,7 +182,8 @@
                 </table>
 
             </uib-tab>
-            <uib-tab heading='Track servers'  ng-hide="track.trackType == 'technical' && ! track.allowGraph">
+            <uib-tab heading='Track servers & Implementation Guide'  ng-hide="track.trackType == 'technical' && ! track.allowGraph">
+
                 <br/>
                 <div class="row">
                     <div class="col-sm-3 col-md-3">
@@ -231,7 +232,7 @@
                         <input class="form-control"  placeholder="Direct URL to model" ng-model="input.LM"/>
                     </div>
                 </div>
-<!--
+
                 <div class="row"  ng-show="track.trackType == 'scenario'">
                     <div class="col-sm-3 col-md-3">
                         Implementation Guide
@@ -239,7 +240,7 @@
                     </div>
                     <div class="col-sm-8 col-md-8">
                         <select class="form-control" ng-model="input.IG"
-                            ng-options="ig.name+ig.description for ig in IGs">
+                            ng-options="ig.name + ' (' + ig.description + ')' for ig in IGs">
 
                         </select>
                     </div>
@@ -249,7 +250,7 @@
                         </i>
                     </div>
                 </div>
-                -->
+
             </uib-tab>
         </uib-tabset>
     </div>

@@ -977,6 +977,7 @@ app.post('/track',function(req,res){
     fieldsToUpdate.chat = data.chat;
     fieldsToUpdate.LM = data.LM;
     fieldsToUpdate.description = data.description;
+    fieldsToUpdate.IG = data.IG;
 
 
 

@@ -517,7 +517,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
         },
 
-        makeLogicalModelFromSD : function(profile,track){
+        makeLogicalModelFromSD : function(profile,track,newId){
             //given a StructureDefinition which is a profile (ie potentially has extensions) generate a logical model by de-referencing the extensions
             //assume R3
             var deferred = $q.defer();
@@ -680,6 +680,13 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                             lst = removeDeletedElements(lst);
                             logicalModel.snapshot.element = lst;
 
+                            fixLM(logicalModel,newId);
+
+                            //fixPaths(lst,newId);
+
+
+
+
                             //logicalModel.snapshot.element = removeExtensions(logicalModel.snapshot.element)
                             console.log(logicalModel.snapshot.element)
 
@@ -694,6 +701,10 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                 } else {
                     //no - we can return the list immediately...
                     logicalModel.snapshot.element = removeExtensions(logicalModel.snapshot.element)
+                    //logicalModel.id = newId
+                    fixLM(logicalModel,newId);
+
+                    //fixPaths(logicalModel.snapshot.element,newId)
                     deferred.resolve(logicalModel)
                 }
             } else {
@@ -702,6 +713,50 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
             return deferred.promise;
 
+
+
+
+            //the last function called before the model is returned
+            function fixLM(LM,root){
+
+                lst = LM.snapshot.element;
+
+                LM.id = newId
+                LM.kind = 'logical';
+                LM.extension = logicalModel.extension || []
+                LM.extension.push({
+                    "url": "http://clinfhir.com/fhir/StructureDefinition/baseTypeForModel",
+                    "valueString": "Patient"
+                })
+
+                LM.identifier = LM.identifier || []
+                LM.identifier.push({system:'http://clinfhir.com',value:'author'})
+
+               /*
+                LM.keyword =  [
+                    {
+                        "system": "http://fhir.hl7.org.nz/NamingSystem/application",
+                        "code": "clinfhir"
+                    }
+                ]
+                */
+
+
+
+                lst.forEach(function (ed,inx) {
+                    if (inx == 0) {
+                        ed.path=root
+                        ed.id = root
+                    } else {
+                        var ar = ed.path.split('.')
+                        ar[0] = root;
+                        var newPath = ar.join('.')
+                        ed.path=newPath
+                        ed.id = newPath
+                    }
+
+                })
+            }
 
             function removeExtensions(arED) {
                 return arED;        //temp

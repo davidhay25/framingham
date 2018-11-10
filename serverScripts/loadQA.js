@@ -6,18 +6,25 @@
 * run build locally build/publish.sh
 * run transform  build/tools/xslt/ProfileToQAView.xslt against build/publish/profiles-resources.xml
 *
-*
+* create folder structire with child folders
 *
 *
 * */
 
 
 var fs = require('fs');
-
+/*
 var resourceSource = "/Users/davidha/fhirbuild/build/source/";
 var publishRoot = "/Users/davidha/fhirbuild/build/publish/";
 var qaOutputRoot = "/Users/davidha/Dropbox/fhirQA2018/";        //where to place the output files...
 var resourcesList = "/Users/davidha/Dropbox/development/ecosystem/artifacts/resources.txt";     //the list of resource tyopes
+*/
+
+var resourceSource = "/Users/davidhay/fhir/fhir/source/";
+var publishRoot = "/Users/davidhay/fhir/fhir/publish/";
+var qaOutputRoot = "/Users/davidhay/Dropbox/fhirQA2019/";        //where to place the output files...
+var resourcesList = "/Users/davidhay/clinfhir/framingham/artifacts/resources.txt";     //the list of resource tyopes from fhir.ini
+
 
 var saveIndividualOtherFiles = false;   //whether to generate individual 'other' files...
 
@@ -33,13 +40,17 @@ var Operations = {};
 
 //set up the hash's used when creating the individual resource pages...
 getSearchParameters();
+
+
 getExtensionDefinitions();
 getCoreProfiles();      //includes operations
 getOtherProfiles();
 
+
 createValueSets();      //generate the valuesets page
 
 createDatatypes();      //generate the datatype page
+
 
 //generate the 'other' files
 fs.readdir(resourceSource, function(err, list) {
@@ -360,7 +371,7 @@ function createValueSets() {
 
         html += "</body></html>";
 
-        var outFileName = qaOutputRoot + '/terminology/'+prop + '.html';
+        var outFileName = qaOutputRoot + 'terminology/'+prop + '.html';
         fs.writeFileSync(outFileName,html)
 
 
@@ -649,7 +660,16 @@ function removeCode(string, start, end) {
 
 function getAllResourceTypes(fileName) {
     var contents = fs.readFileSync(fileName).toString();
+    var result = []
 
     var ar = contents.split('\n');
-    return ar;
+
+    //assume format is flag=Flag - only want the first one
+    ar.forEach(function (line) {
+        var ar1 = line.split('=')
+        result.push(ar1[0])
+    })
+
+
+    return result;
 }

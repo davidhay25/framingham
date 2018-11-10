@@ -200,9 +200,16 @@ angular.module("sampleApp")
 
 
 
+
             $scope.ccSelectedFromList = function(concept) {
                 console.log(concept)
-                $scope.selectedConceptValue = {value:{coding:[concept]},text:concept.display}
+                if ($scope.datatype == 'Coding') {
+                    $scope.selectedConceptValue = concept
+                   // $scope.selectedConceptValue = concept
+                } else {
+                    $scope.selectedConceptValue = {value:{coding:[concept]},text:concept.display}
+                }
+
             };
 
 
@@ -403,11 +410,21 @@ angular.module("sampleApp")
                 //If this was a cc, then already have value...
                 if ($scope.selectedConceptValue) {
                     vo = $scope.selectedConceptValue
+                    if (datatype == 'Coding') {
+                        //this is always represented as a CC - for a coding need to retrieve & return the first coding value
+                        var cc = vo.value;
+                        if (cc.coding) {
+                            vo.value = cc.coding[0];
+                        }
+                    }
                 } else {
                     //return a populated datatype & a display for data entered in the modal  {value: text:}
                     vo = getDatatypeValueSvc.getDTValue(datatype,$scope.input.dt)
 
                 }
+
+
+
 
                 $scope.$close(vo);
             };

@@ -271,7 +271,7 @@ angular.module("sampleApp").service('ecosystemSvc',
         },
 
         makeResourceJson : function (resourceType,id,inTree) {
-            //note: calling returns must call var treeData = cofSvc.makeTree($scope.input.table); first!!
+            //note: calling returns must call var treeData = cofSvc.makeTree($scope.input.table) and pass in as inTree; first!!
 
             if (!inTree) {
                 return {};
@@ -280,9 +280,67 @@ angular.module("sampleApp").service('ecosystemSvc',
             var showLog = false;        //for debugging...
 
             var hashBranch = {};    //will be a hierarchical tree
+            var hashById = {};
 
             //work on a copy as the tree is mutated...
             var tree = angular.copy(inTree);
+
+
+
+            //fri - mark all nodes that are extensions
+            tree.forEach(function (branch) {
+                hashById[branch.id] = branch;       //used by simeple extension...
+                if (branch.data && branch.data.ed &&branch.data && branch.data.ed.extension) {
+                    if (branch.data.ed.extension.length > 0) {
+                        console.log(branch.data.ed.extension[0])
+
+                        branch.data.ed.extension.forEach(function (ex) {
+                            if (ex.url == "http://clinfhir.com/fhir/StructureDefinition/simpleExtensionUrl") {
+                                branch.data.extensionUrl = ex.valueString;
+                            }
+                        })
+
+                    }
+                }
+            });
+
+
+            //now look for complex extensions. The 'parent' is an extension of type 'Backbone element'
+            //If any are found, then their child element values are 'collapsed' into the value for the parent & removed
+            for (var i=0; i < tree.length; i++) {
+                var br = tree[i];
+                if (br.data && br.data.extensionUrl) {
+                    if (br.data.ed && br.data.ed.type) {
+                        if (br.data.ed.type[0].code == 'BackboneElement') {
+                            //this is a complex extension. find all the elements where this id is the parent
+                            var strucData = {url: br.data.extensionUrl,extension:[]}    //the structured value for the extension
+
+                            var parentId = br.id;
+                            for (var j=0; j < tree.length; j++) {
+                                var child = tree[j]
+                                if (child.parent == parentId) {
+                                    //this is a direct child (assume only 1 level of nesting
+                                    console.log(child)
+                                    var data = child.data.structuredData;
+                                    var typ = 'value'+ _capitalize(child.data.dt)
+                                    if (data) {
+                                        var childData = {url:child.text};
+                                        childData[typ] = data;
+                                        strucData.extension.push(childData);
+                                        delete child.data.structuredData;   //this makes it an empty node, so it will be removed later on...
+                                    }
+                                }
+                            }
+
+                            br.data.structuredData = strucData;
+                            br.data.isComplexExtension = true;
+                            console.log(br)
+                        }
+                    }
+                }
+            }
+
+
 
             //run through a pattern of creating a hierarchy, then removing all empty leaf nodes.
             //need to complete until all leaf nodes are removed (can take multiple iterations
@@ -364,50 +422,110 @@ angular.module("sampleApp").service('ecosystemSvc',
 
             //render the resource
             var resource = {resourceType:resourceType}
+            resource.extension = [];        // add the root extension so it's at the top...
             if (id) {
                 resource.id = id;
             }
-            addChildren(resource,hashBranch['#']);
+
+
+
+
+            var simpleElements = {};        //a hash os simple elements. Needed to fix extensions on them...
+            addChildren(resource,hashBranch['#'],resource);
+
+            //if there are no extensions, then remove the element...
+            if (resource.extension.length == 0) {
+                delete resource.extension;
+            }
+
+            //need to fix extensions on simple types
+
 
             return {resource: resource,displayList:displayList};
 
 
-            function addChildren(obj,node) {
-
+            function addChildren(obj,node,parentOfObj) {
                 if (showLog) {console.log('invoking function',node.branch.text, obj,node)}
 
+                var addElement = true;
                 var structuredData = angular.copy(node.branch.data.structuredData) || {}
                 topEleName = node.branch.text
 
                 if (topEleName && topEleName.indexOf('[x]') > -1) {
-                    //console.log('>>> ',node.branch.data)
                     topEleName = topEleName.substr(0, topEleName.length - 3) + _capitalize(node.branch.data.sdDt);
                 }
 
+                //fri
+                //if there's an extensionUrl (added above), then change the name to 'extension'
+                if (node.branch.data.extensionUrl) {
+                    topEleName = 'extension';
 
+
+
+
+                    //var oldStructuredData = angular
+                    if (node.branch.data.isComplexExtension) {
+                        //complex extensions have the complete structured data (including children) set above
+                        structuredData = angular.copy(node.branch.data.structuredData)
+                    } else {
+                        structuredData = {url: node.branch.data.extensionUrl};
+                        var typ = 'value' + _capitalize(node.branch.data.dt);     //datatype
+
+                        structuredData[typ] = angular.copy(node.branch.data.structuredData)
+                    }
+
+
+                    //if the parent is a simple datatype, then the name is _{elementname}
+                    var parent = hashById[node.branch.parent];
+                    console.log(parent)
+
+                    if (parent) {
+                        var ldt = parent.data.dt;
+                        if (ldt) {
+                            var t = ldt.substr(0,1)
+                            if (t.toLowerCase() == t) {
+                                console.log('is lc')
+                                topEleName = "_"+  parent.data.display;
+                                parentOfObj[topEleName] = {"id":"xxx",extension:[structuredData]};  //assume only 1...
+                                addElement = false;     //prevent the extension from being added directlt yo the element...
+                            }
+                        }
+                    }
+
+
+
+                }
+
+                if (addElement) {
+                    if (topEleName) {
+                        if (node.branch.data.isMultiple || topEleName == 'extension') {
+                            obj[topEleName] = obj[topEleName] || []
+                            obj[topEleName].push(structuredData)
+
+                        } else {
+                            obj[topEleName] = structuredData;
+                            //addChildren(structuredData,newChild)
+                        }
+                    } else {
+                        structuredData = obj
+                    }
+                    if (node.children.length > 0) {
+                        node.children.forEach(function (child,inx) {
+                            if (showLog) {console.log('processing child#' + inx,child)};
+                            addChildren(structuredData,child,obj)
+
+                        })
+                    }
+                }
                 if (showLog) {console.log(obj,topEleName)};
                 //If there is no "node.branch.text", then this is the first invokation - the resource root.
                 //set the "structuredData" object to the root, so that subsequent children are added to it directly...
-                if (topEleName) {
-                    if (node.branch.data.isMultiple) {
-                        obj[topEleName] = obj[topEleName] || []
-                        obj[topEleName].push(structuredData)
 
-                    } else {
-                        obj[topEleName] = structuredData;
-                        //addChildren(structuredData,newChild)
-                    }
-                } else {
-                    structuredData = obj
-                }
-                if (node.children.length > 0) {
-                    node.children.forEach(function (child,inx) {
-                        if (showLog) {console.log('processing child#' + inx,child)};
-                        addChildren(structuredData,child)
 
-                    })
-                }
+
             }
+
+
 
             function _capitalize(str) {
                 if (str) {

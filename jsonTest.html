@@ -23,6 +23,7 @@
     <script src="js/modalDialogSvc.js"></script>
     <script src="js/ecosystemSvc.js"></script>
     <script src="js/jsonTestCtrl.js"></script>
+    <script src="js/cofSvc.js"></script>
 
     <script src="js/ecoUtilitiesSvc.js"></script>
 
@@ -47,6 +48,9 @@
                 </li>
 
             </ul>
+
+
+            <button class="btn btn-primary" ng-click="loadProfile()">Load Profile</button>
 
         </div>
         <div class="col-sm-2 col-md-2">
@@ -77,10 +81,13 @@
             <button class="btn btn-primary" ng-click="makeJson()">Refresh Json</button>
             <pre>{{json | json}}</pre>
 
+
+
+
         </div>
     </div>
 
-
+    <pre>{{convertedProfile | json}}</pre>
 
 
 </div>
