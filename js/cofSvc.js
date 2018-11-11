@@ -541,6 +541,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                 //profile.snapshot.element.forEach(function (ed) {
                     logicalModel.snapshot.element.push(ed)
 
+
                     var path = ed.path;
                     var ar = path.split('.');
                     if (ar.indexOf('extension') > -1) {

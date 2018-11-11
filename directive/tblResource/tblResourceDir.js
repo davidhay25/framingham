@@ -657,12 +657,20 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                             }
 
 
+                            //the base of this element. eg used when an element is sliced to know that the underlying element was multiple...
+                            if (ed.base) {
+                                item.base = ed.base
+                            }
+
 
                             item.definition = ed.definition;
                             item.comment = ed.comment;
 
                             item.mult = ed.min + '..'+ed.max;
                             item.max = ed.max;
+
+
+
 
                             if (ed.min > 0) {
                                 item.isRequired = true;

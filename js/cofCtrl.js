@@ -336,6 +336,8 @@ angular.module("sampleApp")
                     document.execCommand('copy');
                     window.getSelection().removeAllRanges();
                     copyElement.remove();
+
+                    alert("The bundle has been copied to the clipboard as well.")
                 }
 
 
@@ -1127,20 +1129,44 @@ angular.module("sampleApp")
                 switch(targets.length) {
                     case 0 :
                         //no resources of this type yet. Just add one...
-                        var item = addItem(type)
-                        var reference = internalAddReference(row,item);
-                        $scope.saveGraph(true);
-                        $scope.explanation = $scope.explanations['resourceAdded']
 
-                        if (cb) {cb(item)}
+                        var modalOptions = {
+                            closeButtonText: "No thanks",
+                            headerText: "Create resource instance",
+                            actionButtonText: "Yes please",
+                            bodyText: "There are no resource instances of this type. Do you want to add one?"
+
+                        };
+                        modalService.showModal({}, modalOptions).then(
+                            function () {
+                                var item = addItem(type)
+                                var reference = internalAddReference(row,item);
+                                $scope.saveGraph(true);
+                                //$scope.explanation = $scope.explanations['resourceAdded']
+                                if (cb) {cb(item)}
+                            }
+                        );
+
 
                         break;
                     case 1 :
                         //there's only one possible target - just refer to it;
-                        var reference = internalAddReference(row,targets[0]);
-                        $scope.saveGraph(true);
-                        $scope.explanation = $scope.explanations['connectToUnique']
-                        if (cb) {cb(targets[0])}
+                        var modalOptions = {
+                            closeButtonText: "No thanks",
+                            headerText: "Link to existing resource instance",
+                            actionButtonText: "Yes please",
+                            bodyText: "There is already a single resource instance of this type in the graph. Do you want to add a reference to it?"
+
+                        };
+                        modalService.showModal({}, modalOptions).then(
+                            function () {
+                                var reference = internalAddReference(row,targets[0]);
+                                $scope.saveGraph(true);
+                                //$scope.explanation = $scope.explanations['connectToUnique']
+                                if (cb) {cb(targets[0])}
+                            }
+                        );
+
                         break;
                     default:
                         //need to show a dialog to select which one...

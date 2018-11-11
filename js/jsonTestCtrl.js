@@ -9,7 +9,9 @@ angular.module("sampleApp")
 
 
             $scope.loadProfile = function(){
-                $http.get('http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/cc-Patient').then(
+                var url = "http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/au-patient"
+                //'http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/cc-Patient'
+                $http.get(url).then(
                     function(data) {
                         var SD = data.data;
                         var track = {}

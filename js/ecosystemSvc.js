@@ -292,7 +292,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                 hashById[branch.id] = branch;       //used by simeple extension...
                 if (branch.data && branch.data.ed &&branch.data && branch.data.ed.extension) {
                     if (branch.data.ed.extension.length > 0) {
-                        console.log(branch.data.ed.extension[0])
+                        //console.log(branch.data.ed.extension[0])
 
                         branch.data.ed.extension.forEach(function (ex) {
                             if (ex.url == "http://clinfhir.com/fhir/StructureDefinition/simpleExtensionUrl") {
@@ -477,14 +477,14 @@ angular.module("sampleApp").service('ecosystemSvc',
 
                     //if the parent is a simple datatype, then the name is _{elementname}
                     var parent = hashById[node.branch.parent];
-                    console.log(parent)
+                    //console.log(parent)
 
                     if (parent) {
                         var ldt = parent.data.dt;
                         if (ldt) {
                             var t = ldt.substr(0,1)
                             if (t.toLowerCase() == t) {
-                                console.log('is lc')
+                                //console.log('is lc')
                                 topEleName = "_"+  parent.data.display;
                                 parentOfObj[topEleName] = {"id":"xxx",extension:[structuredData]};  //assume only 1...
                                 addElement = false;     //prevent the extension from being added directlt yo the element...
@@ -498,7 +498,24 @@ angular.module("sampleApp").service('ecosystemSvc',
 
                 if (addElement) {
                     if (topEleName) {
+
+
+                        //determine if this is a multiple element, or a single object...
+                        var isMultiple = false;
                         if (node.branch.data.isMultiple || topEleName == 'extension') {
+                            isMultiple = true;
+                        }
+
+
+                        if (node.branch.data.ed && node.branch.data.ed.base) {
+                            if (node.branch.data.ed.base.max == '*') {
+                                isMultiple = true;
+                            }
+                            console.log(node.branch.data.ed.base,structuredData)
+                        }
+
+
+                        if (isMultiple) {
                             obj[topEleName] = obj[topEleName] || []
                             obj[topEleName].push(structuredData)
 
