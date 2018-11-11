@@ -486,7 +486,8 @@ angular.module("sampleApp").service('ecosystemSvc',
                             if (t.toLowerCase() == t) {
                                 //console.log('is lc')
                                 topEleName = "_"+  parent.data.display;
-                                parentOfObj[topEleName] = {"id":"xxx",extension:[structuredData]};  //assume only 1...
+                                var id = new Date().getTime()
+                                parentOfObj[topEleName] = {"id":id,extension:[structuredData]};  //assume only 1...
                                 addElement = false;     //prevent the extension from being added directlt yo the element...
                             }
                         }

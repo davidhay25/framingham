@@ -737,6 +737,48 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 });
 
                 //now determine if each item is a leaf (has no children). This is a brute force approach...
+                for (var i=0; i< ar.length; i++) {
+                    var item = ar[i];
+                //ar.forEach(function(item){
+                    var path = item.path;
+                    var childFound = false;
+                    var tmpAr = item.path.split('.');
+                    var lengthOfItemPath = tmpAr.length;
+                    var testItem = ar[i+1];     //the next item. If it has more dots, then it's a child and this element is not a leaf...
+
+                    if (testItem) {
+                        var tmpArC = testItem.path.split('.');
+                        var lengthOfItemPathC = tmpArC.length;
+                        if (lengthOfItemPathC > lengthOfItemPath) {
+                            item.isLeaf = false;        //more dots - must be a child, so noyt a leadf...
+                        } else {
+                            item.isLeaf = true;         //same number (or less) of dots so a leaf
+                        }
+                    } else {
+                        //this is the last item
+                        item.isLeaf = true;
+                    }
+
+
+
+                    /*
+                    for (var j=i+1; j < ar.length; j++) {       //start at the index where the item being evaluated is...
+
+
+
+                        if (testItem.path.startsWith(path+'.')) {
+                        //if (testItem.path.startsWith(path+'.') && testItem.path.length > path.length) {
+                            childFound = true;
+                        }
+                    }
+
+                    if (!childFound) {
+                        item.isLeaf = true;
+                    }*/
+                };
+
+
+                /*
                 ar.forEach(function(item){
                     var path = item.path;
                     var childFound = false;
@@ -753,6 +795,8 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     }
                 });
 
+
+                 */
 
                 return ar;
 

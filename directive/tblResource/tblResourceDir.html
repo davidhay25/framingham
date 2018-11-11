@@ -103,7 +103,7 @@
                         ng-click="hideChildren(row)">
                     </i>
 
-                    <i ng-show="row.childrenHidden" class="clickable glyphiconBig glyphicon glyphicon-menu-right"
+                    <i ng-show="row.childrenHidden && ! row.isLeaf" class="clickable glyphiconBig glyphicon glyphicon-menu-right"
                         ng-click="showChildren(row)">
                     </i>
 
