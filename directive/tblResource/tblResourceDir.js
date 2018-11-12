@@ -223,7 +223,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
             $scope.radio = {};
 
             $scope.editSample = function(row,dt,inx) {
-                var datatype = row.type[0].code;
+                var datatype = row.type[0].code;    //default to the first one..
 
                 if (row.type.length > 1) {
                     if (! dt) {

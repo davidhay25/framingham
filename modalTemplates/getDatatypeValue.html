@@ -905,7 +905,9 @@
                     <div class="row">
                         <div class="col-sm-4 col-md-4">
                             <input placeholder="Concept text. Can be used as search text" class="form-control" ng-model="input.dt.cc.text"/>
+
                         </div>
+
                         <div class="col-sm-2 col-md-2">
                             <button ng-show="binding.url" class="btn btn-primary pull-right"
 
@@ -942,6 +944,9 @@
                     </div>
 
                     <hr/>
+                    <div ng-show="url">
+                        <strong>Query: </strong> {{url}}
+                    </div>
 
                     <uib-tabset ng-show="binding.url">
                         <uib-tab heading="List">
@@ -1044,6 +1049,9 @@
     </div>
 
     <div class="modal-header">
+        <div ng-show="url">
+            <strong>Url: </strong> {{url}}
+        </div>
         <hr/>
         <em>Note that this <strong>may</strong> correctly show the existing value for this element, but may not
         be or may be incomplete. Working on it...</em>

@@ -140,18 +140,37 @@ angular.module("sampleApp")
                 $scope.track.links.splice(inx,1)
             };
 
+
+            //a specific query (like a different terminology) for specific valuesets
+            $scope.addExpandQuery = function(vsUrl,query) {
+                $scope.track.expandQuery = $scope.track.expandQuery || []
+                $scope.track.expandQuery.push({vsUrl:vsUrl,query:query})
+
+                delete $scope.input.eqVsUrl;
+                delete $scope.input.eqQuery;
+
+            };
+
+            $scope.removeExpandQuery = function(inx) {
+                $scope.track.expandQuery.splice(inx,1)
+            };
+
             $scope.addEndPoint = function(url,description) {
                 //console.log(url,description)
                 $scope.track.endPoints = $scope.track.endPoints || []
                 $scope.track.endPoints.push({url:url,description:description})
 
-                delete $scope.input.epUrl;
-                delete $scope.input.epDescription;
+
+                delete $scope.input.eqPath;
+                delete $scope.input.eqQuery;
             };
 
             $scope.removeEndPoint = function(inx) {
                 $scope.track.endPoints.splice(inx,1)
             };
+
+
+
 
             $scope.personSelected = function(person){
                 console.log(person)

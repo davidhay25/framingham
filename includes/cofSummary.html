@@ -119,9 +119,6 @@
 
                             <uib-tabset>
                                 <br/>
-                                <uib-tab heading="Resource Json">
-                                    <pre>{{itemResourceJson | json}}</pre>
-                                </uib-tab>
                                 <uib-tab heading="Data & Notes">
                                     <h4>{{item.type}}</h4>
                                     <table class="table">
@@ -133,6 +130,10 @@
                                         </tr>
                                     </table>
                                 </uib-tab>
+                                <uib-tab heading="Resource Json">
+                                    <pre>{{itemResourceJson | json}}</pre>
+                                </uib-tab>
+
 
 
                                 <!--

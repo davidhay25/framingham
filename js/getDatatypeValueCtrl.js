@@ -8,9 +8,27 @@ angular.module("sampleApp")
             $scope.scenario = scenario;
             $scope.resourceType = resourceType;
             var vsToRenderAsList = [];
+            $scope.input.dt = {}
+
             getCCToRenderAsList();
 
             console.log(currentJson);
+
+            //see if there is a fixed value...  todo - generalize
+            if (row && row.ed && row.ed.fixedString && datatype == 'Identifier') {
+                try {
+                    var json = angular.fromJson(row.ed.fixedString);
+                    console.log(json)
+                    $scope.input.dt.identifier = {};
+                    angular.forEach(json,function(v,k) {
+                        $scope.input.dt.identifier[k] = v;     //not sure how well this will work for nested properties like a CC...
+                    })
+
+                } catch (ex) {
+                    console.log('error parsing '+ row.ed.fixedString)
+                }
+
+            }
 
 
           //  var displayTemplate = []
@@ -27,7 +45,7 @@ angular.module("sampleApp")
             //pre-pop with existing data... todo - some datatypes need specific actions
             console.log(row)
             var tDt = datatype.toLowerCase();
-            $scope.input.dt = {}
+
             //$scope.input.dt[tDt] = row.structuredData;
             //?? could this be combined with the pre-porcessing below
             switch (datatype) {
@@ -37,7 +55,10 @@ angular.module("sampleApp")
 
                     break;
                 default :
-                    $scope.input.dt[tDt] = row.structuredData;
+                    if (row.structuredData) {
+                        $scope.input.dt[tDt] = row.structuredData;
+                    }
+
                     break;
             }
 
@@ -150,11 +171,36 @@ angular.module("sampleApp")
                 delete $scope.selectedConceptProperties;
                 delete $scope.selectedConceptValue;
 
-                var url = termServer + "ValueSet/$expand?url="+row.binding.url+"&count=50";
+
+                var url = termServer + "ValueSet/$expand?url="+row.binding.url+"&count=50"; //default expansion query
+                if (track.expandQuery) {
+                    //if there are specific expansion queries defined in the track, then see if this vs is one that applies
+                    track.expandQuery.forEach(function (eq) {
+                        if (eq.vsUrl == row.binding.url) {
+                            url = eq.query;
+                        }
+                    })
+                }
+
+                /*
+                if ($scope.row.path == 'reaction.manifestation') {
+                    url = "http://its.patientsfirst.org.nz/RestService.svc/Terminz/ValueSet/$expand";
+                    url += "?identifier=http://snomed.info/sct?fhir_vs=refset/351000210106";
+                } else {
+                    url = termServer + "ValueSet/$expand?url="+row.binding.url+"&count=50";
+
+                }
+                */
                 if (text) {
                     url += "&filter="+text
                 }
+
+                $scope.url = url;
                 getExpandedVS(url);     //sets $scope.expandedValueSet
+
+
+
+
             };
 
             var getConceptDescription = function(concept) {

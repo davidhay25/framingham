@@ -978,6 +978,10 @@ app.post('/track',function(req,res){
     fieldsToUpdate.LM = data.LM;
     fieldsToUpdate.description = data.description;
     fieldsToUpdate.IG = data.IG;
+    fieldsToUpdate.expandQuery = data.expandQuery;
+    fieldsToUpdate.endPoints = data.endPoints;
+
+
 
 
 
