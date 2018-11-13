@@ -106,13 +106,14 @@
                 </uib-tab>
 
 
-                <uib-tab>
+                <uib-tab ng-hide="graphHasLinkedPatient">
                     <uib-tab-heading>
                         Select Patient
                     </uib-tab-heading>
+                    <br/>
                     <div class="row">
                         <div class="col-sm-3 col-md-3">
-                            <input class="form-control" type="text" ng-model="input.selectPatientName"/>
+                            <input class="form-control" placeholder="Name" type="text" ng-model="input.selectPatientName"/>
                         </div>
                         <div class="col-sm-2 col-md-2">
                             <button class="btn btn-link" ng-click="findPatient(input.selectPatientName)">Search</button>

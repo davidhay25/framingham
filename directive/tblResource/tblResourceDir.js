@@ -602,14 +602,14 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
                         //ignore all elements that end with this string
                         if (ignoreAll.indexOf(ar1[ar1.length-1]) !== -1) {
-                            console.log('ignoring '+ path)
+                            //console.log('ignoring '+ path)
                             include = false;
                         }
 
                         //ignore element if off the root...
                         if (ar1.length == 1 && (ar1[0]== 'language' ||ar1[0]== 'text' )) {
                             include = false;
-                            console.log('ignoring '+ path)
+                            //console.log('ignoring '+ path)
                         }
 
                         if (include) {
@@ -703,7 +703,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                                     ed.type[0].targetProfile = "http://hl7.org/fhir/StructureDefinition/Resource";
                                 }
 
-                                console.log('type='+type)
+                                //console.log('type='+type)
                                 type = type || 'Resource';
                                 item.referenceDisplay = '--> ' + type;
 

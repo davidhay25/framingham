@@ -10,7 +10,7 @@
 
             <div class="col-md-4 col-sm-4">
                 <div class="pull-right">
-                    <button class="btn btn-primary pull-right" ng-click="selectResource()">Select</button>
+                    <button class="btn btn-primary pull-right" ng-click="selectResources()">Select</button>
                 </div>
 
                 <div class="pull-right">
@@ -39,10 +39,12 @@
                     </div>
                     <div class="col-sm-3 col-md-3">
                         <div class="list-group">
-                            <div class="list-group-item" style="cursor: pointer" ng-repeat="resource in selectedType.resources"
+                            <div class="list-group-item" style="cursor: pointer" ng-repeat="resource in selectedTypeObject.resources"
                                  ng-click="showResource(resource)">
+                                <div class="clickable pull-right" ng-click="selectOneResource(resource)">Select</div>
                                 <p ng-bind-html="resource.text.div | markDown"></p>
                                 <p ng-hide="resource.text.div">No text element. Select to view.</p>
+
                             </div>
                         </div>
                     </div>
@@ -52,10 +54,24 @@
                 </div>
 
             </uib-tab>
-            <uib-tab heading="Patient">
+
+            <uib-tab>
+                <uib-tab-heading>Selected resources <span class="badge">{{selectedResources.length}}</span> </uib-tab-heading>
+                <br/>
+                <div class="list-group">
+                    <div class="list-group-item" style="cursor: pointer" ng-repeat="resource in selectedResources"
+                         ng-click="showResource(resource)">
+                        <div class="clickable pull-right" ng-click="removeOneResource($index)">Remove</div>
+                        {{resource.resourceType}}: <p ng-bind-html="resource.text.div | markDown"></p>
+                        <p ng-hide="resource.text.div">No text element. Select to view.</p>
+                    </div>
+                </div>
+
+            </uib-tab>
+            <uib-tab heading="Patient Json">
                 <pre>{{patient | json}}</pre>
             </uib-tab>
-            <uib-tab heading="All Resources">
+            <uib-tab heading="All Resources Json">
                 <pre>{{allResources | json}}</pre>
             </uib-tab>
         </uib-tabset>

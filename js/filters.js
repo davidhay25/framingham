@@ -229,10 +229,14 @@ angular.module("sampleApp")
         }
     })
     .filter('cleanTextDiv',function(){
-        //remove the <div  xmlns='http://www.w3.org/1999/xhtml'>{texthere}</div> tgs...
+        //remove the <div  xmlns='http://www.w3.org/1999/xhtml'>{texthere}</div> tgs...  Not very elegant...
         return function(textDiv) {
             //console.log(textDiv)
             if (textDiv) {
+
+                //replace the double quotes with single
+                textDiv = textDiv.replace(/"/g, "'");
+
                 var startDiv = "<div xmlns='http://www.w3.org/1999/xhtml'>";
                 if (textDiv.indexOf(startDiv) > -1) {
                     textDiv = textDiv.replace(startDiv,"");

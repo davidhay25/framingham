@@ -219,6 +219,22 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
     return {
 
+        makePatientReference : function(patientId,patientDescription,item) {
+            //if the resource has a reference named 'subject' or 'patient' then create a reference
+            //create a row for the table to reference the Patient...
+            //not used
+            var row = {references:[]};
+
+            var ref = {};
+            ref.targetItem = {id:patientItem.linkedResource.id,description:patientItem.description};
+            ref.sourcePath = "Subject";     //todo may not be correct...
+
+            row.references.push(ref);
+
+
+            item.table = [row];
+
+        },
         makeResourceTree : function(resource) {
             //makes a tree of a resourc einstance
             //pass in a resource instance...
@@ -540,6 +556,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                 ar.forEach(function (ed) {
                 //profile.snapshot.element.forEach(function (ed) {
                     logicalModel.snapshot.element.push(ed)
+
 
 
                     var path = ed.path;

@@ -48,7 +48,6 @@ angular.module("sampleApp")
                 $http.get(url).then(
                     function(data) {
                         console.log(data)
-
                         if (data.data.entry) {
                             data.data.entry.forEach(function(entry) {
                                 var resource = entry.resource;
@@ -63,11 +62,8 @@ angular.module("sampleApp")
                                             if (resource.name[0].family) {
                                                 name += resource.name[0].family;
                                             }
-
                                         }
-
                                     }
-
 
                                     $scope.lstSelectedPatients.push({name:name,resource:resource})
                                 }
@@ -108,9 +104,9 @@ angular.module("sampleApp")
                 //var patientResource;
                 $scope.cofTypeList.forEach(function (item) {
                     if (item.baseType == 'Patient' && item.linked && item.linkedResource) {
-                        //patientResource = item.linkedResource;
+
                         patientItem = item;
-                        //console.log(patientResource)
+
                     }
                 });
 
@@ -119,7 +115,7 @@ angular.module("sampleApp")
                     var url = $scope.selectedTrack.dataServer + "Patient/"+patientItem.linkedResource.id + '/$everything';
                     $http.get(url).then(
                         function(data) {
-                            console.log(data.data)
+
                             $uibModal.open({
                                 templateUrl: 'modalTemplates/selectPatientResource.html',
                                 size: 'lg',
@@ -130,48 +126,49 @@ angular.module("sampleApp")
                                     },
                                     allResources: function () {
                                         return data.data
+                                    },
+                                    currentList : function() {
+                                        return $scope.cofTypeList;
                                     }
                                 }
-                            }).result.then(function (resource) {
-                                //resource is the selected patient resource...
-                                console.log(resource)
+                            }).result.then(function (arResource) {
+                                //resource is the selected patient referenced resource...
+                                console.log(arResource)
 
-                                var item = {id : resource.id, type:resource.resourceType}
-                                item.baseType = resource.resourceType;
-                                item.category = 'core';
-                                item.narrativeStatus = 'generated';     //default to automatically building the text...
-                                item.description = resource.resourceType;
-                                item.linked = true;     //so this won;t be updated to the server
-                                item.linkedResource = resource;
+                                if (arResource) {
+                                    arResource.forEach(function (resource) {
+                                        var item = {id : resource.id, type:resource.resourceType}
+                                        item.baseType = resource.resourceType;
+                                        item.category = 'core';
+                                        item.narrativeStatus = 'generated';     //default to automatically building the text...
+                                        item.description = resource.resourceType;   //default title
+                                        if (resource.text && resource.text.div) {
+                                            item.description = $filter('cleanTextDiv')(resource.text.div)
+                                        }
 
-                                //create a row for the table to reference the Patient...
-                                var row = {references:[]};
-                                var ref = {};
-                                ref.targetItem = {id:patientItem.linkedResource.id,description:patientItem.description};
-                                ref.sourcePath = "Subject";     //todo may not be correct...
+                                        item.linked = true;     //so this won;t be updated to the server
+                                        item.linkedResource = resource;
 
-                                row.references.push(ref);
-                                item.table = [row];
+                                        //create a row for the table to reference the Patient...
+                                        var row = {references:[]};
+                                        //does the resource being linked have a top level reference labelled 'patient' or 'subject? If so, add a reference to it...
+                                        angular.forEach(resource,function (v,k) {
+                                            if (k == 'subject'  || k== 'patient') {
+                                                console.log(k)
+                                                var ref = {};
+                                                ref.targetItem = {id:patientItem.linkedResource.id,description:patientItem.description};
+                                                ref.sourcePath = k;     //todo may not be correct...
+                                                row.references.push(ref);
+                                                item.table = [row];
+                                            }
+                                        })
 
-
-                                $scope.cofTypeList.push(item);
-
-
-                                //there must be a reference to the Patient (or it would not have been in the list
-
-                                /*
-                                if (item.table) {
-                    item.table.forEach(function (row) {
-                        if (row.references) {
-                            row.references.forEach(function (ref) {
-                                var edge = {
-                                    id: 'e' + arEdges.length + 1, from: item.id, to: ref.targetItem.id,
-                                    label: ref.sourcePath, arrows: {to: true}
-                                };
+                                        $scope.cofTypeList.push(item);
 
 
-                                * */
 
+                                    })
+                                }
 
 
 
@@ -647,7 +644,7 @@ angular.module("sampleApp")
 
                             cofSvc.makeLogicalModelFromSD(SD,$scope.selectedTrack).then(
                                 function(LM) {
-                                    profilesCache[name] = LM;
+                                  //temp while debugging  profilesCache[name] = LM;
                                     //this works for CC - may need to be more flexible for others (like STU-2 argonaut)
                                     baseType = SD.type;
                                     addToTypeList(baseType,name,url)
@@ -1113,17 +1110,10 @@ angular.module("sampleApp")
                     if (item.id !== $scope.currentItem.id) {       //don't allow self references...
                         //core resource types...
                         //if (item.type == type || type == 'Resource') {
-                        if (item.baseType == type || type == 'Resource') {
+                        if (item.baseType == type || type == 'Resource' || item.type == type) {
                             targets.push(item)
-                        } else {
-                            //any Logical models?
-                           // var ar = item.type.split('-');
-                           // if (ar.length == 2 && ar[1] == type ) {
-                           //     targets.push(item)
-                           // }
                         }
                     }
-
                 });
 
                 switch(targets.length) {
@@ -1155,7 +1145,7 @@ angular.module("sampleApp")
                             closeButtonText: "No thanks",
                             headerText: "Link to existing resource instance",
                             actionButtonText: "Yes please",
-                            bodyText: "There is already a single resource instance of this type in the graph. Do you want to add a reference to it?"
+                            bodyText: "There is a single resource instance of this type in the graph. Do you want to add a reference to it?"
 
                         };
                         modalService.showModal({}, modalOptions).then(
@@ -1261,13 +1251,17 @@ angular.module("sampleApp")
                     makeGraph();
                     $scope.saveGraph(true);
 
+
                     var vo = ecosystemSvc.makeResourceJson(item.baseType, item.id,treeData);
+                    $scope.resourceJson = vo;
+                    /* - not sure why I did this - seems to be invalid...
                     if (vo) {
                         $scope.resourceJson()({resource: vo.resource, raw: vo.data});
                         return vo.resource;
                     } else {
                         return {error:'Error building Json'}
                     }
+                    */
                 }
 
 

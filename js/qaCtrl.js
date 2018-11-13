@@ -30,9 +30,9 @@ angular.module("sampleApp")
 
             $scope.selectResource = function(type) {
                 console.log(type)
-                $scope.selectedType = type;
+                $scope.selectedTypeObject = type;
                 $scope.waiting = true;
-                var url = 'http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/' +$scope.selectedType
+                var url = 'http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/' +$scope.selectedTypeObject
                 $http.get(url).then(
                     function (data) {
                         console.log(data.data)
