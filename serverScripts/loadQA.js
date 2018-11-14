@@ -22,7 +22,7 @@ var resourcesList = "/Users/davidha/Dropbox/development/ecosystem/artifacts/reso
 
 var resourceSource = "/Users/davidhay/fhir/fhir/source/";
 var publishRoot = "/Users/davidhay/fhir/fhir/publish/";
-var qaOutputRoot = "/Users/davidhay/Dropbox/fhirQA2019/";        //where to place the output files...
+var qaOutputRoot = "/Users/davidhay/Dropbox/fhirQARelease4/";        //where to place the output files...
 var resourcesList = "/Users/davidhay/clinfhir/framingham/artifacts/resources.txt";     //the list of resource tyopes from fhir.ini
 
 
@@ -120,6 +120,7 @@ fs.readdir(resourceSource, function(err, list) {
 //generate the individual Resource files
 fs.readdir(resourceSource, function(err, list) {
 
+    var hashFoldersFound = {}
 
     var lstResources = []
     list.forEach(function(folderName){
@@ -130,6 +131,8 @@ fs.readdir(resourceSource, function(err, list) {
             if (stat.isDirectory() && arAllResourceTypes.indexOf(lcFolderName) > -1) {
                 // a folderName should be equivalent to a resource type
 
+                hashFoldersFound[folderName] = 'found';
+console.log(folderName)
                 var html = '<html xmlns="http://www.w3.org/TR/REC-html40"><head>';
                 html += "<title>Resource: "+folderName+"</title>";
                 html += '<meta name="ProgId" content="Word.Document"></meta>';
@@ -304,6 +307,15 @@ fs.readdir(resourceSource, function(err, list) {
     })
 
 
+
+    setTimeout(function(){
+        console.log('looking for missing resources...')
+        arAllResourceTypes.forEach(function(resourceName){
+            if (!hashFoldersFound[resourceName] ) {
+                console.log(resourceName + ' not found')
+            }
+        })
+    },5000)
 
 
 })

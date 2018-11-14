@@ -192,7 +192,7 @@ angular.module("sampleApp")
                 }
                 */
                 if (text) {
-                    url += "&filter="+text
+                    url += "?filter="+text
                 }
 
                 $scope.url = url;
@@ -261,7 +261,7 @@ angular.module("sampleApp")
 
             //called when a concept is initially selected, and also when a parent or child is selected...
             $scope.selectConcept = function(concept) {
-                $scope.waiting = true;
+
                 $scope.selectedConceptValue = {value:{coding:[concept]},text:concept.display}
 
                 if ($scope.input.dt && $scope.input.dt.cc) {
@@ -271,6 +271,13 @@ angular.module("sampleApp")
                 delete $scope.expandedValueSet;
                 delete $scope.selectedConceptProperties;
 
+
+                //todo - if there's a track specified expand, then don't do the lookup. May want to revisit this...
+                if (track.expandQuery) {
+                    return;
+                }
+
+                $scope.waiting = true;
                 //get the details for the selected code....
                 var url = termServer + "CodeSystem/$lookup?system="+concept.system + "&code="+ concept.code;
                 $http.get(url).then(

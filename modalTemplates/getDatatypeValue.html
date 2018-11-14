@@ -944,10 +944,11 @@
                     </div>
 
                     <hr/>
+                    <!--
                     <div ng-show="url">
                         <strong>Query: </strong> {{url}}
                     </div>
-
+-->
                     <uib-tabset ng-show="binding.url">
                         <uib-tab heading="List">
 
@@ -1049,10 +1050,11 @@
     </div>
 
     <div class="modal-header">
-        <div ng-show="url">
-            <strong>Url: </strong> {{url}}
-        </div>
         <hr/>
+        <div ng-show="url">
+            <strong>Query: </strong> {{url}}
+        </div>
+        
         <em>Note that this <strong>may</strong> correctly show the existing value for this element, but may not
         be or may be incomplete. Working on it...</em>
         <div class="row">

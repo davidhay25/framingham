@@ -35,17 +35,15 @@ angular.module("sampleApp")
             $scope.removeOneResource = function(inx) {
                 var ar = $scope.selectedResources.splice(inx,1)
                 $scope.selectedTypeObject.resources.push(ar[0])
-            }
+            };
 
             $scope.allResources = {entry:[]}
             allResources.entry.forEach(function (entry) {
                 var resourceId = entry.resource.id;
-                if (!hash[resourceId]) {
+                if (!hash[resourceId] && entry.resource.resourceType !== 'Patient') {
                     $scope.allResources.entry.push(entry)
                 }
-
-
-            })
+            });
 
 
             function buildTypes() {

@@ -1,7 +1,7 @@
 
 angular.module("sampleApp")
     .controller('cofCtrl',
-        function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc,
+        function ($scope,ecosystemSvc,ecoUtilitiesSvc,querySvc,$http,$filter,$window,$timeout,$uibModal,cofSvc,
                   modalService,$q) {
 
             $scope.input = {};
@@ -36,7 +36,7 @@ angular.module("sampleApp")
             };
 
             //allow any resource to be linked to the
-            $scope.linkToResource = function() {
+            $scope.linkToResourceDEP = function() {
                 alert('Sorry, not yet enabled...')
             };
 
@@ -113,8 +113,12 @@ angular.module("sampleApp")
                 if (patientItem) {
 
                     var url = $scope.selectedTrack.dataServer + "Patient/"+patientItem.linkedResource.id + '/$everything';
-                    $http.get(url).then(
-                        function(data) {
+                    querySvc.performQueryFollowingPaging(url).then(
+
+
+
+                  //  $http.get(url).then(
+                        function(bundle) {
 
                             $uibModal.open({
                                 templateUrl: 'modalTemplates/selectPatientResource.html',
@@ -125,7 +129,7 @@ angular.module("sampleApp")
                                         return patientItem.linkedResource
                                     },
                                     allResources: function () {
-                                        return data.data
+                                        return bundle
                                     },
                                     currentList : function() {
                                         return $scope.cofTypeList;
@@ -144,6 +148,8 @@ angular.module("sampleApp")
                                         item.description = resource.resourceType;   //default title
                                         if (resource.text && resource.text.div) {
                                             item.description = $filter('cleanTextDiv')(resource.text.div)
+                                            //https://stackoverflow.com/questions/8299742/is-there-a-way-to-convert-html-into-normal-text-without-actually-write-it-to-a-s
+                                            item.description = item.description.replace(/(<([^>]+)>)/g, "");
                                         }
 
                                         item.linked = true;     //so this won;t be updated to the server
@@ -162,13 +168,27 @@ angular.module("sampleApp")
                                                 item.table = [row];
                                             }
                                         })
-
                                         $scope.cofTypeList.push(item);
-
-
-
                                     })
-                                }
+
+                                    //now see if there are any references from/to the new resources
+                                    var hashExisting = {};
+                                    $scope.cofTypeList.forEach(function (item) {
+                                        hashExisting[item.id] = item;
+                                    });
+
+
+                                    arResource.forEach(function (resource) {
+                                        angular.forEach(resource, function (v, k) {
+
+                                        })
+                                    })
+
+
+
+
+                                    }
+
 
 
 
@@ -911,7 +931,7 @@ angular.module("sampleApp")
 
                             var item = {id : 'id'+new Date().getTime(), type:name};
 
-                            item.description = 'LM';
+                            item.description = name;//'LM';
                             var description = $window.prompt("Enter a short description for this resource instance",item.description);
                             if (description) {
                                 item.description = description;

@@ -320,7 +320,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                                 var child = tree[j]
                                 if (child.parent == parentId) {
                                     //this is a direct child (assume only 1 level of nesting
-                                    console.log(child)
+                                    //console.log(child)
                                     var data = child.data.structuredData;
                                     var typ = 'value'+ _capitalize(child.data.dt)
                                     if (data) {
@@ -452,7 +452,8 @@ angular.module("sampleApp").service('ecosystemSvc',
                 topEleName = node.branch.text
 
                 if (topEleName && topEleName.indexOf('[x]') > -1) {
-                    topEleName = topEleName.substr(0, topEleName.length - 3) + _capitalize(node.branch.data.sdDt);
+                    //topEleName = topEleName.substr(0, topEleName.length - 3) + _capitalize(node.branch.data.sdDt);
+                    topEleName = topEleName.substr(0, topEleName.length - 3) + _capitalize(node.branch.data.dt);
                 }
 
                 //fri
