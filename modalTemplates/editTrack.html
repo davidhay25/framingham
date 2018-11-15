@@ -126,10 +126,23 @@
             </uib-tab>
 
             <uib-tab heading="Scenarios">
+                <br/>
                 <table class="table">
+                    <tr><td>Name</td><td>Description</td><td>Move</td></tr>
                     <tr ng-repeat="scenario in track.scenarios">
                         <td>{{scenario.name}}</td>
                         <td>{{scenario.description}}</td>
+
+                        <td>
+                            <i
+                               class="glyphicon glyphicon-arrow-up clickable"
+                               ng-hide = "$index == 0"
+                               ng-click="moveScenarioUp($index)"></i>
+                            <i
+                               class="glyphicon glyphicon-arrow-down clickable"
+                               ng-hide = "$index == (track.scenarios.length -1)"
+                               ng-click="moveScenarioDn($index)"></i>
+                        </td>
                     </tr>
                 </table>
             </uib-tab>

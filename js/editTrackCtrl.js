@@ -187,6 +187,17 @@ angular.module("sampleApp")
                     $scope.track.leadIds[0] = $scope.input.trackLead.id;
                 }
 
+                //need to re-order the scenarioIds based on the order of the scenarios...
+
+                //var clone = angular.copy($scope.track)
+                //$scope.track.scenarios.length = 0;
+                $scope.track.scenarioIds.length = 0;
+
+                $scope.track.scenarios.forEach(function (scenario) {
+                    $scope.track.scenarioIds.push(scenario.id)
+                })
+
+
                 //track.url = $scope.clone.url;
 
                 $scope.track.termServer = $scope.input.termServer;
@@ -221,7 +232,16 @@ angular.module("sampleApp")
                        // $scope.$close({track:track,lead:$scope.input.trackLead})
                     }
                 )
-            }
+            };
+
+            $scope.moveScenarioUp = function(inx) {
+                var id = track.scenarios.splice(inx,1);
+                track.scenarios.splice(inx-1,0,id[0]);
+            };
+            $scope.moveScenarioDn = function(inx) {
+                var id = track.scenarios.splice(inx,1);
+                track.scenarios.splice(inx+1,0,id[0]);
+            };
 
             $scope.deleteTrack = function(){
                 var modalOptions = {
