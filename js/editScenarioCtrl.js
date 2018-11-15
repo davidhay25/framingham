@@ -287,8 +287,13 @@ angular.module("sampleApp")
 
                 modalService.showModal({}, modalOptions).then(
                     function() {
-                        track.status = 'archived';
-                        alert('Not yet implemented')
+                        scenario.status = 'deleted';
+                        $scope.$close(scenario)
+
+
+
+
+                        //alert('Not yet implemented')
                         // $scope.$close({track:track,lead:$scope.input.trackLead})
                     }
                 )

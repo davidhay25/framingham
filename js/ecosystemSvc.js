@@ -2070,7 +2070,7 @@ angular.module("sampleApp").service('ecosystemSvc',
             //urls.push({url:'artifacts/tracks.json',"name":"tracks"});
             urls.push({url:'artifacts/persons.json',"name":"persons"});
 
-            urls.push({url:'/config/track',"name":"tracks"});
+            urls.push({url:'/config/track?ts='+ new Date().getTime(),"name":"tracks"});
             urls.push({url:'/config/scenario',"name":"scenarios"});
             urls.push({url:'/config/role',"name":"roles"});
 
@@ -2232,7 +2232,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                                         })
                                     }
                                 } else {
-                                    console.log("track: "+ track.id +  " scenario id: "+ id+ " missing")
+                                    console.log("track: "+ track.id +  " scenario id: "+ id+ " missing. The scenario may have been deleted.")
                                 }
 
                             })

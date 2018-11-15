@@ -333,6 +333,8 @@ angular.module("sampleApp")
                             //now, add the new scenario to the track and update
                             $scope.selectedTrack.scenarios.push(scenario);
 
+
+
                             //alert('scenario added to track')
                         }, function(err) {
                             console.log(err)
@@ -374,11 +376,40 @@ angular.module("sampleApp")
                         function(data) {
 
 
+
                             //update all roles for the track - just for the display...
                             //updateRolesListInTrack($scope.selectedTrack);
                             ecosystemSvc.updateTrackRoles($scope.selectedTrack)
 
+                            if (clone.status == 'deleted') {
+                                $scope.refresh();
 
+                                //need to set the $scope.selectedTrack as it will be showing the 'old' set of scenarios
+                                //I don';t know why I need to do this TTTT ...
+                                var inx = -1
+                                $scope.selectedTrack.scenarios.forEach(function (sc,pos) {
+                                    if (sc.id == clone.id) {
+                                        inx = pos
+                                    }
+                                });
+
+                                if (inx > -1) {
+                                    $scope.selectedTrack.scenarios.splice(inx,1)
+                                }
+
+                                /*
+                                $scope.tracks.forEach(function (trck) {
+                                    if (trck.id == $scope.selectedTrack.id) {
+                                        $scope.selectedTrack = trck;
+                                    }
+                                })
+*/
+
+                                ////selectedTrack.scenarios - displau
+                                //selectTrack($scope.selectedTrack)
+                                //$scope.selectedTrack = track;
+
+                            }
 
 
                         }, function(err) {
@@ -483,7 +514,7 @@ angular.module("sampleApp")
             var loadData = function(cb){
                 ecosystemSvc.getConnectathonResources().then(
                     function(vo) {
-
+console.log(vo);
                         ecosystemSvc.makeAllScenarioSummary(vo.scenarioGraph,vo.tracks).then(
                             function(data) {
                                 $scope.hashAllScenarioNotes = data;

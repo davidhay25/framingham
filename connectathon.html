@@ -428,11 +428,18 @@
 
                                             <table class="table">
                                                 <tr ng-repeat="link in selectedTrack.links">
-                                                    <td>{{link.name}}</td>
+                                                    <td>
+                                                       <a target="_blank"
+                                                           ng-href="{{link.url}}">{{link.name}}</a>
+
+                                                        <a ng-hide="link.name" target="_blank"
+                                                           ng-href="{{link.url}}">{{link.description}}</a>
+
+                                                    </td>
+                                                    </td>
                                                     <td>{{link.description}}</td>
                                                     <td>
-                                                        <a target="_blank"
-                                                           ng-href="{{link.url}}">{{link.url}}</a>
+                                                        {{link.url}}
                                                         </td>
                                                 </tr>
 

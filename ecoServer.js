@@ -960,9 +960,13 @@ app.post('/track',function(req,res){
     data.issued = new Date();
     var collection = req.selectedDbCon.collection('track')
 
-   // console.log('track',data)
+    //var fieldsToUpdate = {};        //basically everything except scenarioIds
 
-    var fieldsToUpdate = {};        //basically everything except scenarioIds
+    var fieldsToUpdate = JSON.parse(JSON.stringify(data));
+    delete fieldsToUpdate.scenarioIds;
+   // delete fieldsToUpdate.scenarios;
+
+/*
     fieldsToUpdate.name = data.name;
     fieldsToUpdate.roles = data.roles;
     fieldsToUpdate.trackType = data.trackType;
@@ -981,9 +985,10 @@ app.post('/track',function(req,res){
     fieldsToUpdate.expandQuery = data.expandQuery;
     fieldsToUpdate.endPoints = data.endPoints;
     fieldsToUpdate.links = data.links;
+    fieldsToUpdate.status = data.status;
 
 
-
+*/
     collection.update({id:data.id},
         {$set: fieldsToUpdate},function(err,result){
             if (err) {

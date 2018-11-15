@@ -124,6 +124,16 @@
                 </form>
 
             </uib-tab>
+
+            <uib-tab heading="Scenarios">
+                <table class="table">
+                    <tr ng-repeat="scenario in track.scenarios">
+                        <td>{{scenario.name}}</td>
+                        <td>{{scenario.description}}</td>
+                    </tr>
+                </table>
+            </uib-tab>
+
             <uib-tab>
                 <uib-tab-heading>
                     Links <span class="badge">{{track.links.length}}</span>
@@ -189,7 +199,7 @@
             </uib-tab>
 
 
-            <uib-tab heading='Track servers & Implementation Guide'  ng-hide="track.trackType == 'technical' && ! track.allowGraph">
+            <uib-tab heading='Servers & IG'  ng-hide="track.trackType == 'technical' && ! track.allowGraph">
 
                 <br/>
                 <div class="row">
