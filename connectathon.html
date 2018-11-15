@@ -423,13 +423,30 @@
                                         <div class="col-sm-2 col-md-2">
                                             <strong>General links</strong>
                                         </div>
+
                                         <div class="col-sm-9 col-md-9">
+
+                                            <table class="table">
+                                                <tr ng-repeat="link in selectedTrack.links">
+                                                    <td>{{link.name}}</td>
+                                                    <td>{{link.description}}</td>
+                                                    <td>
+                                                        <a target="_blank"
+                                                           ng-href="{{link.url}}">{{link.url}}</a>
+                                                        </td>
+                                                </tr>
+
+                                            </table>
+                                            <em>Links of general interest to this track. Open in a separate tab</em>
+<!--
+
                                            <ul class="list-unstyled">
                                                <li ng-repeat = "link in selectedTrack.links">
                                                    <a target="_blank"
                                                       ng-href="{{link.url}}">{{link.description}} ({{link.url}})</a>
                                                </li>
                                            </ul>
+                                            -->
 
 
                                         </div>

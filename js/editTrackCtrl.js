@@ -123,7 +123,7 @@ angular.module("sampleApp")
                     controller: function($scope,links){
                         $scope.input = {};
                         $scope.addLink = function() {
-                            links.push({url:$scope.input.linkUrl,description:$scope.input.linkDescription});
+                            links.push({url:$scope.input.linkUrl,name:$scope.input.linkName,description:$scope.input.linkDescription});
                             $scope.$close();
                         }
                     },

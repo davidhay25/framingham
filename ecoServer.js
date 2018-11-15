@@ -960,7 +960,7 @@ app.post('/track',function(req,res){
     data.issued = new Date();
     var collection = req.selectedDbCon.collection('track')
 
-    console.log('track',data)
+   // console.log('track',data)
 
     var fieldsToUpdate = {};        //basically everything except scenarioIds
     fieldsToUpdate.name = data.name;
@@ -980,12 +980,9 @@ app.post('/track',function(req,res){
     fieldsToUpdate.IG = data.IG;
     fieldsToUpdate.expandQuery = data.expandQuery;
     fieldsToUpdate.endPoints = data.endPoints;
+    fieldsToUpdate.links = data.links;
 
 
-
-
-
-    //{$set: {name:data.name,roles:data.roles,trackType:data.trackType}},function(err,result){
 
     collection.update({id:data.id},
         {$set: fieldsToUpdate},function(err,result){

@@ -85,7 +85,8 @@
             </div>
 
 
-            <uib-tabset>
+
+            <uib-tabset class="rounded-box">
                 <uib-tab>
                     <uib-tab-heading>
                         Core resource types
@@ -109,6 +110,44 @@
                     </div>
                 </uib-tab>
 
+
+
+                <uib-tab >
+                    <uib-tab-heading>
+                        Logical Models
+                        <span class="badge">{{cofScenario.lms.length}}</span>
+
+
+                    </uib-tab-heading>
+                    <div class="row">
+                        <div class="col-sm-3 clickable" ng-repeat="lm in cofScenario.lms">
+                            <span ng-click="selectLM(lm)"  style="cursor:pointer"
+                                  uib-popover={{lm.description}}
+                                  popover-placement="top"
+                                  popover-trigger="'mouseenter'">
+                                {{lm.url | getLogicalID}}</span>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab >
+                    <uib-tab-heading>
+                        Profiles
+                        <span class="badge">{{cofScenario.selectedProfiles.length}}</span>
+
+
+                    </uib-tab-heading>
+<!--
+                    <button class="btn btn-primary" ng-click="getProfile('LM')">Patient</button>
+                    <button class="btn btn-primary" ng-click="getProfile('LMEnc')">Encounter</button>
+-->
+                    <div class="row">
+                        <div class="col-sm-4 clickable" ng-repeat="profile in cofScenario.selectedProfiles">
+                            <span ng-click="selectCofProfile(profile)"  style="cursor:pointer">{{profile.name}}</span>
+                        </div>
+
+                    </div>
+
+                </uib-tab>
 
                 <uib-tab ng-hide="graphHasLinkedPatient">
                     <uib-tab-heading>
@@ -149,42 +188,6 @@
                     <button class="btn btn-link" ng-click="loadPatientResources()">Load resources</button>
                 </uib-tab>
                 -->
-                <uib-tab >
-                    <uib-tab-heading>
-                        Logical Models
-                        <span class="badge">{{cofScenario.lms.length}}</span>
-
-
-                    </uib-tab-heading>
-                    <div class="row">
-                        <div class="col-sm-3 clickable" ng-repeat="lm in cofScenario.lms">
-                            <span ng-click="selectLM(lm)"  style="cursor:pointer"
-                                  uib-popover={{lm.description}}
-                                  popover-placement="top"
-                                  popover-trigger="'mouseenter'">
-                                {{lm.url | getLogicalID}}</span>
-                        </div>
-                    </div>
-                </uib-tab>
-                <uib-tab >
-                    <uib-tab-heading>
-                        Profiles
-                        <span class="badge">{{cofScenario.selectedProfiles.length}}</span>
-
-
-                    </uib-tab-heading>
-<!--
-                    <button class="btn btn-primary" ng-click="getProfile('LM')">Patient</button>
-                    <button class="btn btn-primary" ng-click="getProfile('LMEnc')">Encounter</button>
--->
-                    <div class="row">
-                        <div class="col-sm-4 clickable" ng-repeat="profile in cofScenario.selectedProfiles">
-                            <span ng-click="selectCofProfile(profile)"  style="cursor:pointer">{{profile.name}}</span>
-                        </div>
-
-                    </div>
-
-                </uib-tab>
             </uib-tabset>
         </div>
     </div>
