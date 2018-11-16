@@ -191,11 +191,14 @@ angular.module("sampleApp")
 
                 //var clone = angular.copy($scope.track)
                 //$scope.track.scenarios.length = 0;
-                $scope.track.scenarioIds.length = 0;
+                if ($scope.track.scenarioIds && $scope.track.scenarios) {
+                    $scope.track.scenarioIds.length = 0;
 
-                $scope.track.scenarios.forEach(function (scenario) {
-                    $scope.track.scenarioIds.push(scenario.id)
-                })
+                    $scope.track.scenarios.forEach(function (scenario) {
+                        $scope.track.scenarioIds.push(scenario.id)
+                    })
+                }
+
 
 
                 //track.url = $scope.clone.url;
@@ -257,6 +260,11 @@ angular.module("sampleApp")
                         $scope.$close({track:track,lead:$scope.input.trackLead})
                     }
                 )
+            }
+
+            $scope.createJson = function() {
+                //var json = {}
+
             }
 
         }
