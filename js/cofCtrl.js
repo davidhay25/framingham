@@ -1189,6 +1189,10 @@ angular.module("sampleApp")
                                 $scope.select=function(item){
                                     $scope.$close(item)
                                 }
+                                $scope.newResource=function(){
+                                    //close with nothing selected = new
+                                    $scope.$close()
+                                }
 
                             },
                             resolve : {
@@ -1205,9 +1209,20 @@ angular.module("sampleApp")
                             }
                         }).result.then(function(item){
 
-                            var reference = internalAddReference(row,item);
-                            $scope.saveGraph(true);
-                            if (cb) {cb(item)}
+                            if (item) {
+                                var reference = internalAddReference(row,item);
+                                $scope.saveGraph(true);
+                                if (cb) {cb(item)}
+                            } else {
+                                //the new option was selected
+                                var item = addItem(type)
+                                var reference = internalAddReference(row,item);
+                                $scope.saveGraph(true);
+                                //$scope.explanation = $scope.explanations['resourceAdded']
+                                if (cb) {cb(item)}
+                            }
+
+
                         });
                     break;
 
