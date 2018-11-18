@@ -86,7 +86,7 @@
 
 
 
-            <uib-tabset class="rounded-box">
+            <uib-tabset>
                 <uib-tab>
                     <uib-tab-heading>
                         Core resource types
@@ -204,7 +204,7 @@
                     <div class="scrollTable">
                         <table class="table table-bordered">
                             <tr><th>Type</th><th>Category</th><th>Title</th><th>References</th><th></th></tr>
-                            <tr ng-repeat="item in cofTypeList" ng-class="{active:currentItem.id == item.id}">
+                            <tr ng-repeat="item in cofTypeList | orderBy:'type' " ng-class="{active:currentItem.id == item.id}">
                                 <td>
                                     <span class="clickable"
                                           uib-popover-html=getListDisplay(item)

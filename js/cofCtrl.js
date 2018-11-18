@@ -1186,9 +1186,26 @@ angular.module("sampleApp")
                                 $scope.lst = lst;
                                 $scope.type = type;
                                 $scope.source = source
+                                $scope.input={filter:""}
                                 $scope.select=function(item){
                                     $scope.$close(item)
                                 }
+
+                                $scope.hashType = {}
+                                lst.forEach(function (res) {
+                                    $scope.hashType[res.type] = 'x'
+                                });
+
+                                $scope.canShow = function(item){
+                                    if ($scope.input.filter) {
+                                        if (item.type == $scope.input.filter) {
+                                            return true;
+                                        }
+                                    } else {
+                                        return true;
+                                    }
+                                }
+
                                 $scope.newResource=function(){
                                     //close with nothing selected = new
                                     $scope.$close()

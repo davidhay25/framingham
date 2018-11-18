@@ -18,13 +18,30 @@
 
     <div class="modal-body">
 
+        <div class="row" ng-show="type=='Resource'">
+            <div class="col-md-4 col-sm-4 clickable" ng-click= "input.filter=''"><strong>All</strong></div>
 
+            <div class="col-md-4 col-sm-4 clickable" ng-click= "input.filter=k" ng-repeat="(k,v) in hashType">
+                <div>{{k}}</div>
+            </div>
+
+        </div>
+
+        <hr ng-show="type=='Resource'"/>
 
         <div class="row">
-            <div class="col-md-2 col-sm-2">
 
-            </div>
             <div class="col-md-10 col-sm-10">
+                <table class="table table-bordered">
+                    <tr><th>Description</th><th>Type</th><th>Action</th></tr>
+                    <tr ng-show="canShow(item)" ng-repeat="item in lst | orderBy: 'type'">
+                        <td>{{item.description}}</td>
+                        <td>{{item.type}} </td>
+                        <td><div class="clickable" ng-click="select(item)">Select</div></td>
+                    </tr>
+                </table>
+
+<!--
                 <ul class="list-group" ng-repeat="item in lst">
                     <li class="list-group-item">
                         <div class="pull-right clickable" ng-click="select(item)">Select</div>
@@ -32,6 +49,7 @@
                         <div><em>{{item.type}}</em></div>
                     </li>
                 </ul>
+                -->
             </div>
         </div>
 
@@ -41,7 +59,11 @@
 
     <div class="modal-header">
         <div class="row">
-            <div class="col-md-12 col-sm-12">
+            <div class="col-md-9 col-sm-9">
+                <em>Select the resource to link to - or click the 'New {{type}}' button to add one.</em>
+
+            </div>
+            <div class="col-md-3 col-sm-3">
                 <button ng-hide = "type == 'Resource'" class="btn btn-primary pull-right" ng-click="newResource()">New {{type}}</button>
             </div>
 

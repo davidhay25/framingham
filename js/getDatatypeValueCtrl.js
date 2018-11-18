@@ -173,14 +173,28 @@ angular.module("sampleApp")
 
 
                 var url = termServer + "ValueSet/$expand?url="+row.binding.url+"&count=50"; //default expansion query
+                var fromEQ = false;
                 if (track.expandQuery) {
                     //if there are specific expansion queries defined in the track, then see if this vs is one that applies
                     track.expandQuery.forEach(function (eq) {
                         if (eq.vsUrl == row.binding.url) {
+                            fromEQ = true;
                             url = eq.query;
+                            if (text) {
+                                url += "?filter="+text
+                            }
                         }
                     })
                 }
+
+                if (! fromEQ) {
+                    if (text) {
+                        url += "&filter="+text
+                    }
+                }
+
+
+
 
                 /*
                 if ($scope.row.path == 'reaction.manifestation') {
@@ -191,9 +205,7 @@ angular.module("sampleApp")
 
                 }
                 */
-                if (text) {
-                    url += "?filter="+text
-                }
+
 
                 $scope.url = url;
                 getExpandedVS(url);     //sets $scope.expandedValueSet

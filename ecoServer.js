@@ -963,7 +963,7 @@ app.post('/track',function(req,res){
     //var fieldsToUpdate = {};        //basically everything except scenarioIds
 
     var fieldsToUpdate = JSON.parse(JSON.stringify(data));
-    delete fieldsToUpdate.scenarioIds;
+    //temp - while I figure out how to do re-order safely...  delete fieldsToUpdate.scenarioIds;
    // delete fieldsToUpdate.scenarios;
 
 /*
