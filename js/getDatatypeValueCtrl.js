@@ -181,11 +181,19 @@ angular.module("sampleApp")
                             $scope.fromEQ = true;
                             url = eq.query;
                             if (text) {
-                                url += "?filter="+text
+                                //todo - very yucky
+                                if (url.indexOf('?') > -1 ) {
+                                    url += "&filter="+text
+                                } else {
+                                    url += "?filter="+text
+                                }
+
                             }
                         }
                     })
                 }
+
+
 
                 if (! $scope.fromEQ) {
                     if (text) {
