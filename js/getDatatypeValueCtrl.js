@@ -173,12 +173,12 @@ angular.module("sampleApp")
 
 
                 var url = termServer + "ValueSet/$expand?url="+row.binding.url+"&count=50"; //default expansion query
-                var fromEQ = false;
+                $scope.fromEQ = false;
                 if (track.expandQuery) {
                     //if there are specific expansion queries defined in the track, then see if this vs is one that applies
                     track.expandQuery.forEach(function (eq) {
                         if (eq.vsUrl == row.binding.url) {
-                            fromEQ = true;
+                            $scope.fromEQ = true;
                             url = eq.query;
                             if (text) {
                                 url += "?filter="+text
@@ -187,7 +187,7 @@ angular.module("sampleApp")
                     })
                 }
 
-                if (! fromEQ) {
+                if (! $scope.fromEQ) {
                     if (text) {
                         url += "&filter="+text
                     }
@@ -285,7 +285,7 @@ angular.module("sampleApp")
 
 
                 //todo - if there's a track specified expand, then don't do the lookup. May want to revisit this...
-                if (track.expandQuery) {
+                if (track.expandQuery && $scope.fromEQ) {
                     return;
                 }
 
