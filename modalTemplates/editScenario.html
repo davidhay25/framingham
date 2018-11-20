@@ -39,6 +39,23 @@
                     </div>
                 </div>
                 <br/>
+
+                <div ng-show="scenario.id">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3">
+                            Scenario Id
+                        </div>
+                        <div class="col-md-9 col-sm-9">
+                            <div class="pull-right">{{scenario.id}}</div>
+                        </div>
+
+                    </div>
+                    <br/>
+                </div>
+
+
+
+
                 <div class="row">
                     <div class="col-md-3 col-sm-3">
                         Description (MarkD)
@@ -347,13 +364,6 @@
                         <em>Enter the actual steps to complete the scenario</em>
                     </uib-tab>
 
-<!--
-                    <uib-tab heading="Success">
-                        <h4>Success</h4>
-                        <textarea class="form-control" ng-model="scenario.success"></textarea>
-                    </uib-tab>
--->
-
                     <uib-tab ng-show="track.trackType == 'technical'">
                         <uib-tab-heading>
                             Roles
@@ -400,22 +410,6 @@
 
 
                     </uib-tab>
-<!--
-                    <uib-tab ng-show="selectedLibrary">
-                        <uib-tab-heading>
-                            clinFHIR scenario
-                        </uib-tab-heading>
-                        <ol>
-                            <li ng-repeat = "hx in selectedLibrary.history" ng-click="selectHxItem(hx)" style="cursor: pointer">
-                                Item  {{$index+1}}
-                            </li>
-                        </ol>
-
-                        <div id="resourceGraph"></div>
-
-                    </uib-tab>
-                    -->
-
                 </uib-tabset>
 
             </div>
@@ -424,21 +418,26 @@
 
     <div class="modal-header">
         <div class="row">
-            <div class="col-md-12 col-sm-12">
 
-                <div class="pull-right">
-                    <em>{{Scenario.id}}</em>
-                </div>
-
-
+            <div class="col-md-8 col-sm-8">
                 <a href="https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf" target="_blank">
                     MarkDown cheat sheet
                 </a>
                 <em>(Markdown is a way to format text with bullets, headings and test formatting by putting specific characters in the text)</em>
 
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+
                 <div ng-show="! isNew && ! readOnly">
-                    <button class="btn btn-danger" ng-click="deleteScenario()">Delete</button>
+                    <button ng-show="canDelete" class="btn btn-danger pull-right" ng-click="deleteScenario()">Delete</button>
                 </div>
+
+
+
+
+
+
             </div>
 
         </div>

@@ -3,6 +3,8 @@ angular.module("sampleApp")
         function ($scope,ecosystemSvc,scenario,modalService,allResourceTypes,library,$uibModal,isNew,track,readOnly) {
 
 
+            $scope.currentUser = ecosystemSvc.getCurrentUser();
+
             $scope.saveText = 'Update';
             if (isNew) {
                 $scope.saveText = 'Add';
@@ -12,6 +14,18 @@ angular.module("sampleApp")
             $scope.library = library;
             $scope.input = {roles:{}};
             $scope.track = track;
+
+
+            //can only delete if there's a track lead that is the current user
+            $scope.canDelete = false;
+            if (track) {        //should always be true as the 'addTrack' sets a base track {id: name: roles: scenarioIds: };
+
+                if (track.leadIds && track.leadIds.length > 0 && $scope.currentUser) {
+                    if (track.leadIds[0] == $scope.currentUser.id) {
+                        $scope.canDelete = true;    //the current user is the track lead...
+                    }
+                }
+            }
 
             $scope.readOnly = readOnly;
             if (readOnly) {
@@ -40,8 +54,7 @@ angular.module("sampleApp")
                     return 0
                 }
 
-
-            })
+            });
 
 
             $scope.addNewRole = function(name,description,type) {
@@ -278,6 +291,26 @@ angular.module("sampleApp")
 
 
             $scope.deleteScenario = function(){
+
+
+                //check that there are no results or links dependant on this scenario. Still show the delete so we can display a reason why can't delete...
+                if (scenario.servers && scenario.servers.length > 0) {
+                    alert("There are servers that have been added to this scenario for technical testing, so it cannot be deleted");
+                    return;
+                }
+
+                if (scenario.clients && scenario.clients.length > 0) {
+                    alert("There are clients that have been added to this scenario for technical testing, so it cannot be deleted");
+                    return;
+                }
+
+                var allResults = ecosystemSvc.getAllResults(null,scenario)
+                console.log(allResults)
+                if (Object.keys(allResults).length > 0) {
+                    alert("There are results registered for this scenario, so it cannot be deleted")
+                    return;
+                }
+
                 var modalOptions = {
                     closeButtonText: "No, I changed my mind",
                     headerText: "Delect track",

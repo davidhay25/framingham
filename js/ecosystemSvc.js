@@ -2248,11 +2248,11 @@ angular.module("sampleApp").service('ecosystemSvc',
                                 var role = hashRole[link.roleid];
 
                                 if (! scenario) {
-                                    alert('unknown scenario id '+ link.scenarioid)
+                                    alert('unknown scenario id getting link '+ link.scenarioid)
                                 }
 
                                 if (! role) {
-                                    alert('unknown role id '+ link.roleid)
+                                    alert('unknown role id getting link'+ link.roleid)
                                 }
 
 

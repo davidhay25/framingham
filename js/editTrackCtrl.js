@@ -58,20 +58,23 @@ angular.module("sampleApp")
             //$scope.mdOptions = {iconlibrary:'glyph'}
 
             $scope.canSave = true;
+            $scope.canDelete = false;       //can only delete if there is a track lead, and the track lead is the vcurrent user
 
             if (track) {        //should always be true as the 'addTrack' sets a base track {id: name: roles: scenarioIds: };
                // $scope.clone = angular.copy(track)
                 $scope.track = track;
                 track.trackType = track.trackType || 'technical' ;      //default to technical
+
                 if (track.leadIds && track.leadIds.length > 0 && $scope.currentUser) {
                     if (track.leadIds[0] !== $scope.currentUser.id) {
                         $scope.canSave = false;
+                    } else {
+                        $scope.canDelete = true;    //the current user is the track lead...
                     }
 
                     $scope.allPersons.forEach(function (person) {
                         if (person.id == track.leadIds[0]) {
                             $scope.input.trackLead = person;
-
                         }
                     })
                 }
