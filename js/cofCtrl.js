@@ -1072,8 +1072,21 @@ angular.module("sampleApp")
             }
 
             //remove an item (resource) from the list...
-            $scope.removeItem = function(inx){
+            $scope.removeItem = function(itemToDelete){
 
+
+                //find the position of this resourcin the list
+                var inx = -1;
+                $scope.cofTypeList.forEach(function (item,p) {
+                    if (item.id == itemToDelete.id) {
+                        inx = p
+                    }
+                });
+
+                if (inx == -1) {
+                    alert("Item not found - can't delete");
+                    return;
+                }
 
                 var resource = $scope.cofTypeList[inx]
                 var modalOptions = {
@@ -1593,6 +1606,17 @@ angular.module("sampleApp")
 
             };
 
+
+            $scope.freezeGraph = function(freeze) {
+                $scope.graphFrozen = freeze
+                if (freeze) {
+                    $scope.graph.setOptions({physics: {barnesHut: {gravitationalConstant: 0, centralGravity: 0, springConstant: 0}}})
+
+                } else {
+                    $scope.graph.setOptions({physics: {barnesHut: {gravitationalConstant: -10000, centralGravity: .3, springConstant: .04}}})
+                }
+            }
+
             function makeGraph(focusResourceId,hidePatient) {
 
                 var vo = cofSvc.makeGraph($scope.cofTypeList,focusResourceId,hidePatient);
@@ -1610,6 +1634,14 @@ angular.module("sampleApp")
 
                 $scope.graph = new vis.Network(container, graphData, options);
 
+                $scope.graph.on("dragendX", function (obj) {
+                    console.log('dragend')
+
+                    $scope.graph.setOptions({physics: {barnesHut: {gravitationalConstant: 0, centralGravity: 0, springConstant: 0}}})
+                    //var options = {physics: {barnesHut: {gravitationalConstant: 0,
+                    // centralGravity: 0, springConstant: 0}}};
+
+                })
 
                 $scope.graph.on("click", function (obj) {
 

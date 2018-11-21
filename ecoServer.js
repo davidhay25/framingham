@@ -6,7 +6,7 @@
 * add the database with the new event code
 * add an 'admin' collection in the db with a document {key: name: }
 * update the artifacts/events.json doc (will rebuild the eventsDB collection on a new server from the doc)
-* restart the database
+* restart the server
 * */
 
 var express = require('express');
@@ -281,6 +281,14 @@ app.get('/public/getUsers/:key',function(req,res){
                 res.send(err,500)
             } else {
                 req.session['config'] = {key:key};      //record the database key in the session
+
+                console.log(result)
+
+                //remove all the passwords!
+                result.forEach(function (user) {
+                    delete user.password;
+                });
+
                 res.send(result)
             }
         })

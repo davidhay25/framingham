@@ -305,7 +305,7 @@ angular.module("sampleApp")
                 }
 
                 var allResults = ecosystemSvc.getAllResults(null,scenario)
-                console.log(allResults)
+                //console.log(allResults)
                 if (Object.keys(allResults).length > 0) {
                     alert("There are results registered for this scenario, so it cannot be deleted")
                     return;

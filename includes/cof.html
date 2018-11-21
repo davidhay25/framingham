@@ -243,7 +243,7 @@
                                 </td>
                                 <td>
                                     <i class="clickable glyphicon glyphicon-remove-sign"
-                                       title="Remove resource" ng-click="removeItem($index)">
+                                       title="Remove resource" ng-click="removeItem(item)">
                                     </i>
                                 </td>
                             </tr>
@@ -266,6 +266,13 @@
                 </uib-tab>
                 <uib-tab heading="Graph" select = "fitGraph()">
                     <div>
+
+                        <span style="padding: 8px" ng-hide="graphFrozen" class="pull-right clickable"
+                              ng-click="freezeGraph(true)">Freeze graph</span>
+                        <span style="padding: 8px" ng-show="graphFrozen" class="pull-right clickable"
+                              ng-click="freezeGraph(false)">Unfreeze graph</span>
+
+
                         <span style="padding: 8px" ng-hide="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Set focus</span>
                         <span style="padding: 8px" ng-show="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Show all</span>
 

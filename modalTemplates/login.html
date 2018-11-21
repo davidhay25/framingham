@@ -49,6 +49,12 @@
                        uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control"/>
 
                 <br/>
+<!--
+
+                <div>
+                    <input type="password" ng-show="person" ng-model="input.password"/>
+                </div>
+-->
                 <button class="btn btn-link " ng-click="addPerson(true)" ng-show="state=='selectUser'">
                     Register new person
                 </button>
@@ -60,6 +66,8 @@
 
         </div>
         <br/>
+
+
 
 
 

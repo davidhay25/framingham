@@ -181,7 +181,6 @@ angular.module("sampleApp")
                     controller: 'loginCtrl',
                     resolve : {
                         eventConfig: function(){
-                            //
                             return $scope.eventConfig;
                         }
                     }
@@ -191,7 +190,6 @@ angular.module("sampleApp")
                         //this was an existing user...
                         var person = vo.person;
                         ecosystemSvc.setCurrentUser(vo.user);
-                       // $scope.input.currentUser = vo.user;
 
                     } else if (vo.newUser) {
                         ecosystemSvc.updatePerson(vo.newUser).then(
@@ -202,7 +200,6 @@ angular.module("sampleApp")
                                 alert('Error saving person: '+ angular.toJson(err));
                             }
                         )
-
                     }
 
 
@@ -1223,75 +1220,6 @@ console.log(vo);
                 $scope.selectedRole = role;
             };
 
-            //========  previous functions =========
-/*
-            $scope.addTag = function(ep) {
-                var tag = $window.prompt("enter tag")
-                if (tag) {
-                    ecosystemSvc.addTag(tag,ep).then(
-                        function(data) {
 
-                        },
-                        function(err) {
-                            console.log(err)
-                        }
-                    )
-                }
-            };
-
-            ecosystemSvc.getEndPoints().then(
-                function(vo) {
-                    $scope.endpoints = vo.endpoints;
-                    $scope.tags = vo.tags;
-
-                }
-            );
-
-            ecosystemSvc.getAllRoles().then(
-                function(cs) {
-
-                    $scope.csAllRoles = cs;
-
-
-                }
-            );
-
-            $scope.setFilter = function() {
-                console.log($scope.input.filterRole)
-            };
-
-            $scope.canShow = function(ep) {
-                var canShow = true;
-                if ($scope.input.filterRole) {
-                    canShow = false;
-                    console.log(ep,$scope.input.filterRole.code)
-
-                    if ($scope.input.filterRole && $scope.input.filterRole.code) {
-                        if (ep.role == $scope.input.filterRole.code) {
-                            canShow = true;
-                        }
-                    }
-                }
-
-                return canShow;
-
-            };
-
-
-
-            function showError(msg) {
-                var err = msg || 'Error accessing platform';
-                var modalOptions = {
-                    closeButtonText: "No, I changed my mind",
-                    //actionButtonText: 'Yes, please create',
-                    headerText: msg,
-                    bodyText: 'There was an error retrieving data from the platform. This can be caused when your login expires, please re-log in and try again. '
-                };
-
-
-                modalService.showModal({}, modalOptions);
-            }
-
-            */
 
     });

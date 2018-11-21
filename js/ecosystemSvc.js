@@ -2337,6 +2337,9 @@ angular.module("sampleApp").service('ecosystemSvc',
                                             //note that the full author is saved. ?should this be the same for the asserter?
                                             if (dataResult.author) {
                                                 result.author = hashAllPersons[dataResult.author.id];
+
+
+
                                             }
 
 
