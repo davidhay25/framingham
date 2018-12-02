@@ -10,7 +10,6 @@
 * */
 
 var express = require('express');
-
 var request = require('request');
 var session = require('express-session');
 var jwt = require('jsonwebtoken');

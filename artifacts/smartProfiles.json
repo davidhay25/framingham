@@ -1,5 +1,16 @@
 {"profiles": [
   {
+    "name" : "myServer",
+    "description":"My very own SMART server",
+    "fhirVersion" : "3",
+    "baseUrl" : "https://localhost:8444/fhir/",
+    "callback" : "https://localhost:8443/callback",
+    "clientId" : "clinfhir-test",
+    "secret": "mySecret",
+    "defaultScope" :"openid profile patient/*.read",
+    "clientIdConfig": "https://localhost:8444/fhir/openid-configuration"
+  },
+  {
     "name" : "mySmile",
     "description":"My Amazon SMILE server",
     "fhirVersion" : "3",

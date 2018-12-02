@@ -1623,25 +1623,57 @@ angular.module("sampleApp")
                 var graphData = vo.graphData;
 
                 var container = document.getElementById('cofGraph');
-                var options = {
+
+                var options;
+
+                options = {
                     physics: {
                         enabled: true,
                         barnesHut: {
                             gravitationalConstant: -10000,
+                            centralGravity: .3,
+                            springConstant: .04
                         }
                     }
                 };
+/*
+
+https://github.com/almende/vis/issues/2017
+                if ($scope.graphFrozen) {
+                   // $scope.graph.setOptions({physics: {barnesHut: {gravitationalConstant: 0, centralGravity: 0, springConstant: 0}}})
+                    options = {
+                        physics: {
+                            enabled: true,
+                            barnesHut: {
+                                gravitationalConstant: 0,
+
+                                centralGravity: 0,
+                                springConstant: .0
+                            }
+                        }
+                    };
+
+
+                } else {
+                    options = {
+                        physics: {
+                            enabled: true,
+                            barnesHut: {
+                                gravitationalConstant: -10000,
+                                centralGravity: .3,
+                                springConstant: .04
+                            }
+                        }
+                    };
+
+                    //$scope.graph.setOptions({physics: {barnesHut: {gravitationalConstant: -10000, centralGravity: .3, springConstant: .04}}})
+                }
+
+*/
 
                 $scope.graph = new vis.Network(container, graphData, options);
 
-                $scope.graph.on("dragendX", function (obj) {
-                    console.log('dragend')
 
-                    $scope.graph.setOptions({physics: {barnesHut: {gravitationalConstant: 0, centralGravity: 0, springConstant: 0}}})
-                    //var options = {physics: {barnesHut: {gravitationalConstant: 0,
-                    // centralGravity: 0, springConstant: 0}}};
-
-                })
 
                 $scope.graph.on("click", function (obj) {
 

@@ -105,7 +105,7 @@ app.post('/setup',function(req,res){
             req.session['serverData'] = {capStmt:capStmt};
 
             getSMARTEndpoints(config,capStmt)
-
+console.log('cpnfig',config)
             res.json(config)
             return;
 
