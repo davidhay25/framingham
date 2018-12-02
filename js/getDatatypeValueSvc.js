@@ -96,6 +96,10 @@ console.log(v);
                         break;
 
                     case 'Quantity' :
+                    case 'Money' :
+                    case 'Count' :
+                    case 'Distance':
+                    case 'Duration':
                     case 'Age' :
                         var f = parseFloat(value.quantity.value)
 
