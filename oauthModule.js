@@ -3,8 +3,7 @@ var jwt = require('jsonwebtoken');
 
 //http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context/
 
-const jwkToPem = require("jwk-to-pem"); //https://www.npmjs.com/package/jwk-to-pem/tutorial
-
+const jwkToPem = require("jwk-to-pem"); //https://www.npmjs.com/package/jwk-to-pem
 
 exports.validateJWT = function(rawJwt) {
 
