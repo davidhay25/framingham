@@ -178,6 +178,7 @@
     <script src="js/selectPatientResourceCtrl.js"></script>
 
     <script src="js/querySvc.js"></script>
+    <script src="js/importTrack.js"></script>
 
 
     <!-- for the 3d graph
@@ -205,7 +206,7 @@
 
             </div>
 
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-2 col-sm-2">
 
                 <div class="navbar-text">
                     <div ng-show="ecosystemSvc.getCurrentUser()">
@@ -229,13 +230,11 @@
 
             </div>
             <div class="col-md-1 col-sm-1">
-                <div class="navbar-text pull-right">
-                    <!--
-                    <div class="pull-right">
-                        <div ng-show="library">*</div>
-                    </div>
-                    -->
 
+
+            </div>
+            <div class="col-md-1 col-sm-1">
+                <div class="navbar-text pull-right">
                     <button ng-show="selectedTrack.trackType == 'technical'" class="btn btn-primary pull-right" ng-click="refresh()">Refresh</button>
 
                 </div>
@@ -304,6 +303,14 @@
                                         <button class="btn btn-link" ng-click="addTrack()">
                                             Add a new Track
                                         </button>
+
+                                        <!-- for now, limit import. Security needs an overall review...-->
+                                        <div ng-show="ecosystemSvc.getCurrentUser().name.toLowerCase() == 'david hay'">
+                                            <div ng-controller="importTrackCtrl">
+                                                <button class="btn btn-link" ng-click="import()">Import a track</button>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

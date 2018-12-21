@@ -359,7 +359,7 @@ angular.module("sampleApp")
 
 
 
-            }
+            };
 
             //save the resources to the data server. This can only be called when a data server is defined in the track
             $scope.saveToFHIRServer = function(cofTypeList){

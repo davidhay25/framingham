@@ -1,0 +1,38 @@
+<div>
+    <div class="modal-header">
+
+        <div class="row">
+            <div class="col-md-8 col-sm-8">
+                <h3 class="modal-title">Edit Track</h3>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div class="pull-right">
+                    <button ng-show="input.json.length > 0"
+                            class="btn btn-primary pull-right" ng-click="import()">Import</button>
+                    <button class="btn btn-link pull-right" ng-click="$dismiss()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="row">
+
+            <div class="col-md-8 col-sm-8">
+                <textarea class="form-control" rows="15" ng-model="input.json"></textarea>
+            </div>
+            <div class="col-md-4 col-sm-4">
+                <strong>Progress</strong>
+                <div class="list-group">
+                    <div class="list-group-item" ng-repeat="item in progress">
+                        {{item}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

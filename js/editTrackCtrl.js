@@ -6,25 +6,20 @@ angular.module("sampleApp")
             $scope.allPersons = allPersons;
             $scope.input = {roles:{}};
             $scope.trackTypes = trackTypes;
-           // $scope.clone = {};
             $scope.isNew = isNew;
 
-            //$scope.IGs = ecosystemSvc.getIGs()
 
             //default servers...
             $scope.input.termServer = "https://ontoserver.csiro.au/stu3-latest/";
             $scope.input.confServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
             $scope.input.dataServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
 
-
-
             $http.get('./artifacts/servers.json').then(
                 function(data) {
                     console.log(data.data)
                     $scope.servers = data.data
                 }
-            )
-
+            );
 
             $scope.selectServer = function(key){
 
@@ -53,16 +48,28 @@ angular.module("sampleApp")
 
             }
 
-
-            //console.log($scope.allRoles)
-            //$scope.mdOptions = {iconlibrary:'glyph'}
-
             $scope.canSave = true;
             $scope.canDelete = false;       //can only delete if there is a track lead, and the track lead is the vcurrent user
 
             if (track) {        //should always be true as the 'addTrack' sets a base track {id: name: roles: scenarioIds: };
-               // $scope.clone = angular.copy(track)
                 $scope.track = track;
+
+                $scope.exportTrack = angular.copy(track);   //a copy of the track to use as an export. Delete the non-design stuff
+                $scope.exportTrack.exportedTrack = true;    //so the imported knows it is legit
+                delete $scope.exportTrack.persons;
+                delete $scope.exportTrack.scenarioIds;
+                delete $scope.exportTrack.resultTotals;
+                delete $scope.exportTrack.toi;
+                delete $scope.exportTrack.clients;
+                delete $scope.exportTrack.servers;
+
+                if ($scope.exportTrack.scenarios) {
+                    $scope.exportTrack.scenarios.forEach(function (scenario) {
+                        delete scenario.clients;
+                        delete scenario.servers;
+                    })
+                }
+
                 track.trackType = track.trackType || 'technical' ;      //default to technical
 
                 if (track.leadIds && track.leadIds.length > 0 && $scope.currentUser) {
@@ -112,7 +119,7 @@ angular.module("sampleApp")
                         console.log('Error accessing conformance server ',err)
                     }
                 );
-            }
+            };
 
             $scope.findIGs($scope.input.confServer)
 
@@ -142,6 +149,8 @@ angular.module("sampleApp")
             $scope.removeLink = function(inx){
                 $scope.track.links.splice(inx,1)
             };
+
+
 
 
             //a specific query (like a different terminology) for specific valuesets
@@ -263,10 +272,30 @@ angular.module("sampleApp")
                         $scope.$close({track:track,lead:$scope.input.trackLead})
                     }
                 )
-            }
+            };
 
-            $scope.createJson = function() {
-                //var json = {}
+
+            $scope.copyToClipboard = function() {
+                //copy to the clipboard
+
+                //https://stackoverflow.com/questions/29267589/angularjs-copy-to-clipboard
+                var copyElement = document.createElement("span");
+                copyElement.appendChild(document.createTextNode(angular.toJson($scope.exportTrack),2));
+                copyElement.id = 'tempCopyToClipboard';
+                angular.element(document.body.append(copyElement));
+
+                // select the text
+                var range = document.createRange();
+                range.selectNode(copyElement);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+
+                // copy & cleanup
+                document.execCommand('copy');
+                window.getSelection().removeAllRanges();
+                copyElement.remove();
+
+                alert("The Json has been copied to the clipboard.")
 
             }
 

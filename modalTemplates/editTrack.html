@@ -211,7 +211,6 @@
 
             </uib-tab>
 
-
             <uib-tab heading='Servers & IG'  ng-hide="track.trackType == 'technical' && ! track.allowGraph">
 
                 <br/>
@@ -283,7 +282,6 @@
 
             </uib-tab>
 
-
             <uib-tab ng-hide="track.trackType == 'technical'">
                 <uib-tab-heading>
                     Specific terminology expansions <span class="badge">{{track.expandQuery.length}}</span>
@@ -312,16 +310,30 @@
                 <div>e.g. http://its.patientsfirst.org.nz/RestService.svc/Terminz/ValueSet/$expand?identifier=http://snomed.info/sct?fhir_vs=refset/351000210106</div>
             </uib-tab>
 
-            <uib-tab heading="json">
-                <pre>{{track | json}}</pre>
+            <uib-tab heading="Json">
+                <div>
+                    <button class="btn btn-link" ng-click="copyToClipboard()">Copy to clipboard</button>
+                </div>
+
+
+                <pre>{{exportTrack | json}}</pre>
             </uib-tab>
         </uib-tabset>
     </div>
 
 
     <div class="modal-header">
+
+
+
         <div class="row">
             <div class="col-md-12 col-sm-12">
+
+                <!--
+                <div ng-show="isNew">
+                    <button class="btn-link btn" ng-click="import()">Import from existing</button>
+                </div>
+                -->
                 <em ng-hide="canSave">
                     Only the track lead can make changes. (As indicated by the current user in the navbar)
                 </em>
