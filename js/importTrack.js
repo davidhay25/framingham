@@ -51,6 +51,7 @@ angular.module("sampleApp")
                                 //save all the roles
                                 angular.forEach(hashRole,function(role){
                                     role.id = role.id + roleSuffix;
+                                    role.trackId = track.id;
                                     queries.push(addEntity('role',role));
                                 });
 
