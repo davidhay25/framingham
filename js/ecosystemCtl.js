@@ -1180,6 +1180,14 @@ console.log(vo);
                 delete $scope.selectedRole;
                 delete $scope.input.selectedTrackPerson;
                 $scope.selectedTrack = track;
+
+                if (track.url) {
+                    $scope.iframeUrl = track.url;
+                } else {
+                    $scope.iframeUrl = "about:blank";
+                }
+
+
                 $scope.selectedTrackReport =  ecosystemSvc.getTrackResults(track);      //summary of this track...
 
                 //add the interested people to this track...

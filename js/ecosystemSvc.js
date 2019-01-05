@@ -2201,7 +2201,9 @@ angular.module("sampleApp").service('ecosystemSvc',
                                 if (person) {
                                     track.leads.push(person)
                                 } else {
+                                    //can't find the person references as the track lead - warn and empty the yrack lead...
                                     console.log("PersonId "+ id + " missing from track "+ track.id)
+                                    track.leadIds.length = 0;
                                 }
                             })
                         }
@@ -2226,9 +2228,6 @@ angular.module("sampleApp").service('ecosystemSvc',
                                             } else {
                                                 console.log(" role id:" + id + " missing from track: "+ track.id +  " scenario id: "+ scenario.id )
                                             }
-
-
-
                                         })
                                     }
                                 } else {

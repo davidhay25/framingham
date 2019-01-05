@@ -4,6 +4,15 @@
 
 
 angular.module("sampleApp")
+
+
+
+    .filter('trustAsResourceUrl', ['$sce', function($sce) {
+        return function(val) {
+            return $sce.trustAsResourceUrl(val);
+        };
+    }])
+
     .filter('showUrlMaxLength', function() {
         return function(s,l) {
             if (s) {

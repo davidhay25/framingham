@@ -28,6 +28,7 @@ angular.module("sampleApp")
                             console.log(track);
                             $scope.progress.push('Cleaning Track')
                             track.leads = [];
+                            track.leadIds = [];
                             track.scenarioIds = [];
                             track.id = 'id' + new Date().getTime();
                             let roleSuffix = '-' + new Date().getTime();    //to ensure roleId is unique...
