@@ -4,8 +4,6 @@ angular.module("sampleApp")
     .controller('ecosystemCtrl',
         function ($rootScope,$scope,$http,modalService,ecosystemSvc,$window,$localStorage,$uibModal,ecoUtilitiesSvc,$filter) {
 
-
-
             $http.post("/startup",{});  //record access
             $scope.ecosystemSvc = ecosystemSvc;
             $scope.input = {};
