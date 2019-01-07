@@ -987,7 +987,9 @@
                     <iframe ng-src="{{eventConfig.details | trustAsResourceUrl}}" height="800px" width="100%"></iframe>
                 </uib-tab>
 
-                <uib-tab index="people">
+
+
+                <uib-tab>
                     <uib-tab-heading>
                         People
                         <span class="badge">{{allPersons.length}}</span>
@@ -1100,9 +1102,6 @@
                                 </tr>
                             </table>
 
-<!--
-                            <pre>{{personSummary | json}}</pre>
-                            -->
                         </div>
                     </div>
 
@@ -1110,6 +1109,8 @@
 
 
                 </uib-tab>
+
+
 
                 <uib-tab ng-show="selectedTrack.trackType == 'technical'">
                     <uib-tab-heading>
