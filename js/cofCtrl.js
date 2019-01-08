@@ -830,7 +830,7 @@ angular.module("sampleApp")
                 if (table) {
                     drawTree(table)
                     //update the structured data in teh selected node - this is just for the display actually...
-                    if ($scope.selectedTreeNode) {
+                    if ($scope.selectedTreeNode && $scope.selectedTreeNode.data) {
                         $scope.selectedTreeNode.data.structuredData = row.structuredData;
                     }
                     makeDocumentDisplay();
@@ -1421,7 +1421,7 @@ angular.module("sampleApp")
 
             function drawTree(table) {
                 if (table) {
-                    var treeData = cofSvc.makeTree(table);
+                    var treeData = cofSvc.makeTree(table,$scope.hideEmptyInTreeView);
                     $('#lmTreeView').jstree('destroy');
                     $('#lmTreeView').jstree(
                         {'core': {'multiple': false, 'data': treeData, 'themes': {name: 'proton', responsive: true}}}
@@ -1455,6 +1455,10 @@ angular.module("sampleApp")
 
             }
 
+            $scope.toggleTreeViewDisplay = function(){
+                $scope.hideEmptyInTreeView = ! $scope.hideEmptyInTreeView;
+                drawTree($scope.currentItem.table)
+            }
 
             //when the user selects a new type to add from the list of types in the scenario...
             $scope.selectCofType = function(type) {

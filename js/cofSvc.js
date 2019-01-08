@@ -903,9 +903,13 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
 
         },
-        makeGraph: function (lst,focusResourceId,hidePatient) {
+        makeGraph: function (lstIn,focusResourceId,hidePatient) {
             //if focusResourceId, then only show resources with a directreference to that one
             //if hidePatient then don't show patient
+            //lst is list of all resources...
+            let lst = angular.copy(lstIn);      //so we can modify the list
+
+
             var arNodes = [], arEdges = [];
             var objColours = ecosystemSvc.objColours();
             var nodesWithReferenceFromFocus = {}
@@ -920,6 +924,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                     }
                 })
             }
+
 
             lst.forEach(function (item) {
 
@@ -945,9 +950,15 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
                 //now get all the references from this node...
                 if (item.table) {
+
+
+
+
+
                     item.table.forEach(function (row) {
                         if (row.references) {
                             row.references.forEach(function (ref) {
+                                console.log(ref)
                                 var edge = {
                                     id: 'e' + arEdges.length + 1, from: item.id, to: ref.targetItem.id,
                                     label: ref.sourcePath, arrows: {to: true}
@@ -1030,17 +1041,23 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
             }
 
         },
-        makeTree : function(table) {
+        makeTree : function(table,hideEmpty) {
             //makes a tree of the type
+            //hideEmpty  = true;
             var arTree = [];
             var pathHash = {};      //the most recent id for each hash
 
             if (! table) {
                 return;
             }
-            //assume that the tree is in
+            //assume that the tree is in order
 
             table.forEach(function (row) {
+
+
+
+
+
                 var path = row.path;     //this is always unique in a logical model...
                 var arPath = path.split('.');
                 var item = {data:row};
@@ -1050,8 +1067,36 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                 item.id = newId;//path;
 
                 item.text = arPath[arPath.length-1];
+                if (arPath.length == 1) {
+                    //the root
+                    item.parent = '#'
+                } else {
+                    arPath.pop();//
+                    //item.parent = arPath.join('.');
+                    item.parent = pathHash[arPath.join('.')];   //this will be the most recent element with this path
+
+
+
+                }
+
                 if (row.structuredData) {
                     item['li_attr'] = {class:'treeNodeHasData'};
+
+                    //make the parent have this class also...
+                    let nodeParent = getNodeById(item.parent)
+                    if (nodeParent) {
+                        //set the parent font to bold
+                        nodeParent['li_attr'] = {class:'treeNodeHasData'};
+
+                        //add structuredData to the parent also...
+                        nodeParent.data = nodeParent.data || {}
+                        nodeParent.data.structuredData = nodeParent.data.structuredData || {}
+                        nodeParent.data.structuredData[item.text] = row.structuredData;
+
+                    }
+
+                } else {
+                    item['li_attr'] = {class:'treeNodeHasNoData'};
                 }
 
                 item.icon = '/icons/icon_primitive.png';
@@ -1069,7 +1114,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                 if (row.isBBE) {
                     item.icon='/icons/icon_element.gif';
                 }
-
+/*
                 if (arPath.length == 1) {
                     //the root
                     item.parent = '#'
@@ -1081,10 +1126,36 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
 
                 }
+                */
                 arTree.push(item)
             });
 
-            return arTree;
+            if (hideEmpty) {
+                let newTree = [];
+                arTree.forEach(function (item) {
+                    if (item.data.structuredData || item.text == 'id' || item.text == 'resourceType') {
+                        newTree.push(item)
+                    }
+
+                })
+                return newTree;
+            } else {
+                return arTree;
+            }
+
+
+
+            function getNodeById(id) {
+                for (var i=0; i < arTree.length; i++) {
+                    let node = arTree[i]
+                    if (node.id == id) {
+                        return node;
+                        break;
+                    }
+                }
+                return null;
+
+            }
         }
     }
 });

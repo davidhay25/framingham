@@ -21,6 +21,11 @@
             color: darkgreen;
         }
 
+        .treeNodeHasNoData {
+            font-weight: normal;
+            color: black;
+        }
+
     </style>
 
     <div class="row" ng-show="selectedTrack">
@@ -470,8 +475,13 @@
 
                 </uib-tab>
 
-                <uib-tab heading="Tree editor">
+                <uib-tab heading="Tree view">
                     <br/>
+
+                    <div>
+                        <div class="clickable pull-right" ng-click="toggleTreeViewDisplay()">Toggle hide empty</div>
+                    </div>
+
                     <div class="row">
                         <div class="col-sm-4 col-md-4">
                             <div class="scrollTable rounded-box" >
@@ -486,11 +496,14 @@
 
                                     <div ng-show="selectedTreeNode">
 
+                                        <!-- not sure this is working - don't delete though...
                                         <div>
                                             <button class="btn btn-danger pull-right" ng-show="selectedTreeNode.data.isMultiple && selectedTreeNode.data.isOriginal"
                                                     class="clickable" ng-click="duplicateFromTree(selectedTreeNode.data.id)">Duplicate row (and children)
                                             </button>
                                         </div>
+
+                                        -->
 
                                         <pre >{{selectedTreeNode.data.structuredData | json}}</pre>
 
@@ -548,7 +561,7 @@
 
 
                 </uib-tab>
-                <uib-tab heading="Resource instance (including validation errors">
+                <uib-tab heading="Resource instance (including most recent validation)">
                     <br/>
 
                     <uib-tabset>

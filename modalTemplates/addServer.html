@@ -116,7 +116,8 @@
                                 <div class="myScroll">
 
                                     <ul class="list-group">
-                                        <li ng-class="{'list-group-item':true, listItemSelected:selectedResourceDef == type}" ng-repeat="type in serverDetails.types"
+                                        <li ng-class="{'list-group-item':true, listItemSelected:selectedResourceDef == type}"
+                                            ng-repeat="type in serverDetails.types | orderBy: 'type'"
                                             ng-click="selectResourceDef(type)" style="cursor: pointer">
                                             <bold>{{type.type}}</bold>
                                             <span class="pull-right">{{type.cap}}</span>
