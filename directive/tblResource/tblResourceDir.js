@@ -684,6 +684,11 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                                 item.binding = {url:ed.binding.valueSetReference.reference,strength:ed.binding.strength}
                             }
 
+                            //R4
+                            if (ed.binding && ed.binding.valueSet) {
+                                item.binding = {url:ed.binding.valueSet,strength:ed.binding.strength}
+                            }
+
                             if (item.dt == 'Reference') {
                                 item.isReference = true;
 
