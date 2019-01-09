@@ -434,6 +434,8 @@ angular.module("sampleApp")
             //'selectedTrack' comes from the parent scope...
             $scope.$watch(function(scope) {return scope.selectedTrack},function(track,olfV){
 
+
+
                 if (track && track.scenarios) {
 
                     //ensure that all the paths for all the resources in all scenarios are in the cache

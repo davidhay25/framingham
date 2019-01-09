@@ -903,11 +903,12 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
 
         },
-        makeGraph: function (lstIn,focusResourceId,hidePatient) {
+        makeGraph: function (lst,focusResourceId,hidePatient) {
             //if focusResourceId, then only show resources with a directreference to that one
             //if hidePatient then don't show patient
             //lst is list of all resources...
-            let lst = angular.copy(lstIn);      //so we can modify the list
+
+            //let lst = angular.copy(lstIn);   NOOOOOOO!!!! must be the original as they are all references!!!!   //so we can modify the list
 
 
             var arNodes = [], arEdges = [];
@@ -1054,10 +1055,6 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
 
             table.forEach(function (row) {
 
-
-
-
-
                 var path = row.path;     //this is always unique in a logical model...
                 var arPath = path.split('.');
                 var item = {data:row};
@@ -1074,8 +1071,6 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                     arPath.pop();//
                     //item.parent = arPath.join('.');
                     item.parent = pathHash[arPath.join('.')];   //this will be the most recent element with this path
-
-
 
                 }
 
