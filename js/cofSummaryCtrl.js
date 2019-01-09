@@ -3,7 +3,8 @@ angular.module("sampleApp")
         function ($scope,ecosystemSvc,ecoUtilitiesSvc,$http,$filter,$window,$timeout,$uibModal,cofSvc) {
 
             $scope.input = {};
-            $scope.showAllScenarios = false
+            $scope.showAllScenarios = false;
+            let hashScenarios = {};      //set when the track is selected
 
             $scope.selectAllScenarios = function(flag){
                 $scope.showAllScenarios = flag
@@ -31,7 +32,7 @@ angular.module("sampleApp")
                                     $scope.graphs.push(graph)
                                 }
 
-                            })
+                            });
 
                             console.log($scope.graphs)
                         }
@@ -43,9 +44,6 @@ angular.module("sampleApp")
                 }
 
             };
-
-
-
 
             $scope.selectResourceSummary = function(type,summary) {
                 $scope.selectedSummaryType = type;
@@ -137,19 +135,24 @@ angular.module("sampleApp")
             //a single graph (for a single user) is selected from the list at the left...
             $scope.selectGraph = function(shortGraph){
                 $scope.filteredGraph = false;       //set the filter off to start with...
-                delete $scope.item;                 //this is a selected item in teh selected graph
+
+
+
+                //delete $scope.item;                 //this is a selected item in teh selected graph
                 delete $scope.allHashPathSummaries;
 
 
-                var url = "/oneScenarioGraph/"+shortGraph.id
+                var url = "/oneScenarioGraph/"+shortGraph.id;
 
+                //retrieve the graph...
                 $http.get(url).then(
                     function(data) {
-
                         $scope.selectedGraph = angular.copy(data.data); //not saving the graph back, but you never know...
+                        $scope.selectedGraph.scenario = hashScenarios[$scope.selectedGraph.scenarioid];
+
+                        //trck
+
                         makeGraph($scope.selectedGraph.items);
-
-
 
                         //now generate the complete set of sample/notes summaries (by the graph author)
                         $scope.allHashPathSummaries = [];
@@ -159,7 +162,6 @@ angular.module("sampleApp")
                                 $scope.allHashPathSummaries.push({type:item.type,summary:summary})
                             }
                         });
-
 
                         //now decorate the graph items with the comments...
                         if ($scope.selectedGraph.comments && $scope.selectedGraph.items) {
@@ -189,6 +191,24 @@ angular.module("sampleApp")
                         }
 
 
+                        //if there's already a selected item, then find the one with the same id in the new graph and select that...
+                        if ($scope.item) {
+                            let found = false;
+
+                            //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of
+                            for (const el of $scope.selectedGraph.items) {
+                                if (el.id == $scope.item.id) {
+                                    $scope.selectItem(el);
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            if (! found) {
+                                $scope.selectItem();    //will clear the details of the selected item..
+                            }
+                        }
+
 
                     },
                     function(err) {
@@ -198,10 +218,28 @@ angular.module("sampleApp")
 
             };
 
+            //used to order graphs by name...
+            $scope.graphName = function(graph) {
+                if (graph && graph.scenario) {
+                    return graph.scenario.name;
+                }
+
+            }
+
             //select an item/resource from the graph
             $scope.selectItem = function(item) {
 
+                //clear the current derived values...
                 delete $scope.itemResourceJson;
+                $('#sumryTreeView').jstree('destroy');
+                delete $scope.selectedTreeNode;
+                //delete $scope.item;
+
+
+                if (!item) {
+                    return;
+                }
+
                 $scope.item = item;     //the item (containing the resourcce)
 
                 var treeData = cofSvc.makeTree(item.table);
@@ -226,6 +264,32 @@ angular.module("sampleApp")
                 //a hash of notes & samples by path...
                 $scope.hashPathSummary = makeItemSummary(item);
 
+                //draw the tree
+
+                //var treeData = cofSvc.makeTree(table,$scope.hideEmptyInTreeView);
+               // $('#sumryTreeView').jstree('destroy');
+                $('#sumryTreeView').jstree(
+                    {'core': {'multiple': false, 'data': treeData, 'themes': {name: 'proton', responsive: true}}}
+                ).on('changed.jstree', function (e, data) {
+                    if (data.node) {
+                        $scope.selectedTreeNode = data.node;
+
+                        delete $scope.selectedTreeRow;
+
+                        if ($scope.item.table) {
+                            $scope.item.table.forEach(function (row) {
+                                if (row.id == $scope.selectedTreeNode.data.id) {
+                                    $scope.selectedTreeRow = row;
+                                }
+                            })
+                        }
+
+                        //console.log($scope.currentItem.table);
+
+
+                        $scope.$digest();
+                    }
+                })
 
 
             };
@@ -373,9 +437,10 @@ angular.module("sampleApp")
                 if (track && track.scenarios) {
 
                     //ensure that all the paths for all the resources in all scenarios are in the cache
-                    track.scenarios.forEach(function(trck){
-                        if (trck.scenarioTypes) {
-                            trck.scenarioTypes.forEach(function(type){
+                    track.scenarios.forEach(function(scen){
+                        hashScenarios[scen.id] = scen
+                        if (scen.scenarioTypes) {
+                            scen.scenarioTypes.forEach(function(type){
                                 ecosystemSvc.getAllPathsForType(type,true,track)
                             })
                         }

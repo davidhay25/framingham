@@ -748,7 +748,6 @@ angular.module("sampleApp")
                     size : 'lg',
                     controller: 'importGraphCtrl',
                     resolve : {
-
                         allScenariosThisTrack : function(){
                             return $scope.selectedTrack.scenarios;
                         }

@@ -55,7 +55,7 @@
                     <!-- only show if there is a user (the user deletion doesn't remove all references-->
                     <div class="scrollTable">
                         <ul class="list-group">
-                            <li ng-repeat="graph in graphs"
+                            <li ng-repeat="graph in graphs | orderBy : graphName"
                                 ng-show="graph.user"
                                 ng-class="{'list-group-item':true,active:graph.id == selectedGraph.id}" ng-click="selectGraph(graph)">
                                 <div class="clickable">{{graph.user.name}}</div>
@@ -69,15 +69,31 @@
                 </div>
 
                 <div class="col-sm-4 col-md-4">
-                    <div ng-show="item">
-                        <span style="padding: 8px" ng-hide="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Set focus</span>
-                        <span style="padding: 8px" ng-show="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Show all</span>
+                    <div class="row">
+                        <div class="col-sm-9 col-md-9">
+                            <div>
+                                {{selectedGraph.scenario.description}}
+                            </div>
+
+                        </div>
+                        <div class="col-sm-3 col-md-3">
+                            <div ng-show="item">
+                                <span style="padding: 8px" ng-hide="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Set focus</span>
+                                <span style="padding: 8px" ng-show="filteredGraph" class="pull-right clickable" ng-click="setFocus()">Show all</span>
+                            </div>
+                        </div>
                     </div>
+
+
+
                     <br/>
                     <div class="clearfix"></div>
                     <div id="sumCofGraph"></div>
                 </div>
                 <div class="col-sm-6 col-md-6">
+
+
+
                     <uib-tabset>
                         <uib-tab heading ='All Resources'>
 
@@ -86,10 +102,6 @@
                                 <div class="col-sm-8 col-md-8"><p ng-bind-html="selectedGraph.scenarioNotes | markDown"></p></div>
 
                             </div>
-
-
-
-
 
                             <div class="row">
                                 <div class="col-sm-4 col-md-4"><h4>Path</h4></div>
@@ -115,10 +127,24 @@
                         </uib-tab>
 
 
-                        <uib-tab heading ='Selected Resource'>
+                        <uib-tab ng-show="item">
+                            <uib-tab-heading>
+                                Selected Resource: {{item.baseType}} ({{item.id}})
+                            </uib-tab-heading>
 
                             <uib-tabset>
                                 <br/>
+                                <uib-tab heading="Tree view">
+                                    <div class="row">
+                                        <div class="col-sm-4 col-md-4">
+                                            <div id="sumryTreeView"></div>
+                                        </div>
+                                        <div class="col-sm-8 col-md-8">
+                                            <pre ng-show="selectedTreeNode">{{selectedTreeNode.data.structuredData | json}}</pre>
+                                        </div>
+                                    </div>
+
+                                </uib-tab>
                                 <uib-tab heading="Data & Notes">
                                     <h4>{{item.type}}</h4>
                                     <table class="table">
@@ -136,13 +162,6 @@
 
 
 
-                                <!--
-                                                                <uib-tab heading="raw graph">
-                                                                    <pre>{{selectedGraph | json}}</pre>
-                                                                </uib-tab>
-
-                                                               -->
-
 
 
                                 <uib-tab heading="structuredData">
@@ -157,10 +176,11 @@
                                     </table>
 
                                 </uib-tab>
-
+<!--
                                 <uib-tab heading="selected item (dev)">
                                     <pre>{{item | json}}</pre>
                                 </uib-tab>
+                                -->
 
                                 <uib-tab>
                                     <uib-tab-heading>
