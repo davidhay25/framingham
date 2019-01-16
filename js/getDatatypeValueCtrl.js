@@ -31,16 +31,12 @@ angular.module("sampleApp")
             }
 
 
-          //  var displayTemplate = []
-           // displayTemplate.push({type:'Patient', path:'gender',display:'Gender:'});
 
             $scope.textFromTemplate = ecosystemSvc.makeResourceText(currentJson)
             $scope.pasteNarrative = function(text) {
                 $scope.input.dt.narrative = $scope.input.dt.narrative || {}
                 $scope.input.dt.narrative.div = text;
             };
-
-
 
             //pre-pop with existing data... todo - some datatypes need specific actions
             console.log(row)
@@ -55,8 +51,12 @@ angular.module("sampleApp")
 
                     break;
                 default :
+
                     if (row.structuredData) {
-                        $scope.input.dt[tDt] = row.structuredData;
+                        //todo - need to make sure the dataType hasn't changed...
+
+
+                       // $scope.input.dt[tDt] = row.structuredData;
                     }
 
                     break;
@@ -517,7 +517,7 @@ angular.module("sampleApp")
                 //I think that past DSTU-2 the urls' should all resolve directly...
                 vsToRenderAsList.push('ReligiousAffiliation');
                 vsToRenderAsList.push('Ethnicity');
-                vsToRenderAsList.push('investigation-sets');
+                //vsToRenderAsList.push('investigation-sets');
                 vsToRenderAsList.push('observation-interpretation');
                 vsToRenderAsList.push('marital-status');
                 vsToRenderAsList.push('ActPharmacySupplyType');

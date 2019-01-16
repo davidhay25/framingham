@@ -647,7 +647,23 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                             }
 
                             item.dt = ed.type[0].code;      //todo - this may be redundant now...
-                            item.type = ed.type;
+
+                            //in R4, targetProfile is multiple so need an entry for each one
+                            //ie, unlike Logical modeller - have one element for each one
+                            if (angular.isArray(ed.type[0].targetProfile)) {
+                                item.type = []
+                                ed.type[0].targetProfile.forEach(function (url) {
+                                    item.type.push({code:'Reference',targetProfile:url})
+                                })
+
+                            }
+                             else {
+                                item.type = ed.type;
+                            }
+
+
+
+
                             item.mustSupport = ed.mustSupport;
                             item.isModifier = ed.isModifier;
                             //item.fhirMapping = getFHIRMapping(ed);
@@ -668,8 +684,6 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
                             item.mult = ed.min + '..'+ed.max;
                             item.max = ed.max;
-
-
 
 
                             if (ed.min > 0) {
@@ -693,22 +707,21 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                                 item.isReference = true;
 
                                 //need to flag all the parents of a node with a reference for the 'show references only' flag
-                                //console.log(item.path);
-                                //var ar = item.path.split('.');
-
 
 
 
 
                                 var type = $filter('getLogicalID')(ed.type[0].targetProfile)
 
+
+
                                 //for linkage
                                 if (! type) {
-                                    ed.type = ed.type || []
+                                    ed.type = ed.type || [];
                                     ed.type[0].targetProfile = "http://hl7.org/fhir/StructureDefinition/Resource";
                                 }
 
-                                //console.log('type='+type)
+
                                 type = type || 'Resource';
                                 item.referenceDisplay = '--> ' + type;
 
