@@ -446,8 +446,8 @@ angular.module("sampleApp").service('ecosystemSvc',
                 return {resource: resource, displayList: displayList};
 
             } catch (ex) {
-                alert('There was an error creating the Resource Json and it will be empty. The error can be ignored (but do tell david Hay)')
-                return {resource: {}, displayList: displayList};
+                let msg = 'There was an error creating the Resource Json and it will be empty. The error can be ignored (but do tell David Hay)';
+                return {resource: {msg:msg}, displayList: displayList};
             }
 
 
@@ -457,7 +457,7 @@ angular.module("sampleApp").service('ecosystemSvc',
 
                 var addElement = true;
                 var structuredData = angular.copy(node.branch.data.structuredData) || {}
-                topEleName = node.branch.text
+                topEleName = node.branch.text;      //the name of the node we are adding
 
                 if (topEleName && topEleName.indexOf('[x]') > -1) {
                     //topEleName = topEleName.substr(0, topEleName.length - 3) + _capitalize(node.branch.data.sdDt);
