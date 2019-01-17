@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 //http://pm2.keymetrics.io/docs/usage/pm2-doc-single-page/#allow-pm2-to-bind-applications-on-ports-80-443-without-root
-
+//https://medium.freecodecamp.org/supercharge-your-debugging-experience-for-node-js-3f0ddfaffbb2
 
 /* To create a new event:
 * add the database with the new event code

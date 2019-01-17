@@ -273,9 +273,11 @@ angular.module("sampleApp").service('ecosystemSvc',
         makeResourceJson : function (resourceType,id,inTree) {
             //note: calling returns must call var treeData = cofSvc.makeTree($scope.input.table) and pass in as inTree; first!!
 
+
             if (!inTree) {
                 return {};
             }
+
 
             var showLog = false;        //for debugging...
 
@@ -286,162 +288,168 @@ angular.module("sampleApp").service('ecosystemSvc',
             var tree = angular.copy(inTree);
 
 
+            try {
 
-            //fri - mark all nodes that are extensions
-            tree.forEach(function (branch) {
-                hashById[branch.id] = branch;       //used by simeple extension...
-                if (branch.data && branch.data.ed &&branch.data && branch.data.ed.extension) {
-                    if (branch.data.ed.extension.length > 0) {
-                        //console.log(branch.data.ed.extension[0])
+                //fri - mark all nodes that are extensions
+                tree.forEach(function (branch) {
+                    hashById[branch.id] = branch;       //used by simeple extension...
+                    if (branch.data && branch.data.ed && branch.data && branch.data.ed.extension) {
+                        if (branch.data.ed.extension.length > 0) {
+                            //console.log(branch.data.ed.extension[0])
 
-                        branch.data.ed.extension.forEach(function (ex) {
-                            if (ex.url == "http://clinfhir.com/fhir/StructureDefinition/simpleExtensionUrl") {
-                                branch.data.extensionUrl = ex.valueString;
-                            }
-                        })
+                            branch.data.ed.extension.forEach(function (ex) {
+                                if (ex.url == "http://clinfhir.com/fhir/StructureDefinition/simpleExtensionUrl") {
+                                    branch.data.extensionUrl = ex.valueString;
+                                }
+                            })
 
+                        }
                     }
-                }
-            });
+                });
 
 
-            //now look for complex extensions. The 'parent' is an extension of type 'Backbone element'
-            //If any are found, then their child element values are 'collapsed' into the value for the parent & removed
-            for (var i=0; i < tree.length; i++) {
-                var br = tree[i];
-                if (br.data && br.data.extensionUrl) {
-                    if (br.data.ed && br.data.ed.type) {
-                        if (br.data.ed.type[0].code == 'BackboneElement') {
-                            //this is a complex extension. find all the elements where this id is the parent
-                            var strucData = {url: br.data.extensionUrl,extension:[]}    //the structured value for the extension
+                //now look for complex extensions. The 'parent' is an extension of type 'Backbone element'
+                //If any are found, then their child element values are 'collapsed' into the value for the parent & removed
+                for (var i = 0; i < tree.length; i++) {
+                    var br = tree[i];
+                    if (br.data && br.data.extensionUrl) {
+                        if (br.data.ed && br.data.ed.type) {
+                            if (br.data.ed.type[0].code == 'BackboneElement') {
+                                //this is a complex extension. find all the elements where this id is the parent
+                                var strucData = {url: br.data.extensionUrl, extension: []}    //the structured value for the extension
 
-                            var parentId = br.id;
-                            for (var j=0; j < tree.length; j++) {
-                                var child = tree[j]
-                                if (child.parent == parentId) {
-                                    //this is a direct child (assume only 1 level of nesting
-                                    //console.log(child)
-                                    var data = child.data.structuredData;
-                                    var typ = 'value'+ _capitalize(child.data.dt)
-                                    if (data) {
-                                        var childData = {url:child.text};
-                                        childData[typ] = data;
-                                        strucData.extension.push(childData);
-                                        delete child.data.structuredData;   //this makes it an empty node, so it will be removed later on...
+                                var parentId = br.id;
+                                for (var j = 0; j < tree.length; j++) {
+                                    var child = tree[j]
+                                    if (child.parent == parentId) {
+                                        //this is a direct child (assume only 1 level of nesting
+                                        //console.log(child)
+                                        var data = child.data.structuredData;
+                                        var typ = 'value' + _capitalize(child.data.dt)
+                                        if (data) {
+                                            var childData = {url: child.text};
+                                            childData[typ] = data;
+                                            strucData.extension.push(childData);
+                                            delete child.data.structuredData;   //this makes it an empty node, so it will be removed later on...
+                                        }
                                     }
                                 }
-                            }
 
-                            br.data.structuredData = strucData;
-                            br.data.isComplexExtension = true;
-                            console.log(br)
+                                br.data.structuredData = strucData;
+                                br.data.isComplexExtension = true;
+                                console.log(br)
+                            }
                         }
                     }
                 }
-            }
 
 
+                //run through a pattern of creating a hierarchy, then removing all empty leaf nodes.
+                //need to complete until all leaf nodes are removed (can take multiple iterations
+                var cleaning = true;
+                var cnt = 0;        //a safety mechanism to avoid getting locked in a loop
+                while (cleaning) {
+                    hashBranch = {};    //will be a hierarchical tree
+                    hashBranch['#'] = {id: '#', branch: {data: {}}, children: []};
 
-            //run through a pattern of creating a hierarchy, then removing all empty leaf nodes.
-            //need to complete until all leaf nodes are removed (can take multiple iterations
-            var cleaning = true;
-            var cnt = 0;        //a safety mechanism to avoid getting locked in a loop
-            while (cleaning) {
-                hashBranch = {};    //will be a hierarchical tree
-                hashBranch['#'] = {id:'#',branch:{data:{}},children:[]};
+                    cleaning = false;
+                    cnt++;
 
-                cleaning = false;
-                cnt++;
-
-                //build a version of the hierarchy...
-                tree.forEach(function (branch) {
-                    var branchEntry= {id:branch.id,branch:branch,children:[]};
-                    hashBranch[branch.id] = branchEntry;
-                    if (branch.parent) {
-                        var parent = hashBranch[branch.parent];
-                        parent.children.push(branchEntry)
-                    }
-                });
-
-                //now create a hash of all empty leaf nodes...
-                var idsToDelete = {}
-                angular.forEach(hashBranch,function(v,k){
-
-                    //todo text node doesn't have data for some reason....
-                    v.branch.data = v.branch.data || {};
-                    if (v.children.length == 0 && ! v.branch.data.structuredData) {
-                        if (k !== '#') {
-                            idsToDelete[k] = true;
-                            cleaning = true;    //if any are found, then re-set the flag so there will be another iteration
-                        }
-                    }
-                });
-
-                //if there were any leaf nodes found, build a new table with non-empty nodes
-                if (cleaning) {
-                    var newTree = [];
+                    //build a version of the hierarchy...
                     tree.forEach(function (branch) {
-                        if (! idsToDelete[branch.id]) {
-                            newTree.push(branch)
+                        var branchEntry = {id: branch.id, branch: branch, children: []};
+                        hashBranch[branch.id] = branchEntry;
+                        if (branch.parent) {
+                            var parent = hashBranch[branch.parent];
+                            parent.children.push(branchEntry)
                         }
                     });
-                    tree = newTree;
+
+                    //now create a hash of all empty leaf nodes...
+                    var idsToDelete = {}
+                    angular.forEach(hashBranch, function (v, k) {
+
+                        //todo text node doesn't have data for some reason....
+                        v.branch.data = v.branch.data || {};
+                        if (v.children.length == 0 && !v.branch.data.structuredData) {
+                            if (k !== '#') {
+                                idsToDelete[k] = true;
+                                cleaning = true;    //if any are found, then re-set the flag so there will be another iteration
+                            }
+                        }
+                    });
+
+                    //if there were any leaf nodes found, build a new table with non-empty nodes
+                    if (cleaning) {
+                        var newTree = [];
+                        tree.forEach(function (branch) {
+                            if (!idsToDelete[branch.id]) {
+                                newTree.push(branch)
+                            }
+                        });
+                        tree = newTree;
+                    }
+
+                    //the safety...
+                    if (cnt > 10) {
+                        cleaning = false;
+                        console.log('forced quit...')
+                    }
                 }
 
-                //the safety...
-                if (cnt > 10) {
-                    cleaning = false;
-                    console.log('forced quit...')
+
+                if (showLog) {
+                    console.log(hashBranch)
                 }
-            }
+
+                var displayList = [];
+
+                /* Don't delete for the moment - may be useful in debugging...
+
+                //create a display for the object passed to the rendering routine...
+
+                angular.forEach(hashBranch,function(v,k){
+                    var item = {id:v.id,path:v.branch.text,children:[]}
+                    v.children.forEach(function(child){
+
+                        var o = hashBranch[child.id]
+
+                        item.children.push({id:child.id,path:o.branch.text})
 
 
-            if (showLog) {console.log(hashBranch)}
-
-            var displayList =[];
-
-            /* Don't delete for the moment - may be useful in debugging...
-
-            //create a display for the object passed to the rendering routine...
-
-            angular.forEach(hashBranch,function(v,k){
-                var item = {id:v.id,path:v.branch.text,children:[]}
-                v.children.forEach(function(child){
-
-                    var o = hashBranch[child.id]
-
-                    item.children.push({id:child.id,path:o.branch.text})
-
-
+                    })
+                    displayList.push(item)
                 })
-                displayList.push(item)
-            })
 
-*/
+    */
 
 
-            //render the resource
-            var resource = {resourceType:resourceType}
-            resource.extension = [];        // add the root extension so it's at the top...
-            if (id) {
-                resource.id = id;
+                //render the resource
+                var resource = {resourceType: resourceType}
+                resource.extension = [];        // add the root extension so it's at the top...
+                if (id) {
+                    resource.id = id;
+                }
+
+
+                var simpleElements = {};        //a hash os simple elements. Needed to fix extensions on them...
+                addChildren(resource, hashBranch['#'], resource);
+
+                //if there are no extensions, then remove the element...
+                if (resource.extension.length == 0) {
+                    delete resource.extension;
+                }
+
+                //need to fix extensions on simple types
+
+
+                return {resource: resource, displayList: displayList};
+
+            } catch (ex) {
+                alert('There was an error creating the Resource Json and it will be empty. The error can be ignored (but do tell david Hay)')
+                return {resource: {}, displayList: displayList};
             }
 
-
-
-
-            var simpleElements = {};        //a hash os simple elements. Needed to fix extensions on them...
-            addChildren(resource,hashBranch['#'],resource);
-
-            //if there are no extensions, then remove the element...
-            if (resource.extension.length == 0) {
-                delete resource.extension;
-            }
-
-            //need to fix extensions on simple types
-
-
-            return {resource: resource,displayList:displayList};
 
 
             function addChildren(obj,node,parentOfObj) {

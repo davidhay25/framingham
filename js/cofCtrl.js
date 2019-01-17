@@ -412,7 +412,7 @@ angular.module("sampleApp")
             $scope.showOOSummary = function(oo) {
                 var display = ""
                 display = "<strong>Validation Results</strong>"
-                if (oo.issue) {
+                if (oo && oo.issue) {
                     display += '<ul>';
                     oo.issue.forEach(function (iss) {
 
