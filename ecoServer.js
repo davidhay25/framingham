@@ -5,6 +5,7 @@
 /* To create a new event:
 * add the database with the new event code
 * add an 'admin' collection in the db with a document {key: name: }
+* add an document in the 'eventDb' collection  {key: display: }
 * update the artifacts/events.json doc (will rebuild the eventsDB collection on a new server from the doc)
 * restart the server
 * */
