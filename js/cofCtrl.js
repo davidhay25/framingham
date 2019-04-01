@@ -845,10 +845,19 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/selectCoreType.html',
                     size : 'lg',
-                    controller: function($scope,lst) {
+                    controller: function($scope,lst,track) {
                         var fullList = angular.copy(lst)
+                        $scope.lst = angular.copy(fullList)
+                        if (track.supportedResources) {
+                            $scope.lst = angular.copy(track.supportedResources)
+                            fullList = angular.copy(track.supportedResources)
+                            console.log($scope.lst)
+                        } else {
 
-                        $scope.lst = angular.copy(fullList);//[];
+                        }
+                        //console.log(track.supportedResources);
+
+                        //$scope.lst = angular.copy(fullList);//[];
 
                         $scope.input = {};
                         $scope.setFilter = function(filter) {
@@ -882,6 +891,9 @@ angular.module("sampleApp")
 
                     },
                     resolve : {
+                        track : function() {
+                            return $scope.selectedTrack
+                        },
                         lst: function(){
                             return $scope.allResourceTypes;
                             // return $scope.cofTypeList;

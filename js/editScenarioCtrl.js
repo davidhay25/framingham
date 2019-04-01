@@ -82,6 +82,10 @@ angular.module("sampleApp")
 
             $scope.allResourceTypes = angular.copy(allResourceTypes);
 
+            if (track.supportedResources) {
+                $scope.allResourceTypes = angular.copy(track.supportedResources);
+            }
+
             $scope.deleteStep = function(inx) {
                 $scope.scenario.steps.splice(inx,1)
             }

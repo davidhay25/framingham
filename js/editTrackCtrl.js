@@ -194,6 +194,9 @@ angular.module("sampleApp")
 
             $scope.save = function(){
 
+
+
+
                 if ($scope.input.trackLead) {
                     $scope.track.leadIds = $scope.track.leadIds || [];
                     $scope.track.leadIds[0] = $scope.input.trackLead.id;
@@ -228,7 +231,41 @@ angular.module("sampleApp")
                     delete $scope.track.IG;
                 }
 
-                $scope.$close({track:$scope.track,lead:$scope.input.trackLead})
+
+                if ($scope.track.trackType == "scenario" || $scope.track.allowGraph) {
+                    //load the supported resource types
+                    let url = $scope.track.confServer + 'metadata';
+                    $http.get(url).then(
+                        function (data) {
+                            let cs = data.data;
+                            $scope.track.supportedResources = []
+                            console.log(cs)
+                            if (cs.rest) {
+                                cs.rest.forEach(function(rest){
+                                    if (rest.resource) {
+                                        rest.resource.forEach(function (resource) {
+                                            $scope.track.supportedResources.push({name:resource.type})
+                                        })
+                                    }
+                                });
+                                console.log($scope.track.supportedResources)
+                            }
+
+                        },
+                        function(err) {
+                            alert('Error retrieving CapabilityStatement: '+url)
+                        }
+                    ).finally(function(){
+                        $scope.$close({track:$scope.track,lead:$scope.input.trackLead})
+                    })
+
+
+
+                } else {
+                    $scope.$close({track:$scope.track,lead:$scope.input.trackLead})
+                }
+
+
             };
 
 
