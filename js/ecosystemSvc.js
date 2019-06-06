@@ -32,6 +32,8 @@ angular.module("sampleApp").service('ecosystemSvc',
     var extNoteUrl = 'http://clinfhir.com/StructureDefinition/cf-eco-note';
     var tagUrl = 'http://clinfhir.com/NamingSystem/cf-eco-tag';
 
+    let profilesCache={} ;
+
     //construct an Endpoint resource from an ep internal model..
     var makeResourceFromEP = function(ep){
         var res = {resourceType:'Endpoint',id:ep.id,status:'active'};
@@ -204,6 +206,9 @@ angular.module("sampleApp").service('ecosystemSvc',
 
     return {
 
+        setProfilesCache : function(cache) {
+            profilesCache = cache;
+        },
         getIGs : function(serverUrl) {
             var deferred = $q.defer();
             //get all the Implementation Guides on the conformance server
@@ -279,6 +284,18 @@ angular.module("sampleApp").service('ecosystemSvc',
             }
 
 
+
+            console.log(profilesCache,resourceType)
+            //this is a hash of the ed's in the root profiles by path. Used in slicong to ensure the element is multiple
+            var hashRootProfile = {}
+            if (profilesCache && profilesCache[resourceType] && profilesCache[resourceType].snapshot && profilesCache[resourceType].snapshot.element) {
+                profilesCache[resourceType].snapshot.element.forEach(function(entry){
+                    hashRootProfile[entry.path] = entry;
+                })
+                console.log(hashRootProfile)
+            }
+
+
             var showLog = false;        //for debugging...
 
             var hashBranch = {};    //will be a hierarchical tree
@@ -286,6 +303,9 @@ angular.module("sampleApp").service('ecosystemSvc',
 
             //work on a copy as the tree is mutated...
             var tree = angular.copy(inTree);
+
+
+
 
 
             try {
@@ -446,7 +466,9 @@ angular.module("sampleApp").service('ecosystemSvc',
                 return {resource: resource, displayList: displayList};
 
             } catch (ex) {
+                console.log(ex);
                 let msg = 'There was an error creating the Resource Json and it will be empty. The error can be ignored (but do tell David Hay)';
+                msg += ex.message;
                 return {resource: {msg:msg}, displayList: displayList};
             }
 
@@ -458,6 +480,30 @@ angular.module("sampleApp").service('ecosystemSvc',
                 var addElement = true;
                 var structuredData = angular.copy(node.branch.data.structuredData) || {}
                 topEleName = node.branch.text;      //the name of the node we are adding
+
+                //added 2019-01-09 to support slicing...
+                if (node && node.branch && node.branch.data) {
+                    let fhirMapping = node.branch.data.fhirMapping
+                    //console.log(fhirMapping)
+                    if (fhirMapping && fhirMapping.map) {
+                        let ar = fhirMapping.map.split('.')
+                        let mappedName = ar[ar.length-1];
+                        if (mappedName !== 'extension') {
+
+                           // if ()
+                            topEleName = mappedName;
+                            //see if the path in the root profile is multiple.
+                            if (hashRootProfile && hashRootProfile[fhirMapping.map])  {
+                                if (hashRootProfile[fhirMapping.map].max == '*') {
+                                    node.branch.data.isMultiple = true;
+                                    console.log('mult')
+                                }
+
+                            }
+                        }
+                    }
+                }
+
 
                 if (topEleName && topEleName.indexOf('[x]') > -1) {
                     //topEleName = topEleName.substr(0, topEleName.length - 3) + _capitalize(node.branch.data.sdDt);
@@ -517,19 +563,47 @@ angular.module("sampleApp").service('ecosystemSvc',
                         }
 
 
+                        //todo - this isn't being set correctly in the LM...
                         if (node.branch.data.ed && node.branch.data.ed.base) {
                             if (node.branch.data.ed.base.max == '*') {
                                 isMultiple = true;
                             }
                             console.log(node.branch.data.ed.base,structuredData)
                         }
+/*
 
+                        //if there's already a value with this name, then convert it to an array. Used for slicing
+                        //todo THis shoul dreally be properly fixed by setting the base correcrtly...
+                        if (obj[topEleName]) {
+                            let tmp = obj[topEleName];
+                            delete obj[topEleName];
+                            obj[topEleName] = [tmp]
+                            isMultiple = true
+                        }
+
+                        */
 
                         if (isMultiple) {
+                            console.log(obj[topEleName])
                             obj[topEleName] = obj[topEleName] || []
+
+                            //there's an error where the code is not property recognizing that this element
+                            //is multiple eg Composition.section.entry. This fixes it (todo - see if the root issue can be fixed)
+                            //Discard the original value...
+                            if (! angular.isArray(obj[topEleName])){
+                                let t = obj[topEleName];
+                                obj[topEleName] = [];
+                                //obj[topEleName].push(t)
+                            }
+
+
                             obj[topEleName].push(structuredData)
 
                         } else {
+
+
+
+
                             obj[topEleName] = structuredData;
                             //addChildren(structuredData,newChild)
                         }
@@ -565,7 +639,7 @@ angular.module("sampleApp").service('ecosystemSvc',
 
 
 
-        makeResourceJsonV2 : function (resourceType,id,inTree) {
+        makeResourceJsonV2DEP : function (resourceType,id,inTree) {
             var showLog = true;        //for debugging...
 
             var hashBranch = {};    //will be a hierarchical tree
@@ -699,7 +773,7 @@ angular.module("sampleApp").service('ecosystemSvc',
         },
 
 
-        makeResourceJsonV1 : function (type,id,table) {
+        makeResourceJsonV1DEP : function (type,id,table) {
             //construct the json for a single resource based on the table from the tblResourceDir
 
             if (! table) {

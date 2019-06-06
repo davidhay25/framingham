@@ -134,6 +134,7 @@
                         </div>
                     </div>
                 </uib-tab>
+                <!--
                 <uib-tab >
                     <uib-tab-heading>
                         Profiles
@@ -141,10 +142,10 @@
 
 
                     </uib-tab-heading>
-<!--
-                    <button class="btn btn-primary" ng-click="getProfile('LM')">Patient</button>
-                    <button class="btn btn-primary" ng-click="getProfile('LMEnc')">Encounter</button>
--->
+
+                    <button class="btn btn-link" ng-click="getProfile('LM')">Patient</button>
+                    <button class="btn btn-primary" ng-click="getProfile('LMEnc')">Encounter</button
+
                     <div class="row">
                         <div class="col-sm-4 clickable" ng-repeat="profile in cofScenario.selectedProfiles">
                             <span ng-click="selectCofProfile(profile)"  style="cursor:pointer">{{profile.name}}</span>
@@ -153,6 +154,7 @@
                     </div>
 
                 </uib-tab>
+                -->
 
                 <uib-tab ng-hide="graphHasLinkedPatient">
                     <uib-tab-heading>

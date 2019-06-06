@@ -21,7 +21,7 @@ angular.module("sampleApp")
                 delete $scope.explanation;
             };
 
-
+/*
             //not using at present - seems a distraction...
             $scope.getListDisplay = function(item) {
                 if (item.category == 'logical' || item.category == 'profile') {
@@ -30,7 +30,7 @@ angular.module("sampleApp")
                 console.log(item)
                // return 'ok'
             }
-
+*/
             $scope.stopExplanations = function() {
                 alert('Sorry, not yet enabled...')
             };
@@ -657,7 +657,7 @@ angular.module("sampleApp")
                     baseType = profilesCache[name].type;
                     addToTypeList(baseType,name,url)
                 } else {
-                    //this is the first time this SD has been selected - retrive if
+                    //this is the first time this SD has been selected - retrieve it
                     var confServer = $scope.selectedTrack.confServer;
                     ecoUtilitiesSvc.findConformanceResourceByUri(url,confServer).then(      //in st johns...
                         function (SD) {
@@ -824,7 +824,7 @@ angular.module("sampleApp")
 
                 $scope.saveGraph(true);     //save the graph without showing
 
-                //drawTree(table);            //update the tree view
+                //$scope.showResourceTable.open();    //fprce a re-draw (May 2019)
 
                 if (table) {
                     drawTree(table)
@@ -950,12 +950,32 @@ angular.module("sampleApp")
 
                             item.url = url;     //needed for LM
                             item.baseType = baseType;
-                            item.category = 'logical'
+                            item.category = 'logical';
 
                             $scope.cofTypeList.push(item)
                             makeGraph();
                             $scope.saveGraph(true)
                             profilesCache[name] = data.data;
+
+                            //now get the base resource. we need this for multiplicity during slicing
+                            if (! profilesCache[baseType]) {
+                                url = "http://hl7.org/fhir/StructureDefinition/" + baseType;
+                                var confServer = $scope.selectedTrack.confServer;
+                                ecoUtilitiesSvc.findConformanceResourceByUri(url,confServer).then(
+                                    function (SD) {
+                                        profilesCache[baseType] = SD;
+                                        console.log(SD)
+                                        ecosystemSvc.setProfilesCache(profilesCache)
+                                        //$scope.showResourceTable.open(item,SD,$scope.cofScenario,$scope.selectedTrack,receiveTable);
+                                    }
+                                )
+
+                            }
+
+
+
+
+
                         } else {
                             alert("I couldn't find the base type of the Logical Model. Was this LM authored by clinFHIR, and based on a core resource type?")
                         }
@@ -1577,6 +1597,20 @@ angular.module("sampleApp")
 
                     //https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Patient-1
 
+/*
+                    $http.get('http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/nhipatient').then(
+                        function(data) {
+                            var SD = data.data;
+                            console.log('loaded nhipatient');
+                            cofSvc.makeLogicalModelFromSD(SD,track).then(
+                                function(LM) {
+console.log(LM)
+                                    $scope.LM = LM;
+                                }
+                            )
+                        }
+                    );
+*/
 
 //+++++++++++++ todo  remove
 
@@ -1595,7 +1629,7 @@ angular.module("sampleApp")
                             }
                         );
 
- $http.get('http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/cc-Patient').then(
+                    $http.get('http://snapp.clinfhir.com:8081/baseDstu3/StructureDefinition/cc-Patient').then(
                         function(data) {
                             var SD = data.data;
                             cofSvc.makeLogicalModelFromSD(SD,track).then(

@@ -222,7 +222,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
             $scope.radio = {};
 
-            $scope.editSample = function(row,dt,inx) {
+            $scope.editSample = function(row,dt) {
                 var datatype = row.type[0].code;    //default to the first one..
 
                 if (row.type.length > 1) {
@@ -347,9 +347,9 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
 
 
             //make a copy of an item
-            $scope.duplicate = function(item) {
+            $scope.duplicate = function(item,inxOfRow) {
                 var path = item.path;       //path to duplicate (along with children)
-
+/*
                 //find the place to start inserting. This is after the last child with a matching path
                 var inx = 0;
                 $scope.input.table.forEach(function(row,pos){
@@ -358,13 +358,28 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                     }
                 });
                 inx++;
+*/
+                //start from the current position, until we find an element that doesn't start with the path
+                let ar = path.split('.')
+                let cnt = ar.length;
+                for (var i=inxOfRow+1; i < $scope.input.table.length; i++) {
+                    let row = $scope.input.table[i]
+                    let ar1 = row.path.split('.')
+                    if (! row.path.startsWith(path) || ar1.length <= cnt) {
+                        inx = i;
+                        break
+                    }
+                }
+
+
 
                 var clone = angular.copy($scope.input.table);
+
                 clone.forEach(function(row){
                     //if (row.path.startsWith(path)) {
 
 
-                    //this is the the original 'parent' that is being duplicated. Construct an od for it
+                    //this is the the original 'parent' that is being duplicated. Construct an id for it
                     if (row.path ==path && row.isOriginal) {
                         newParentId = 'id' + new Date().getTime() + Math.floor(Math.random()*1000);
                     }

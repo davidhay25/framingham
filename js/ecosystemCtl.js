@@ -8,6 +8,15 @@ angular.module("sampleApp")
             $scope.ecosystemSvc = ecosystemSvc;
             $scope.input = {};
 
+            $http.post('/stats/login',{module:'comMan'}).then(
+                function(data){
+
+                },
+                function(err){
+                    console.log('error accessing clinfhir to register access',err)
+                }
+            );
+
             //which track type to display
             $scope.input.trackListDisplay = 'all';     //<< change back to 'all' after connectathon
 
@@ -26,7 +35,7 @@ angular.module("sampleApp")
                         return true
                     }
                 }
-            }
+            };
 
             //so the display of the track type can be different to the code
             $scope.trackTypeDisplay = {};

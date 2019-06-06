@@ -959,7 +959,7 @@ angular.module("sampleApp").service('cofSvc', function(ecosystemSvc,ecoUtilities
                     item.table.forEach(function (row) {
                         if (row.references) {
                             row.references.forEach(function (ref) {
-                                console.log(ref)
+                                //console.log(ref)
                                 var edge = {
                                     id: 'e' + arEdges.length + 1, from: item.id, to: ref.targetItem.id,
                                     label: ref.sourcePath, arrows: {to: true}

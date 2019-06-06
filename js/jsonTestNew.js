@@ -288,7 +288,7 @@ angular.module("sampleApp")
                     var allPersons = data.data;
                     allPersons.forEach(function(person){
                         hashPersons[person.id] = person
-                    })
+                    });
 
                     $http.get('/config/scenario').then(
                         function(data) {

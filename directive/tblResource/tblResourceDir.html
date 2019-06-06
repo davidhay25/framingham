@@ -97,7 +97,7 @@
                 <!--<th>Flags</th>-->
                 <th>Value</th>
                 <th ng-hide="hideNotes">Notes</th></tr>
-            <tr ng-repeat="row in input.table" ng-hide="row.isHidden" ng-init="input.tableIndex = $index">
+            <tr ng-repeat="row in input.table" ng-hide="row.isHidden" ng-init="rowIndex = $index">
                 <td>
                     <i ng-hide="row.childrenHidden || row.isLeaf" class="clickable glyphiconBig glyphicon glyphicon-menu-down"
                         ng-click="hideChildren(row)">
@@ -115,16 +115,18 @@
                            title="Delete" ng-click="deleteDuplicate(row)">
                     </i>
                     </div>
-
-                    <i ng-show="row.isMultiple && row.isOriginal" class="clickable glyphicon glyphicon-plus-sign pull-right"
-                       title="Add new row" ng-click="duplicate(row)">
-                    </i>
                     <!--
 
-                     <i ng-show="row.isMultiple" class="clickable glyphicon glyphicon-plus-sign pull-right"
-                        title="Add new row" ng-click="duplicate(row)">
-                     </i>
-  -->
+                                      Not sure the impact of allowing non original elements to repeat...
+                                      <i ng-show="row.isMultiple && row.isOriginal" class="clickable glyphicon glyphicon-plus-sign pull-right"
+                                         title="Add new row" ng-click="duplicate(row)">
+                                      </i>
+
+                    -->
+                                       <i ng-show="row.isMultiple" class="clickable glyphicon glyphicon-plus-sign pull-right"
+                                          title="Add new row" ng-click="duplicate(row,rowIndex)">
+                                       </i>
+
                     <div ng-style="{'padding-left': ((row.path | pathindent) -10)*1.5 +'px'}"
                          uib-popover-html=getPopoverText(row)
                          ng-class="{required:row.isRequired,extension:row.ed.meta.isExtension}"
@@ -150,7 +152,7 @@
                        popover-placement="top"
                        popover-trigger="'mouseenter'"
 
-                       ng-click="editSample(row,radio[row.id],input.tableIndex)">
+                       ng-click="editSample(row,radio[row.id])">
                     </i>
 
 
