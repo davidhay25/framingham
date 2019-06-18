@@ -18,7 +18,7 @@ angular.module("sampleApp")
             );
 
             //which track type to display
-            $scope.input.trackListDisplay = 'all';     //<< change back to 'all' after connectathon
+            $scope.input.trackListDisplay = 'all';     //can be changed by event.type...
 
             $scope.showTrack = function(track) {
 
@@ -28,7 +28,6 @@ angular.module("sampleApp")
                     if (track.trackType == 'lmreview' || track.trackType == 'scenario' ) {
                         return true
                     }
-
                 }
                 else if ($scope.input.trackListDisplay == 'technical') {
                     if (track.trackType == 'technical'  ) {
@@ -39,51 +38,11 @@ angular.module("sampleApp")
 
             //so the display of the track type can be different to the code
             $scope.trackTypeDisplay = {};
+
+
             $scope.trackTypeDisplay.technical = "Technical";
             $scope.trackTypeDisplay.lmreview = "Logical Model Review";
             $scope.trackTypeDisplay.scenario = "Resource graph";
-
-
-/*
-            var req = {
-                method: 'GET',
-                url: 'https://hof.smilecdr.com:8000/Patient/t100',
-                headers: {
-                    'Accept': 'application/fhir+json',
-                    'Authorization':'Basic YWRtaW46SGF5T25GSElS'
-                }
-            };
-
-            $http(req).then(
-                function(data) {
-                    console.log(data)
-                },
-                function(data) {
-                    console.log(data)
-                }
-            )
-
-            */
-
-            /*
-
-                        var authorizationUri = 'https://hof.smilecdr.com:9200/oauth/authorize';
-                        authorizationUri += "?redirect_uri=https://localhost:8090/callback";
-                        authorizationUri += "&response_type=code";
-                        authorizationUri += "&scope=openapi patient/*"
-                        authorizationUri += "&state="+ "test";
-                        authorizationUri += "&aud="+ 'https://hof.smilecdr.com:9200/oauth/authorize'
-                        authorizationUri += "&client_id=clinfhir-test"
-                        $http.post(authorizationUri,{}).then(
-                            function(data) {
-                                console.log(data)
-                            },
-                            function(data) {
-                                console.log(data)
-                            }
-                        )
-            */
-
 
 
             //is there an event in the url?
@@ -114,8 +73,21 @@ angular.module("sampleApp")
                                     $scope.eventConfig = data.data[0];
 
                                     if ($scope.eventConfig) {
+
+                                        //sets the type of the event - 'clinical' or 'technical'
+                                        if ($scope.eventConfig.type) {
+                                            $scope.input.trackListDisplay = $scope.eventConfig.type;
+                                        }
+
                                         if ($scope.eventConfig.navBarStyle) {
                                             $scope.navBarStyle = $scope.eventConfig.navBarStyle;
+
+
+
+
+
+                                            //$scope.input.trackListDisplay $scope.input.trackListDisplay
+
                                         }
                                         //save the config in the service (if the page is re-loaded
                                         ecosystemSvc.setEventConfig(data.data[0]);
@@ -750,7 +722,7 @@ console.log(vo);
                     controller: 'editTrackCtrl',
                     resolve : {
                         track: function () {          //the default config
-                            return track; //$scope.selectedTrack;
+                            return track;
                         },
                         allPersons : function() {
                             return $scope.allPersons;
@@ -760,6 +732,9 @@ console.log(vo);
                         },
                         trackTypes : function(){
                             return $scope.trackTypes;
+                        },
+                        event : function() {
+                            return $scope.eventConfig;
                         }
                     }
                 }).result.then(function(vo){

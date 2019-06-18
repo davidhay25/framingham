@@ -267,11 +267,15 @@
                                     Show:
                                 </div>-->
                                 <div class="col-sm-12 col-md-12">
-                                    <div class="btn-group">
-                                        <label class="btn btn-default" ng-model="input.trackListDisplay" uib-btn-radio="'all'">All</label>
-                                        <label class="btn btn-default" ng-model="input.trackListDisplay" uib-btn-radio="'technical'">Technical</label>
-                                        <label class="btn btn-default" ng-model="input.trackListDisplay" uib-btn-radio="'clinical'">Clinical</label>
+                                    <!-- If a type is specified in the event definition, then don't allow a change-->
+                                    <div ng-hide="eventConfig.type">
+                                        <div class="btn-group">
+                                            <label class="btn btn-default" ng-model="input.trackListDisplay" uib-btn-radio="'all'">All</label>
+                                            <label class="btn btn-default" ng-model="input.trackListDisplay" uib-btn-radio="'technical'">Technical</label>
+                                            <label class="btn btn-default" ng-model="input.trackListDisplay" uib-btn-radio="'clinical'">Clinical</label>
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -691,7 +695,28 @@
 
                                                                             {{type}}
 
-                                                                            <!--{{step}}-->
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="row"ng-show="selectedScenario.lms.length > 0">
+                                                                <div class="col-sm-3 col-md-3">
+                                                                    <strong>Logical Models</strong>
+                                                                </div>
+                                                                <div class="col-sm-9 col-md-9">
+                                                                    <ul>
+                                                                        <li ng-repeat="lm in selectedScenario.lms">
+
+                                                                            <span uib-popover={{lm.url}}
+                                                                                  popover-placement="top"
+                                                                                  popover-trigger="'mouseenter'">
+                                                                                    {{lm.description}}
+                                                                                </span>
+
+
+
                                                                         </li>
                                                                     </ul>
                                                                 </div>
@@ -1802,6 +1827,7 @@
                     </div>
                 </uib-tab>
 
+                <!-- not sure if this is useful any more...
                 <uib-tab heading="All graph notes" ng-show="selectedTrack.allowGraph || selectedTrack.trackType == 'scenario'">
                     <br/>
 
@@ -1812,6 +1838,7 @@
 
 
                 </uib-tab>
+                -->
 
                 <uib-tab heading="Participation report" select="makeEventReport()">
                     <br/>

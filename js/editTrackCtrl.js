@@ -1,6 +1,6 @@
 angular.module("sampleApp")
     .controller('editTrackCtrl',
-        function ($scope,ecosystemSvc,track,allPersons,modalService,isNew,trackTypes,$uibModal,$http) {
+        function ($scope,ecosystemSvc,event,track,allPersons,modalService,isNew,trackTypes,$uibModal,$http) {
 
             $scope.currentUser = ecosystemSvc.getCurrentUser();
             $scope.allPersons = allPersons;
@@ -68,6 +68,13 @@ angular.module("sampleApp")
                         delete scenario.clients;
                         delete scenario.servers;
                     })
+                }
+
+                //if the event type has been set to clincial, then all tracks should be scenario - will probably drop 'lmreview'
+                if (event && event.type) {
+                    if (event.type == 'clincial') {
+                        track.trackType = 'scenario';
+                    }
                 }
 
                 track.trackType = track.trackType || 'technical' ;      //default to technical
