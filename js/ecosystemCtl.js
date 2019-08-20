@@ -144,6 +144,11 @@ angular.module("sampleApp")
 
                 }
             );
+/*
+            $scope.showTrackTypeDescription = function(type){
+                return trackTypes[type];
+            };
+            */
 
             function clearSession() {
                 delete $scope.selectedTrack;

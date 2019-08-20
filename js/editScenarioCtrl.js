@@ -114,6 +114,9 @@ angular.module("sampleApp")
 
             };
 
+            $scope.linkPopover = function(link) {
+                return link.url;// + link.description
+            }
 
             $scope.selectProfile = function() {
                 $uibModal.open({

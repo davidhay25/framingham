@@ -16,7 +16,7 @@ angular.module("sampleApp")
 
             $http.get('./artifacts/servers.json').then(
                 function(data) {
-                    console.log(data.data)
+                    //console.log(data.data)
                     $scope.servers = data.data
                 }
             );
@@ -41,7 +41,7 @@ angular.module("sampleApp")
                     }
                 }).result.then(
                     function(data) {
-                        console.log(data)
+                        //console.log(data)
                         $scope.input[key] = data.url;
                     }
                 )
@@ -108,7 +108,7 @@ angular.module("sampleApp")
                 ecosystemSvc.getIGs(serverUrl).then(
                     function (list) {
                         $scope.IGs = list
-                        console.log(list)
+                       // console.log(list)
 
                         //set the currently selected IG (if any)
                         if (track.IG) {
@@ -192,7 +192,7 @@ angular.module("sampleApp")
 
 
             $scope.personSelected = function(person){
-                console.log(person)
+               // console.log(person)
                 $scope.track.leads = $scope.track.leads || [];
                 $scope.track.leads[0] = person;
                 $scope.input.trackLead = person;
@@ -246,7 +246,7 @@ angular.module("sampleApp")
                         function (data) {
                             let cs = data.data;
                             $scope.track.supportedResources = []
-                            console.log(cs)
+                            //console.log(cs)
                             if (cs.rest) {
                                 cs.rest.forEach(function(rest){
                                     if (rest.resource) {
@@ -255,7 +255,7 @@ angular.module("sampleApp")
                                         })
                                     }
                                 });
-                                console.log($scope.track.supportedResources)
+                                //console.log($scope.track.supportedResources)
                             }
 
                         },
