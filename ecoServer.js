@@ -9,7 +9,7 @@
 * update the artifacts/events.json doc (will rebuild the eventsDB collection on a new server from the doc)
 * restart the server
 * */
-
+require('events').EventEmitter.prototype._maxListeners = 100;
 var express = require('express');
 var request = require('request');
 var session = require('express-session');
