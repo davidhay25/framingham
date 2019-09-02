@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Basic operation - conMan Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Basic operation";
+    var mkdocs_page_input_path = "graphBasic.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> conMan Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../selectTrack/">Event organization</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Graph Builder documentation</span>
+    <ul class="subnav">
+                <li class=" current">
+                    
+    <a class="current" href="./">Basic operation</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#select-a-graph">Select a graph</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#top-pane">Top pane</a></li>
+        
+            <li><a class="toctree-l4" href="#bottom-left-pane-display">Bottom left pane (display)</a></li>
+        
+            <li><a class="toctree-l4" href="#bottom-right-tab">Bottom right tab</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../graphEdit.md">Editing a resource</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../graphServer/">Server interaction</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Using the Graph Builder</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../graphProcess/">Basic process</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../graphExistingPatients/">Working with existing patients</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../graphDynamic.md">Representing dynamic scenarios</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../graphExisting.md">Reviewing existing graphs</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../graphLogical.md">Logical models</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../clinical/">Clinical</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">conMan Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Graph Builder documentation &raquo;</li>
+        
+      
+    
+    <li>Basic operation</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h2 id="select-a-graph">Select a graph</h2>
+<p>To create (or edit) a graph, select the 'Graph Builder' tab that is shown when an appropriate track is selected. </p>
+<p><img alt="Screenshot" src="../img/graphTab.png" /></p>
+<h3 id="top-pane">Top pane</h3>
+<p>The tab has the following panes.</p>
+<p>The <strong>top pane</strong> has a number of sections from left to right.</p>
+<ul>
+<li>All the scenarios are displayed in a drop down to the upper left. Selecting a scenario will display the graph that has been created by the user for that scenario - or an empty space where the graph can be created.</li>
+<li>Immediately below the drop down is an 'import' link. Clicking this link displays a dialog containing any graphs that have been created by any user for scenarios in this track. Selecting a graph will create a copy in the current users space where they can edit it (the original is uneffected). Note that any existing  graph will be replaced).</li>
+<li>Next is a description of the scenario. Only a few lines are displayed - clicking the 'eye' icon will display the full details of the scenario.</li>
+<li>Then, the review purpose (if entered) is displayed.</li>
+<li>Finally the palette of resource types is displayed. The palette has 3 sub tabs:<ul>
+<li><strong>Core resource types</strong> - or the resource types defined in the specification. A subset will be displayed for immediate selection (defined in the scenario), or any type can be selected using the 'Select Direct' link.</li>
+<li><strong>Logical models</strong> are created by the clinFHIR logical modeller. They act the same way as core resource types, but the instances cannot be saved on the server</li>
+<li><strong>Select patient</strong> allows an existing patient from the server </li>
+</ul>
+</li>
+</ul>
+<p>Graphs are created by selecting a resource type from the pallette to the upper right and giving it a short name (which is only used as a label on the graph). This will result in a resource of that type being added to the graph.</p>
+<p>When the scenario is created by the designer, the resource types that are most likely to be needed for that scenario are added to the scenario and will be displayed in the palette </p>
+<p>Below the top pane, the screen is divided into a left and right pane.</p>
+<h3 id="bottom-left-pane-display">Bottom left pane (display)</h3>
+<p>The left pane has a number of sub tabs</p>
+<ul>
+<li>the <strong>List</strong> tab displays the resource instances in the graph in the form of a table showing each resource instance, with a number of properties of the resource.<ul>
+<li>The resource <strong>Type</strong>. Clicking on the type will select it, showing the editor pane to the right. The question mark icon will open the page in the spec that describes that type.    </li>
+<li>The <strong>Category</strong> of the resource (core or logical). Only core instances can be saved in the data server.</li>
+<li>The <strong>Title</strong> of the resource that was entered when the instance was created. It can be changed by clicking on it. The title is saved with the graph, but is not part of the resource itself (ie if the resource is saved to the server, then the title is not part of it). It's purpose is to identify the resource instance in the graph</li>
+<li>The <strong>References</strong> tab lists the references from that resource to another. Clicking on the <em>x</em> icon will remove that reference.</li>
+<li>Finally, the column to the right also has an <em>x</em> icon that will remove the resource instance when clicked.</li>
+</ul>
+</li>
+<li>The <strong>Graph</strong> tab displays the resource instances with lines connecting them. Each line is a reference from one resource to another. Clicking on a resource selects and shows the details in the editor pane to the right. Resources can be dragged around in the graph. Resources that are not connected to any other 'float' in the graph. It pays to connect them as soon as possible. There are a number of links to the upper right of the graph that effect the graph display:<ul>
+<li><strong>Hide Patient</strong> suppresses the display of a Patient resource, including any references to it.</li>
+<li><strong>Set focus</strong> hides all resources (and references) other than those that have a direct reference to or from the currently selected resource. When a resource has a focus in this way, the link name changes to <strong>Show all</strong></li>
+<li><strong>Freeze graph</strong> stops the dynamic re-arrangement of the graph when a resource is dragged. Useful when creating an image of the graph, which can be done by right clicking on the graph.</li>
+</ul>
+</li>
+<li><strong>Notes on scenario</strong> allow any note to be attached to the scenario graph. Useful when reviewing a graph, but not often used.</li>
+<li><strong>Server interaction</strong> allows the resources in the graph to be saved on the data server. This is further described <a href="../graphServer/">here</a></li>
+</ul>
+<h3 id="bottom-right-tab">Bottom right tab</h3>
+<p>This tab is where the contents of the currently selected resource </p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../graphServer/" class="btn btn-neutral float-right" title="Server interaction">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../selectTrack/" class="btn btn-neutral" title="Event organization"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../selectTrack/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../graphServer/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

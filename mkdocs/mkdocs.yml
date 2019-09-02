@@ -1,0 +1,17 @@
+site_name: conMan Documentation
+theme: readthedocs
+nav:
+- Home: 'index.md'
+- Event organization : 'selectTrack.md'
+- Graph Builder documentation:
+    - Basic operation : 'graphBasic.md'
+    - Editing a resource : 'graphEdit.md'
+    - Server interaction : 'graphServer.md'
+
+- Using the Graph Builder:
+    - Basic process : 'graphProcess.md'
+    - Working with existing patients : 'graphExistingPatients.md'
+    - Representing dynamic scenarios : 'graphDynamic.md'
+    - Reviewing existing graphs : 'graphExisting.md'
+    - Logical models : 'graphLogical.md'
+- 'clinical.md'

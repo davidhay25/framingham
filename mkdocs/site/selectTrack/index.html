@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Event organization - conMan Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Event organization";
+    var mkdocs_page_input_path = "selectTrack.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> conMan Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Event organization</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#tracks">Tracks</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#track-servers">Track Servers</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#scenarios">Scenarios</a></li>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Graph Builder documentation</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../graphBasic/">Basic operation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../graphEdit.md">Editing a resource</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../graphServer/">Server interaction</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Using the Graph Builder</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../graphProcess/">Basic process</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../graphExistingPatients/">Working with existing patients</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../graphDynamic.md">Representing dynamic scenarios</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../graphExisting.md">Reviewing existing graphs</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../graphLogical.md">Logical models</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../clinical/">Clinical</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">conMan Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Event organization</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h2 id="tracks">Tracks</h2>
+<p>Each event can have any number of tracks defined for it. Anyone can create a track - if they make themselves a track lead, then only they can edit it. There are 3 different types of track:</p>
+<ul>
+<li>Technical tracks are used to record the outcome of testing between a client and a server.</li>
+<li>Logical model tracks are used to enter data for a single Logical Model (which must be created by the clinFHIR Logical modeller).</li>
+<li>Resource Graph tracks are used to create graphs of resources (or resource webs) that represent a single scenario</li>
+</ul>
+<p>Events can be configured to only have a single type of track or any type. If more than one type is suppoered by an event, there is a set of buttons above the tracklist that can be used to show only a single type of track.</p>
+<p>A tracks is selected by clicking on it in the list to the left. Details about that track will appear to the right, and a number of tabswill be displayed at the top of the screen (the tabs that appear depend on the track type).</p>
+<h3 id="track-servers">Track Servers</h3>
+<p>When the track is created of type <em>Resource Graph</em>, the FHIR servers that it uses are selected. There are 3 servers for each track:</p>
+<ul>
+<li>The <strong>Conformance</strong> server holds the resource type definitions and profiles (as StructureDefinition resources)</li>
+<li>The <strong>Data</strong> server is where the resources in the graph can be saved (The graphs themselves are saved in a separate database). Server interaction is descibed on a separate page.</li>
+<li>The <strong>Terminology</strong> server supports the terminology operations that are required - specifically the <em>$expand</em> operation that displays the contents of a ValueSet. The ValueSets themselves and any associated CodeSystem resources must also be stored on the Terminology server.</li>
+</ul>
+<h2 id="scenarios">Scenarios</h2>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../graphBasic/" class="btn btn-neutral float-right" title="Basic operation">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../graphBasic/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

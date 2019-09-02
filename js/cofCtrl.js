@@ -364,6 +364,7 @@ angular.module("sampleApp")
             //save the resources to the data server. This can only be called when a data server is defined in the track
             $scope.saveToFHIRServer = function(cofTypeList){
 
+                delete $scope.submitErrorOO;
                 var cnt = 0;
                 cofTypeList.forEach(function (item) {
                     if (! item.linked) {
@@ -433,7 +434,7 @@ angular.module("sampleApp")
 
             //validate all the resource instances - update the server model
             $scope.validateAll = function(lstItem){
-
+                delete $scope.submitErrorOO;
                 //reset all the validation results...
                 lstItem.forEach(function (item) {
                     item.validation={isValid:'unknown'}
@@ -943,7 +944,7 @@ angular.module("sampleApp")
                             var item = {id : 'id'+new Date().getTime(), type:name};
 
                             item.description = name;//'LM';
-                            var description = $window.prompt("Enter a short description for this resource instance",item.description);
+                            var description = $window.prompt("Enter a title for this resource instance",item.description);
                             if (description) {
                                 item.description = description;
                             }
@@ -1369,7 +1370,7 @@ angular.module("sampleApp")
 
             $scope.editDescription = function(item) {
 
-                var description = $window.prompt("Enter a short description for this resource",item.description);
+                var description = $window.prompt("Enter a title for this resource instance",item.description);
                 if (description) {
                     item.description = description;
                     makeGraph();
@@ -1514,7 +1515,7 @@ angular.module("sampleApp")
 
                 item.description = type + " " + ctr;
 
-                var description = $window.prompt("Enter a short description for this resource",item.description);
+                var description = $window.prompt("Enter a title for this resource instance",item.description);
                 if (description) {
                     item.description = description;
                 }
