@@ -57,7 +57,7 @@ var app = express();
 //to serve up the static web pages - particularly the login page if no page is specified...
 //Order of app.use() is important as we need to increase the size limit for json parsing...
 app.use('/', express.static(__dirname,{index:'/connectathon.html'}));
-
+//app.use('/', express.static(__dirname + '/mkdocs/site/graphBasic/'));
 
 //http://mongodb.github.io/node-mongodb-native/3.0/quick-start/quick-start/
 const MongoClient = require('mongodb').MongoClient;
