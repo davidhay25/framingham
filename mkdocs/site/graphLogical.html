@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="img/favicon.ico">
-  <title>Basic process - conMan Documentation</title>
+  <title>Logical models - conMan Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Basic process";
-    var mkdocs_page_input_path = "graphProcess.md";
+    var mkdocs_page_name = "Logical models";
+    var mkdocs_page_input_path = "graphLogical.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -81,12 +81,9 @@
 		
     <span class="caption-text">Using the Graph Builder</span>
     <ul class="subnav">
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="graphProcess.html">Basic process</a>
-    <ul class="subnav">
-            
-    </ul>
+    <a class="" href="graphProcess.html">Basic process</a>
                 </li>
                 <li class="">
                     
@@ -100,9 +97,23 @@
                     
     <a class="" href="graphExisting.html">Reviewing existing graphs</a>
                 </li>
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="graphLogical.html">Logical models</a>
+    <a class="current" href="graphLogical.html">Logical models</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#using-clinfhir-logical-models-in-the-graph-builder">Using clinFHIR logical models in the graph builder</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#setup">Setup</a></li>
+        
+            <li><a class="toctree-l4" href="#notes">Notes</a></li>
+        
+        </ul>
+    
+
+    </ul>
                 </li>
     </ul>
 	    </li>
@@ -133,7 +144,7 @@
         
       
     
-    <li>Basic process</li>
+    <li>Logical models</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -143,10 +154,25 @@
           <div role="main">
             <div class="section">
               
-                <p>The following process is suggested for creating a graph.</p>
-<p>Add the resource instances</p>
-<p>Create the references</p>
-<p>Add the resource contents</p>
+                <h2 id="using-clinfhir-logical-models-in-the-graph-builder">Using clinFHIR logical models in the graph builder</h2>
+<p>The graph builder can also build 'pseudo' resource instances from logical models that have been created using the clinFHIR Logical Modeller. These are useful if you create the models from core resource types and add elements to the models to represent extensions. You can then 'test' out the models in the Graph Builder, and subsequently create the real profiles.</p>
+<p><strong>These <em>pseudo</em> resources cannot be saved on the data server</strong></p>
+<p>Using logical models in this way requires specific setup of the scenario.</p>
+<h3 id="setup">Setup</h3>
+<ol>
+<li>Select the track, and note the conformance server.</li>
+<li>Open clinfhir and set the conformance server to the same server</li>
+<li>Load the clinFHIR Logical modeller and create the model, giving it a name that you will recognize later. You can model it on a core resource type or just use an ad hoc model. Make a note of the Model Url (found in the <strong>Model</strong> tab on the right.</li>
+<li>In conMan, create a new scenario in the track (or select an existing one) and select the 'types' tab. The logical model can be added at the bottom of the dialog - click the + icon to display a dialog that will allow you to select the logical model you created.</li>
+<li>Save the scenario.</li>
+</ol>
+<p>After this, the logical model will be available to select from the Logical Models tab in the palette of the graph builder. You can either select from the dropdown (which can be quite difficult if there are a lot of models) or just enter the url to the model that you noted in step 3 above.</p>
+<h3 id="notes">Notes</h3>
+<p>You can use a logical model from another server if you wish.</p>
+<ol>
+<li>In the clinFHIR logical modeler make a note of the full url to the modelas described in step3 above.</li>
+<li>Then, just add to the scenario as described in step 4.</li>
+</ol>
               
             </div>
           </div>
@@ -154,10 +180,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="graphExistingPatients.html" class="btn btn-neutral float-right" title="Working with existing patients">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-      
-        <a href="graphServer.html" class="btn btn-neutral" title="Server interaction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="graphExisting.html" class="btn btn-neutral" title="Reviewing existing graphs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -183,10 +207,8 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="graphServer.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="graphExisting.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="graphExistingPatients.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

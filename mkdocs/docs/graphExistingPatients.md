@@ -1,8 +1,12 @@
-The default operation of the Graph builder is to build graphs representing scenarios which are saved in an application database - and can be viewed by others. The resources in the graph can also be saved to a FHIR server, as described in the [Server interaction](graphServer.md) page. When they are saved in a FHIR server, they are just like any other resource instance there.
+The default operation of the Graph builder is to build graphs representing scenarios which are saved in an application database on the conMan server - and can be [viewed by others](graphExisting.md). The resources in the graph can also be saved to a FHIR server, as described in the [Server interaction](graphServer.md) page. When they are saved in a FHIR server, they are just like any other resource instance there.
 
-However there are situations where you want to 'share' resources across different graphs - and potentially different graphs from different users. To do this, you need to follow a specific process which is to 'connect' the graph with an existing patient in the server. When you do this, the other resources that reference that patient can be included in your graph - but they cannot be edited. It is quite possible for a single patient on the server to have resources created by different people, but only the creator can subsequeltly modify the resource.
+However there are situations where you want to 'share' resources across different graphs - and potentially different graphs from different users. To do this, you need to follow a specific process which is to 'connect' the graph with an existing patient in the server. When you do this, the other resources that reference that patient can be included (or linked to) in your graph - but they cannot be edited. It is quite possible for a single patient on the server to have resources created by different people, but only the creator can subsequently modify the resources they create.
 
-There are a number of ways that this can be done.
+Here's a diagram showing the relationship between the Authoring and Linking graphs - only the author can update.
+
+![Screenshot](img/linkResource.png)
+
+There are a couple of ways that resources can be linked. In both cases the key is to 'connect' a graph with a Patient resource on the data server - after which the resources associated with that Patient (technically, in the patient [compartment](http://hl7.org/fhir/compartmentdefinition.html) can be linked to any graph.
 
 ##Existing patient
 This describes the process where the patient - and other resources already exist on the server. This can be done by any number of users simultaneously (though note that the testing has not been thorough :) )
@@ -22,6 +26,8 @@ Note that the 'master' version of the resource is held in the graph. This means 
 
 
 ##New patient 
-If the patient does not already exist, then it should be created by one of the users first. After that, other resources can be added in the usual way.
+If the patient does not already exist, then it should be created by one of the users first. Make sure to enter the name using the HumanName fields (not just the text, otherwise it won't be found when other users search for it). [Save the patient](graphServer.md) to the server. After that, other graphs can be linked to that patient and add or read other resources associated with that patient.
+
+***Note that the graph from which the patient is created won't be able link to resources that others create (at this time). If this is a potential issue, the create the Patient using a 'throw away' graph (maybe created by a dummy user), and everybody links to that Patient. This will be addressed in a future release***
 
 

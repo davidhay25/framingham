@@ -103,13 +103,16 @@
 
                     <div class="row">
                         <div class="col-sm-3 clickable" ng-repeat="type in cofScenario.scenarioTypes">
-                            <span ng-click="selectCofType(type)"  style="cursor:pointer">{{type}}</span>
+
+                            <span  ng-click="selectCofType(type)"  style="cursor:pointer">{{type}}</span>
                         </div>
                         <div class="col-sm-3 clickable" ng-click="selectCoreType()">&gt;Select Direct&lt;</div>
 
                         <div class="col-sm-3 clickable" ng-show="graphHasLinkedPatient"
                              ng-click="selectPatientInstanceResource()">&gt;Select from Patient&lt;
                         </div>
+
+                       
 
 
                     </div>
@@ -383,8 +386,6 @@
                                             Not Checked
                                         </div>
 
-
-
                                         <div  ng-hide="item.isLogical || item.linked" ng-switch on="item.validation.isValid">
                                             <div ng-switch-when="yes">
                                                 <i class="glyphicon glyphicon-ok clickable pass"
@@ -399,7 +400,7 @@
                                                 </i>
                                             </div>
                                             <div ng-switch-when="nodata">
-                                                Resource has no data
+                                                Resource has no data so won't be saved
                                             </div>
 
                                             <div ng-switch-default>

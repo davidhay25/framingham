@@ -68,7 +68,7 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="graphEdit.md">Editing a resource</a>
+    <a class="" href="graphEdit.html">Editing a resource</a>
                 </li>
                 <li class=" current">
                     
@@ -100,22 +100,17 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="graphDynamic.md">Representing dynamic scenarios</a>
+    <a class="" href="graphDynamic.html">Representing dynamic scenarios</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="graphExisting.md">Reviewing existing graphs</a>
+    <a class="" href="graphExisting.html">Reviewing existing graphs</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="graphLogical.md">Logical models</a>
+    <a class="" href="graphLogical.html">Logical models</a>
                 </li>
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="clinical.html">Clinical</a>
 	    </li>
           
         </ul>
@@ -160,7 +155,7 @@
 <p><img alt="Screenshot" src="img/graphServer.png" /></p>
 <p>Each resource instance has</p>
 <ul>
-<li>The resource type (only core types can be saved to the data server). Clicking on the type will select the resource and display the contents in the <a href="graphEdit.md">editor pane</a>.</li>
+<li>The resource type (only core types can be saved to the data server). Clicking on the type will select the resource and display the contents in the <a href="graphEdit.html">editor pane</a>.</li>
 <li>The resource title that identifies it in the graph</li>
 <li>The resource id that was assigned by the app. This can be used to retrieve the resource directly from the server by any other app using the syntax [host]/{type}/{id}</li>
 <li>Whether the resourcs instance is valid. Validation is performed by the server (using the $validate operation) and invoked by clicking the 'Validate all' link at the upper right'. There are a number of possible icons and comments than can appear in this column.<ul>
@@ -173,7 +168,7 @@
 <p>To save the resource instances in the current graph to the server, click the 'Submit' button at the top right in the tab. This will attempt to save the resources on the server. If the transaction succeeds then a message is displayed. Otherwise, an error is displayed immediately above the list of resources. A common error is not entering any data for a resource that has a reference to it. As there is no data, it will not be saved, and so the transaction will fail. Entering data in the resource and re-submitting should fix this problem (and clicking the type in the first column will select the resource ready for editing.</p>
 <p>Technically, what happens is that a transaction containing the resources is created and sent to the server. Resources are saved using the PUT operation (as the app assigns the ids). </p>
 <h1 id="validating-a-resource">Validating a resource</h1>
-<p>It is also possible to validate a resource without saving it to the server. This can be done by clicking the <em>Validate all</em> link. There is also a validate option in the <a href="graphEdit.md">editor</a>.</p>
+<p>It is also possible to validate a resource without saving it to the server. This can be done by clicking the <em>Validate all</em> link. There is also a validate option in the <a href="graphEdit.html">editor</a>.</p>
               
             </div>
           </div>
@@ -184,7 +179,7 @@
         <a href="graphProcess.html" class="btn btn-neutral float-right" title="Basic process">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="graphBasic.html" class="btn btn-neutral" title="Basic operation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="graphEdit.html" class="btn btn-neutral" title="Editing a resource"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -210,7 +205,7 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="graphBasic.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="graphEdit.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
         <span style="margin-left: 15px"><a href="graphProcess.html" style="color: #fcfcfc">Next &raquo;</a></span>

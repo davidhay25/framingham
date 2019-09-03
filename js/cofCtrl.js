@@ -115,9 +115,6 @@ angular.module("sampleApp")
                     var url = $scope.selectedTrack.dataServer + "Patient/"+patientItem.linkedResource.id + '/$everything';
                     querySvc.performQueryFollowingPaging(url).then(
 
-
-
-                  //  $http.get(url).then(
                         function(bundle) {
 
                             $uibModal.open({
@@ -385,6 +382,10 @@ angular.module("sampleApp")
                     secondaryText :" Server Url: "+ $scope.selectedTrack.dataServer
                 };
 
+                if (cnt == 1) {
+                    modalOptions.bodyText =  'Are you sure you wish to save this resource on the data server'
+                }
+
                 modalService.showModal({}, modalOptions).then(
                     function(){
                        cofSvc.sendToFHIRServer(cofTypeList,$scope.selectedTrack ).then(
@@ -472,6 +473,10 @@ angular.module("sampleApp")
 
                 });
 
+                if (arQuery.length ==0) {
+                    alert("There are no resources to validate!")
+                    return;
+                }
 
                 $q.all(arQuery).then(function(data){
                     console.log(data);
@@ -1090,10 +1095,7 @@ angular.module("sampleApp")
                                     }
                                 });
 
-
-
                                 makeDocumentDisplay();
-
                             }
 
 
@@ -1478,11 +1480,6 @@ angular.module("sampleApp")
                         }
                     })
 
-
-                    //$scope.resourceTree = $('#lmTreeView').jstree(true).get_json('#', {flat:false})
-
-//console.log($scope.resourceTree)
-
                 }
 
             }
@@ -1494,6 +1491,17 @@ angular.module("sampleApp")
 
             //when the user selects a new type to add from the list of types in the scenario...
             $scope.selectCofType = function(type) {
+
+                if (type =='Patient') {
+                    if ($scope.graphHasLinkedPatient) {
+                        alert("You can't add a patient to a graph that is linked to a patient on the server")
+                        return;
+                    } else {
+                        if (! confirm("You already have a Patient in this graph, are you sure you wish to add another?")) {
+                            return;
+                        }
+                    }
+                }
                 addItem(type)
             };
 
@@ -1561,6 +1569,13 @@ angular.module("sampleApp")
                     //does the new scenario already have data
                     if (allScenarios[scenario.id]) {
                         $scope.cofScenario = allScenarios[scenario.id]
+
+                        //does it have a linked patient?
+                        console.log($scope.cofScenario)
+
+
+
+
                     } else {
                         //don't want the main scenario object to hold the rows... - actually, I think we do...
                         var clone = angular.copy(scenario);

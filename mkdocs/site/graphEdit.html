@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="img/favicon.ico">
-  <title>Basic process - conMan Documentation</title>
+  <title>Editing a resource - conMan Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Basic process";
-    var mkdocs_page_input_path = "graphProcess.md";
+    var mkdocs_page_name = "Editing a resource";
+    var mkdocs_page_input_path = "graphEdit.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -66,9 +66,12 @@
                     
     <a class="" href="graphBasic.html">Basic operation</a>
                 </li>
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="graphEdit.html">Editing a resource</a>
+    <a class="current" href="graphEdit.html">Editing a resource</a>
+    <ul class="subnav">
+            
+    </ul>
                 </li>
                 <li class="">
                     
@@ -81,12 +84,9 @@
 		
     <span class="caption-text">Using the Graph Builder</span>
     <ul class="subnav">
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="graphProcess.html">Basic process</a>
-    <ul class="subnav">
-            
-    </ul>
+    <a class="" href="graphProcess.html">Basic process</a>
                 </li>
                 <li class="">
                     
@@ -129,11 +129,11 @@
     
       
         
-          <li>Using the Graph Builder &raquo;</li>
+          <li>Graph Builder documentation &raquo;</li>
         
       
     
-    <li>Basic process</li>
+    <li>Editing a resource</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -143,10 +143,28 @@
           <div role="main">
             <div class="section">
               
-                <p>The following process is suggested for creating a graph.</p>
-<p>Add the resource instances</p>
-<p>Create the references</p>
-<p>Add the resource contents</p>
+                <p>When a resource instance is selected in the left pane of the browser (whether from the list, graph or server interaction tab) it is available for editing in the right pane (except for linked resources of course).</p>
+<p><img alt="Screenshot" src="img/graphEditTable.png" /></p>
+<p>The first tab contains the <strong>table editor</strong> which is the primary mechanism for adding strcutures data to the resource. Each element is a row in the tablle with the following columns:</p>
+<ul>
+<li>The first column will have a '&gt;' icon when the element has child elements. Clicking on that icon will display the children. </li>
+<li>Next is the element name. Mousing over the name will show the description of that element from the spec. The '+' symbol to the right in the column will add another copy of the element, if it is one that can repeat. Elements that have been added in this way have a '-' symbol that will remove them when clicked.</li>
+<li>Next is the cardinality of the element.</li>
+<li>Next are the possible datatypes for the element. Clicking the 'edit' icon to the right in the column displays the edit dialog for that datatype where data can be entered. New data will replace old.<ul>
+<li>If there is more than one allowed datatype, then there is a set of radio buttons that you use to select the type you want before clicking edit</li>
+<li>If the data type is a reference, then the possible types that can be references are shown with a '--&gt;' arrow in front of them. The result of clicking on the type name will vary according to whether there are any instances of that type already in the graph.<ul>
+<li>If there are no instances of that type then the app will prompt to create one</li>
+<li>If there is a single instance of that type, then the app will offer to create a reference to it</li>
+<li>If there is more than one instance of that type in the graph, then a dialog is shown allowing you to chose which one to reference (or create a new one)</li>
+</ul>
+</li>
+<li>The last columen shoms the current value for that element.</li>
+</ul>
+</li>
+</ul>
+<p>The <strong>tree view</strong> tab shows the resource as a tree, with bolded elements to show which ones have a value in the resource. Clicking the element displays the current value. The permitted datatypes are shown as links - clicking on them displays the data entry dialog.</p>
+<p>Note that it is not possible to add another copy of an element - this must be done in the table view.</p>
+<p>The <strong>Resource Instance</strong> tab shows the json view of the current resource instance. There's a link in the tab that will validate the resource using the current data server $validate operation.</p>
               
             </div>
           </div>
@@ -154,10 +172,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="graphExistingPatients.html" class="btn btn-neutral float-right" title="Working with existing patients">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="graphServer.html" class="btn btn-neutral float-right" title="Server interaction">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="graphServer.html" class="btn btn-neutral" title="Server interaction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="graphBasic.html" class="btn btn-neutral" title="Basic operation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -183,10 +201,10 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="graphServer.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="graphBasic.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="graphExistingPatients.html" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="graphServer.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

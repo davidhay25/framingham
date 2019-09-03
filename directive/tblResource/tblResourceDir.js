@@ -238,6 +238,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 $uibModal.open({
                     templateUrl: 'modalTemplates/getDatatypeValue.html',
                     size: 'lg',
+                    backdrop: 'static',
                     controller: 'getDatatypeValueCtrl',
                     resolve : {
                         'datatype' : function(){

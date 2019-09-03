@@ -1,3 +1,9 @@
+## What is a graph
+One of the key features in FHIR is the ability to connect individual resource instances together in a graph (or web) of instances using references between the resources. In this way, scenarios can be created involving many resources.
+
+The graph builder allows these graphs to be created and viewed visually.
+
+
 ## Select a graph
 To create (or edit) a graph, select the 'Graph Builder' tab that is shown when an appropriate track is selected. 
 

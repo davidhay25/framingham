@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="img/favicon.ico">
-  <title>Basic process - conMan Documentation</title>
+  <title>createTrack - conMan Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Basic process";
-    var mkdocs_page_input_path = "graphProcess.md";
+    var mkdocs_page_name = "createTrack";
+    var mkdocs_page_input_path = "createTrack.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -81,12 +81,9 @@
 		
     <span class="caption-text">Using the Graph Builder</span>
     <ul class="subnav">
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="graphProcess.html">Basic process</a>
-    <ul class="subnav">
-            
-    </ul>
+    <a class="" href="graphProcess.html">Basic process</a>
                 </li>
                 <li class="">
                     
@@ -128,12 +125,8 @@
     <li><a href="index.html">Docs</a> &raquo;</li>
     
       
-        
-          <li>Using the Graph Builder &raquo;</li>
-        
-      
     
-    <li>Basic process</li>
+    <li>createTrack</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -143,23 +136,43 @@
           <div role="main">
             <div class="section">
               
-                <p>The following process is suggested for creating a graph.</p>
-<p>Add the resource instances</p>
-<p>Create the references</p>
-<p>Add the resource contents</p>
+                <h2 id="creating-a-track">Creating a track</h2>
+<p>Any user can create a track. This is done by clicking the 'Add a new track' link below the list of tracks. The following options are available.</p>
+<ul>
+<li><strong>Name</strong>: The name of the track which will appear in the track list. Keep it short.</li>
+<li><strong>Track Lead</strong>: The person managing the track. If entered (it's optional) then only this person can make changes to the track 0 including changing the track lead.</li>
+<li><strong>Details Page</strong>: A link to a page that has more details on the track. A link to the page is displayed when the track is selected.</li>
+<li><strong>Event Chat</strong>: The <a href="">Zulip chat stream</a> used for supporing track participants</li>
+<li><strong>Track Type</strong>: The type of track. There are 3 types:<ul>
+<li><strong>Technical</strong> tracks contain functionity to record clients and servers participating in the track, and to record the outcome of testing</li>
+<li><strong>Logical Model Review</strong> are for creating 'instances' of ligical models. Less commonly used</li>
+<li><strong>Resource Graph</strong> tracks support the graph builder.</li>
+</ul>
+</li>
+<li><strong>Allow direct sample</strong> is shown when the track type is Logical model or Resoruce graph and allows a user to enter element values direclty into the model as text. This is convenient, but does prevent data being saved on the server as the data is not consistent with FHIR datatypes.</li>
+<li><strong>Allow Graphs</strong> is shown when the track type is technical, and will show the Graph  Builder (which is generally hidden for this track type.</li>
+</ul>
+<p>At the bottom of the dialog is a tabset with the following options.</p>
+<ul>
+<li><strong>Description</strong> a more complete description of the track. This will be displayed when the track is selected.</li>
+<li><strong>Scenarios</strong> displays the scenarios that have been created for the track and allows them to be re-ordered.</li>
+<li><strong>Links</strong> are any extra links of interest to track participants. They will appear as links when the track is selected. Add the link by clicking the + button to the right</li>
+<li>
+<p><strong>Servers &amp; IG</strong> is displayed for a track type of Logical Model and Resource Graph and is where the servers for the track are selected. There are 3 servers that should be configured either by selecting them from the list or entering the url to the FHIR root into the text boxes</p>
+<ul>
+<li>The <strong>Terminology</strong> server has the terminology resources required (ValueSets, CodeSystems etc) and must support the $expand operation</li>
+<li>The <strong>Conformance</strong> server has the conformance resources - eg StructureDefinition</li>
+<li>The <strong>Data</strong> server is where resource instances will be saved / loaded - see <a href="graphServer.html">Server Interaction</a> for details</li>
+<li>The <strong>Implementation Guide</strong> is not currently used.</li>
+</ul>
+<p>The other tabs can be ignored.</p>
+</li>
+</ul>
+<p><img alt="Screenshot" src="img/createTrack.png" /></p>
               
             </div>
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="graphExistingPatients.html" class="btn btn-neutral float-right" title="Working with existing patients">Next <span class="icon icon-circle-arrow-right"></span></a>
-      
-      
-        <a href="graphServer.html" class="btn btn-neutral" title="Server interaction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>
@@ -183,10 +196,6 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="graphServer.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
-      
-      
-        <span style="margin-left: 15px"><a href="graphExistingPatients.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

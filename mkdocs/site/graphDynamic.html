@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="img/favicon.ico">
-  <title>Basic process - conMan Documentation</title>
+  <title>Representing dynamic scenarios - conMan Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Basic process";
-    var mkdocs_page_input_path = "graphProcess.md";
+    var mkdocs_page_name = "Representing dynamic scenarios";
+    var mkdocs_page_input_path = "graphDynamic.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -81,20 +81,26 @@
 		
     <span class="caption-text">Using the Graph Builder</span>
     <ul class="subnav">
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="graphProcess.html">Basic process</a>
-    <ul class="subnav">
-            
-    </ul>
+    <a class="" href="graphProcess.html">Basic process</a>
                 </li>
                 <li class="">
                     
     <a class="" href="graphExistingPatients.html">Working with existing patients</a>
                 </li>
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="graphDynamic.html">Representing dynamic scenarios</a>
+    <a class="current" href="graphDynamic.html">Representing dynamic scenarios</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#setup">Setup</a></li>
+    
+
+    <li class="toctree-l3"><a href="#creating-the-graph">Creating the graph</a></li>
+    
+
+    </ul>
                 </li>
                 <li class="">
                     
@@ -133,7 +139,7 @@
         
       
     
-    <li>Basic process</li>
+    <li>Representing dynamic scenarios</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -143,10 +149,21 @@
           <div role="main">
             <div class="section">
               
-                <p>The following process is suggested for creating a graph.</p>
-<p>Add the resource instances</p>
-<p>Create the references</p>
-<p>Add the resource contents</p>
+                <p>Dynamic scenarios (where the scenario changes over time reflecting a process of some sort) are not really supported well at this time.</p>
+<p>One way that this could be done (which does require the track to be set up properly) is as follows.</p>
+<h3 id="setup">Setup</h3>
+<ol>
+<li><a href="createTrack.html">Create a track</a> for the dynamic scenario (each track should have only one dynamic scenario).</li>
+<li><a href="createScenario.md">Create a scenario</a> in the track for each of the steps in the process.</li>
+</ol>
+<h3 id="creating-the-graph">Creating the graph</h3>
+<ol>
+<li>Select the first scenario and create the graph. Optionally save to the server.</li>
+<li>Select the next scenario. Click the <strong>import</strong> link below the scenario selector and import the scenario you just created. Modify as required to represent the next step in the process. Optionally save to the server.</li>
+<li>Select the next scenario and import the previous one. Modify and optionally save.</li>
+<li>repeat as required.</li>
+</ol>
+<p>Note that each graph is creating a new resource instance when importing, so this doesn't really reflect changes to a single resource over time. In fact, there is no real value in saving to the server if all you wanted to do was to see the changing resources.</p>
               
             </div>
           </div>
@@ -154,10 +171,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="graphExistingPatients.html" class="btn btn-neutral float-right" title="Working with existing patients">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="graphExisting.html" class="btn btn-neutral float-right" title="Reviewing existing graphs">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="graphServer.html" class="btn btn-neutral" title="Server interaction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="graphExistingPatients.html" class="btn btn-neutral" title="Working with existing patients"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -183,10 +200,10 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="graphServer.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="graphExistingPatients.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="graphExistingPatients.html" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="graphExisting.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

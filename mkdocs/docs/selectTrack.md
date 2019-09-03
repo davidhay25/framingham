@@ -14,6 +14,8 @@ Events can be configured to only have a single type of track or any type. If mor
 
 A tracks is selected by clicking on it in the list to the left. Details about that track will appear to the right, and a number of tabswill be displayed at the top of the screen (the tabs that appear depend on the track type).
 
+The [create Track](createTrack.md) page has further details.
+
 ### Track Servers
 
 When the track is created of type *Resource Graph*, the FHIR servers that it uses are selected. There are 3 servers for each track:
