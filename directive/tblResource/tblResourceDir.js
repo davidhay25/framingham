@@ -374,8 +374,10 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 }
 
                 if (!inx) {
-                    alert('Insert point not found. Started at '+ inxOfRow + ". Not duplicated ")
-                    return
+                    //This happens when the row being duplicated is at the end of the table... (usually)
+                    inx = $scope.input.table.length;
+                   // alert('Insert point not found. Started at '+ inxOfRow + ". Not duplicated ")
+                   // return
                 }
 
                 var clone = angular.copy($scope.input.table);
