@@ -1497,9 +1497,10 @@ angular.module("sampleApp")
                         alert("You can't add a patient to a graph that is linked to a patient on the server")
                         return;
                     } else {
+                        /* temp - see if there is already a patient there
                         if (! confirm("You already have a Patient in this graph, are you sure you wish to add another?")) {
                             return;
-                        }
+                        }\*/
                     }
                 }
                 addItem(type)

@@ -361,24 +361,26 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                 inx++;
 */
                 //start from the current position, until we find an element that doesn't start with the path
-                let ar = path.split('.')
-                let cnt = ar.length;
+                let ar = path.split('.');
+                let inx;
+                let cnt = ar.length;    //number of segments in the path being duplicated...
                 for (var i=inxOfRow+1; i < $scope.input.table.length; i++) {
-                    let row = $scope.input.table[i]
-                    let ar1 = row.path.split('.')
+                    let row = $scope.input.table[i];
+                    let ar1 = row.path.split('.');
                     if (! row.path.startsWith(path) || ar1.length <= cnt) {
                         inx = i;
-                        break
+                        break;
                     }
                 }
 
-
+                if (!inx) {
+                    alert('Insert point not found. Started at '+ inxOfRow + ". Not duplicated ")
+                    return
+                }
 
                 var clone = angular.copy($scope.input.table);
 
                 clone.forEach(function(row){
-                    //if (row.path.startsWith(path)) {
-
 
                     //this is the the original 'parent' that is being duplicated. Construct an id for it
                     if (row.path ==path && row.isOriginal) {
@@ -402,7 +404,7 @@ angular.module("sampleApp").directive('tblResource', function ($filter,$uibModal
                         row.canDelete = true;
                         row.rootParentId = newParentId;     //the parent off the root...
                         //now change the path in the row by incrementing the suffix..
-                        $scope.input.table.splice(inx,0,row);
+                        $scope.input.table.splice(inx,0,row);       //<<<<<<<<<<<<<<<<<<<<<<<<<<,
                         inx++;
                     }
                 });
