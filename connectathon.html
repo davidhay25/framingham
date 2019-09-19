@@ -200,7 +200,7 @@
             <div class="col-md-8 col-sm-8">
                 <div>
                     <a class="navbar-brand" href="#">
-                        ConMan: {{eventConfig.name}} <span ng-hide="eventConfig">No event specified.</span>
+                        Event Manager: {{eventConfig.name}} <span ng-hide="eventConfig">No event specified.</span>
                         <span ng-show="selectedTrack"><strong>({{selectedTrack.name}} track)</strong></span>
                     </a>
                 </div>
@@ -251,6 +251,13 @@
     </nav>
 
     <div class="row" ng-show="eventConfig">
+
+
+        <div class="alert-danger alert" ng-show="eventConfig.name=='atlanta2019'">
+            This is NOT the Clinicians on FHIR support application.
+            Click <a href="http://snapp.clinfhir.com:8100/gbMain.html?event=atlanta2019">here</a> to go to that app
+        </div>
+
 
         <div class="col-sm-12 col-md-12">
 
