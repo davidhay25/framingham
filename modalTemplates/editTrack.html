@@ -64,6 +64,31 @@
         <br/>
 
 
+        <!-- This is the connectathon type - not the previous type-->
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                Track type
+            </div>
+            <div class="col-sm-10 col-md-10">
+                <div class="btn-group">
+                    <label class="btn btn-primary" ng-model="track.trackSubType" uib-btn-radio="'igreview'">IG Review</label>
+                    <label class="btn btn-primary" ng-model="track.trackSubType" uib-btn-radio="'training'">Training</label>
+                    <label class="btn btn-primary" ng-model="track.trackSubType" uib-btn-radio="'codereview'">Code Review</label>
+
+                </div>
+                <!--
+                <div>{{trackTypes[track.trackType]}}</div>
+                -->
+            </div>
+
+        </div>
+        <br/>
+
+
+
+
+        <!--
+
         <div class="row">
             <div class="col-sm-2 col-md-2">
                 Track type
@@ -81,6 +106,8 @@
         </div>
         <br/>
 
+        -->
+        <!--
         <div class="row" ng-show="track.trackType == 'technical'">
             <div class="col-md-2 col-sm-2">
                 Allow Graphs
@@ -94,6 +121,10 @@
                 when the track type is 'scenario')</p>
             </div>
         </div>
+
+        -->
+
+        <!--
 
         <br/>
         <div class="row" ng-show="track.trackType !== 'technical'">
@@ -111,6 +142,8 @@
             </div>
         </div>
         <br/>
+
+        -->
 
         <uib-tabset>
             <uib-tab heading="Description">

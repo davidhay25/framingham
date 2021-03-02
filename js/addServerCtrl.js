@@ -1,7 +1,8 @@
 angular.module("sampleApp")
     .controller('addServerCtrl',
-        function ($scope,ecosystemSvc,modalService,$http,existingServer) {
+        function ($scope,ecosystemSvc,modalService,$http,existingServer,tracks) {
 
+            $scope.tracks = tracks;
             $scope.input = {};
             $scope.input.serverRole = {}
             $scope.saveText = "Add new Server";
@@ -21,6 +22,7 @@ angular.module("sampleApp")
                 serverExists = true;
                 $scope.saveText = "Update server";//+ existingServer.name;
                 $scope.input.name = existingServer.name;
+                $scope.input.notes = existingServer.notes;
                 $scope.input.description = existingServer.description ;
                 $scope.input.address = existingServer.address ;
                 $scope.input.UIaddress = existingServer.UIaddress ;
@@ -28,6 +30,15 @@ angular.module("sampleApp")
                 $scope.allHooks = existingServer.allHooks;
                 $scope.fhirVersion = existingServer.fhirVersion;
                 $scope.SMART = existingServer.SMART;
+
+                $scope.input.tracks = {}
+                $scope.input.trackCount = 0
+                if (existingServer.tracks) {
+                    existingServer.tracks.forEach(function (trackId){
+                        $scope.input.tracks[trackId] = true;
+                        $scope.input.trackCount++
+                    })
+                };
 
                 if (existingServer.contact) {
                     $scope.input.contact = existingServer.contact[0];
@@ -104,7 +115,7 @@ angular.module("sampleApp")
 
                 $http.get(url).then(
                     function(data) {
-                        modalService.showModal({},{bodyText:"The CapabilityStatement was returned, so we can update the server specific information. See the 'Server Details' tab"});
+                        modalService.showModal({},{bodyText:"The CapabilityStatement was returned, so we can update the server specific information. See the 'Server Capability' tab"});
                         serverExists = true;
                         //console.log(data.data);
                         var cs = data.data;
@@ -194,7 +205,18 @@ angular.module("sampleApp")
                         isNewServer = false;
                     }
 
+                    server.tracks = []
+
+                    Object.keys($scope.input.tracks).forEach(function(key){
+                        if ($scope.input.tracks[key]) {
+                            server.tracks.push(key)
+                        }
+                    });
+
+
+
                     server.name = $scope.input.name;
+                    server.notes = $scope.input.notes;
                     server.description = $scope.input.description;
                     server.address = $scope.input.address;
                     server.UIaddress = $scope.input.UIaddress;

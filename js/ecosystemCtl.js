@@ -138,6 +138,24 @@ angular.module("sampleApp")
 
             }
 
+            $scope.getServersForTrack = function(trackId) {
+                let ar = []
+                if ($scope.allServers) {
+                    $scope.allServers.forEach(function (server){
+                        if (server.tracks) {
+                            server.tracks.forEach(function (id){
+                                if (trackId == id) {
+                                    ar.push(server)
+                                }
+                            })
+                        }
+
+                    })
+                }
+
+                return ar
+            }
+
             $http.get('/artifacts/trackTypes.json').then(
                 function(data) {
                     $scope.trackTypes = data.data;
@@ -443,6 +461,7 @@ angular.module("sampleApp")
                 }
             }
 
+
             $scope.getSvrDescription = function(svr) {
                 var desc = svr.description;
                 if (desc) {
@@ -453,7 +472,18 @@ angular.module("sampleApp")
                 } else {
                     return ""
                 }
+            };
 
+            $scope.getSvrNotes = function(svr) {
+                var notes = svr.notes;
+                if (notes) {
+                    if (notes.length > 50) {
+                        notes = notes.substr(0,47)+ '...'
+                    }
+                    return notes;
+                } else {
+                    return ""
+                }
             };
 
             $scope.deleteResult = function(rslt) {
@@ -512,6 +542,21 @@ console.log(vo);
                         console.log(ecoUtilitiesSvc.getObjectSize(vo));
 
                         $scope.tracks = vo.tracks;
+
+                        $scope.tracks.sort(function(a,b){
+                            if (a.name > b.name) {
+                                return 1
+                            } else {
+                                return -1
+                            }
+
+                        })
+                        //used to display track by name in server tracks listing
+                        $scope.hashTracks = {}
+                        $scope.tracks.forEach(function(track){
+                            $scope.hashTracks[track.id] = track
+                        })
+
 
                         $scope.allClients =  ecosystemSvc.getAllClients();
                         $scope.allServers = ecosystemSvc.getAllServers();
@@ -1052,6 +1097,9 @@ console.log(vo);
                     resolve : {
                         existingServer: function () {          //the default config
                             return svr;
+                        },
+                        tracks: function () {          //the default config
+                            return $scope.tracks;
                         }
                     }
 

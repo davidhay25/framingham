@@ -253,28 +253,20 @@
     <div class="row" ng-show="eventConfig">
 
 
-        <div class="alert-danger alert" ng-show="eventConfig.name=='atlanta2019'">
-            This is NOT the Clinicians on FHIR support application.
-            Click <a href="http://snapp.clinfhir.com:8100/gbMain.html?event=atlanta2019">here</a> to go to that app
-        </div>
 
 
         <div class="col-sm-12 col-md-12">
 
             <uib-tabset>
 
-                <uib-tab heading="Select Track">
+                <uib-tab heading="Track details">
                     <br/>
                     <div class="row">
                         <div class="col-sm-2 col-md-2">
-
+<!--
                             <div class="row" style="margin-bottom: 20px">
-                                <!--
-                                <div class="col-sm-2 col-md-2">
-                                    Show:
-                                </div>-->
                                 <div class="col-sm-12 col-md-12">
-                                    <!-- If a type is specified in the event definition, then don't allow a change-->
+
                                     <div ng-hide="eventConfig.type">
                                         <div class="btn-group">
                                             <label class="btn btn-default" ng-model="input.trackListDisplay" uib-btn-radio="'all'">All</label>
@@ -285,6 +277,8 @@
 
                                 </div>
                             </div>
+
+                            -->
 
                             <div ng-hide="tracks">
                                 <br/>
@@ -308,7 +302,7 @@
 
                                         {{track.name}}
 
-                                        <div><em class="center-text">({{trackTypeDisplay[track.trackType]}})</em></div>
+                                        <div><em class="center-text">{{track.trackSubType}}</em></div>
 
                                     </li>
                                 </ul>
@@ -335,15 +329,10 @@
 
                         <div class="col-sm-10 col-md-10" ng-show="selectedTrack">
 
-
-
-
                             <uib-tabset>
                                 <uib-tab heading="Description">
                                     <br/>
-<!--
-                                    <a ng-click="editTrack(selectedTrack)">Edit</a>
--->
+
                                     <div class="row">
                                         <div class="col-sm-2 col-md-2">
                                             <strong>Description</strong>
@@ -573,11 +562,14 @@
                                             <div class="row">
                                                 <div class="col-sm-6 col-md-6">
                                                     <strong>Track Type: </strong>
-
+<!--
                                                     <span uib-popover-html=trackTypes[selectedTrack.trackType]
                                                           popover-placement="top"
                                                           popover-trigger="'mouseenter'">
                                                         {{trackTypeDisplay[selectedTrack.trackType]}}</span>
+                                                    -->
+                                                    {{selectedTrack.trackSubType}}
+
 <!--
                                                     <div style="padding-top: 8px">X{{trackTypes[selectedTrack.trackType]}}</div>
 -->
@@ -928,7 +920,41 @@
                                     <iframe ng-src="{{iframeUrl | trustAsResourceUrl}}" height="800px" width="100%"></iframe>
 
                                 </uib-tab>
-                                <uib-tab heading="Report" ng-show="selectedTrack.trackType == 'technical'">
+                                <uib-tab>
+                                    <uib-tab-heading>
+                                        Servers <span class="badge">{{getServersForTrack(selectedTrack.id).length}}</span>
+                                    </uib-tab-heading>
+
+                                    <table class="table table-condensed">
+                                        <tr><th>Name</th><th>Url</th><th>Description</th><th>Notes</th><th></th></tr>
+                                        <tr ng-repeat="server in getServersForTrack(selectedTrack.id)">
+                                            <td>{{server.name}}</td>
+                                            <td>{{server.address}}</td>
+                                            <td>{{server.description}}</td>
+                                            <td>{{server.notes}}</td>
+                                            <td><button class="btn btn-link" ng-click="editServer(server)">View</button> </td>
+
+
+                                        </tr>
+                                    </table>
+
+<!--
+                                    <div ng-repeat = "server in allServers">
+                                        <div ng-repeat = "trackId in server.tracks">
+                                            <div ng-show = "trackId == selectedTrack.id">
+                                                {{server.name}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    -->
+
+
+                                </uib-tab>
+
+
+
+                                <uib-tab heading="Report" ng-show="false && selectedTrack.trackType == 'technical'">
                                     <br/>
                                     <div class="row">
                                         <div class="col-md-6 col-sm-6">
@@ -1036,8 +1062,6 @@
                                 </uib-tab>
                             </uib-tabset>
 
-
-
                         </div>
                     </div>
 
@@ -1048,8 +1072,6 @@
                 <uib-tab heading = 'Event' ng-show="eventConfig.details">
                     <iframe ng-src="{{eventConfig.details | trustAsResourceUrl}}" height="800px" width="100%"></iframe>
                 </uib-tab>
-
-
 
                 <uib-tab>
                     <uib-tab-heading>
@@ -1172,9 +1194,7 @@
 
                 </uib-tab>
 
-
-
-                <uib-tab ng-show="selectedTrack.trackType == 'technical'">
+                <uib-tab>
                     <uib-tab-heading>
                         Clients
                         <span class="badge" ng-show="allClients.length > 0">{{allClients.length}}</span>
@@ -1220,25 +1240,26 @@
 
                 </uib-tab>
 
-                <uib-tab  ng-show="selectedTrack.trackType == 'technical'">
+                <uib-tab>
                     <uib-tab-heading>
                         Servers
                         <span class="badge" ng-show="allServers.length > 0">{{allServers.length}}</span>
                     </uib-tab-heading>
                     <br/>
 
-                    <uib-tabset>
-                        <uib-tab heading="Connectathon">
+
                             <div>
                                 <button class="btn btn-link pull-right" ng-click="editServer()">New Server</button>
                             </div>
                             <table class="table table-bordered">
-                                <tr><th>Name</th><th>Url</th><th>FHIR Version</th><th>Description</th><th>Contacts</th>
-                                    <th>Track / Scenario / Role (from Testing)</th>
+                                <tr><th>Name</th><th>Url</th><th>FHIR Version</th><th>Description & Notes</th><th>Notes</th>
+                                    <th>Tracks</th>
+                                    <!--
                                     <th uib-popover="CDS=CDS hooks, SMART = SMART enabled, mouseover badge for details"
                                          popover-placement="top"
                                          popover-append-to-body = true
                                          popover-trigger="'mouseenter'">Flags</th>
+                                    -->
                                     <th></th></tr>
                                 <tr ng-repeat="svr in allServers">
                                     <td>{{svr.name}}</td>
@@ -1264,19 +1285,18 @@
                                             {{getSvrDescription(svr)}}
 
                                         </div>
-
-                                        <!--
-                                    <div ng-repeat="hook in svr.allHooks.services"
-                                         uib-popover="{{hook.description}}"
-                                         popover-placement="top"
-                                         popover-append-to-body = true
-                                         popover-trigger="'mouseenter'">
-                                        hook:{{hook.hook}} ({{hook.id}})
-                                    </div>
-                                        -->
-
-
                                     </td>
+                                    <td>
+                                        <div uib-popover="{{svr.notes}}"
+                                             popover-placement="right"
+                                             popover-append-to-body = true
+                                             popover-trigger="'mouseenter'">
+
+                                            {{getSvrNotes(svr)}}
+
+                                        </div>
+                                    </td>
+                                    <!--
                                     <td>
                                         <div ng-repeat = "person in svr.contact">
                                             {{person.name}}
@@ -1285,11 +1305,22 @@
                                             </span>
                                         </div>
                                     </td>
+                                    -->
                                     <td>
+                                        <div ng-repeat="trackId in svr.tracks">
+
+                                            {{hashTracks[trackId].name}}
+
+                                        </div>
+
+                                        <!--
                                         <div ng-repeat="scenarioName in getScenariosForServer(svr) track by $index">
                                             {{scenarioName }}
                                         </div>
+                                        -->
+
                                     </td>
+                                    <!--
                                     <td>
                                         <span class="badge" ng-show="svr.allHooks.services.length > 0"
                                               uib-popover-html=showHooksSummary(svr)
@@ -1298,13 +1329,15 @@
                                         >CDS</span>
                                         <span class="badge" ng-show="svr.SMART.authorize">SMART</span>
                                     </td>
+                                    -->
 
                                     <td><button class="btn btn-link" ng-click="editServer(svr)">View</button> </td>
                                 </tr>
                             </table>
 
-                        </uib-tab>
-                        <uib-tab heading="Ecosystem">
+
+
+                            <!--
                             <div class="banner">Locate servers by ecosystem role (rather than Scenario role) - Experimental</div>
 
                             <div class="row">
@@ -1356,22 +1389,18 @@
                                             <td>{{type.cap}}</td>
                                         </tr>
                                     </table>
-                                    <!--
-                                    <pre>{{selectedServer | json}}</pre>
-                                    -->
                                 </div>
                             </div>
 
+-->
 
 
-                        </uib-tab>
-                    </uib-tabset>
 
 
 
                 </uib-tab>
 
-                <uib-tab heading="Technical Testing" ng-show="selectedTrack.trackType == 'technical'">
+                <uib-tab heading="Technical Testing">
                     <br/>
 
                     <div class="row">
@@ -1595,12 +1624,11 @@
                     </div>
                 </uib-tab>
 
-
+<!--
                 <uib-tab ng-show="selectedTrack.trackType == 'lmreview'">
                     <uib-tab-heading>
                         Summary of LM Review
-                        <!--<span class="badge" ng-show="ecosystemSvc.allResultsCount() > 0">{{ecosystemSvc.allResultsCount()}}</span>
-                        -->
+
                     </uib-tab-heading>
                     <br/>
 
@@ -1610,7 +1638,9 @@
 
                 </uib-tab>
 
-                <uib-tab ng-show="selectedTrack.trackType == 'technical'">
+                -->
+
+                <uib-tab>
                     <uib-tab-heading>
                         Test Results
                         <span class="badge" ng-show="ecosystemSvc.allResultsCount() > 0">{{ecosystemSvc.allResultsCount()}}</span>
@@ -1842,7 +1872,7 @@
                 </uib-tab>
 
 
-
+<!--
                 <uib-tab heading="Logical Model Review" ng-show="selectedTrack.trackType == 'lmreview'">
                     <br/>
                     <div ng-controller="lmCheckCtrl">
@@ -1850,6 +1880,9 @@
                     </div>
                 </uib-tab>
 
+                -->
+
+                <!--
                 <uib-tab heading="Graph Builder" ng-show="selectedTrack.allowGraph ||  selectedTrack.trackType == 'scenario'">
                     <br/>
                     <div ng-controller="cofCtrl">
@@ -1863,6 +1896,8 @@
                         <ng-include src="'includes/cofSummary.html'"></ng-include>
                     </div>
                 </uib-tab>
+
+                -->
 
                 <!-- not sure if this is useful any more...
                 <uib-tab heading="All graph notes" ng-show="selectedTrack.allowGraph || selectedTrack.trackType == 'scenario'">
@@ -2010,15 +2045,15 @@
                 </uib-tab>
 
 
-
+<!--
                 <uib-tab heading="Documentation">
                     <br/>
 
                     <iframe width="100%" height="900px" src="/mkdocs/site/index.html"></iframe>
 
-                    <!-- <iframe width="100%" height="900px" src="/artifacts/docs.html"></iframe> -->
 
                 </uib-tab>
+                -->
 
 
 

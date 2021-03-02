@@ -45,7 +45,9 @@
 
                                        typeahead-editable = 'false'
                                        uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control"/>
-                                <div><em>Contact person is required, and must be a selection from the users from the people tab</em></div>
+                                <div><em>Contact person is required, and should be a selection from the users from the people tab.
+                                (Just start typing to get a filtered list)
+                                </em></div>
 
                             </div>
                         </div>
@@ -57,11 +59,12 @@
 
                 <div class="row">
                     <div class="col-md-8 col-sm-8">
-                        <input type="text" class="form-control" ng-model="input.address" placeholder="Enter the Url to the server FHIR root"/>
+                        <input type="text" class="form-control" ng-model="input.address"
+                               placeholder="Enter the Url to the server FHIR root. Must expose a capabilityStatement"/>
                     </div>
 
                     <div class="col-md-4 col-sm-4">
-                        <button class="btn btn-link" ng-show="input.name"
+                        <button class="btn btn-link" ng-show="input.address"
                                 ng-click="checkServerExists()">Check CapabilityStatement</button>
                         <div class="pull-right" ng-show="waiting">
                             <img src="css/ajax_loader_blue_32.gif"/>
@@ -89,9 +92,21 @@
                     <div class="col-md-5 col-sm-5">
                        <input disabled="disabled" ng-model="fhirVersion"/>
                     </div>
+                    <div class="col-md-5 col-sm-5">
+                        <em>Read from the CapabilityStatement</em>
+                    </div>
                 </div>
                 <br/>
 
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <textarea class="form-control" rows="3"
+                                  placeholder="Notes about this server - eg special instructions to connect to it"
+                                  ng-model = "input.notes"></textarea>
+
+                    </div>
+                </div>
+                <br/>
 
 
                 <div class="row">
@@ -150,6 +165,7 @@
 
             </uib-tab>
 
+            <!--
             <uib-tab>
                 <uib-tab-heading>
                     Ecosystem roles
@@ -188,6 +204,10 @@
 
             </uib-tab>
 
+            -->
+
+            <!--
+
             <uib-tab ng-show="input.address">
                 <uib-tab-heading>
                     CDS-Hooks
@@ -197,28 +217,31 @@
 
 
                 <table class="table table-bordered">
-                    <!--
-                    <tr><th>Id</th><th>Name</th><th>Hook</th><th>Description</th></tr>
-                    -->
+
                     <tr ng-repeat="hook in allHooks.services">
                         <td>
                             <pre>{{hook | json}}</pre>
                         </td>
-                        <!--
-                        <td>{{hook.id}}</td>
-                        <td>{{hook.name}}</td>
-                        <td>{{hook.hook}}</td>
-                        <td>{{hook.description}}</td>
-                        <td>
-                            <pre>{{hook | json}}</pre>
-                        </td>
--->
+
                     </tr>
                 </table>
                 <button class="btn btn-link" ng-click="loadHooks()">Check for hooks</button>
             </uib-tab>
+-->
+
+            <uib-tab >
+                <uib-tab-heading>
+                    Associated tracks
+                    <span class="badge">{{input.trackCount}}</span>
+                </uib-tab-heading>
+                <em>Tracks that this server supports</em>
+
+                <div ng-repeat = "track in tracks">
+                    <checkbox ng-model="input.tracks[track.id]"></checkbox> {{track.name}}
+                </div>
 
 
+            </uib-tab>
 
             <uib-tab>
                 <uib-tab-heading>

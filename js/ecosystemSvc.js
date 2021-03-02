@@ -2594,7 +2594,7 @@ angular.module("sampleApp").service('ecosystemSvc',
 
 
         },
-        makeGraph : function(bundle,centralResource,hideMe,showText) {
+        makeGraphDEP : function(bundle,centralResource,hideMe,showText) {
             //+++++++ this is a copy from builderSvc to avoid pulling in dups. Should really be in a separate library
             //builds the model that has all the models referenced by the indicated SD, recursively...
             //if hideMe is true, then hide the central node and all references to it

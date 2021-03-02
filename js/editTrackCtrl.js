@@ -9,6 +9,8 @@ angular.module("sampleApp")
             $scope.isNew = isNew;
 
 
+
+
             //default servers...
             $scope.input.termServer = "https://ontoserver.csiro.au/stu3-latest/";
             $scope.input.confServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
@@ -77,7 +79,7 @@ angular.module("sampleApp")
                     }
                 }
 
-                track.trackType = track.trackType || 'technical' ;      //default to technical
+                track.trackType = 'technical' ;//track.trackType || 'technical' ;      //default to technical
 
                 if (track.leadIds && track.leadIds.length > 0 && $scope.currentUser) {
                     if (track.leadIds[0] !== $scope.currentUser.id) {
@@ -238,6 +240,7 @@ angular.module("sampleApp")
                     delete $scope.track.IG;
                 }
 
+                //$scope.track.subType =
 
                 if ($scope.track.trackType == "scenario" || $scope.track.allowGraph) {
                     //load the supported resource types
