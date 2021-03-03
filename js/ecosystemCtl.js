@@ -22,6 +22,8 @@ angular.module("sampleApp")
 
             $scope.showTrack = function(track) {
 
+                return true;
+/*
                 if ($scope.input.trackListDisplay == 'all') {
                     return true;
                 } else if ($scope.input.trackListDisplay == 'clinical') {
@@ -34,6 +36,8 @@ angular.module("sampleApp")
                         return true
                     }
                 }
+
+                */
             };
 
             //so the display of the track type can be different to the code
@@ -542,7 +546,7 @@ console.log(vo);
                         console.log(ecoUtilitiesSvc.getObjectSize(vo));
 
                         $scope.tracks = vo.tracks;
-
+/*
                         $scope.tracks.sort(function(a,b){
                             if (a.name > b.name) {
                                 return 1
@@ -551,6 +555,7 @@ console.log(vo);
                             }
 
                         })
+                        */
                         //used to display track by name in server tracks listing
                         $scope.hashTracks = {}
                         $scope.tracks.forEach(function(track){
@@ -1215,6 +1220,9 @@ console.log(vo);
                 delete $scope.selectedRole;
                 delete $scope.input.selectedTrackPerson;
                 $scope.selectedTrack = track;
+
+                //so we can show the track summary in the testing sub-tab
+                $scope.resultsSummary = ecosystemSvc.getTrackResults(track);
 
                 if (track.url) {
                     $scope.iframeUrl = track.url;

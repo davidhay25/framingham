@@ -73,7 +73,7 @@
 
             </uib-tab>
 
-            <uib-tab heading="Link to TouchStone">
+            <uib-tab ng-show="false" heading="Link to TouchStone">
                 <div ng-controller="touchStoneCtrl">
 
                     {{ecosystemSvc.getCurrentUser()}}
@@ -114,7 +114,7 @@
 
             </uib-tab>
 
-            <uib-tab>
+            <uib-tab  ng-show="false">
                 <uib-tab-heading>
                     Trackers &nbsp;&nbsp;
                     <span ng-show="trackers.length > 0" class="pull-right badge">{{trackers.length}}</span>

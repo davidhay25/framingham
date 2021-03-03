@@ -2257,6 +2257,8 @@ angular.module("sampleApp").service('ecosystemSvc',
                         }
 
                     });
+                    ciSort(vo.tracks,'name');
+
 
                     //link scenarios to tracks
                     var hashRole = {};

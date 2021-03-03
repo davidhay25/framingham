@@ -200,8 +200,12 @@
             <div class="col-md-8 col-sm-8">
                 <div>
                     <a class="navbar-brand" href="#">
-                        Event Manager: {{eventConfig.name}} <span ng-hide="eventConfig">No event specified.</span>
+                        Connectathon Manager: {{eventConfig.name}}
+                        <!--
+                        <span ng-hide="eventConfig">No event specified.</span>
                         <span ng-show="selectedTrack"><strong>({{selectedTrack.name}} track)</strong></span>
+
+                        -->
                     </a>
                 </div>
 
@@ -213,13 +217,25 @@
                 -->
             </div>
 
+
+            <div class="col-md-1 col-sm-1">
+
+
+            </div>
+            <div class="col-md-1 col-sm-1">
+                <div class="navbar-text pull-right">
+                    <button class="btn btn-primary pull-right"
+                            ng-click="refresh()">Refresh</button>
+
+                </div>
+            </div>
             <div class="col-md-2 col-sm-2">
 
                 <div class="navbar-text">
                     <div ng-show="ecosystemSvc.getCurrentUser()">
                         {{ecosystemSvc.getCurrentUser().name}}
                         <span>
-                             <i class="glyphicon glyphicon-remove-sign"
+                             <i class="glyphicon glyphicon-log-out"
                                 ng-show = "ecosystemSvc.getCurrentUser()"
                                 style="padding-top: 12px; padding-left: 10px"
                                 uib-popover="Log out"
@@ -236,16 +252,6 @@
                 </div>
 
             </div>
-            <div class="col-md-1 col-sm-1">
-
-
-            </div>
-            <div class="col-md-1 col-sm-1">
-                <div class="navbar-text pull-right">
-                    <button ng-show="selectedTrack.trackType == 'technical'" class="btn btn-primary pull-right" ng-click="refresh()">Refresh</button>
-
-                </div>
-            </div>
 
         </div>
     </nav>
@@ -259,7 +265,7 @@
 
             <uib-tabset>
 
-                <uib-tab heading="Track details">
+                <uib-tab heading="Track details & testing">
                     <br/>
                     <div class="row">
                         <div class="col-sm-2 col-md-2">
@@ -290,7 +296,7 @@
                                     <li ng-class="{'list-group-item':1,'listItemSelected':selectedTrack.id == track.id}"
                                         style="cursor: pointer"
                                         ng-show="showTrack(track)"
-                                        ng-repeat="track in tracks | orderBy: 'name' "
+                                        ng-repeat="track in tracks"
                                         ng-click="selectTrack(track)">
 
                                         <span>
@@ -952,8 +958,6 @@
 
                                 </uib-tab>
 
-
-
                                 <uib-tab heading="Report" ng-show="false && selectedTrack.trackType == 'technical'">
                                     <br/>
                                     <div class="row">
@@ -1060,6 +1064,25 @@
 
 
                                 </uib-tab>
+
+                                <uib-tab>
+                                    <uib-tab-heading>
+                                        Testing <span class="badge"
+                                              uib-popover=" Pass /  Fail /  Partial /  Note"
+                                              popover-placement="top"
+                                              popover-append-to-body = true
+                                              popover-trigger="'mouseenter'">
+                                        {{resultsSummary.resultTotals.pass}} / {{resultsSummary.resultTotals.fail}} /
+                                        {{resultsSummary.resultTotals.partial}} / {{resultsSummary.resultTotals.note}}</span>
+                                    </uib-tab-heading>
+
+
+
+
+                                    <ng-include src="'includes/testResult.html'"></ng-include>
+                                </uib-tab>
+
+
                             </uib-tabset>
 
                         </div>
@@ -1400,8 +1423,22 @@
 
                 </uib-tab>
 
-                <uib-tab heading="Technical Testing">
+                <uib-tab ng-show = "false" heading="Record test result">
                     <br/>
+
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            Current Track: {{selectedTrack.name}}
+                            <span><em>Select a different track in the Track details tab</em></span>
+                            <!--
+                            <select class="form-control" ng-model="selectedTrack"
+                                    ng-options = "option.name for option in tracks">
+                            </select>
+                            -->
+                        </div>
+                    </div>
+
 
                     <div class="row">
                         <!--
@@ -1623,6 +1660,7 @@
 
                     </div>
                 </uib-tab>
+
 
 <!--
                 <uib-tab ng-show="selectedTrack.trackType == 'lmreview'">
@@ -1992,7 +2030,7 @@
                                             </li>
                                         </ul>
 
-                                        <h4>Clients (in any scenario)
+                                        <h4>Clients (from testing)
                                             <span ng-show="input.partTrack.clients.length > 0" class="badge">
                                         {{input.partTrack.clients.length}}</span>
                                         </h4>
@@ -2003,7 +2041,7 @@
                                             </li>
                                         </ul>
 
-                                        <h4>Servers (in any scenario)
+                                        <h4>Servers (from testing)
                                             <span ng-show="input.partTrack.servers.length > 0" class="badge">
                                         {{input.partTrack.servers.length}}</span>
                                         </h4>
@@ -2045,15 +2083,20 @@
                 </uib-tab>
 
 
-<!--
+
                 <uib-tab heading="Documentation">
                     <br/>
 
-                    <iframe width="100%" height="900px" src="/mkdocs/site/index.html"></iframe>
 
+                    <iframe width="100%" height="900px"
+                            src="https://docs.google.com/document/d/e/2PACX-1vShxGk1j0-DgQ5jP3CNIqpmbN_QGG1ZJd9haEkgcT2yY77KF5tPwCtBckV5Mo9ZN-PXghhCeXD7zaxg/pub?embedded=true"></iframe>
+                    <!--
+                    <iframe width="100%" height="900px"
+                            src="https://docs.google.com/document/d/1-NPnegdLRfGoECOjKOV_5ubDbX7grgeJQFeBwjBXSIw/pub?embedded=true"></iframe>
+-->
 
                 </uib-tab>
-                -->
+
 
 
 
