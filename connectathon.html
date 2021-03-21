@@ -1158,13 +1158,14 @@
                     <br/>
 
                     <table class="table table-condensed">
-                        <tr><th>Name</th><th>Version</th><th>Description</th><th>Package</th><th>Tracks</th>
+                        <tr><th>Name</th><th>Description</th><th>Package</th><th>Version</th><th>Tracks</th>
                             <th>External link</th><th>View in Registry</th><th>Edit</th></tr>
                         <tr ng-repeat="ig in allIGs">
                             <td>{{ig.name}}</td>
-                            <td>{{ig.version}}</td>
+
                             <td>{{ig.description}}</td>
                             <td>{{ig.package}}</td>
+                            <td>{{ig.version}}</td>
                             <td>
                                 <div ng-repeat="track in tracks">
                                     <div ng-repeat = "tig in track.IGs">

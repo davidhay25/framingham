@@ -13,10 +13,10 @@ require('events').EventEmitter.prototype._maxListeners = 100;
 var express = require('express');
 var request = require('request');
 var session = require('express-session');
-var jwt = require('jsonwebtoken');
+//var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 
-var touchStone = require('myModules/touchstoneModule');
+//var touchStone = require('myModules/touchstoneModule');
 
 var fs = require('fs');
 
@@ -95,7 +95,7 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
                 } else {
 
                     dbKeys = result;
-console.log(result)
+//console.log(result)
                     dbKeys.forEach(function(item){
                         hashDataBases[item.key] = client.db(item.key);
                     });
@@ -151,7 +151,7 @@ console.log(result)
 app.use(session({
     secret: 'conManRules-OK?',
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,        //was false
     cookie: { secure: false }   // secure cookies need ssl...
 }));
 
@@ -216,7 +216,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended:true,limit:'50mb',type:'
 app.use(jsonParser);
 app.use(urlencodedParser);
 
-touchStone.setup(app);      //initialize the routes in touchstone
+//touchStone.setup(app);      //initialize the routes in touchstone
 
 
 
@@ -282,7 +282,7 @@ app.get('/public/getUsers/:key',function(req,res){
             } else {
                 req.session['config'] = {key:key};      //record the database key in the session
 
-                console.log(result)
+                //console.log(result)
 
                 //remove all the passwords!
                 result.forEach(function (user) {
@@ -334,7 +334,7 @@ app.post('/public/setEvent',function(req,res) {
     if (hashDataBases[event.key]) {
         req.session['config'] = {key: event.key};      //record the database key in the session
 
-        res.json({});
+        res.json(req.session['config']);
     } else {
         res.status(400).send({msg:'Invalid event key:'+event.key})
     }

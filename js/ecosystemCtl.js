@@ -70,6 +70,7 @@ angular.module("sampleApp")
 
                 $http.post('/public/setEvent',{key:eventCode}).then(
                     function (data) {
+                        console.log(data)
                         //now get the event configuration from the event database (admin).
                         $http.get("config/admin/").then(
                             function(data) {
