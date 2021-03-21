@@ -179,6 +179,8 @@
 
     <script src="js/querySvc.js"></script>
     <script src="js/importTrack.js"></script>
+    <!---->
+    <script src="js/igCtrl.js"></script>
 
 
     <!-- for the 3d graph
@@ -197,7 +199,7 @@
     <nav class="navbar navbar-default navbar-fixed-top" ng-style="navBarStyle" role="navigation">
 
         <div class="container-fluid row">
-            <div class="col-md-8 col-sm-8">
+            <div class="col-md-6 col-sm-6">
                 <div>
                     <a class="navbar-brand" href="#">
                         Connectathon Manager: {{eventConfig.name}}
@@ -218,17 +220,8 @@
             </div>
 
 
-            <div class="col-md-1 col-sm-1">
 
 
-            </div>
-            <div class="col-md-1 col-sm-1">
-                <div class="navbar-text pull-right">
-                    <button class="btn btn-primary pull-right"
-                            ng-click="refresh()">Refresh</button>
-
-                </div>
-            </div>
             <div class="col-md-2 col-sm-2">
 
                 <div class="navbar-text">
@@ -253,6 +246,25 @@
 
             </div>
 
+
+            <div class="col-md-1 col-sm-1">
+                <div class="navbar-text pull-right">
+
+                    <i style="padding-top: 12px; padding-left: 10px"
+                       class="glyphicon glyphicon-refresh" ng-click="refresh()"></i>
+                    <!--
+                    <button class="btn btn-primary pull-right"
+                            ng-click="refresh()">Refresh</button>
+-->
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-3">
+                <div class="navbar-text pull-right">
+                    <img  src="/icons/supported_by_lyniate.png"/>
+                </div>
+
+            </div>
         </div>
     </nav>
 
@@ -333,8 +345,9 @@
 
                         </div>
 
-                        <div class="col-sm-10 col-md-10" ng-show="selectedTrack">
+                        <div class="col-sm-10 col-md-10">
 
+                            <div  ng-show="selectedTrack">
                             <uib-tabset>
                                 <uib-tab heading="Description">
                                     <br/>
@@ -576,9 +589,19 @@
                                                     -->
                                                     {{selectedTrack.trackSubType}}
 
-<!--
-                                                    <div style="padding-top: 8px">X{{trackTypes[selectedTrack.trackType]}}</div>
--->
+                                                    <div ng-show="selectedTrack.IG">
+                                                        <br/>
+                                                        <strong>IG name: </strong>{{selectedTrack.IG.name}}
+
+                                                        <a ng-href="https://registry.fhir.org/package/{{selectedTrack.IG.package}}%7c{{selectedTrack.IG.version}}"
+                                                           target="_blank">({{selectedTrack.IG.package}})</a>
+
+
+                                                        <div>{{selectedTrack.IG.description}}</div>
+
+
+                                                    </div>
+
                                                 </div>
                                                 <div class="col-sm-6 col-md-6">
                                                     <strong>Leads</strong>
@@ -921,11 +944,13 @@
 
 
                                 </uib-tab>
+                                <!--
                                 <uib-tab heading="Details page" ng-show="iframeUrl !== 'about:blank'">
                                     <br/>
                                     <iframe ng-src="{{iframeUrl | trustAsResourceUrl}}" height="800px" width="100%"></iframe>
 
                                 </uib-tab>
+                                -->
                                 <uib-tab>
                                     <uib-tab-heading>
                                         Servers <span class="badge">{{getServersForTrack(selectedTrack.id).length}}</span>
@@ -1067,7 +1092,7 @@
 
                                 <uib-tab>
                                     <uib-tab-heading>
-                                        Testing <span class="badge"
+                                        Testing <span ng-show="selectedTrack.scenarios.length > 0" class="badge"
                                               uib-popover=" Pass /  Fail /  Partial /  Note"
                                               popover-placement="top"
                                               popover-append-to-body = true
@@ -1075,22 +1100,82 @@
                                         {{resultsSummary.resultTotals.pass}} / {{resultsSummary.resultTotals.fail}} /
                                         {{resultsSummary.resultTotals.partial}} / {{resultsSummary.resultTotals.note}}</span>
                                     </uib-tab-heading>
+                                    <br/>
 
 
 
+                                    <div ng-show="selectedTrack.scenarios.length == 0">
+                                        <em>Testing can only be performed if the track defines scenarios against which tests
+                                            can be done..</em>
+                                    </div>
 
-                                    <ng-include src="'includes/testResult.html'"></ng-include>
+                                    <div ng-show="selectedTrack.scenarios.length > 0">
+                                        <ng-include src="'includes/testResult.html'"></ng-include>
+                                    </div>
+
+
                                 </uib-tab>
 
 
                             </uib-tabset>
 
+                            </div>
+
+
                         </div>
                     </div>
 
+
+
+
                 </uib-tab>
 
+                <uib-tab>
+                    <uib-tab-heading>
+                        Implementation Guides
+                        <span class="badge">{{allIGs.length}}</span>
+                    </uib-tab-heading>
+                    <br/>
 
+                    <table class="table table-condensed">
+                        <tr><th>Name</th><th>Version</th><th>Description</th><th>Package</th><th>Tracks</th>
+                            <th>External link</th><th>View in Registry</th><th>Edit</th></tr>
+                        <tr ng-repeat="ig in allIGs">
+                            <td>{{ig.name}}</td>
+                            <td>{{ig.version}}</td>
+                            <td>{{ig.description}}</td>
+                            <td>{{ig.package}}</td>
+                            <td>
+                                <div ng-repeat="track in tracks">
+                                    <div ng-show="track.IG._id && (track.IG._id == ig._id)">
+
+                                        <div class="clickable"
+                                                ng-click="selectTrack(track,'Select the track tab to view the track details')">
+                                            {{track.name}}
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <a ng-show="ig.link" ng-href="{{ig.link}}" target="_blank">View</a>
+                            </td>
+                            <td>
+                                <a ng-href="https://registry.fhir.org/package/{{ig.package}}%7c{{ig.version}}" target="_blank">View</a>
+                            </td>
+                            <td>
+                                <div class="clickable" ng-click="editIG(ig)">Edit</div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <button class="btn btn-link" ng-click="editIG()">Add new IG</button>
+
+<!--
+                    <pre>{{allIGs | json}}</pre>
+                    -->
+                </uib-tab>
 
                 <uib-tab heading = 'Event' ng-show="eventConfig.details">
                     <iframe ng-src="{{eventConfig.details | trustAsResourceUrl}}" height="800px" width="100%"></iframe>
@@ -2164,6 +2249,8 @@
         <p>Would indicate the MiHIN 2018 Connectathon. If you don't know what the event code is, you'll
         need to contact the connectathin organizer.</p>
     </div>
+
+
 
 
 </div>

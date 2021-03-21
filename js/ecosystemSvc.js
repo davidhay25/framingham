@@ -138,6 +138,7 @@ angular.module("sampleApp").service('ecosystemSvc',
     var eventConfig = {};
     var serverRoleSummary;
     var allResults = {};
+    let allIGs = []
 
 
     if (!String.prototype.startsWith) {
@@ -206,10 +207,46 @@ angular.module("sampleApp").service('ecosystemSvc',
 
     return {
 
+
+
         setProfilesCache : function(cache) {
             profilesCache = cache;
         },
-        getIGs : function(serverUrl) {
+
+        getIGs : function() {
+            return allIGs
+
+        },
+
+        addIG : function(ig){
+            var deferred = $q.defer();
+            $http.post("/ig",ig).then(
+                function(data){
+                    let ar = []
+
+
+                    allIGs.forEach(function (item) {
+                        if (item.id !== ig.id) {
+                            ar.push(item)
+                        }
+                    })
+
+                    ar.push(ig)
+
+                    ciSort(ar,name)
+                    allIGs = ar;
+
+                    deferred.resolve(ig)
+                }, function(err) {
+                    console.log(err);
+                    deferred.reject(err)
+                }
+            );
+            return deferred.promise;
+
+        },
+
+        getIGsDEP : function(serverUrl) {
             var deferred = $q.defer();
             //get all the Implementation Guides on the conformance server
             if (IGCacheByServer[serverUrl]) {
@@ -637,8 +674,6 @@ angular.module("sampleApp").service('ecosystemSvc',
 
         },
 
-
-
         makeResourceJsonV2DEP : function (resourceType,id,inTree) {
             var showLog = true;        //for debugging...
 
@@ -771,7 +806,6 @@ angular.module("sampleApp").service('ecosystemSvc',
                 }
 
         },
-
 
         makeResourceJsonV1DEP : function (type,id,table) {
             //construct the json for a single resource based on the table from the tblResourceDir
@@ -2156,6 +2190,8 @@ angular.module("sampleApp").service('ecosystemSvc',
             urls.push({url:'/config/scenario',"name":"scenarios"});
             urls.push({url:'/config/role',"name":"roles"});
 
+            urls.push({url:'/config/ig',"name":"igs"});
+
             urls.push({url:'/client',"name":"clients"});
             urls.push({url:'/server',"name":"servers"});
             urls.push({url:'/result',"name":"results"});
@@ -2195,7 +2231,9 @@ angular.module("sampleApp").service('ecosystemSvc',
                     allPersons = vo.persons;    //scoped to service
                     ciSort(allPersons,'name');
 
-
+                    console.log(vo.igs)
+                    allIGs = vo.igs;
+                    ciSort(allIGs,'name')
                     hashAllPersons = {};
                     allPersons.forEach(function(p){
                         hashAllPersons[p.id] = p;

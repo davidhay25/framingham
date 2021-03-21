@@ -8,7 +8,7 @@ angular.module("sampleApp")
             $scope.trackTypes = trackTypes;
             $scope.isNew = isNew;
 
-
+            $scope.allIGs = ecosystemSvc.getIGs()
 
 
             //default servers...
@@ -72,13 +72,22 @@ angular.module("sampleApp")
                     })
                 }
 
+                if (track.IG) {
+                    $scope.allIGs.forEach(function (ig) {
+                        if (ig._id == track.IG._id) {
+                            $scope.input.IG = ig;
+                        }
+                    })
+                }
+
+                /*
                 //if the event type has been set to clincial, then all tracks should be scenario - will probably drop 'lmreview'
                 if (event && event.type) {
                     if (event.type == 'clincial') {
                         track.trackType = 'scenario';
                     }
                 }
-
+*/
                 track.trackType = 'technical' ;//track.trackType || 'technical' ;      //default to technical
 
                 if (track.leadIds && track.leadIds.length > 0 && $scope.currentUser) {
@@ -103,6 +112,7 @@ angular.module("sampleApp")
 
             }
 
+/*
             $scope.findIGs = function(serverUrl) {
                 //console.log('blur')
                 $scope.IGs = $scope.IGs || [];
@@ -110,7 +120,6 @@ angular.module("sampleApp")
                 ecosystemSvc.getIGs(serverUrl).then(
                     function (list) {
                         $scope.IGs = list
-                       // console.log(list)
 
                         //set the currently selected IG (if any)
                         if (track.IG) {
@@ -120,8 +129,6 @@ angular.module("sampleApp")
                                 }
                             })
                         }
-
-
                     },
 
                     function(err) {
@@ -132,7 +139,7 @@ angular.module("sampleApp")
 
             $scope.findIGs($scope.input.confServer)
 
-
+*/
             $scope.addLink = function() {
 
 
@@ -203,9 +210,6 @@ angular.module("sampleApp")
 
             $scope.save = function(){
 
-
-
-
                 if ($scope.input.trackLead) {
                     $scope.track.leadIds = $scope.track.leadIds || [];
                     $scope.track.leadIds[0] = $scope.input.trackLead.id;
@@ -215,6 +219,7 @@ angular.module("sampleApp")
 
                 //var clone = angular.copy($scope.track)
                 //$scope.track.scenarios.length = 0;
+
                 if ($scope.track.scenarioIds && $scope.track.scenarios) {
                     $scope.track.scenarioIds.length = 0;
 
@@ -226,22 +231,28 @@ angular.module("sampleApp")
 
 
                 //track.url = $scope.clone.url;
-
+/*
                 $scope.track.termServer = $scope.input.termServer;
                 $scope.track.confServer = $scope.input.confServer ;
                 $scope.track.dataServer = $scope.input.dataServer;
 
                 $scope.track.LM = $scope.input.LM ;
-
+*/
                 if ($scope.input.IG) {
-                    $scope.track.IG = {id:$scope.input.IG.id,name:$scope.input.IG.name}
-                    $scope.track.IG.url = $scope.track.confServer + "ImplementationGuide/"+$scope.input.IG.id;
+                    $scope.track.IG = $scope.input.IG
+
+                   // $scope.track.IG = {id:$scope.input.IG.id,name:$scope.input.IG.name}
+                   // $scope.track.IG.url = $scope.track.confServer + "ImplementationGuide/"+$scope.input.IG.id;
+
+
                 } else {
                     delete $scope.track.IG;
                 }
 
-                //$scope.track.subType =
+                $scope.$close({track:$scope.track,lead:$scope.input.trackLead})
 
+                //$scope.track.subType =
+/*
                 if ($scope.track.trackType == "scenario" || $scope.track.allowGraph) {
                     //load the supported resource types
                     let url = $scope.track.confServer + 'metadata';
@@ -274,7 +285,7 @@ angular.module("sampleApp")
                 } else {
                     $scope.$close({track:$scope.track,lead:$scope.input.trackLead})
                 }
-
+*/
 
             };
 

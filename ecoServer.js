@@ -449,6 +449,19 @@ app.post('/client',function(req,res){
     })
 });
 
+//================= IG's ==========
+
+app.post('/IG',function(req,res){
+    var IG = req.body
+    req.selectedDbCon.collection("ig").update({id:IG.id},IG,{upsert:true},function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+});
+
 //================================ servers =======================
 //get all servers
 app.get('/server',function(req,res){

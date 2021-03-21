@@ -19,10 +19,10 @@
     <div class="modal-body">
 
         <div class="row">
-            <div class="col-md-2 col-sm-2">
+            <div class="col-md-3 col-sm-3">
                 Name
             </div>
-            <div class="col-md-10 col-sm-10">
+            <div class="col-md-9 col-sm-9">
                 <input class="form-control" ng-model="track.name"/>
             </div>
         </div>
@@ -30,7 +30,7 @@
         <br/>
 
         <div class="row">
-            <div class="col-md-2 col-sm-2">
+            <div class="col-md-3 col-sm-3">
                 Track Lead
             </div>
             <div class="col-md-4 col-sm-4">
@@ -44,20 +44,20 @@
         <br/>
 
         <div class="row">
-            <div class="col-sm-2 col-md-2">
+            <div class="col-sm-3 col-md-3">
                 Details Page
             </div>
-            <div class="col-sm-10 col-md-10">
+            <div class="col-sm-9 col-md-9">
                 <input class="form-control" ng-model="track.url" placeholder="Full url (including http://.. to the link">
             </div>
         </div>
         <br/>
 
         <div class="row">
-            <div class="col-sm-2 col-md-2">
+            <div class="col-sm-3 col-md-3">
                 Event chat
             </div>
-            <div class="col-sm-10 col-md-10">
+            <div class="col-sm-9 col-md-9">
                 <input class="form-control" ng-model="track.chat" placeholder="Full url (including http://.. to the event chat">
             </div>
         </div>
@@ -66,15 +66,16 @@
 
         <!-- This is the connectathon type - not the previous type-->
         <div class="row">
-            <div class="col-sm-2 col-md-2">
+            <div class="col-sm-3 col-md-3">
                 Track type
             </div>
-            <div class="col-sm-10 col-md-10">
+            <div class="col-sm-9 col-md-9">
                 <div class="btn-group">
                     <label class="btn btn-primary" ng-model="track.trackSubType" uib-btn-radio="'igreview'">IG Review</label>
                     <label class="btn btn-primary" ng-model="track.trackSubType" uib-btn-radio="'training'">Training</label>
-                    <label class="btn btn-primary" ng-model="track.trackSubType" uib-btn-radio="'codereview'">Code Review</label>
-
+                    <label class="btn btn-primary" ng-model="track.trackSubType" uib-btn-radio="'resourcetest'">Resource test</label>
+                    <label class="btn btn-primary" ng-model="track.trackSubType" uib-btn-radio="'assocspec'">Associated spec. test</label>
+                    
                 </div>
                 <!--
                 <div>{{trackTypes[track.trackType]}}</div>
@@ -85,6 +86,26 @@
         <br/>
 
 
+        <div class="row"  ng-show="track.trackSubType == 'igreview'">
+            <div class="col-sm-3 col-md-3">
+                Implementation Guide
+            </div>
+
+            <div class="col-sm-8 col-md-8">
+                <select class="form-control" ng-model="input.IG"
+                        ng-options="ig.name + ' (' + ig.description + ')' for ig in allIGs">
+
+                </select>
+            </div>
+<!--
+            <div class="col-sm-1 col-md-1">
+                <i class="clickable glyphicon glyphicon-option-horizontal"
+                   title="Select server" ng-click="selectServer('termServer')">
+                </i>
+            </div>
+            -->
+
+        </div>
 
 
         <!--
@@ -144,6 +165,10 @@
         <br/>
 
         -->
+
+
+
+
 
         <uib-tabset>
             <uib-tab heading="Description">
@@ -260,6 +285,7 @@
                         </i>
                     </div>
                 </div>
+                <!--
                 <div class="row" ng-hide="track.trackType == 'lmreview'">
                     <div class="col-sm-3 col-md-3" >
                         Conformance Server
@@ -273,6 +299,8 @@
                         </i>
                     </div>
                 </div>
+
+                -->
                 <div class="row" ng-hide="track.allowDirectSample || track.trackType == 'lmreview'">
                     <div class="col-sm-3 col-md-3">
                         Data Server
@@ -286,6 +314,7 @@
                         </i>
                     </div>
                 </div>
+                <!--
                 <div class="row"  ng-show="track.trackType == 'lmreview'">
                     <div class="col-sm-3 col-md-3">
                         Logical Model
@@ -294,6 +323,7 @@
                         <input class="form-control"  placeholder="Direct URL to model" ng-model="input.LM"/>
                     </div>
                 </div>
+-->
 
                 <div class="row"  ng-show="track.trackType == 'scenario'">
                     <div class="col-sm-3 col-md-3">

@@ -113,7 +113,7 @@ angular.module("sampleApp")
                                 }
                             },
                             function(err) {
-                                alert('There was an error in logging in. Please contact the event organizers.')
+                                alert("There was an error in logging in. Please contact the event organizers. Note that conMan doesn't work in the Brave browser at the moment.")
                                 console.log(err)
                             }
                         );
@@ -264,6 +264,20 @@ angular.module("sampleApp")
             $scope.chartColors = []; //'#00cc00', '#cc3300', '#ffff99']
             $scope.chartOptions = {legend:{display:true}};
 
+
+            $scope.editIG = function (IG) {
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/editIG.html',
+                    controller: 'igCtrl',
+                    resolve : {
+                        IG: function(){
+                            return IG;
+                        }
+                    }
+                }).result.then(function(){
+                    $scope.allIGs = ecosystemSvc.getIGs()
+                })
+            }
 
             $scope.getScenarioDescription = function(scenario) {
                 return $filter('markDown')(scenario.description)
@@ -529,6 +543,10 @@ angular.module("sampleApp")
             var loadData = function(cb){
                 ecosystemSvc.getConnectathonResources().then(
                     function(vo) {
+
+                        $scope.allIGs = ecosystemSvc.getIGs()
+
+
 console.log(vo);
                         ecosystemSvc.makeAllScenarioSummary(vo.scenarioGraph,vo.tracks).then(
                             function(data) {
@@ -1215,7 +1233,7 @@ console.log(vo);
 
             }
 
-            $scope.selectTrack = function(track) {
+            $scope.selectTrack = function(track,showMessage) {
                 delete $scope.selectedScenario;
                 delete $scope.selectedRole;
                 delete $scope.input.selectedTrackPerson;
@@ -1253,12 +1271,9 @@ console.log(vo);
 
                 });
 
-                //and those with this as a Track Of Interest
-
-
-
-
-
+                if (showMessage) {
+                    alert(showMessage)
+                }
 
             };
 
