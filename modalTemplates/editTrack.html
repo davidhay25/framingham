@@ -75,7 +75,7 @@
                     <label class="btn btn-primary" ng-model="track.trackSubType" uib-btn-radio="'training'">Training</label>
                     <label class="btn btn-primary" ng-model="track.trackSubType" uib-btn-radio="'resourcetest'">Resource test</label>
                     <label class="btn btn-primary" ng-model="track.trackSubType" uib-btn-radio="'assocspec'">Associated spec. test</label>
-                    
+
                 </div>
                 <!--
                 <div>{{trackTypes[track.trackType]}}</div>
@@ -88,14 +88,33 @@
 
         <div class="row"  ng-show="track.trackSubType == 'igreview'">
             <div class="col-sm-3 col-md-3">
-                Implementation Guide
+                Implementation Guide/s
             </div>
 
-            <div class="col-sm-8 col-md-8">
-                <select class="form-control" ng-model="input.IG"
-                        ng-options="ig.name + ' (' + ig.description + ')' for ig in allIGs">
+            <div class="col-sm-9 col-md-9">
+                <table class="table table-condensed table-bordered">
+                    <tr ng-repeat = "ig in track.IGs track by $index">
+                        <td>{{ig.name}}</td>
+                        <td>{{ig.description}}</td>
+                        <td><i class="glyphicon glyphicon-remove-circle clickable" ng-click="removeIG(ig)"/> </td>
+                    </tr>
+                </table>
 
-                </select>
+
+                <div class="row">
+                    <div class="col-md-10 col-sm-10">
+                        <select class="form-control" ng-model="input.newIG"
+                                ng-options="ig.name + ' (' + ig.description + ')' for ig in allIGs">
+
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <button ng-show="input.newIG" class="btn btn-success" ng-click="addIG(input.newIG)">Add</button>
+                    </div>
+                </div>
+
+
+
             </div>
 <!--
             <div class="col-sm-1 col-md-1">

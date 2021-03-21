@@ -8,8 +8,38 @@ angular.module("sampleApp")
             $scope.trackTypes = trackTypes;
             $scope.isNew = isNew;
 
-            $scope.allIGs = ecosystemSvc.getIGs()
+            $scope.allIGs = []; ecosystemSvc.getIGs()
 
+
+
+            function setAvailableIgs() {
+                $scope.allIGs.length = 0;
+                ecosystemSvc.getIGs().forEach(function (ig) {
+                    let ar = $scope.track.IGs.filter(item => item.id == ig.id);
+                    if (ar.length == 0) {
+                        $scope.allIGs.push(ig)
+                    }
+                })
+            }
+
+
+            $scope.addIG = function(ig) {
+                $scope.track.IGs = $scope.track.IGs || []
+                $scope.track.IGs.push(ig)
+                setAvailableIgs()
+            }
+
+            $scope.removeIG = function(ig) {
+                let ar = []
+                $scope.track.IGs.forEach(function (tig) {
+                    if (tig.id !== ig.id) {
+                        ar.push(tig)
+                    }
+                })
+                $scope.track.IGs.length = 0;
+                $scope.track.IGs = ar;
+                setAvailableIgs()
+            }
 
             //default servers...
             $scope.input.termServer = "https://ontoserver.csiro.au/stu3-latest/";
@@ -22,6 +52,9 @@ angular.module("sampleApp")
                     $scope.servers = data.data
                 }
             );
+
+
+
 
             $scope.selectServer = function(key){
 
@@ -55,7 +88,8 @@ angular.module("sampleApp")
 
             if (track) {        //should always be true as the 'addTrack' sets a base track {id: name: roles: scenarioIds: };
                 $scope.track = track;
-
+                $scope.track.IGs = $scope.track.IGs || []
+                setAvailableIgs();      //IG's not already associated with this track...
                 $scope.exportTrack = angular.copy(track);   //a copy of the track to use as an export. Delete the non-design stuff
                 $scope.exportTrack.exportedTrack = true;    //so the imported knows it is legit
                 delete $scope.exportTrack.persons;
@@ -72,6 +106,7 @@ angular.module("sampleApp")
                     })
                 }
 
+
                 if (track.IG) {
                     $scope.allIGs.forEach(function (ig) {
                         if (ig._id == track.IG._id) {
@@ -79,6 +114,7 @@ angular.module("sampleApp")
                         }
                     })
                 }
+
 
                 /*
                 //if the event type has been set to clincial, then all tracks should be scenario - will probably drop 'lmreview'
@@ -112,37 +148,8 @@ angular.module("sampleApp")
 
             }
 
-/*
-            $scope.findIGs = function(serverUrl) {
-                //console.log('blur')
-                $scope.IGs = $scope.IGs || [];
-                $scope.IGs.length =0;
-                ecosystemSvc.getIGs(serverUrl).then(
-                    function (list) {
-                        $scope.IGs = list
 
-                        //set the currently selected IG (if any)
-                        if (track.IG) {
-                            list.forEach(function (item) {
-                                if (item.id == track.IG.id) {
-                                    $scope.input.IG = item;
-                                }
-                            })
-                        }
-                    },
-
-                    function(err) {
-                        console.log('Error accessing conformance server ',err)
-                    }
-                );
-            };
-
-            $scope.findIGs($scope.input.confServer)
-
-*/
             $scope.addLink = function() {
-
-
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addLinkToScenario.html',
                     //size: 'lg',
@@ -162,6 +169,7 @@ angular.module("sampleApp")
                 })
 
             };
+
             $scope.removeLink = function(inx){
                 $scope.track.links.splice(inx,1)
             };

@@ -281,22 +281,7 @@
                     <br/>
                     <div class="row">
                         <div class="col-sm-2 col-md-2">
-<!--
-                            <div class="row" style="margin-bottom: 20px">
-                                <div class="col-sm-12 col-md-12">
 
-                                    <div ng-hide="eventConfig.type">
-                                        <div class="btn-group">
-                                            <label class="btn btn-default" ng-model="input.trackListDisplay" uib-btn-radio="'all'">All</label>
-                                            <label class="btn btn-default" ng-model="input.trackListDisplay" uib-btn-radio="'technical'">Technical</label>
-                                            <label class="btn btn-default" ng-model="input.trackListDisplay" uib-btn-radio="'clinical'">Clinical</label>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            -->
 
                             <div ng-hide="tracks">
                                 <br/>
@@ -567,10 +552,6 @@
                                     </div>
 
 
-
-
-
-
                                     <div class="row">
                                         <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
@@ -589,15 +570,25 @@
                                                     -->
                                                     {{selectedTrack.trackSubType}}
 
-                                                    <div ng-show="selectedTrack.IG">
+                                                    <div ng-show="selectedTrack.IGs">
                                                         <br/>
-                                                        <strong>IG name: </strong>{{selectedTrack.IG.name}}
 
-                                                        <a ng-href="https://registry.fhir.org/package/{{selectedTrack.IG.package}}%7c{{selectedTrack.IG.version}}"
-                                                           target="_blank">({{selectedTrack.IG.package}})</a>
+                                                        <table class="table table-bordered table-condensed">
+                                                            <tr ng-repeat="ig in selectedTrack.IGs track by $index">
+                                                                <td>{{ig.name}}</td>
+                                                                <td>{{ig.description}}</td>
+                                                                <td>
+                                                                    <div ng-show="ig.package && ig.version">
+                                                                        <a ng-href="https://registry.fhir.org/package/{{ig.package}}%7c{{ig.version}}"
+                                                                           target="_blank">({{ig.package}})</a>
+                                                                    </div>
+
+                                                                </td>
+                                                            </tr>
+                                                        </table>
 
 
-                                                        <div>{{selectedTrack.IG.description}}</div>
+
 
 
                                                     </div>
@@ -1147,22 +1138,27 @@
                             <td>{{ig.package}}</td>
                             <td>
                                 <div ng-repeat="track in tracks">
-                                    <div ng-show="track.IG._id && (track.IG._id == ig._id)">
-
-                                        <div class="clickable"
-                                                ng-click="selectTrack(track,'Select the track tab to view the track details')">
-                                            {{track.name}}
+                                    <div ng-repeat = "tig in track.IGs">
+                                        <div ng-show="tig.id == ig.id">
+                                            <div class="clickable"
+                                                 ng-click="selectTrack(track,'Select the track tab to view the track details')">
+                                                {{track.name}}
+                                            </div>
                                         </div>
-
-
                                     </div>
+
+
                                 </div>
                             </td>
                             <td>
+
                                 <a ng-show="ig.link" ng-href="{{ig.link}}" target="_blank">View</a>
                             </td>
                             <td>
-                                <a ng-href="https://registry.fhir.org/package/{{ig.package}}%7c{{ig.version}}" target="_blank">View</a>
+                                <div ng-show="ig.package && ig.version">
+                                    <a ng-href="https://registry.fhir.org/package/{{ig.package}}%7c{{ig.version}}" target="_blank">View</a>
+                                </div>
+
                             </td>
                             <td>
                                 <div class="clickable" ng-click="editIG(ig)">Edit</div>
