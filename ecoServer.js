@@ -155,11 +155,12 @@ app.use(function (req, res, next) {
         //are we in a user session?
 
         var config = req.session['config'];         //the configuration for this user
-//console.log('session check',config)
+console.log('session check',url,config)
         if (config && config.key) {
             //yep - there is a session...
             //there is a config and a key - this user
             var db = hashDataBases[config.key];     //the database connection
+
             if (db) {
                 req.selectedDbCon = db;
                 next()
