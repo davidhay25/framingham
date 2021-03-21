@@ -20,7 +20,7 @@ var bodyParser = require('body-parser');
 
 var fs = require('fs');
 
-var manageMod = require('./ecoModule');
+//var manageMod = require('./ecoModule');
 
 
 var hashDataBases = {};         //hash for all connected databases
@@ -95,7 +95,6 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
                 } else {
 
                     dbKeys = result;
-//console.log(result)
                     dbKeys.forEach(function(item){
                         hashDataBases[item.key] = client.db(item.key);
                     });
@@ -104,52 +103,21 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
             }
         });
 
-/*
 
-        //all the different databases on this server...
-        dbKeys.forEach(function(item){
-            hashDataBases[item.key] = client.db(item.key);
-        });
-*/
 
         //initialize the management module
-        manageMod.setup(app,hashDataBases);
+        //manageMod.setup(app,hashDataBases);
 
         //at server startup, read all the scenarios. We need this when creating the TestReport resource. it is neverupdated (at the moment)
 
-        /* todo - move this to another place
 
-        TODO DON'T DELETE UNTIL THAT HAS BEEN DONE
-
-        db.collection("track").find({}).toArray(function(err,result){
-            if (err) {
-                console.log('Unable to load the tracks!')
-            } else {
-                result.forEach(function (track) {
-                    hashTrack[track.id] = track;
-                })
-            }
-        });
-
-        db.collection("scenario").find({}).toArray(function(err,result){
-            if (err) {
-                console.log('Unable to load the scenarios!')
-            } else {
-                result.forEach(function (scenario) {
-                    hashScenario[scenario.id] = scenario;
-                })
-            }
-        })
-
-
-        */
 
     }
 });
 
 //initialize the session...
 app.use(session({
-    secret: 'conManRules-OK?',
+    secret: 'conManRules-OK',
     resave: false,
     saveUninitialized: true,        //was false
     cookie: { secure: false }   // secure cookies need ssl...
@@ -187,7 +155,7 @@ app.use(function (req, res, next) {
         //are we in a user session?
 
         var config = req.session['config'];         //the configuration for this user
-
+//console.log('session check',config)
         if (config && config.key) {
             //yep - there is a session...
             //there is a config and a key - this user
@@ -200,6 +168,7 @@ app.use(function (req, res, next) {
             }
         } else {
             //not in a user session...
+            console.log('no session ' + url)
             next();
         }
     }
@@ -330,7 +299,7 @@ app.get('/event/detail/:key',function(req,res){
 //sets the session for the specified event...
 app.post('/public/setEvent',function(req,res) {
     var event = req.body;
-    console.log(event)
+    console.log('setEvent',event)
     if (hashDataBases[event.key]) {
         req.session['config'] = {key: event.key};      //record the database key in the session
 
@@ -383,7 +352,7 @@ app.get('/proxyfhir/*',function(req,res) {
             var err = error || body;
             res.send(err,500)
         } else if (response && response.statusCode !== 200) {
-            console.log(response.statusCode)
+            //console.log(response.statusCode)
             res.send(body,response.statusCode);//,'binary')
         } else {
             res.send(body);//,'binary')
@@ -730,7 +699,7 @@ app.get('/scenarioGraph',function(req,res) {
             res.send(err,500)
         } else {
             if (result.length > 0) {
-                console.log(result)
+                //console.log(result)
                 res.send(result)
             } else {
                 res.send([])
@@ -930,6 +899,7 @@ app.post('/lmCheckComment',function(req,res) {
 
 app.get('/config/:type',function(req,res){
     var type = req.params.type;
+
     req.selectedDbCon.collection(type).find({status : {$ne : 'deleted' }}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
@@ -937,6 +907,7 @@ app.get('/config/:type',function(req,res){
             res.send(result)
         }
     })
+
 });
 
 //todo - the uploaded won;t work no more....
@@ -1016,7 +987,7 @@ app.post('/track',function(req,res){
                 console.log(err)
                 res.send(err,500)
             } else {
-                console.log(result.result.n)
+                //console.log(result.result.n)
                 if (result.result.n == 0) {     //no matches found
                     //no updates, this is a new document
                     console.log('inserting...')

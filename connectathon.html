@@ -201,7 +201,7 @@
         <div class="container-fluid row">
             <div class="col-md-5 col-sm-5">
                 <div>
-                    <a class="navbar-brand" href="#">
+                    <a class="navbar-brand" style="padding-top: 24px" href="#">
                         Connectathon Manager: {{eventConfig.name}}
                         <!--
                         <span ng-hide="eventConfig">No event specified.</span>
@@ -251,6 +251,9 @@
                 <div class="navbar-text pull-right">
 
                     <i style="padding-top: 12px; padding-left: 10px"
+                       uib-popover="Refresh data"
+                       popover-placement="right"
+                       popover-trigger="'mouseenter'"
                        class="glyphicon glyphicon-refresh" ng-click="refresh()"></i>
                     <!--
                     <button class="btn btn-primary pull-right"
