@@ -199,7 +199,7 @@
     <nav class="navbar navbar-default navbar-fixed-top" ng-style="navBarStyle" role="navigation">
 
         <div class="container-fluid row">
-            <div class="col-md-6 col-sm-6">
+            <div class="col-md-5 col-sm-5">
                 <div>
                     <a class="navbar-brand" href="#">
                         Connectathon Manager: {{eventConfig.name}}
@@ -222,7 +222,7 @@
 
 
 
-            <div class="col-md-2 col-sm-2">
+            <div class="col-md-3 col-sm-3">
 
                 <div class="navbar-text">
                     <div ng-show="ecosystemSvc.getCurrentUser()">
@@ -261,7 +261,10 @@
 
             <div class="col-md-3 col-sm-3">
                 <div class="navbar-text pull-right">
-                    <img  src="/icons/supported_by_lyniate.png"/>
+                    <a href="https://www.lyniate.com/" target="_blank">
+                        <img  src="/icons/supported_by_lyniate.png"/>
+                    </a>
+
                 </div>
 
             </div>
@@ -341,9 +344,26 @@
                                         <div class="col-sm-2 col-md-2">
                                             <strong>Description</strong>
                                         </div>
-                                        <div class="col-sm-9 col-md-9">
+                                        <div class="col-sm-6 col-md-6">
+
+
+
+
                                             <p ng-bind-html="selectedTrack.description | markDown"></p>
                                             <!--{{selectedTrack.description}}-->
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="col-sm-6 col-md-6">
+                                                <strong>Leads</strong>
+                                                <ul style="padding-top: 8px" class="list-unstyled">
+                                                    <li ng-repeat="lead in selectedTrack.leads">
+                                                        {{lead.name}}
+                                                        <div ng-show="contact.value" style="margin-left: 20px" ng-repeat="contact in lead.contact">
+                                                            {{contact.type}}: {{contact.value}}
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -555,12 +575,12 @@
                                     <div class="row">
                                         <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
-                                            <strong>Track type & leads</strong>
+                                            <strong>Track type</strong>
                                         </div>
                                         <div class="col-sm-10 col-md-10">
 
                                             <div class="row">
-                                                <div class="col-sm-6 col-md-6">
+                                                <div class="col-sm-12 col-md-12">
                                                     <strong>Track Type: </strong>
 <!--
                                                     <span uib-popover-html=trackTypes[selectedTrack.trackType]
@@ -574,15 +594,22 @@
                                                         <br/>
 
                                                         <table class="table table-bordered table-condensed">
+                                                            <tr><th>Name</th><th>Description</th><th>Package</th><th>Details</th></tr>
                                                             <tr ng-repeat="ig in selectedTrack.IGs track by $index">
                                                                 <td>{{ig.name}}</td>
                                                                 <td>{{ig.description}}</td>
                                                                 <td>
                                                                     <div ng-show="ig.package && ig.version">
                                                                         <a ng-href="https://registry.fhir.org/package/{{ig.package}}%7c{{ig.version}}"
-                                                                           target="_blank">({{ig.package}})</a>
+                                                                           target="_blank">{{ig.package}}</a>
                                                                     </div>
 
+                                                                </td>
+                                                                <td>
+                                                                    <div ng-show="ig.link">
+                                                                        <a ng-href="{{ig.link}}"
+                                                                           target="_blank">View</a>
+                                                                    </div>
                                                                 </td>
                                                             </tr>
                                                         </table>
@@ -594,6 +621,7 @@
                                                     </div>
 
                                                 </div>
+<!--
                                                 <div class="col-sm-6 col-md-6">
                                                     <strong>Leads</strong>
                                                     <ul style="padding-top: 8px" class="list-unstyled">
@@ -605,6 +633,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
+                                                -->
                                             </div>
 
 
