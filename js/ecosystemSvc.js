@@ -1634,6 +1634,29 @@ angular.module("sampleApp").service('ecosystemSvc',
 
         },
 
+        getIGResults : function() {
+            //generate a summary for all IGs
+            let result = {}
+            allIGs.forEach(function (IG) {
+                result[IG.id] = angular.copy(IG)
+                result[IG.id].results = []
+            })
+
+            angular.forEach(allResults,function(value,key) {
+                if (value.IG) {
+                    let igId = value.IG.id //the id of the IG
+                    let detail = {}
+                    detail.asserter = {name: value.asserter.name, id : value.asserter.id};
+                    detail.result = value.text;
+                    detail.note = value.note;
+                    detail.id = value.id;       //the Id of the test
+                    detail.track = {name:value.track.name}
+                    detail.scenario = {name:value.scenario.name}
+                    result[igId].results.push(detail)
+                }
+            })
+            return result
+        },
         getTrackResults : function(track) {
             //get a summary object for a track
             var summary = {total : 0, scenario : {},notes:[]}
@@ -1962,6 +1985,8 @@ angular.module("sampleApp").service('ecosystemSvc',
             resultToSave.type = result.type;
             resultToSave.text = result.text;
             resultToSave.note = result.note;
+            resultToSave.IG = result.IG;
+
             if (serverRole) {
                 resultToSave.server = {serverid:serverRole.server.id,roleid:serverRole.role.id,name:serverRole.server.name};
             }
@@ -1976,11 +2001,11 @@ angular.module("sampleApp").service('ecosystemSvc',
             if (result.asserter){
                 resultToSave.asserterid = result.asserter.id    //todo - should this be the whole object (like author)???
             }
-
+/*
             if ($localStorage.ecoCurrentUser) {
                 resultToSave.author = $localStorage.ecoCurrentUser;    //save the whole object.
             }
-
+*/
 
             $http.put("/result",resultToSave).then(
                 function(){
@@ -2418,6 +2443,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                                         result.type = dataResult.type;
                                         result.note = dataResult.note;
                                         result.trackers = dataResult.trackers;
+                                        result.IG = dataResult.IG;
                                         result.track = hashTrack[dataResult.trackid];
                                         if (!result.track) {
                                             alert("error processing track in result# " + dataResult.id);

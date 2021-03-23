@@ -597,14 +597,14 @@
                                                         <br/>
 
                                                         <table class="table table-bordered table-condensed">
-                                                            <tr><th>Name</th><th>Description</th><th>Package</th><th>Details</th></tr>
+                                                            <tr><th>Name</th><th>Description</th><th>Package / Version</th><th>Track page</th></tr>
                                                             <tr ng-repeat="ig in selectedTrack.IGs track by $index">
                                                                 <td>{{ig.name}}</td>
                                                                 <td>{{ig.description}}</td>
                                                                 <td>
                                                                     <div ng-show="ig.package && ig.version">
                                                                         <a ng-href="https://registry.fhir.org/package/{{ig.package}}%7c{{ig.version}}"
-                                                                           target="_blank">{{ig.package}}</a>
+                                                                           target="_blank">{{ig.package}} / {{ig.version}}</a>
                                                                     </div>
 
                                                                 </td>
@@ -987,10 +987,10 @@
                                             <td>{{server.description}}</td>
                                             <td>{{server.notes}}</td>
                                             <td><button class="btn btn-link" ng-click="editServer(server)">View</button> </td>
-
-
                                         </tr>
                                     </table>
+
+                                    <em>Servers where the server contact person has indicated suitability for this track</em>
 
 <!--
                                     <div ng-repeat = "server in allServers">
@@ -1792,7 +1792,7 @@
 
                 -->
 
-                <uib-tab>
+                <uib-tab select="IGTestReport()"">
                     <uib-tab-heading>
                         Test Results
                         <span class="badge" ng-show="ecosystemSvc.allResultsCount() > 0">{{ecosystemSvc.allResultsCount()}}</span>
@@ -1842,7 +1842,7 @@
                                             {{tracker.url}}
                                         </div>
                                     </td>
-                                    <!--<td>{{key}}</td>-->
+
 
                                 </tr>
                             </table>
@@ -2015,6 +2015,43 @@
 
                         </uib-tab>
 
+
+                        <uib-tab heading="Analysis by IG" >
+                            <br/>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="list-group">
+                                        <div ng-class="{'list-group-item':true,'listItemSelected':input.selectedIGTests.id == IG.id}"
+                                             ng-repeat = "(id,IG) in IGtests" style="cursor: pointer">
+                                            <span ng-show = "IG.results.length > 0" class="badge pull-right">{{IG.results.length}}</span>
+                                            <div ng-click="input.selectedIGTests = IG">{{IG.name}}</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-9">
+                                    <div ng-show="input.selectedIGTests.results.length ==0">
+                                        No tests have been recorded against this IG. Tests are recorded
+                                        for a scenario in a track, and the IG can be selected then.
+                                    </div>
+
+                                    <table class="table table-bordered" ng-show="input.selectedIGTests.results.length > 0">
+                                        <tr><th>Outcome</th><th>Asserter</th><th>Note</th><th>Track</th><th>Scenario</th></tr>
+                                        <tr ng-repeat="test in input.selectedIGTests.results">
+                                            <td>{{test.result}}</td>
+                                            <td>{{test.asserter.name}}</td>
+                                            <td>{{test.note}}</td>
+                                            <td>{{test.track.name}}</td>
+                                            <td>{{test.scenario.name}}</td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+
+
+
+                        </uib-tab>
 
                     </uib-tabset>
 <!--

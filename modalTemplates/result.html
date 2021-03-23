@@ -23,6 +23,8 @@
             <uib-tab heading="Test result">
 
                 <br/>
+
+
                 <div class="row">
                     <div class="col-md-2 col-sm-2">
                         Asserter
@@ -31,10 +33,31 @@
                         <input type="text" ng-model="input.asserter"
                                typeahead-on-select = "asserterSelected($item, $model, $label, $event)"
                                uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control">
-
                     </div>
                 </div>
                 <br/>
+
+                <div ng-show="IGs.length > 0">
+                    <div class="row" >
+                        <div class="col-md-2 col-sm-2">
+                            IG
+                        </div>
+                        <div class="col-md-8 col-sm-8">
+                            <div ng-show="IGs.length == 1">
+                                {{IGs[0].name}}
+                            </div>
+
+                            <div ng-show="IGs.length > 1">
+                                <select class="form-control" ng-model="input.selectedIG"
+                                        ng-options = "IG.name for IG in IGs"></select>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <br/>
+                </div>
+
 
                 <div class="row">
                     <div class="col-md-6 col-sm-6">

@@ -20,24 +20,16 @@ angular.module("sampleApp")
             //which track type to display
             $scope.input.trackListDisplay = 'all';     //can be changed by event.type...
 
+
+            //test results by IG
+            $scope.IGTestReport = function(){
+                $scope.IGtests = ecosystemSvc.getIGResults()
+            }
+
             $scope.showTrack = function(track) {
 
                 return true;
-/*
-                if ($scope.input.trackListDisplay == 'all') {
-                    return true;
-                } else if ($scope.input.trackListDisplay == 'clinical') {
-                    if (track.trackType == 'lmreview' || track.trackType == 'scenario' ) {
-                        return true
-                    }
-                }
-                else if ($scope.input.trackListDisplay == 'technical') {
-                    if (track.trackType == 'technical'  ) {
-                        return true
-                    }
-                }
 
-                */
             };
 
             //so the display of the track type can be different to the code
@@ -1031,11 +1023,12 @@ console.log(vo);
                     }
                 }).result.then(function(vo){
 
-
                     ecosystemSvc.addScenarioResult(track,scenario,client,server,vo);
                     //update the results summary
+
                     $scope.resultsSummary = ecosystemSvc.getTrackResults(track); //get a summary object for the results for a track
 
+                    //todo - no longer used - was a tab under trac details - ?remove
                     $scope.selectedTrackReport =  ecosystemSvc.getTrackResults(track);      //summary of this track...
 
 
