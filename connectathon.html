@@ -2036,9 +2036,17 @@
                                     </div>
 
                                     <table class="table table-bordered" ng-show="input.selectedIGTests.results.length > 0">
-                                        <tr><th>Outcome</th><th>Asserter</th><th>Note</th><th>Track</th><th>Scenario</th></tr>
+                                        <tr><th>Outcome</th><th>Client</th><th>Server</th><th>Asserter</th><th>Note</th><th>Track</th><th>Scenario</th></tr>
                                         <tr ng-repeat="test in input.selectedIGTests.results">
                                             <td>{{test.result}}</td>
+                                            <td>
+                                                {{test.client.name}} ({{test.client.role}})
+
+                                            </td>
+                                            <td>
+                                                {{test.server.name}} ({{test.server.role}})
+
+                                            </td>
                                             <td>{{test.asserter.name}}</td>
                                             <td>{{test.note}}</td>
                                             <td>{{test.track.name}}</td>

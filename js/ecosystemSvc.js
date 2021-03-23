@@ -1652,6 +1652,13 @@ angular.module("sampleApp").service('ecosystemSvc',
                     detail.id = value.id;       //the Id of the test
                     detail.track = {name:value.track.name}
                     detail.scenario = {name:value.scenario.name}
+                    try {
+                        detail.client = {name:value.client.client.name,role:value.client.role.name,systemRole: value.client.role.role}
+                        detail.server = {name:value.server.server.name,role:value.server.role.name,systemRole: value.server.role.role}
+                    } catch (ex) {
+
+                    }
+
                     result[igId].results.push(detail)
                 }
             })
