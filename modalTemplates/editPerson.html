@@ -27,6 +27,7 @@
                <input class="form-control" placeholder="Email address" ng-model = "input.email"></input>
             </div>
         </div>
+
         <br/>
         <div class="row">
             <div class="col-md-6 col-sm-6">
@@ -57,7 +58,7 @@
                 Tracks of Interest
             </div>
             <div class="col-md-7 col-sm-7">
-                <div class="row" ng-repeat="toi in tracksOfInterest">
+                <div class="row" ng-repeat="toi in tracksOfInterest track by $index">
                     <div class="col-sm-10 col-md-10">
                         {{toi.name}}
                     </div>
@@ -67,21 +68,35 @@
                         </i>
                     </div>
                 </div>
+            </div>
 
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-2 col-sm-2">
 
+            </div>
+            <div class="col-md-7 col-sm-7">
+                <select ng-model="input.interestTrack" class="form-control"
 
-                <select ng-show = "input.newTOI" ng-model="input.interestTrack" class="form-control"
-                        ng-change = "addTOI(input.interestTrack)"
                         ng-options = 'track as track.name for track in tracks'></select>
-
-                <button ng-hide="input.newTOI" class="btn btn-link pull-right" ng-click="input.newTOI = ! input.newTIO">Add</button>
-
+            </div>
+            <div class="col-md-2 col-sm-2">
+                <button ng-show="input.interestTrack"  class="btn btn-success pull-right"
+                        ng-click="addTOI(input.interestTrack)">Add</button>
             </div>
         </div>
 
+
+
+
+
+
+
+
         <br/>
 
-
+<!--
         <div class="row">
             <div class="col-sm-2 col-md-2">
                 Preferences
@@ -93,6 +108,8 @@
 
             </div>
         </div>
+
+        -->
 
         <div class="row">
             <div class="col-md-6 col-sm-6">

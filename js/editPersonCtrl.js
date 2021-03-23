@@ -7,22 +7,48 @@ angular.module("sampleApp")
             $scope.titleText = "Add new person";
 
             //$scope.tracks = [{name:''}];
-            $scope.tracks = [];
-            tracks.forEach(function (trck) {
-                $scope.tracks.push(trck);
-            });
 
-            $scope.tracks.sort(function(a,b){
-                if (a.name > b.name) {
-                    return 1
-                } else {
-                    return -1
-                }
-            });
+
+            function cleanTrackList() {
+                $scope.tracks = [];
+                tracks.forEach(function (trck) {
+                    let canAdd = true;
+/*
+                    if ($scope.input.primaryTrack && $scope.input.primaryTrack.id == trck.id) {
+                        canAdd = false
+                    }
+                    */
+                    if ($scope.tracksOfInterest) {
+                        if ($scope.tracksOfInterest.filter(item => item.id == trck.id).length > 0) {
+                            canAdd = false
+                        }
+                    }
+
+
+
+                    if (canAdd) {
+                        $scope.tracks.push(trck);
+                    }
+
+                });
+
+                $scope.tracks.sort(function(a,b){
+                    if (a.name > b.name) {
+                        return 1
+                    } else {
+                        return -1
+                    }
+                });
+
+            }
+            //cleanTrackList(person)
+
 
 
             var inputPerson;
             $scope.tracksOfInterest = [];
+
+
 
             if (person) {
                 //this is an update
@@ -40,6 +66,7 @@ angular.module("sampleApp")
                     }
                 });
 
+
                 if (person.primaryTrack) {
                     for (i=0; i < tracks.length;i++) {
                         t = tracks[i]
@@ -56,6 +83,8 @@ angular.module("sampleApp")
                     })
                 }
 
+                cleanTrackList(person)
+
                 $scope.saveText = "Update Person";
                 $scope.titleText = "Edit existing person";
             } else {
@@ -64,12 +93,20 @@ angular.module("sampleApp")
 
 
             $scope.addTOI = function(track) {
+                if ($scope.input.primaryTrack && $scope.input.primaryTrack.id == track.id) {
+                    alert('This is already the primary track')
+                    delete $scope.input.interestTrack
+                    return;
+                }
                 $scope.tracksOfInterest.push(track);
-                delete $scope.input.newTOI;
+                //delete $scope.input.newTOI;
+                cleanTrackList(person)
+                delete $scope.input.interestTrack
             }
 
             $scope.removeTOI = function(inx) {
                 $scope.tracksOfInterest.splice(inx,1)
+                cleanTrackList(person)
             }
 
             $scope.updatePerson = function(){
