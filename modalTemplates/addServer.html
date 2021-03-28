@@ -75,7 +75,8 @@
                 <br/>
                 <div class="row">
                     <div class="col-md-8 col-sm-8">
-                        <input type="text" class="form-control" ng-model="input.UIaddress" placeholder="The Url of any User Interface the server exposes"/>
+                        <input type="text" class="form-control" ng-model="input.UIaddress"
+                               placeholder="The Url of any User Interface the server exposes"/>
                     </div>
 
                     <div class="col-md-4 col-sm-4">
@@ -111,7 +112,8 @@
 
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
-                        <textarea class="form-control" rows="3" placeholder="An optional description of the server" ng-model = "input.description"></textarea>
+                        <textarea class="form-control" rows="3" placeholder="An optional description of the server"
+                                  ng-model = "input.description"></textarea>
 
                     </div>
                 </div>
@@ -258,6 +260,12 @@
 
         <div class="row">
             <div class="col-md-6 col-sm-6">
+                <div ng-show="input.address">
+                    <a target="_blank" ng-href = "http://clinfhir.com/query.html#{{input.address}}">
+                        Load clinFHIR Server Query for this server
+                    </a>
+
+                </div>
 
             </div>
             <div class="col-md-6 col-sm-6">

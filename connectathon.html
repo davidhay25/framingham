@@ -2040,12 +2040,16 @@
                                         <tr ng-repeat="test in input.selectedIGTests.results">
                                             <td>{{test.result}}</td>
                                             <td>
-                                                {{test.client.name}} ({{test.client.role}})
+                                                <div ng-show="test.client.name">
+                                                    {{test.client.name}} ({{test.client.role}})
+                                                </div>
+
 
                                             </td>
                                             <td>
-                                                {{test.server.name}} ({{test.server.role}})
-
+                                                <div ng-show="test.server.name">
+                                                    {{test.server.name}} ({{test.server.role}})
+                                                </div>
                                             </td>
                                             <td>{{test.asserter.name}}</td>
                                             <td>{{test.note}}</td>
