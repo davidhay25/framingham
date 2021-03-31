@@ -1,13 +1,6 @@
 add description for track sub type
 
-track has list of IG's (name, packageId)
-    IG 
-        packageId
-        name
-        description
-        pathToDocs
-
-tab for list of IG's
-    IG description
-    list of tracks
-    select 
+separate reporting app for IG's
+    work across miltiple events
+    aggregate tests from different events
+    allow direct user input? (but need to be event specific)

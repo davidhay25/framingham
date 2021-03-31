@@ -377,6 +377,173 @@
                                     <div class="row">
                                         <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
+                                            <strong>Track type</strong>
+                                        </div>
+                                        <div class="col-sm-10 col-md-10">
+
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-12">
+                                                    <strong>Track Type: </strong>
+
+                                                    {{selectedTrack.trackSubType}}
+
+                                                    <div ng-show="selectedTrack.IGs.length > 0">
+                                                        <br/>
+
+                                                        <table class="table table-bordered table-condensed">
+                                                            <tr><th>Name</th><th>Description</th><th>Package / Version</th><th>Track page</th></tr>
+                                                            <tr ng-repeat="ig in selectedTrack.IGs track by $index">
+                                                                <td>{{ig.name}}</td>
+                                                                <td>{{ig.description}}</td>
+                                                                <td>
+                                                                    <div ng-show="ig.package && ig.version">
+                                                                        <a ng-href="https://registry.fhir.org/package/{{ig.package}}%7c{{ig.version}}"
+                                                                           target="_blank">{{ig.package}} / {{ig.version}}</a>
+                                                                    </div>
+
+                                                                </td>
+                                                                <td>
+                                                                    <div ng-show="ig.link">
+                                                                        <a ng-href="{{ig.link}}"
+                                                                           target="_blank">View</a>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+
+
+
+
+
+                                                    </div>
+
+                                                </div>
+<!--
+                                                <div class="col-sm-6 col-md-6">
+                                                    <strong>Leads</strong>
+                                                    <ul style="padding-top: 8px" class="list-unstyled">
+                                                        <li ng-repeat="lead in selectedTrack.leads">
+                                                            {{lead.name}}
+                                                            <div ng-show="contact.value" style="margin-left: 20px" ng-repeat="contact in lead.contact">
+                                                                {{contact.type}}: {{contact.value}}
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                -->
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+<!--
+                                    <div class="row">
+                                        <hr class="trackBorder"/>
+                                        <div class="col-sm-2 col-md-2">
+                                            <strong>Track Leads</strong>
+                                        </div>
+                                        <div class="col-sm-10 col-md-10">
+                                            <ul class="list-unstyled">
+                                                <li ng-repeat="lead in selectedTrack.leads">
+                                                    {{lead.name}}
+                                                    <div ng-show="contact.value" style="margin-left: 20px" ng-repeat="contact in lead.contact">
+                                                        {{contact.type}}: {{contact.value}}
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    -->
+                                    <div  ng-show="selectedTrack.url">
+                                        <div class="row">
+                                            <hr class="trackBorder"/>
+                                            <div class="col-sm-2 col-md-2">
+                                                <strong>Confluence track page</strong>
+                                            </div>
+                                            <div class="col-sm-9 col-md-9">
+                                                <div ng-hide="selectedTrack.url">No Wiki page for this track.</div>
+                                                <a target="_blank" ng-show="selectedTrack.url"
+                                                   ng-href="{{selectedTrack.url}}">{{selectedTrack.url}}</a> (Opens in a new tab)
+
+                                            </div>
+
+                                        </div>
+                                        <br/>
+                                    </div>
+
+
+
+                                    <div ng-show="selectedTrack.chat">
+                                        <div class="row">
+                                            <hr class="trackBorder"/>
+                                            <div class="col-sm-2 col-md-2">
+                                                <strong>Chat link</strong>
+                                            </div>
+                                            <div class="col-sm-9 col-md-9">
+                                                <a target="_blank" ng-show="selectedTrack.chat"
+                                                   ng-href="{{selectedTrack.chat}}">{{selectedTrack.chat}}</a> (Opens in a new tab)
+
+                                            </div>
+                                        </div>
+                                        <br/>
+                                    </div>
+
+
+                                    <div ng-show="selectedTrack.links">
+                                        <div class="row">
+                                            <hr class="trackBorder"/>
+                                            <div class="col-sm-2 col-md-2">
+                                                <strong>General links</strong>
+                                            </div>
+
+                                            <div class="col-sm-9 col-md-9">
+
+                                                <table class="table">
+                                                    <tr ng-repeat="link in selectedTrack.links">
+                                                        <td>
+                                                            <a target="_blank"
+                                                               ng-href="{{link.url}}">{{link.name}}</a>
+
+                                                            <a ng-hide="link.name" target="_blank"
+                                                               ng-href="{{link.url}}">{{link.description}}</a>
+
+                                                        </td>
+                                                        </td>
+                                                        <td>{{link.description}}</td>
+                                                        <!--<td>
+                                                            {{link.url}}
+                                                            </td>-->
+                                                    </tr>
+
+                                                </table>
+                                                <em>Links of general interest to this track. Open in a separate tab</em>
+                                                <!--
+
+                                                                                           <ul class="list-unstyled">
+                                                                                               <li ng-repeat = "link in selectedTrack.links">
+                                                                                                   <a target="_blank"
+                                                                                                      ng-href="{{link.url}}">{{link.description}} ({{link.url}})</a>
+                                                                                               </li>
+                                                                                           </ul>
+                                                                                            -->
+
+
+                                            </div>
+                                        </div>
+                                        <br/>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <hr class="trackBorder"/>
+                                        <div class="col-sm-2 col-md-2">
                                             <strong>Scenarios</strong>
                                         </div>
                                         <div class="col-sm-10 col-md-10">
@@ -574,233 +741,6 @@
                                         </div>
                                     </div>
 
-
-                                    <div class="row">
-                                        <hr class="trackBorder"/>
-                                        <div class="col-sm-2 col-md-2">
-                                            <strong>Track type</strong>
-                                        </div>
-                                        <div class="col-sm-10 col-md-10">
-
-                                            <div class="row">
-                                                <div class="col-sm-12 col-md-12">
-                                                    <strong>Track Type: </strong>
-<!--
-                                                    <span uib-popover-html=trackTypes[selectedTrack.trackType]
-                                                          popover-placement="top"
-                                                          popover-trigger="'mouseenter'">
-                                                        {{trackTypeDisplay[selectedTrack.trackType]}}</span>
-                                                    -->
-                                                    {{selectedTrack.trackSubType}}
-
-                                                    <div ng-show="selectedTrack.IGs">
-                                                        <br/>
-
-                                                        <table class="table table-bordered table-condensed">
-                                                            <tr><th>Name</th><th>Description</th><th>Package / Version</th><th>Track page</th></tr>
-                                                            <tr ng-repeat="ig in selectedTrack.IGs track by $index">
-                                                                <td>{{ig.name}}</td>
-                                                                <td>{{ig.description}}</td>
-                                                                <td>
-                                                                    <div ng-show="ig.package && ig.version">
-                                                                        <a ng-href="https://registry.fhir.org/package/{{ig.package}}%7c{{ig.version}}"
-                                                                           target="_blank">{{ig.package}} / {{ig.version}}</a>
-                                                                    </div>
-
-                                                                </td>
-                                                                <td>
-                                                                    <div ng-show="ig.link">
-                                                                        <a ng-href="{{ig.link}}"
-                                                                           target="_blank">View</a>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-
-
-
-
-
-                                                    </div>
-
-                                                </div>
-<!--
-                                                <div class="col-sm-6 col-md-6">
-                                                    <strong>Leads</strong>
-                                                    <ul style="padding-top: 8px" class="list-unstyled">
-                                                        <li ng-repeat="lead in selectedTrack.leads">
-                                                            {{lead.name}}
-                                                            <div ng-show="contact.value" style="margin-left: 20px" ng-repeat="contact in lead.contact">
-                                                                {{contact.type}}: {{contact.value}}
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                -->
-                                            </div>
-
-
-                                        </div>
-                                    </div>
-
-
-
-
-
-
-<!--
-                                    <div class="row">
-                                        <hr class="trackBorder"/>
-                                        <div class="col-sm-2 col-md-2">
-                                            <strong>Track Leads</strong>
-                                        </div>
-                                        <div class="col-sm-10 col-md-10">
-                                            <ul class="list-unstyled">
-                                                <li ng-repeat="lead in selectedTrack.leads">
-                                                    {{lead.name}}
-                                                    <div ng-show="contact.value" style="margin-left: 20px" ng-repeat="contact in lead.contact">
-                                                        {{contact.type}}: {{contact.value}}
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <br/>
-                                    -->
-                                    <div  ng-show="selectedTrack.url">
-                                        <div class="row">
-                                            <hr class="trackBorder"/>
-                                            <div class="col-sm-2 col-md-2">
-                                                <strong>Confluence track page</strong>
-                                            </div>
-                                            <div class="col-sm-9 col-md-9">
-                                                <div ng-hide="selectedTrack.url">No Wiki page for this track.</div>
-                                                <a target="_blank" ng-show="selectedTrack.url"
-                                                   ng-href="{{selectedTrack.url}}">{{selectedTrack.url}}</a> (Opens in a new tab)
-
-                                            </div>
-
-                                        </div>
-                                        <br/>
-                                    </div>
-
-
-
-                                    <div ng-show="selectedTrack.chat">
-                                        <div class="row">
-                                            <hr class="trackBorder"/>
-                                            <div class="col-sm-2 col-md-2">
-                                                <strong>Chat link</strong>
-                                            </div>
-                                            <div class="col-sm-9 col-md-9">
-                                                <a target="_blank" ng-show="selectedTrack.chat"
-                                                   ng-href="{{selectedTrack.chat}}">{{selectedTrack.chat}}</a> (Opens in a new tab)
-
-                                            </div>
-                                        </div>
-                                        <br/>
-                                    </div>
-
-
-                                    <div ng-show="selectedTrack.links">
-                                        <div class="row">
-                                            <hr class="trackBorder"/>
-                                            <div class="col-sm-2 col-md-2">
-                                                <strong>General links</strong>
-                                            </div>
-
-                                            <div class="col-sm-9 col-md-9">
-
-                                                <table class="table">
-                                                    <tr ng-repeat="link in selectedTrack.links">
-                                                        <td>
-                                                            <a target="_blank"
-                                                               ng-href="{{link.url}}">{{link.name}}</a>
-
-                                                            <a ng-hide="link.name" target="_blank"
-                                                               ng-href="{{link.url}}">{{link.description}}</a>
-
-                                                        </td>
-                                                        </td>
-                                                        <td>{{link.description}}</td>
-                                                        <!--<td>
-                                                            {{link.url}}
-                                                            </td>-->
-                                                    </tr>
-
-                                                </table>
-                                                <em>Links of general interest to this track. Open in a separate tab</em>
-                                                <!--
-
-                                                                                           <ul class="list-unstyled">
-                                                                                               <li ng-repeat = "link in selectedTrack.links">
-                                                                                                   <a target="_blank"
-                                                                                                      ng-href="{{link.url}}">{{link.description}} ({{link.url}})</a>
-                                                                                               </li>
-                                                                                           </ul>
-                                                                                            -->
-
-
-                                            </div>
-                                        </div>
-                                        <br/>
-                                    </div>
-
-
-                                    <div ng-hide="selectedTrack.trackType == 'technical' && ! selectedTrack.allowGraph">
-                                        <div class="row">
-                                            <!--  <div class="row" ng-show="selectedTrack.confServer || selectedTrack.termServer || selectedTrack.LM">-->
-                                            <hr class="trackBorder"/>
-                                            <div class="col-sm-2 col-md-2">
-                                                <strong>Configuration</strong>
-                                            </div>
-                                            <div class="col-sm-9 col-md-9">
-                                                <div class="row">
-                                                    <div class="col-sm-3 col-md-3">
-                                                        <strong>Terminology server</strong>
-                                                    </div>
-                                                    <div class="col-sm-8 col-md-8">
-                                                        {{selectedTrack.termServer}}
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-sm-3 col-md-3">
-                                                        <strong>Conformance server</strong>
-                                                    </div>
-                                                    <div class="col-sm-8 col-md-8">
-                                                        {{selectedTrack.confServer}}
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-sm-3 col-md-3">
-                                                        <strong>Data server</strong>
-                                                    </div>
-                                                    <div class="col-sm-8 col-md-8">
-                                                        {{selectedTrack.dataServer}}
-                                                    </div>
-                                                </div>
-
-                                                <div class="row" ng-show="selectedTrack.LM">
-                                                    <div class="col-sm-3 col-md-3">
-                                                        <strong>Logical model</strong>
-                                                    </div>
-                                                    <div class="col-sm-8 col-md-8">
-                                                        {{selectedTrack.LM}}
-                                                    </div>
-                                                </div>
-                                                <div class="row" ng-show="selectedTrack.IG">
-                                                    <div class="col-sm-3 col-md-3">
-                                                        <strong>Implementation Guide</strong>
-                                                    </div>
-                                                    <div class="col-sm-8 col-md-8">
-                                                        {{selectedTrack.IG.name}}
-                                                        ({{selectedTrack.IG.url}})
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br/>
-                                    </div>
 
 
                                     <div class="row">
