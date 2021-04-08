@@ -22,7 +22,66 @@
         -->
         <div class="col-sm-12 col-md-12">
             <uib-tabset>
-                <uib-tab heading="Client/Server">
+                <uib-tab heading="Comment against Scenario (Direct)">
+                    <br/>
+                    <p class="banner">This allows a result to be recorded directly against a scenario</p>
+                    <div class="row">
+
+                        <div class="col-md-3 col-sm-3">
+                            <ul class="list-group">
+                                <li ng-class="{'list-group-item':1,
+                                                    'listItemSelected':selectedScenarioDirect.id == scenario.id}"
+                                    style="cursor: pointer"
+                                    ng-repeat="scenario in selectedTrack.scenarios"
+                                    ng-click="selectScenarioDirect(scenario)">
+                                    {{scenario.name}}
+
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class="col-md-9 col-sm-9">
+                            <div ng-show="selectedScenarioDirect">
+
+
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th>Type</th><th>Asserter</th><th>Result</th>
+                                        <th>Note</th><th>Trackers</th>
+                                    </tr>
+                                    <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(null,selectedScenarioDirect)">
+                                        <td>{{result.type}}</td>
+                                        <td>{{result.asserter.name}}</td>
+                                        <td>{{result.text}}</td>
+
+                                        <td>{{result.note}}</td>
+                                        <td>
+                                            <div ng-repeat="tracker in result.trackers">
+                                                {{tracker.url}}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a href="#" ng-click="editTestResult(result)">edit</a>
+                                        </td>
+
+
+                                    </tr>
+                                </table>
+
+
+
+
+                                <a href="#" ng-click="addTestResult(selectedTrack,selectedScenarioDirect,null,null)">Add new result</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </uib-tab>
+
+
+
+                <uib-tab heading="Identifier Client/Server">
                     <br/>
                     <p class="banner">This is used when a scenario only uses 2 participants - a client and a server</p>
                     <div ng-repeat="scenario in selectedTrack.scenarios track by $index">
@@ -118,62 +177,7 @@
 
                 </uib-tab>
 
-                <uib-tab heading="Comment against Scenario (Direct)">
-                    <br/>
-                    <p class="banner">This allows a result to be recorded directly against a scenario</p>
-                    <div class="row">
 
-                        <div class="col-md-3 col-sm-3">
-                            <ul class="list-group">
-                                <li ng-class="{'list-group-item':1,
-                                                    'listItemSelected':selectedScenarioDirect.id == scenario.id}"
-                                    style="cursor: pointer"
-                                    ng-repeat="scenario in selectedTrack.scenarios"
-                                    ng-click="selectScenarioDirect(scenario)">
-                                    {{scenario.name}}
-
-                                </li>
-                            </ul>
-
-                        </div>
-                        <div class="col-md-9 col-sm-9">
-                            <div ng-show="selectedScenarioDirect">
-
-
-                                <table class="table table-bordered">
-                                    <tr>
-                                        <th>Type</th><th>Asserter</th><th>Result</th>
-                                        <th>Note</th><th>Trackers</th>
-                                    </tr>
-                                    <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(null,selectedScenarioDirect)">
-                                        <td>{{result.type}}</td>
-                                        <td>{{result.asserter.name}}</td>
-                                        <td>{{result.text}}</td>
-
-                                        <td>{{result.note}}</td>
-                                        <td>
-                                            <div ng-repeat="tracker in result.trackers">
-                                                {{tracker.url}}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a href="#" ng-click="editTestResult(result)">edit</a>
-                                        </td>
-
-
-                                    </tr>
-                                </table>
-
-
-
-
-                                <a href="#" ng-click="addTestResult(selectedTrack,selectedScenarioDirect,null,null)">Add new result</a>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </uib-tab>
                 <!--
                                                 <uib-tab heading="Pull from Touchstone">
                                                     <br/>
