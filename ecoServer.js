@@ -334,6 +334,55 @@ app.post('/startup',function(req,res){
     });
 });
 
+// ============ web interface
+app.get('/web/servers/:eventCode',function(req,res){
+
+    let eventCode = req.params.eventCode;
+
+    //var db = hashDataBases[config.key];     //the database connection
+
+
+    var eventDb =  hashDataBases[eventCode];
+
+    if (eventDb) {
+        let ar = []
+        ar.push("<html><title>Servers</title> <head>")
+
+        //https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
+
+        ar.push("<link rel='stylesheet' type='text/css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'/>")
+
+        ar.push("</head><body style='padding: 8px'>")
+        eventDb.collection("server").find({}).toArray(function(err,result){
+            if (err) {
+                res.send(err,500)
+            } else {
+                //generate a simple page. Should probably use a templating engine of some sort
+                ar.push("<h3>Servers for " + eventCode + " connectathon</h3>")
+                ar.push("<table class='table table-bordered table-condensed'>")
+                ar.push("<tr><th>Name</th><th>Description</th><th>Notes</th><th>FHIR Version</th><th>Address</th></tr>")
+                result.forEach(function (server){
+                    ar.push("<tr>")
+                    ar.push("<td>" + server.name + "</td>")
+                    ar.push("<td>" + (server.description || '') + "</td>")
+                    ar.push("<td>" + (server.notes || '') + "</td>")
+                    ar.push("<td>" + (server.fhirVersion || '') + "</td>")
+                    ar.push("<td>" + server.address+ "</td>")
+                    ar.push("</tr>")
+                })
+                ar.push("</table>")
+                ar.push("</body></html>")
+
+                res.send(ar.join('\n'))
+            }
+        })
+    } else {
+        let err = "Event code " + eventCode + " not known"
+        res.send(err,404)
+    }
+
+
+});
 
 //========= proxy endpoints. Used by the connectathon UI to query a server, and by CDS-hooks function =======
 
