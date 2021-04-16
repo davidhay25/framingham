@@ -1377,7 +1377,14 @@
                                 <tr ng-repeat="svr in allServers">
                                     <td>{{svr.name}}</td>
                                     <td>
-                                        <div ng-show="svr.address">Root: {{svr.address}}</div>
+                                        <div ng-show="svr.address">
+                                            <a target="_blank" ng-href = "http://clinfhir.com/query.html#{{svr.address}}">
+                                                Server root: {{svr.address}}
+                                            </a>
+
+
+
+                                        </div>
                                         <div ng-show="svr.UIaddress">UI: {{svr.UIaddress}}</div>
                                     </td>
                                     <!--
