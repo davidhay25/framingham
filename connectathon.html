@@ -918,29 +918,66 @@
                                         Servers <span class="badge">{{getServersForTrack(selectedTrack.id).length}}</span>
                                     </uib-tab-heading>
 
-                                    <table class="table table-condensed">
+                                    <h4>Servers associated with this track</h4>
+
+                                    <table class="table table-condensed table-bordered">
                                         <tr><th>Name</th><th>Url</th><th>Description</th><th>Notes</th><th></th></tr>
                                         <tr ng-repeat="server in getServersForTrack(selectedTrack.id)">
-                                            <td>{{server.name}}</td>
-                                            <td>{{server.address}}</td>
-                                            <td>{{server.description}}</td>
-                                            <td>{{server.notes}}</td>
+                                            <td width="15%">{{server.name}}</td>
+                                            <td width="25%">
+
+                                                <a target="_blank" ng-href = "http://clinfhir.com/query.html#{{server.address}}">
+                                                    {{server.address}}
+                                                </a>
+                                                <!--
+                                                <a target="_blank"
+                                                   ng-src="http://clinfhir.com/query.html#{{server.address}}">{{server.address}}</a>
+                                                -->
+
+                                            </td>
+                                            <td width="25%">{{server.description}}</td>
+                                            <td width="25%">{{server.notes}}</td>
                                             <td><button class="btn btn-link" ng-click="editServer(server)">View</button> </td>
                                         </tr>
                                     </table>
 
-                                    <em>Servers where the server contact person has indicated suitability for this track</em>
+                                    <em>Servers where the server contact person has indicated suitability for this track.
+                                    Use the edit link to view details & remove from track if needed. Clicking the Url
+                                    will load the clinFHIR Server Query module for this server in a separate tab.</em>
 
-<!--
+
+                                    <h4>Other servers </h4>
+                                    <table class="table table-condensed table-bordered">
+                                        <tr><th>Name</th><th>Url</th><th>Description</th><th>Notes</th><th></th></tr>
+                                        <tr ng-repeat="server in allServers">
+                                            <td width="15%">{{server.name}}</td>
+                                            <td width="25%">
+                                                <a target="_blank" ng-href = "http://clinfhir.com/query.html#{{server.address}}">
+                                                    {{server.address}}
+                                                </a>
+                                            </td>
+                                            <td width="25%">{{server.description}}</td>
+                                            <td width="25%">{{server.notes}}</td>
+                                            <td><button class="btn btn-link" ng-click="editServer(server)">View</button> </td>
+                                        </tr>
+                                    </table>
+                                    <em>Use the view link to view details of the server, and add it to this track if desired.
+                                        Clicking the Url
+                                        will load the clinFHIR Server Query module for this server in a separate tab.</em>
+                                    <!--
+
                                     <div ng-repeat = "server in allServers">
                                         <div ng-repeat = "trackId in server.tracks">
                                             <div ng-show = "trackId == selectedTrack.id">
-                                                {{server.name}}
+                                                <checkbox ng-model="input.trackServer[$index]">
+                                                    {{server.name}}
+                                                </checkbox>
+
                                             </div>
                                         </div>
                                     </div>
+-->
 
-                                    -->
 
 
                                 </uib-tab>

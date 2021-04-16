@@ -135,6 +135,7 @@ angular.module("sampleApp")
 
             }
 
+            // - routines associated with track server list
             $scope.getServersForTrack = function(trackId) {
                 let ar = []
                 if ($scope.allServers) {
@@ -149,9 +150,13 @@ angular.module("sampleApp")
 
                     })
                 }
-
                 return ar
             }
+            // - load server query for a server
+
+            http://clinfhir.com/query.html#https:%2F%2Fterminz.azurewebsites.net%2Ffhir%2F
+
+
 
             $http.get('/artifacts/trackTypes.json').then(
                 function(data) {

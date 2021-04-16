@@ -123,6 +123,15 @@ angular.module("sampleApp")
                         $scope.fhirVersion = cs.fhirVersion;
                         $scope.CS = cs;
 
+                        //update the description from the CS
+                        $scope.input.description = ""
+                        if (cs.name) {
+                            $scope.input.description += cs.name;
+                        }
+                        if (cs.description) {
+                            $scope.input.description += '\n' + cs.description;
+                        }
+
 
                         getSMARTEndpoints($scope.SMART,cs);
 
@@ -137,6 +146,9 @@ angular.module("sampleApp")
                                 if (res.interaction) {
                                     var cap = "";
                                     res.interaction.forEach(function (int) {
+                                        if (int.code == 'search-type') {
+                                            cap += 'S'
+                                        }
                                         if (int.code == 'read') {
                                             cap += 'R'
                                         }
@@ -145,6 +157,9 @@ angular.module("sampleApp")
                                         }
                                         if (int.code == 'update') {
                                             cap += 'U'
+                                        }
+                                        if (int.code == 'history-instance') {
+                                            cap += 'H'
                                         }
                                     })
                                     item.cap = cap;
