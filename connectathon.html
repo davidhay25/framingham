@@ -70,6 +70,14 @@
             overflow-y: scroll;
         }
 
+        .tabName {
+            font-weight: bold;
+            font-style: italic;
+        }
+        . taskDescription {
+            margin-left: 10px;
+        }
+
         .pass {
             border : 1px solid #eeeeee;
             padding : 5px;
@@ -276,12 +284,150 @@
 
     <div class="row" ng-show="eventConfig">
 
-
-
-
         <div class="col-sm-12 col-md-12">
 
             <uib-tabset>
+
+                <uib-tab heading="Home Page">
+
+                    <h3 class="center-text">Welcome to Connectathon Manager for the May 2021 FHIR Connectathon</h3>
+
+                    <div class="center-text">
+                        <p><em  >The purpose of this application is to help support connectathion attendees by making it
+                            easier to locate tracks of interest, and to participate in those tracks, including recording feedback
+                            and testing outcomes.</em></p>
+                    </div>
+
+                    <hr/>
+
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <h4>Other Connectathon supporting resources</h4>
+
+                            <p>This application should be used in conjunction with the other connectathon supporting applications, namely</p>
+
+                            <ul>
+
+                                <li>The
+                                    <a href="https://confluence.hl7.org/display/FHIR/2021+-+05+Connectathon+27" target="_blank">
+                                        Connectathon home page in confluence
+                                    </a>
+                                </li>
+                                <li>The whova Virtual Event toot</li>
+                                <li>Zulip chat streams (links are found with each track)</li>
+
+                            </ul>
+
+
+                            <h4>Getting started</h4>
+                            <p>If this is your first time at the connectathon, then we suggest the following first steps.</p>
+
+                            <ul>
+                                <li>Scan the list of tracks for tracks of interest. You likely already know your main track,
+                                    but there are likely others of interest. You can see the tracks in the <span class="tabName">Tracks</span> tab and
+                                    also a list on Implementation Guides being tested in the <span class="tabName">Implementation Guides</span> tab.
+                                    Ideally, you'll have a single 'primary' track and other 'tracks of interest'.
+
+                                </li>
+                                <li>Update your profile in the <span class="tabName">People</span> tab. Your entry will be the only one with an
+                                    'edit' link alongside it - use that link to enter your email address (if you want to) and
+                                    record your primary track and tracks of interest.</li>
+                                <li>If you have a server that you want to test, of make it available for use in a track then
+                                    enter the details on the <span class="tabName">Servers</span> tab.
+                                    Theres <a href="https://youtu.be/cZMTnXOdU8o" target="_blank">a short video</a> that describes
+                                    this in more detail.
+                                    </li>
+
+                                <li>If you have a client application that you want to test, of make it available for use in a track then
+                                    enter the details on the <span class="tabName">Clients</span> tab.</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+
+
+                            <h4>Common tasks</h4>
+                            <p>These are things that you will likely want to do over the course of the event</p>
+
+                            <h5>Record your interest in a track</h5>
+                            <div style="margin-left: 20px">
+                                Go to the <span class="tabName">People</span> tab, find your name in the list and edit
+                                your profile. You can record primary and tracks of interest there.
+                            </div>
+
+                            <h5>Register a server for others to use in one or more tracks </h5>
+
+                            <div style="margin-left: 20px">
+
+                                    This is done from the <span class="tabName">Servers</span> tab.
+                                    Theres <a href="https://youtu.be/cZMTnXOdU8o" target="_blank">a short video</a> that describes
+                                    this in more detail.
+                            </div>
+
+                            <h5>Find who is testing a specific Implementation Guide</h5>
+                            <div style="margin-left: 20px">
+                                To find out the track/s that are testing an IG, look in the
+                                <span class="tabName">Implementation Guide</span> tab. You'll see a list of tracks
+                                alongside each IG.
+                                <div>
+                                    To find individuals working in those tracks, go to the <span class="tabName">Servers</span> tab
+                                    and select the 'Description' tab to the right. All track participants (recorded when an
+                                    individual registeres their interest in setting up their profile) are displayed towards
+                                    the bottom. Contact details will be in that users profile (and cal also be displayed by
+                                    clicking on the name in the list).
+                                </div>
+
+                            </div>
+
+                            <h5>Find a server to test against</h5>
+                            <div style="margin-left: 20px">
+                                Select the track in the <span class="tabName">Tracks</span> tab, then the 'Servers' sub-tab
+                                to the right. The servers currently associated with the track are shown at the top, other
+                                servers are listed below that. Use the 'View' link to the right to view the server details
+                                including associating servers with tracks.
+                            </div>
+
+                            <h5>Record the outcome of a test</h5>
+                            <div style="margin-left: 20px">
+
+                                Only tracks that have been set up for testing by adding scenarios can have outcomes applied.
+                                Select the track in the <span class="tabName">Tracks</span> tab, then the 'Testing' sub-tab to the right.
+                                There are two ways to record an outcome:
+                                <ul>
+                                    <li>The 'Comment against scenario' sub-tab supports a simple note against the scenario</li>
+                                    <li>The 'Identified Client/server' sub-tab allows a note or a result to be applied to
+                                    a specific client and server. Video to come.</li>
+                                </ul>
+                            </div>
+
+                            <h5>Review test results for a track</h5>
+                            <div style="margin-left: 20px">
+                                These are view for each track in the Testing sub-tab (where new ones can be entered). There's
+                                also a <span class="tabName">Test results</span> tab where outcomes for all tracks can be found.
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <!--
+                    <img src="icons/thumb-track.png" style="width:20%; height:auto"/>
+                    -->
+
+                </uib-tab>
+
 
                 <uib-tab heading="Track details & testing">
                     <br/>
@@ -2242,7 +2388,7 @@
 
 
 
-                <uib-tab heading="Documentation">
+                <uib-tab heading="Documentation" ng-show="false">
                     <br/>
 
 
