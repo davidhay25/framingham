@@ -290,10 +290,13 @@
 
                 <uib-tab heading="Home Page">
 
+                    <div ng-show="eventConfig.key == 'public' || eventConfig.key == 'con27'">
+
+
                     <h3 class="center-text">Welcome to Connectathon Manager for the May 2021 FHIR Connectathon</h3>
 
                     <div class="center-text">
-                        <p><em  >The purpose of this application is to help support connectathion attendees by making it
+                        <p><em  >The purpose of this application is to help support Connectathon attendees by making it
                             easier to locate tracks of interest, and to participate in those tracks, including recording feedback
                             and testing outcomes.</em></p>
                     </div>
@@ -307,7 +310,7 @@
 
                             <h4>Other Connectathon supporting resources</h4>
 
-                            <p>This application should be used in conjunction with the other connectathon supporting applications, namely</p>
+                            <p>This application should be used in conjunction with the other connectathon supporting applications, namely:</p>
 
                             <ul>
 
@@ -316,8 +319,10 @@
                                         Connectathon home page in confluence
                                     </a>
                                 </li>
-                                <li>The whova Virtual Event toot</li>
-                                <li>Zulip chat streams (links are found with each track)</li>
+                                <li>The whova Virtual Event page</li>
+                                <li> <a href="https://chat.fhir.org/#recent_topics" target="_blank">
+                                    Zulip chat streams (specific track links links are found with each track)</a>
+                                </li>
 
                             </ul>
 
@@ -326,7 +331,7 @@
                             <p>If this is your first time at the connectathon, then we suggest the following first steps.</p>
 
                             <ul>
-                                <li>Scan the list of tracks for tracks of interest. You likely already know your main track,
+                                <li>Scan the list of tracks for tracks of interest. You probably already know your main track,
                                     but there are likely others of interest. You can see the tracks in the <span class="tabName">Tracks</span> tab and
                                     also a list on Implementation Guides being tested in the <span class="tabName">Implementation Guides</span> tab.
                                     Ideally, you'll have a single 'primary' track and other 'tracks of interest'.
@@ -344,13 +349,46 @@
                                 <li>If you have a client application that you want to test, of make it available for use in a track then
                                     enter the details on the <span class="tabName">Clients</span> tab.</li>
                             </ul>
+
+                            <h4>Links of interest</h4>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul>
+                                        <li><a href="https://confluence.hl7.org/display/FHIR" target="_blank">HL7 FHIR Confluence</a> </li>
+                                        <li><a href="http://hl7.org/fhir/" target="_blank">FHIR R4 spec</a> </li>
+                                        <li><a href="http://hl7.org/fhir/2021Mar/" target="_blank">FHIR R4b ballot spec</a> </li>
+                                        <li><a href="http://hl7.org/fhir/2021May/" target="_blank">FHIR R5 draft spec</a> </li>
+                                        <li><a href="https://registry.fhir.org/" target="_blank">FHIR Package Registry</a> </li>
+                                        <li><a href="http://fhir.org/guides/registry/" target="_blank">FHIR Implementation Guide Registry</a> </li>
+
+                                        <li> <a href="https://chat.fhir.org/#recent_topics" target="_blank">
+                                            Zulip chat streams</a>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul>
+                                        <li><a href="https://www.devdays.com/" target="_blank">Next DevDays (June 2021) </a> </li>
+                                        <li><a href="https://www.devdays.com/events/" target="_blank">Videos of previous DevDays presentations </a> </li>
+                                        <li><a href="https://www.youtube.com/results?search_query=fhir" target="_blank">Youtube FHIR videos </a> </li>
+                                        <li><a href="http://clinfhir.com/" target="_blank">clinFHIR </a> </li>
+                                        <li><a href="https://confluence.hl7.org/display/FHIR/Blogs" target="_blank">FHIR Blogs</a> </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="col-md-6">
 
 
                             <h4>Common tasks</h4>
+                            <div style="margin-left: 20px">
                             <p>These are things that you will likely want to do over the course of the event</p>
-
+                            </div>
                             <h5>Record your interest in a track</h5>
                             <div style="margin-left: 20px">
                                 Go to the <span class="tabName">People</span> tab, find your name in the list and edit
@@ -411,20 +449,10 @@
                     </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-                    <!--
-                    <img src="icons/thumb-track.png" style="width:20%; height:auto"/>
-                    -->
+                    </div>
+                    <div ng-hide="eventConfig.key == 'public' || eventConfig.key == 'con27'">
+                        Welcome to conman for the event with the key: {{eventConfig.key}}
+                    </div>
 
                 </uib-tab>
 

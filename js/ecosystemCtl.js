@@ -154,7 +154,7 @@ angular.module("sampleApp")
             }
             // - load server query for a server
 
-            http://clinfhir.com/query.html#https:%2F%2Fterminz.azurewebsites.net%2Ffhir%2F
+          //  http://clinfhir.com/query.html#https:%2F%2Fterminz.azurewebsites.net%2Ffhir%2F
 
 
 
