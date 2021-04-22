@@ -1560,7 +1560,13 @@
 
 
                                         </div>
-                                        <div ng-show="svr.UIaddress">UI: {{svr.UIaddress}}</div>
+                                        <div ng-show="svr.UIaddress">
+                                            <a target="_blank" ng-href = "{{svr.UIaddress}}">
+                                                UI: {{svr.UIaddress}}
+                                            </a>
+
+
+                                        </div>
                                     </td>
                                     <!--
                                     <td><div  uib-popover="{{svr.address}}"
@@ -1648,7 +1654,8 @@
 
                                 </div>
                                 <div class = "col-md-2">
-                                    <button class="btn btn-primary" ng-click="searchServers(input.searchType)">Search</button>
+                                    <button class="btn btn-primary pull-right" ng-show="input.searchType"
+                                            ng-click="searchServers(input.searchType)">Search</button>
                                 </div>
                             </div>
                             <hr/>
