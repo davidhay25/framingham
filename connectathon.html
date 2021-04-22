@@ -352,6 +352,8 @@
 
                             <h4>External links of interest</h4>
 
+
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <ul>
@@ -376,6 +378,9 @@
                                         <li><a href="https://www.youtube.com/results?search_query=fhir" target="_blank">Youtube FHIR videos </a> </li>
                                         <li><a href="http://clinfhir.com/" target="_blank">clinFHIR </a> </li>
                                         <li><a href="https://confluence.hl7.org/display/FHIR/Blogs" target="_blank">FHIR Blogs</a> </li>
+                                        <li><a href="https://www.youtube.com/playlist?list=PL6yKJa-XDmyOtjwoTb4IQC9_9Q57twR-Z" target="_blank">conMan videos</a> </li>
+
+
 
                                     </ul>
                                 </div>
@@ -1157,7 +1162,7 @@
 
                                 </uib-tab>
 
-                                <uib-tab heading="Report" ng-show="false && selectedTrack.trackType == 'technical'">
+                                <uib-tab heading="Report" ng-show="true">
                                     <br/>
                                     <div class="row">
                                         <div class="col-md-6 col-sm-6">
@@ -1535,19 +1540,14 @@
                     </uib-tab-heading>
                     <br/>
 
-
+                    <uib-tabset>
+                        <uib-tab heading = "List">
                             <div>
                                 <button class="btn btn-link pull-right" ng-click="editServer()">New Server</button>
                             </div>
                             <table class="table table-bordered">
                                 <tr><th>Name</th><th>Url</th><th>FHIR Version</th><th>Description & Notes</th><th>Notes</th>
                                     <th>Tracks</th>
-                                    <!--
-                                    <th uib-popover="CDS=CDS hooks, SMART = SMART enabled, mouseover badge for details"
-                                         popover-placement="top"
-                                         popover-append-to-body = true
-                                         popover-trigger="'mouseenter'">Flags</th>
-                                    -->
                                     <th></th></tr>
                                 <tr ng-repeat="svr in allServers">
                                     <td>{{svr.name}}</td>
@@ -1631,63 +1631,88 @@
                             </table>
 
 
+                        </uib-tab>
 
-                            <!--
-                            <div class="banner">Locate servers by ecosystem role (rather than Scenario role) - Experimental</div>
+                        <uib-tab heading = "Search">
+                                <br/>
+                            <div class="row">
+                                <div class = "col-md-3">
+                                    <input type="text" class="form-control"
+                                           placeholder="Search string - eg 'Patient'"
+                                           ng-model="input.searchType"/>
+                                </div>
+                                <div class = "col-md-7">
+                                    <div  style="margin-top:10px">
+                                        <em>Enter the search string. Will search for types and operations in the CapabilityStatement.</em>
+                                    </div>
+
+                                </div>
+                                <div class = "col-md-2">
+                                    <button class="btn btn-primary" ng-click="searchServers(input.searchType)">Search</button>
+                                </div>
+                            </div>
+                            <hr/>
 
                             <div class="row">
-                                <div class="col-sm-2 col-md-2">
-                                    <ul class="list-group">
-                                        <li style="cursor: pointer"
-                                            ng-class="{'list-group-item':true}"
-                                            ng-click="selectServerRole(server)"
-                                            ng-repeat="server in eventConfig.serverRoles">
-                                            {{server.display}}
+                                <div class = "col-md-3">
+                                    <div class="list-group">
 
-                                            <span ng-show="serverRoleSummary[server.code].servers.length > 0"
-                                                  class="badge">{{serverRoleSummary[server.code].servers.length}}
-                                            </span>
-                                        </li>
-                                    </ul>
+                                        <div ng-class="{'list-group-item':true,'listItemSelected':res.id == input.selectedServerQueryResult.id}"
+                                             ng-repeat = "res in serverQueryResults.servers"
+                                            ng-click = "input.selectedServerQueryResult = res" >
+
+                                            <div class="clickable pull-right" ng-click="editServerFromSearch(res.id)">View</div>
+                                            {{res.name}}
+
+
+                                        </div>
+
+                                    </div>
+                                    <em>There can be multiple entries for a server if multiple match reasons are found</em>
                                 </div>
-                                <div class="col-sm-3 col-md-3">
-                                    <div ng-show="serversWithServerRole.length == 0">No servers in this role...</div>
-                                    <ul class="list-group">
-                                        <li  style="cursor: pointer"
-                                             ng-class="{'list-group-item':true}"
-                                            ng-click="selectServerWithServerRole(svr)"
-                                            ng-repeat="svr in serversWithServerRole">
-                                            {{svr.name}}
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="col-sm-3 col-md-3">
-                                    <table ng-show="selectedServer" class="table table-bordered">
-                                        <tr><td>Name</td><td>{{selectedServer.name}}</td></tr>
-                                        <tr><td>Description</td><td>{{selectedServer.description}}</td></tr>
-                                        <tr><td>Url</td><td>{{selectedServer.address}}</td></tr>
-                                        <tr><td>Contact</td><td>
-                                            <div ng-repeat = "person in selectedServer.contact">
-                                                {{person.name}}
-                                                <span ng-repeat="contact in person.contact">
-                                                {{contact.type}}: {{contact.value}}
-                                            </span>
-                                            </div>
-                                        </td></tr>
-                                    </table>
+                                <div class = "col-md-9" ng-show="input.selectedServerQueryResult">
+                                    
+                                    <div class="row">
+                                        <div class = "col-md-4">
+                                            <strong>Match reason</strong>
+                                        </div>
+                                        <div class = "col-md-4">
+                                            <strong>Description</strong>
+                                        </div>
+                                        <div class = "col-md-4">
+                                            <strong>Notes</strong>
+                                        </div>
+                                    </div>
 
+                                    <div class="row">
+                                        <div class = "col-md-4">
+                                            {{input.selectedServerQueryResult.matchType}}:
+                                            {{input.selectedServerQueryResult.matchReason}}
+                                        </div>
+                                        <div class = "col-md-4">
+                                            {{input.selectedServerQueryResult.description}}
+                                        </div>
+                                        <div class = "col-md-4">
+                                            {{input.selectedServerQueryResult.notes}}
+                                        </div>
+                                    </div>
+                                    
+                                    
 
-                                    <table ng-show="selectedServer" class="table table-bordered">
-                                        <tr><th>Resource type</th><th>Capabilities</th></tr>
-                                        <tr ng-repeat="type in selectedServer.serverDetails.types">
-                                            <td>{{type.type}}</td>
-                                            <td>{{type.cap}}</td>
-                                        </tr>
-                                    </table>
+                                    <br/>
+                                    <strong ng-show="input.selectedServerQueryResult.matchType == 'Type'">rest.resource entry containing the match</strong>
+                                    <pre>{{input.selectedServerQueryResult.definition | json}}</pre>
                                 </div>
                             </div>
 
--->
+
+
+
+
+
+
+                        </uib-tab>
+                    </uib-tabset>
 
 
 

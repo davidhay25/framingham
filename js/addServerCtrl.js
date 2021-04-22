@@ -15,90 +15,7 @@ angular.module("sampleApp")
 
             $scope.eventConfig = ecosystemSvc.getEventConfig();
 
-            if (existingServer) {
-                //this is an edit
-                $scope.serverId = existingServer.id;
-                $scope.editingServer = true;
-                serverExists = true;
-                $scope.saveText = "Update server";//+ existingServer.name;
-                $scope.input.name = existingServer.name;
-                $scope.input.notes = existingServer.notes;
-                $scope.input.description = existingServer.description ;
-                $scope.input.address = existingServer.address ;
-                $scope.input.UIaddress = existingServer.UIaddress ;
-
-                $scope.allHooks = existingServer.allHooks;
-                $scope.fhirVersion = existingServer.fhirVersion;
-                $scope.SMART = existingServer.SMART;
-
-                $scope.input.tracks = {}
-                $scope.input.trackCount = 0
-                if (existingServer.tracks) {
-                    existingServer.tracks.forEach(function (trackId){
-                        $scope.input.tracks[trackId] = true;
-                        $scope.input.trackCount++
-                    })
-                };
-
-                if (existingServer.contact) {
-                    $scope.input.contact = existingServer.contact[0];
-                    $scope.selectedPerson = existingServer.contact[0];
-                } else {
-                    $scope.input.contact = ecosystemSvc.getCurrentUser();
-                    $scope.selectedPerson = ecosystemSvc.getCurrentUser();
-                }
-
-                $scope.input.serverRoleCount = 0;
-                if (existingServer.serverRoles) {
-                    existingServer.serverRoles.forEach(function (sr) {
-                        $scope.input.serverRole[sr.code] = true;
-                        $scope.input.serverRoleCount++;
-                    })
-                }
-
-                //console.log($scope.input.serverRole)
-
-            } else {
-                //this is new...
-                $scope.input.contact = ecosystemSvc.getCurrentUser();
-                $scope.selectedPerson = ecosystemSvc.getCurrentUser();
-            }
-
-            $scope.checkContactSelectionDEP = function() {
-                if (! $scope.input.contact) {
-                    modalService.showModal({},{bodyText:"It looks like you haven't selected a person. You can't save unless there is an actual person selected as a contact for this server. "})
-                }
-            };
-
-            $scope.contactSelected = function(item){
-                $scope.selectedPerson = item;
-            };
-
-            $scope.allPersons = ecosystemSvc.getAllPersons();//[]
-
-            $scope.loadHooks = function() {
-                //check for any CDS hooks
-
-                var url = 'proxyfhir/'+  addSlash($scope.input.address) + 'cds-services';
-                $http.get(url).then(
-                    function(data){
-                        $scope.allHooks = data.data;
-                    },
-                    function(err) {
-                        modalService.showModal({},{bodyText:'There was no valid response to the call '+url})
-                    }
-                )
-            };
-
-
-            function addSlash(url) {
-                if (url.substr(-1) !== '/') {
-                    url += '/';
-                }
-                return url;
-            }
-
-            $scope.checkServerExists = function() {
+            $scope.checkServerExists = function(hideAlert) {
 
                 if ($scope.input.address.substr(-1) !== '/') {
                     $scope.input.address += '/';
@@ -115,7 +32,11 @@ angular.module("sampleApp")
 
                 $http.get(url).then(
                     function(data) {
-                        modalService.showModal({},{bodyText:"The CapabilityStatement was returned, so we can update the server specific information. See the 'Server Capability' tab"});
+                        if (! hideAlert) {
+                            modalService.showModal({},{bodyText:"The CapabilityStatement was returned, so we can update the server specific information. See the 'Server Capability' tab"});
+
+                        }
+
                         serverExists = true;
                         //console.log(data.data);
                         var cs = data.data;
@@ -178,6 +99,89 @@ angular.module("sampleApp")
                 })
             };
 
+
+            if (existingServer) {
+                //this is an edit
+                $scope.serverId = existingServer.id;
+                $scope.editingServer = true;
+                serverExists = true;
+                $scope.saveText = "Update server";//+ existingServer.name;
+                $scope.input.name = existingServer.name;
+                $scope.input.notes = existingServer.notes;
+                $scope.input.description = existingServer.description ;
+                $scope.input.address = existingServer.address ;
+                $scope.input.UIaddress = existingServer.UIaddress ;
+
+                $scope.allHooks = existingServer.allHooks;
+                $scope.fhirVersion = existingServer.fhirVersion;
+                $scope.SMART = existingServer.SMART;
+
+                $scope.input.tracks = {}
+                $scope.input.trackCount = 0
+                if (existingServer.tracks) {
+                    existingServer.tracks.forEach(function (trackId){
+                        $scope.input.tracks[trackId] = true;
+                        $scope.input.trackCount++
+                    })
+                };
+
+                if (existingServer.contact) {
+                    $scope.input.contact = existingServer.contact[0];
+                    $scope.selectedPerson = existingServer.contact[0];
+                } else {
+                    $scope.input.contact = ecosystemSvc.getCurrentUser();
+                    $scope.selectedPerson = ecosystemSvc.getCurrentUser();
+                }
+
+                $scope.input.serverRoleCount = 0;
+                if (existingServer.serverRoles) {
+                    existingServer.serverRoles.forEach(function (sr) {
+                        $scope.input.serverRole[sr.code] = true;
+                        $scope.input.serverRoleCount++;
+                    })
+                }
+
+                //console.log($scope.input.serverRole)
+
+                $scope.checkServerExists(true);     //refresh the cap stmt - don't show any message
+
+            } else {
+                //this is new...
+                $scope.input.contact = ecosystemSvc.getCurrentUser();
+                $scope.selectedPerson = ecosystemSvc.getCurrentUser();
+            }
+
+
+
+            $scope.contactSelected = function(item){
+                $scope.selectedPerson = item;
+            };
+
+            $scope.allPersons = ecosystemSvc.getAllPersons();//[]
+
+            $scope.loadHooks = function() {
+                //check for any CDS hooks
+
+                var url = 'proxyfhir/'+  addSlash($scope.input.address) + 'cds-services';
+                $http.get(url).then(
+                    function(data){
+                        $scope.allHooks = data.data;
+                    },
+                    function(err) {
+                        modalService.showModal({},{bodyText:'There was no valid response to the call '+url})
+                    }
+                )
+            };
+
+
+            function addSlash(url) {
+                if (url.substr(-1) !== '/') {
+                    url += '/';
+                }
+                return url;
+            }
+
+
             $scope.checkName = function() {
                 //if this is an edit, then don't check for dupes!
                 if (existingServer) {
@@ -203,10 +207,6 @@ angular.module("sampleApp")
                 if (serverExists) {     //is there a FHIR server at the configured Url?
 
 
-
-
-
-
                     if (! $scope.selectedPerson) {
                         modalService.showModal({},{bodyText:"It looks like you haven't selected a contact person. You can't save unless there is an actual person selected as a contact for this server. "})
                         return;
@@ -227,8 +227,6 @@ angular.module("sampleApp")
                             server.tracks.push(key)
                         }
                     });
-
-
 
                     server.name = $scope.input.name;
                     server.notes = $scope.input.notes;
@@ -251,11 +249,11 @@ angular.module("sampleApp")
 
                     //dont't save the server details - makes the resource large
                     delete server.serverDetails;
-                    /*
-                    if ($scope.serverDetails) {
-                        server.serverDetails = $scope.serverDetails;
-                    }
-                    */
+
+                    //May2021 - add the full capstmt. When returning the list of tracke, these will be removed...
+                    server.capStmt = $scope.CS;
+
+
 
                     if ($scope.allHooks) {
                         server.allHooks = $scope.allHooks;

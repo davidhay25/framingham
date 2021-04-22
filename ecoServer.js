@@ -9,6 +9,12 @@
 * update the artifacts/events.json doc (will rebuild the eventsDB collection on a new server from the doc)
 * restart the server
 * */
+
+
+process.on('uncaughtException', function(err) {
+    console.log('>>>>>>>>>>>>>>> Caught exception: ' + err);
+});
+
 require('events').EventEmitter.prototype._maxListeners = 100;
 var express = require('express');
 var request = require('request');
@@ -489,6 +495,13 @@ app.get('/server',function(req,res){
         if (err) {
             res.send(err,500)
         } else {
+
+            if (result) {
+                result.forEach(function (svr){
+                    delete svr.capStmt;         //remove the capability statement to reduce size
+                })
+            }
+
             res.send(result)
         }
     })
@@ -509,6 +522,80 @@ app.post('/server',function(req,res){
     })
 });
 
+
+//find all servers that claim to support a type or operation
+app.get('/server/query/:search',function (req,res){
+
+    let searchString = req.params.search.toLowerCase();       //todo might be an operation name in the future
+    console.log(searchString)
+    req.selectedDbCon.collection("server").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            if (result) {
+                let response = {servers:[]}
+                result.forEach(function (svr){
+
+                  if (svr.capStmt) {
+                      //console.log(svr.capStmt.rest.length)
+
+
+                      if (svr.capStmt.rest && svr.capStmt.rest.length > 0) {
+
+                          //search for Resource types
+                          let ar = svr.capStmt.rest[0].resource.filter(item => item.type.toLowerCase() == searchString)
+                          //console.log(ar.length)
+                          if (ar.length > 0) {
+                              let item = {id:svr.id,name:svr.name,description:svr.description,notes:svr.notes}
+                              item.definition = ar[0];
+                              item.matchReason = "Supported resource type"
+                              item.matchType = "Type"
+                              response.servers.push(item)
+                          }
+
+
+                            //search for resource operations
+                          svr.capStmt.rest[0].resource.forEach(function (res) {
+                              if (res.operation) {
+                                  res.operation.forEach(function (op) {
+                                      if (op.name && op.name.toLowerCase() == searchString) {
+                                          let item = {id:svr.id,name:svr.name,description:svr.description,notes:svr.notes}
+                                          item.definition = res;
+                                          item.matchReason = "Resource level operation"
+                                          item.matchType = "Type"
+                                          response.servers.push(item)
+                                      }
+                                  })
+                              }
+                          })
+                        //search for interactions (operations) at the server root level
+
+                          if (svr.capStmt.rest[0].operation) {
+                              let ar1 = svr.capStmt.rest[0].operation.filter(item => item.name.toLowerCase() == searchString)
+
+                              if (ar1.length > 0) {
+                                  //should only be a single entry...
+                                  let item = {id:svr.id,name:svr.name,description:svr.description,notes:svr.notes}
+                                  item.definition = ar1[0];
+                                  item.matchReason = "Root level operation"
+                                  item.matchType = "Root"
+                                  response.servers.push(item)
+                              }
+                          }
+
+
+                      }
+                  }
+                })
+                res.send(response)
+            } else {
+                res.send({})
+            }
+
+        }
+    })
+
+})
 
 //============================== results ===============
 //get all results

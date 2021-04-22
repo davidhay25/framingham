@@ -3,6 +3,10 @@ angular.module("sampleApp").service('ecoUtilitiesSvc', function($q,$http,modalSe
 
     return {
 
+        findServersSupportingResource : function (type,) {
+
+        },
+
         findConformanceResourceByUri : function(url,serverUrl,typeOfConformanceResource) {
             //find a StructureDefinition based on its Uri. ie we query the registry to find the required SD
             //copied from rbServices

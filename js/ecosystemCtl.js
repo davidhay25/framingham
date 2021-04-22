@@ -130,9 +130,27 @@ angular.module("sampleApp")
 
             $scope.selectAllNotes = function(type,notes) {
                 $scope.oneTypeAllNotes = notes;
-
                 $scope.oneTypeAllNotesType = type;
 
+            }
+
+            $scope.searchServers = function(type) {
+                type = type || "Patient"
+                let url = "/server/query/" + type;
+                $http.get(url).then(
+                    function(data) {
+                        console.log(data)
+                        $scope.serverQueryResults = data.data;
+                    }
+                )
+            }
+
+            $scope.editServerFromSearch = function(serverId) {
+                let ar = $scope.allServers.filter(item => item.id == serverId)
+                if (ar.length == 1) {
+                    $scope.editServer(ar[0])
+                }
+                //$scope.editServer = function(svr) {
             }
 
             // - routines associated with track server list
