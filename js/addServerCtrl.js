@@ -142,8 +142,10 @@ angular.module("sampleApp")
                 }
 
                 //console.log($scope.input.serverRole)
+                    if ($scope.input.address) {
+                        $scope.checkServerExists(true);     //refresh the cap stmt - don't show any message
+                    }
 
-                $scope.checkServerExists(true);     //refresh the cap stmt - don't show any message
 
             } else {
                 //this is new...
