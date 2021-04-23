@@ -147,6 +147,8 @@ angular.module("sampleApp")
                 $scope.input.dataServer = track.dataServer || 'http://fhirtest.uhn.ca/baseDstu3/';
                 $scope.input.LM = track.LM;
 
+            } else {
+                $scope.track = {trackSubType : "igreview"}
             }
 
 
