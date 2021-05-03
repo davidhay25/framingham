@@ -42,7 +42,6 @@
                             <div class="col-md-8 col-sm-8">
                                 <input type="text" ng-model="input.contact"
                                        typeahead-on-select = "contactSelected($item, $model, $label, $event)"
-
                                        typeahead-editable = 'false'
                                        uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control"/>
                                 <div><em>Contact person is required, and should be a selection from the users from the people tab.
@@ -80,6 +79,10 @@
                     </div>
 
                     <div class="col-md-4 col-sm-4">
+
+                        <a ng-show="input.UIaddress" target="_blank" ng-href = "{{input.UIaddress}}">
+                            Load UI
+                        </a>
 
                     </div>
                 </div>

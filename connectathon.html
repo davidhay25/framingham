@@ -331,18 +331,20 @@
                             <p>If this is your first time at the connectathon, then we suggest the following first steps.</p>
 
                             <ul>
-                                <li>Scan the list of tracks for tracks of interest. You probably already know your main track,
-                                    but there are likely others of interest. You can see the tracks in the <span class="tabName">Tracks</span> tab and
-                                    also a list on Implementation Guides being tested in the <span class="tabName">Implementation Guides</span> tab.
-                                    Ideally, you'll have a single 'primary' track and other 'tracks of interest'.
+                                <li>Scan the list of Tracks and Implementation Guides for tracks of interest. You probably already know your main track,
+                                    but there are likely others of interest to you. You can see the tracks in the <span class="tabName">Track details and testing</span> tab and
+                                    also a list of Implementation Guides being tested in the <span class="tabName">Implementation Guides</span> tab.
+
 
                                 </li>
                                 <li>Update your profile in the <span class="tabName">People</span> tab. Your entry will be the only one with an
                                     'edit' link alongside it - use that link to enter your email address (if you want to) and
-                                    record your primary track and tracks of interest.</li>
+                                    record your primary track and tracks of interest.  Ideally, you'll have a single 'primary' track and any number
+                                    'tracks of interest' (Recording them here means your name
+                                    will appear in the track description and <span class="tabName">Participation Report</span> so others can find you).</li>
                                 <li>If you have a server that you want to test, or make it available for use in a track then
                                     enter the details on the <span class="tabName">Servers</span> tab.
-                                    Theres <a href="https://youtu.be/cZMTnXOdU8o" target="_blank">a short video</a> that describes
+                                    There's <a href="https://youtu.be/cZMTnXOdU8o" target="_blank">a short video</a> that describes
                                     this in more detail.
                                     </li>
 
@@ -389,18 +391,17 @@
                         </div>
                         <div class="col-md-6">
 
-
                             <h4>Common tasks</h4>
                             <div style="margin-left: 20px">
                             <p>These are things that you will likely want to do over the course of the event</p>
                             </div>
-                            <h5>Record your interest in a track</h5>
+                            <h5><em>Record your interest in a track</em></h5>
                             <div style="margin-left: 20px">
                                 Go to the <span class="tabName">People</span> tab, find your name in the list and edit
                                 your profile. You can record primary and tracks of interest there.
                             </div>
 
-                            <h5>Register a server for others to use in one or more tracks </h5>
+                            <h5><em>Register a server for others to use in one or more tracks </em></h5>
 
                             <div style="margin-left: 20px">
 
@@ -409,44 +410,48 @@
                                     this in more detail.
                             </div>
 
-                            <h5>Find who is testing a specific Implementation Guide</h5>
+                            <h5><em>Find who is testing a specific Implementation Guide</em></h5>
                             <div style="margin-left: 20px">
                                 To find out the track/s that are testing an IG, look in the
                                 <span class="tabName">Implementation Guide</span> tab. You'll see a list of tracks
                                 alongside each IG.
-                                <div>
+
                                     To find individuals working in those tracks, go to the <span class="tabName">Tracks</span> tab
                                     and select the 'Description' tab to the right. All track participants (recorded when an
                                     individual registers their interest while setting up their profile) are displayed towards
-                                    the bottom. Contact details will be in that users profile (and cal also be displayed by
+                                    the bottom. Contact details will be in that users profile (and can also be displayed by
                                     clicking on the name in the list).
-                                </div>
+
 
                             </div>
 
-                            <h5>Find a server to test against</h5>
+                            <h5><em>Find a server to test against</em></h5>
                             <div style="margin-left: 20px">
-                                Select the track in the <span class="tabName">Tracks</span> tab, then the 'Servers' sub-tab
+                                You can look at the full server list in the
+                                <span class="tabName">Servers</span> tab. If the server has been registered for use with a track, then
+                                it will also appear in the track description. To view the list, select the track in the <span class="tabName">Tracks</span> tab, then the 'Servers' sub-tab
                                 to the right. The servers currently associated with the track are shown at the top, other
                                 servers are listed below that. Use the 'View' link to the right to view the server details
-                                including associating servers with tracks. You can also look at the full server list in the
-                                <span class="tabName">Servers</span> tab
+                                including associating servers with tracks.
                             </div>
 
-                            <h5>Record the outcome of a test</h5>
+                            <h5><em>Record the outcome of a test</em></h5>
                             <div style="margin-left: 20px">
+
+
 
                                 Only tracks that have been set up for testing by adding scenarios can have outcomes applied.
                                 Select the track in the <span class="tabName">Tracks</span> tab, then the 'Testing' sub-tab to the right.
                                 There are two ways to record an outcome:
                                 <ul>
-                                    <li>The 'Comment against scenario' sub-tab supports a simple note against the scenario</li>
+                                    <li>The 'Comment against scenario' sub-tab supports a simple note against the scenario.
+                                    Here's a <a href="https://youtu.be/sKR3C9LFaek" target="_blank">video</a>.</li>
                                     <li>The 'Identified Client/server' sub-tab allows a note or a result to be applied to
                                     a specific client and server. Video to come.</li>
                                 </ul>
                             </div>
 
-                            <h5>Review test results for a track</h5>
+                            <h5><em>Review test results for a track</em></h5>
                             <div style="margin-left: 20px">
                                 These are view for each track in the Testing sub-tab (where new ones can be entered). There's
                                 also a <span class="tabName">Test results</span> tab where outcomes for all tracks can be found.
@@ -985,6 +990,7 @@
 
                                                         </div>
                                                         <div class="col-sm-6 col-md-6">
+
                                                             {{input.selectedTrackTOIPerson.name}}
                                                             <div class="row" ng-repeat="contact in input.selectedTrackTOIPerson.contact">
                                                                 <div class="col-sm-4 col-md-4">

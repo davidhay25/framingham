@@ -45,13 +45,19 @@ angular.module("sampleApp")
                         $scope.CS = cs;
 
                         //update the description from the CS
+
+                        if ($scope.input.description == "") {
+                            if (cs.name) {
+                                $scope.input.description += cs.name;
+                            }
+
+                            if (cs.description) {
+                                $scope.input.description += '\n' + cs.description;
+                            }
+                        }
                         $scope.input.description = ""
-                        if (cs.name) {
-                            $scope.input.description += cs.name;
-                        }
-                        if (cs.description) {
-                            $scope.input.description += '\n' + cs.description;
-                        }
+
+
 
 
                         getSMARTEndpoints($scope.SMART,cs);

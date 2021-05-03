@@ -1253,7 +1253,9 @@ console.log(vo);
             $scope.selectTrack = function(track,showMessage) {
                 delete $scope.selectedScenario;
                 delete $scope.selectedRole;
+                delete $scope.input.selectedTrackTOIPerson;
                 delete $scope.input.selectedTrackPerson;
+
                 $scope.selectedTrack = track;
 
                 //so we can show the track summary in the testing sub-tab
