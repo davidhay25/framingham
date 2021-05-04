@@ -40,7 +40,13 @@
                                 <td>{{result.note}}</td>
                                 <td>{{result.IG.name}}</td>
                                 <td>
-                                    <a href="#" ng-click="editTestResult(result)">edit</a>
+
+
+                                    <div ng-show = "currentUser.id == result.asserter.id">
+                                        <a href="#" ng-click="editTestResult(result)">edit</a>
+                                    </div>
+
+
                                 </td>
 
                             </tr>

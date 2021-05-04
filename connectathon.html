@@ -468,7 +468,6 @@
 
                 </uib-tab>
 
-
                 <uib-tab heading="Track details & testing">
                     <br/>
                     <div class="row">
@@ -1170,29 +1169,27 @@
 
                                             <table class="table table-bordered">
                                                 <tr>
-                                                    <th>Asserter</th><th>Scenario</th><th>Server</th><th>Result</th>
+                                                    <th>Scenario</th><th>Server</th><th>Asserter</th><th>Result</th>
                                                     <th>Note</th><th>IG</th>
                                                 </tr>
-                                                <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(null,selectedScenarioDirect)">
+                                                <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(selectedTrack)">
+<!-- <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(null,selectedScenarioDirect)">-->
 
-                                                    <td>{{result.asserter.name}}</td>
                                                     <td>{{result.scenario.name}}</td>
                                                     <td>{{result.server.name}}</td>
+                                                    <td>{{result.asserter.name}}</td>
                                                     <td>{{result.text}}</td>
 
                                                     <td>{{result.note}}</td>
                                                     <td>
                                                         {{result.IG.name}}
-                                                        <!--
-                                                        <div ng-repeat="tracker in result.trackers">
-                                                            {{tracker.url}}
-                                                        </div>
-                                                        -->
+
                                                     </td>
+                                                    <!--
                                                     <td>
                                                         <a href="#" ng-click="editTestResult(result)">edit</a>
                                                     </td>
-
+-->
                                                 </tr>
                                             </table>
 
@@ -1204,116 +1201,6 @@
 
 
 
-
-                                <uib-tab heading="Report" ng-show="false">
-                                    <br/>
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-6">
-                                            <div>There are {{selectedTrack.persons.length}} participants
-                                            and {{selectedTrack.toi.length}} watchers.</div>
-
-                                                <div>There are {{selectedTrackReport.uniqueServers.length}} unique Servers associated
-                                                with scenarios in this track.
-                                                    <span ng-show="selectedTrackReport.uniqueServers.length"> These are: </span></div>
-                                            <br/>
-                                            <ul class="list-unstyled" style="margin-left: 70px">
-                                                <li ng-repeat="serverRole in selectedTrackReport.uniqueServers">
-                                                    {{serverRole.server.name}} ({{serverRole.server.contact[0].name}})
-                                                </li>
-                                            </ul>
-
-                                            <!-- Not supporting clients ATM
-                                            <div>There are {{selectedTrackReport.uniqueClients.length}} unique Clients associated
-                                                with scenarios in this track.
-                                                <span ng-show="selectedTrackReport.uniqueClients.length"> These are: </span></div>
-                                            <br/>
-                                            <ul class="list-unstyled" style="margin-left: 70px">
-                                                <li ng-repeat="clientRole in selectedTrackReport.uniqueClients">
-                                                    {{clientRole.client.name}} ({{clientRole.client.contact[0].name}})
-                                                </li>
-                                            </ul>
-                                            -->
-
-
-                                            <br/>
-                                            <div ng-show="selectedTrackReport.total ==0">There are no test results yet.</div>
-
-                                            <div ng-show="selectedTrackReport.total >0">
-                                                <div>There
-                                                    <span ng-show="selectedTrackReport.total == 1">was 1 test report</span>
-                                                    <span ng-show="selectedTrackReport.total >1">were {{selectedTrackReport.total}} test results</span>
-
-                                                    reported. The test results broke down as follows:</div>
-
-                                                <br/>
-
-                                                <div style="margin-left: 100px">
-                                                    <table>
-                                                        <tr>
-                                                            <th>Result</th><th>Count</th><th>%</th>
-                                                        </tr>
-                                                        <tr ng-repeat = "(k,v) in selectedTrackReport.resultTotals">
-                                                            <td width="80px">{{k}}</td>
-                                                            <td width="60px">{{v}}</td>
-                                                            <td width="60px">{{(v/selectedTrackReport.total)*100 | number:0}}%</td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <strong>Result notes</strong>
-                                            <div ng-repeat="note in selectedTrackReport.notes">
-                                                <div class="rounded-box">
-                                                    <div class="row"
-                                                         style="background-color: lightgoldenrodyellow; margin: 2px">
-                                                        <div class="col-sm-6 col-md-6">
-                                                            {{note.asserter.name}}
-                                                        </div>
-                                                        <div class="col-sm-6 col-md-6">
-                                                            <div class="pull-right">{{note.date | date:'EEE hh:mm a'}}</div>
-
-                                                        </div>
-                                                    </div>
-
-                                                    <hr style="margin: 2px"/>
-                                                    <div class="row">
-                                                        <div class="col-sm-12 col-md-12">
-                                                            <div style="margin-left: 25px">{{note.note}}</div>
-                                                        </div>
-
-                                                    </div>
-                                                    <hr style="margin: 2px"/>
-
-                                                    <div class="row"
-                                                         style="margin: 2px">
-                                                        <div class="col-sm-6 col-md-6">
-                                                            <div style="margin-top: 10px">
-                                                                <strong >{{note.scenarioName}}</strong>
-                                                            </div>
-
-                                                        </div>
-                                                        <div class="col-sm-6 col-md-6">
-                                                            <div class="pull-right">
-                                                                <div ng-class="note.text ">{{note.text}}</div>
-                                                            </div>
-
-
-                                                        </div>
-                                                    </div>
-
-
-
-                                                   <!-- {{note}}-->
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                </uib-tab>
 
                                 <uib-tab>
                                     <uib-tab-heading>
@@ -2118,11 +2005,7 @@
                                     <uib-tabset ng-show="selectedTrackSummary">
                                         <uib-tab heading="All scenarios summary">
                                             <br/>
-                                            <!--
-                                            <canvas id="bar" class="chart chart-bar" chart-options="barOptions"
-                                                    chart-data="barData" chart-labels="barLabels" chart-series="barSeries">
-                                            </canvas>
-                                            -->
+
 
                                             <canvas id="bar" class="chart chart-horizontal-bar" chart-options="barOptions"
                                                     chart-data="barData" chart-labels="barLabels" chart-series="barSeries">
@@ -2188,12 +2071,12 @@
 
                                             <table class="table table-bordered">
                                                 <tr>
-                                                    <th>Type</th><th>Scenario</th><th>Server</th><th>Asserter</th><th>Result</th>
+                                                    <th>Scenario</th><th>Server</th><th>Asserter</th><th>Result</th>
                                                     <th>Note</th><th>IG</th><th></th>
                                                 </tr>
                                                 <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(selectedTrackSummary)">
 
-                                                    <td>{{result.type}}</td>
+
                                                     <td>{{result.scenario.name}}</td>
                                                     <td>{{result.server.name}}
                                                         <!--
@@ -2265,22 +2148,22 @@
                                         for a scenario in a track, and the IG can be selected then.
                                     </div>
 
-                                    <table class="table table-bordered" ng-show="input.selectedIGTests.results.length > 0">
-                                        <tr><th>Outcome</th><th>Server</th><th>Asserter</th><th>Note</th><th>Track</th><th>Scenario</th></tr>
-                                        <tr ng-repeat="test in input.selectedIGTests.results">
-                                            <td>{{test.result}}</td>
 
-                                            <td>{{test.server.name}}
-                                                <!--
-                                                <div ng-show="test.server.name">
-                                                    {{test.server.name}} ({{test.server.role}})
-                                                </div>
-                                                -->
-                                            </td>
-                                            <td>{{test.asserter.name}}</td>
-                                            <td>{{test.note}}</td>
+
+
+
+                                    <table class="table table-bordered" ng-show="input.selectedIGTests.results.length > 0">
+                                        <tr><th>Track</th><th>Scenario</th><th>Server</th><th>Asserter</th><th>Result</th><th>Note</th></tr>
+                                        <tr ng-repeat="test in input.selectedIGTests.results">
                                             <td>{{test.track.name}}</td>
                                             <td>{{test.scenario.name}}</td>
+                                            <td>{{test.server.name}}</td>
+                                            <td>{{test.asserter.name}}</td>
+                                            <td>{{test.result}}</td>
+
+                                            <td>{{test.note}}</td>
+
+
                                         </tr>
                                     </table>
 
@@ -2299,45 +2182,6 @@
                 </uib-tab>
 
 
-<!--
-                <uib-tab heading="Logical Model Review" ng-show="selectedTrack.trackType == 'lmreview'">
-                    <br/>
-                    <div ng-controller="lmCheckCtrl">
-                        <ng-include src="'includes/lmCheck.html'"></ng-include>
-                    </div>
-                </uib-tab>
-
-                -->
-
-                <!--
-                <uib-tab heading="Graph Builder" ng-show="selectedTrack.allowGraph ||  selectedTrack.trackType == 'scenario'">
-                    <br/>
-                    <div ng-controller="cofCtrl">
-                        <ng-include src="'includes/cof.html'"></ng-include>
-                    </div>
-                </uib-tab>
-
-                <uib-tab heading="Summary of graphs " ng-show="selectedTrack.allowGraph || selectedTrack.trackType == 'scenario'">
-                    <br/>
-                    <div ng-controller="cofSummaryCtrl">
-                        <ng-include src="'includes/cofSummary.html'"></ng-include>
-                    </div>
-                </uib-tab>
-
-                -->
-
-                <!-- not sure if this is useful any more...
-                <uib-tab heading="All graph notes" ng-show="selectedTrack.allowGraph || selectedTrack.trackType == 'scenario'">
-                    <br/>
-
-
-                    <div ng-controller="allNotesCtrl">
-                        <ng-include src="'includes/allNotes.html'"></ng-include>
-                    </div>
-
-
-                </uib-tab>
-                -->
 
                 <uib-tab heading="Participation report" select="makeEventReport()">
                     <br/>
@@ -2485,68 +2329,7 @@
 
 
 
-                <uib-tab heading="Documentation" ng-show="false">
-                    <br/>
-                    <!--
 
-                                      <iframe width="100%" height="900px"
-                                              src="https://docs.google.com/document/d/e/2PACX-1vShxGk1j0-DgQ5jP3CNIqpmbN_QGG1ZJd9haEkgcT2yY77KF5tPwCtBckV5Mo9ZN-PXghhCeXD7zaxg/pub?embedded=true"></iframe>
-
-
-                                      <iframe width="100%" height="900px"
-                                              src="https://docs.google.com/document/d/1-NPnegdLRfGoECOjKOV_5ubDbX7grgeJQFeBwjBXSIw/pub?embedded=true"></iframe>
-                  -->
-
-                </uib-tab>
-
-
-
-
-<!--
- ng-controller = "editTrackCtrl"
-
-                <uib-tab heading="List">
-                    <br/>
-                    <select ng-model="input.filterRole" ng-change="setFilter()"
-                            ng-options = "concept.display for concept in csAllRoles.concept"></select>
-
-                    <table class="table table-bordered">
-                        <tr><th>Name</th><th>Description</th><th>Role</th><th>Url</th><th>Auth Svr.</th><th>Notes</th><th>Tags</th></tr>
-                        <tr ng-repeat="ep in endpoints" ng-show="canShow(ep)">
-                            <td>{{ep.name}}</td>
-                            <td>{{ep.description}}</td>
-                            <td>{{ep.role}}</td>
-                            <td>{{ep.url}}</td>
-                            <td>{{ep.authz}}</td>
-                            <td>
-                                <div ng-repeat="note in ep.notes">
-                                    {{note.text}}
-                                </div>
-                            </td>
-                            <td>
-                                <div ng-repeat="tag in ep.tags">
-                                    {{tag}}
-                                </div>
-                                <a class='pull-right' href="#" ng-click="addTag(ep)">Add</a>
-                            </td>
-                        </tr>
-                    </table>
-                </uib-tab>
-                <uib-tab heading="Graph">
-                    <div class="row">
-                        <div class="col-sm-4 col-md-4">
-
-                        </div>
-                        <div class="col-sm-4 col-md-4">
-
-                        </div>
-                    </div>
-                </uib-tab>
-                <uib-tab heading="json">
-                    <pre>{{endpoints | json}}</pre>
-                </uib-tab>
-
-                -->
             </uib-tabset>
 
         </div>

@@ -68,7 +68,6 @@ angular.module("sampleApp")
                             function(data) {
                                 if (data.data) {
                                     $scope.eventConfig = data.data[0];
-
                                     if ($scope.eventConfig) {
 
                                         //sets the type of the event - 'clinical' or 'technical'
@@ -80,20 +79,15 @@ angular.module("sampleApp")
                                             $scope.navBarStyle = $scope.eventConfig.navBarStyle;
 
 
-
-
-
-                                            //$scope.input.trackListDisplay $scope.input.trackListDisplay
-
                                         }
                                         //save the config in the service (if the page is re-loaded
                                         ecosystemSvc.setEventConfig(data.data[0]);
                                         loadData();     //can load all the data for the event ...
 
                                         //is there a user cached for this event?
-                                        var user = ecosystemSvc.getCurrentUser();
+                                        $scope.currentUser = ecosystemSvc.getCurrentUser();
 
-                                        if (! user) {
+                                        if (! $scope.currentUser) {
                                             //no user - need to login
                                             login();
                                         }
@@ -210,19 +204,22 @@ angular.module("sampleApp")
 
                     if (vo.user) {
                         //this was an existing user...
-                        var person = vo.person;
+                        //var person = vo.person;
                         ecosystemSvc.setCurrentUser(vo.user);
+                        $scope.currentUser = ecosystemSvc.getCurrentUser();
 
                     } else if (vo.newUser) {
                         ecosystemSvc.updatePerson(vo.newUser).then(
                             function(data) {
                                 ecosystemSvc.setCurrentUser(vo.newUser);
+                                $scope.currentUser = ecosystemSvc.getCurrentUser();
 
                             }, function(err) {
                                 alert('Error saving person: '+ angular.toJson(err));
                             }
                         )
                     }
+
 
 
                     /* temp...
