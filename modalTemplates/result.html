@@ -18,160 +18,105 @@
 
     <div class="modal-body">
 
-
-        <uib-tabset>
-            <uib-tab heading="Test result">
-
-                <br/>
-
-
-                <div class="row">
-                    <div class="col-md-2 col-sm-2">
-                        Asserter
-                    </div>
-                    <div class="col-md-5 col-sm-5">
-                        <input type="text" ng-model="input.asserter"
-                               typeahead-on-select = "asserterSelected($item, $model, $label, $event)"
-                               uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control">
-                    </div>
-                </div>
-                <br/>
-
-                <div ng-show="IGs.length > 0">
-                    <div class="row" >
-                        <div class="col-md-2 col-sm-2">
-                            IG
-                        </div>
-                        <div class="col-md-8 col-sm-8">
-                            <div ng-show="IGs.length == 1">
-                                {{IGs[0].name}}
-                            </div>
-
-                            <div ng-show="IGs.length > 1">
-                                <select class="form-control" ng-model="input.selectedIG"
-                                        ng-options = "IG.name for IG in IGs"></select>
-                            </div>
+        <div class="row">
+            <div class="col-md-2 col-sm-2">
+                Asserter
+            </div>
+            <div class="col-md-5 col-sm-5">
+                <input type="text" ng-model="input.asserter"
+                       typeahead-on-select = "asserterSelected($item, $model, $label, $event)"
+                       uib-typeahead="person.name for person in allPersons | filter:{name:$viewValue} | limitTo:8" class="form-control">
+            </div>
+        </div>
+        <br/>
 
 
-                        </div>
-                    </div>
-                    <br/>
-                </div>
+        <div class="row">
+            <div class="col-md-2 col-sm-2">
+                Server
+            </div>
+            <div class="col-md-5 col-sm-5">
+                <select ng-model="input.selectedServer" class="form-control"
+                        ng-options = "server.name for server in allServers"></select>
 
+                <!--
+                <input type="text" ng-model="input.serverSelectUI"
+                       typeahead-on-select = "serverSelected($item, $model, $label, $event)"
+                       uib-typeahead="server.name for server in allServers | filter:{name:$viewValue} | limitTo:8" class="form-control">
+                -->
 
-                <div class="row">
-                    <div class="col-md-6 col-sm-6">
-
-                        <div class="btn-group">
-                            <label class="btn btn-success" ng-model="input.radioModel" uib-btn-radio="'pass'">Pass</label>
-                            <label class="btn btn-danger" ng-model="input.radioModel" uib-btn-radio="'fail'">Fail</label>
-                            <label class="btn btn-warning" ng-model="input.radioModel" uib-btn-radio="'partial'">Partial</label>
-                            <label class="btn btn-primary" ng-model="input.radioModel" uib-btn-radio="'note'">Note</label>
-                        </div>
-                        <div ng-show="input.radioModel">Current value: <strong>{{input.radioModel}}</strong></div>
-
-                    </div>
-                    <div class="col-md-6 col-sm-6">
-                        <div ng-show="input.radioModel=='pass'">
-                            Well done! Please add any notes you have and save...
-                        </div>
-                        <div ng-show="input.radioModel=='fail'">
-                            That's a pity. Any particular reason?
-                        </div>
-                        <div ng-show="input.radioModel=='partial'">
-                            Well, that's better than a fail! Please add the details in the box below...
-                        </div>
-                        <div ng-show="input.radioModel=='note'">
-                            So not actually a test then? Fine - make sure you add the details in the box below...
-                        </div>
-
-                    </div>
-                </div>
-                <br/>
-
-                <textarea placeholder="Enter any notes" class="form-control" ng-model="input.note"></textarea>
-
-
-
-
-            </uib-tab>
-
-            <uib-tab ng-show="false" heading="Link to TouchStone">
-                <div ng-controller="touchStoneCtrl">
-
-                    {{ecosystemSvc.getCurrentUser()}}
-
-
-                    <div class="pull-right">
-                        <button
-                                ng-click="authenticate(ecosystemSvc.getCurrentUser())"
-                                class="btn btn-warning">Login</button>
-                        <button
-                                ng-click="getTestResults()"
-                                class="btn btn-primary">Retrieve</button>
-                    </div>
+            </div>
 <!--
+            <div class="col-md-5 col-sm-5">
+                <select ng-model="input.selectedRole" class="form-control"
+                        ng-options = "role.name for role in allRoles"></select>
+            </div>
 
-                    <div class="row">
+-->
 
-                        <div class="col-md-3 col-sm-3">
-                            <ul class="list-group">
-                                <li ng-class="{'list-group-item':1,
-                                                    'listItemSelected':selectedScenarioDirect.id == scenario.id}"
-                                    style="cursor: pointer"
-                                    ng-repeat="scenario in selectedTrack.scenarios"
-                                    ng-click="selectScenarioDirect(scenario)">
-                                    {{scenario.name}}
+        </div>
+        <br/>
 
-                                </li>
-                            </ul>
 
-                        </div>
-                        <div class="col-md-3 col-sm-3">
 
-                        </div>
+        <div ng-show="IGs.length > 0">
+            <div class="row" >
+                <div class="col-md-2 col-sm-2">
+                    IG
+                </div>
+                <div class="col-md-8 col-sm-8">
+                    <div ng-show="IGs.length == 1">
+                        {{IGs[0].name}}
                     </div>
 
-                    -->
-                </div>
-
-            </uib-tab>
-
-            <uib-tab  ng-show="false">
-                <uib-tab-heading>
-                    Trackers &nbsp;&nbsp;
-                    <span ng-show="trackers.length > 0" class="pull-right badge">{{trackers.length}}</span>
-                </uib-tab-heading>
-                <br/>
-
-                <h5 ng-show="trackers.length > 0">Current trackers</h5>
-                <div ng-repeat="tracker in trackers">
-                    {{tracker.url}}
-                </div>
-
-                <h5>New tracker</h5>
-                <div class="row">
-                    <div class="col-md-10 col-sm-10">
-                        <input type="text" class="form-control" ng-model="input.newTracker" placeholder="Url to tracker item"/>
+                    <div ng-show="IGs.length > 1">
+                        <select class="form-control" ng-model="input.selectedIG"
+                                ng-options = "IG.name for IG in IGs"></select>
                     </div>
-                    <div class="col-md-2 col-sm-2">
-                        <button ng-show="input.newTracker" class="btn btn-primary" ng-click="addNewTracker()">Add</button>
-                    </div>
+
+
+                </div>
+            </div>
+            <br/>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+
+                <div class="btn-group">
+                    <label class="btn btn-success" ng-model="input.radioModel" uib-btn-radio="'pass'">Pass</label>
+                    <label class="btn btn-danger" ng-model="input.radioModel" uib-btn-radio="'fail'">Fail</label>
+                    <label class="btn btn-warning" ng-model="input.radioModel" uib-btn-radio="'partial'">Partial</label>
+                    <label class="btn btn-primary" ng-model="input.radioModel" uib-btn-radio="'note'">Note</label>
+                </div>
+                <div ng-show="input.radioModel">Current value: <strong>{{input.radioModel}}</strong></div>
+
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <div ng-show="input.radioModel=='pass'">
+                    Well done! Please add any notes you have and save...
+                </div>
+                <div ng-show="input.radioModel=='fail'">
+                    That's a pity. Any particular reason?
+                </div>
+                <div ng-show="input.radioModel=='partial'">
+                    Well, that's better than a fail! Please add the details in the box below...
+                </div>
+                <div ng-show="input.radioModel=='note'">
+                    So not actually a test then? Fine - make sure you add the details in the box below...
                 </div>
 
-                <br/><br/>
-                <p><em>Use this function to record trackers created as a result of this interaction. Create the tracker
-                item directly, then paste the URL into the box above and click 'Add' to add to the result. You will still
-                need to save the result (on the other tab) to save in the dataBase</em></p>
+            </div>
+        </div>
+        <br/>
 
-                <div class="pull-right">
-                    <a href="https://gforge.hl7.org/gf/project/fhir/tracker/" target="_blank">Link to tracker (opens in new tab)</a>
-                </div>
+        <textarea placeholder="Enter any notes" class="form-control" ng-model="input.note"></textarea>
 
 
 
-            </uib-tab>
-        </uib-tabset>
+
+
 
 </div>
 

@@ -1304,7 +1304,7 @@ angular.module("sampleApp").service('ecosystemSvc',
         allResultsCount : function() {
             return Object.keys(allResults).length;
         },
-        deleteResult : function(rslt) {
+        deleteResultDEP : function(rslt) {
             var deferred = $q.defer();
             //this will set the status of the result (based on the id) to 'deleted'
             $http.delete("/result/"+rslt.id).then(
@@ -1652,13 +1652,17 @@ angular.module("sampleApp").service('ecosystemSvc',
                     detail.id = value.id;       //the Id of the test
                     detail.track = {name:value.track.name}
                     detail.scenario = {name:value.scenario.name}
+                    if (value.server) {
+                        detail.server = {name:value.server.name}
+                    }
+                    /*
                     try {
                         detail.client = {name:value.client.client.name,role:value.client.role.name,systemRole: value.client.role.role}
                         detail.server = {name:value.server.server.name,role:value.server.role.name,systemRole: value.server.role.role}
                     } catch (ex) {
 
                     }
-
+*/
                     result[igId].results.push(detail)
                 }
             })
@@ -1683,10 +1687,11 @@ angular.module("sampleApp").service('ecosystemSvc',
                         item.total ++;
                         summary.resultTotals[value.text]++;
 
-                        if (value.note) {
-                            summary.notes.push({asserter:value.asserter,note:value.note,
+                        let note = value.note || "";
+                      //  if (value.note) {
+                            summary.notes.push({asserter:value.asserter,note:note,
                                 date:value.issued,text:value.text,scenarioName:scenarioName})
-                        }
+                       // }
                     }
                 } else {
                     alert("There's an invalid result with the id: "+value.id)
@@ -1945,10 +1950,11 @@ angular.module("sampleApp").service('ecosystemSvc',
 
         },
 
-        addScenarioResult : function(track,scenario,clientRole,serverRole,result) {
-
+        addScenarioResult : function(track,scenario,result) {
+            //addScenarioResult : function(track,scenario,clientRole,serverRole,result) {
             result.id = result.id || 'id'+ new Date().getTime();
 
+            /* I'm not sure if the 'key' is needed
             var key;
             if (clientRole && serverRole) {
                 //this has come from the client/server tab...
@@ -1965,17 +1971,7 @@ angular.module("sampleApp").service('ecosystemSvc',
             }
 
             result.key = key;       //in case we delete it...
-
-            //add the participants to the result. In this somple case there is one client and one server
-            //todo - leave this for now - consider multi participant in v2...
-            //result.participants = result.participants || []
-            //result.participants.length = 0;
-            //result.participants.push({systemRole:'client',role: client.role,participant:client.client});
-            //result.participants.push({systemRole:'server',role: server.role,participant:server.server});
-
-            //todo - not sure if participant is needed here...
-            //result.server = {role: serverRole.role,participant:serverRole.server};  //used for download
-            //result.client = {role: clientRole.role,participant:clientRole.client};  //used for download
+*/
 
 
             result.scenario = scenario;
@@ -1984,8 +1980,8 @@ angular.module("sampleApp").service('ecosystemSvc',
             result.track.resultTotals[result.text] = result.track.resultTotals[result.text] || 0;
             result.track.resultTotals[result.text]++;
 
-            allResults[key] = result;
-
+            //allResults[key] = result;
+            allResults[result.id] = result;
 
             var resultToSave = {};
             resultToSave.id = result.id;
@@ -1993,26 +1989,31 @@ angular.module("sampleApp").service('ecosystemSvc',
             resultToSave.text = result.text;
             resultToSave.note = result.note;
             resultToSave.IG = result.IG;
+            if (result.server) {
+                //result.server is the server object
+                let serverStore = {serverid : result.server.id, name : result.server.name}; //don't want the full server object
 
+                //if (result.serverRole)
+
+                resultToSave.server = serverStore; //serverid:result.server.server.id,roleid:result.server.role.id,name:result.server.server.name};
+            }
+
+            /*
             if (serverRole) {
                 resultToSave.server = {serverid:serverRole.server.id,roleid:serverRole.role.id,name:serverRole.server.name};
             }
             if (clientRole) {
                 resultToSave.client = {clientid:clientRole.client.id,roleid:clientRole.role.id,name:clientRole.client.name};
             }
-
+*/
             resultToSave.scenarioid = scenario.id;
             resultToSave.trackid = track.id;
             resultToSave.trackers = result.trackers;
-
+           // resultToSave.type =
             if (result.asserter){
                 resultToSave.asserterid = result.asserter.id    //todo - should this be the whole object (like author)???
             }
-/*
-            if ($localStorage.ecoCurrentUser) {
-                resultToSave.author = $localStorage.ecoCurrentUser;    //save the whole object.
-            }
-*/
+
 
             $http.put("/result",resultToSave).then(
                 function(){
@@ -2157,7 +2158,7 @@ angular.module("sampleApp").service('ecosystemSvc',
             return deferred.promise;
         },
 
-        removeClientFromScenario : function(scenario,clientRole) {
+        removeClientFromScenarioDEP : function(scenario,clientRole) {
             var deferred = $q.defer();
             //make sure there are no results against this clientRole
             var canDelete = true
@@ -2451,7 +2452,12 @@ angular.module("sampleApp").service('ecosystemSvc',
                                         result.note = dataResult.note;
                                         result.trackers = dataResult.trackers;
                                         result.IG = dataResult.IG;
+                                        if (dataResult.server) {
+                                            result.server = hashServer[dataResult.server.serverid];
+                                        }
+
                                         result.track = hashTrack[dataResult.trackid];
+
                                         if (!result.track) {
                                             alert("error processing track in result# " + dataResult.id);
                                         }
@@ -2465,14 +2471,20 @@ angular.module("sampleApp").service('ecosystemSvc',
 
                                             result.issued = dataResult.issued;
                                             if (dataResult.server) {
-                                                result.server = {server: hashServer[dataResult.server.serverid],
-                                                    role: hashRole[dataResult.server.roleid]};
 
+                                               // result.server = {server: hashServer[dataResult.server.serverid],
+                                                    //role: hashRole[dataResult.server.roleid]};
+
+                                                //not sure about the role...
+                                             //   result.server = {server: hashServer[dataResult.server.serverid],
+                                                  //  role:{}};
+
+/*
                                                 if (!result.server.server || ! result.server.role) {
                                                     alert("Error processing server in result# " + dataResult.id);
                                                     delete result.server;
                                                 }
-
+*/
                                             }
                                             if (dataResult.client) {
                                                 result.client = {client: hashClient[dataResult.client.clientid],
@@ -2497,6 +2509,9 @@ angular.module("sampleApp").service('ecosystemSvc',
                                             }
 
 
+                                            //no longer supporting the 'cs' - clientserver type of test
+                                            let key =  dataResult.id;
+                                            /*
                                             var key;
                                             if (dataResult.type == 'cs') {
                                                 key = result.scenario.id + "|" + result.client.client.id + '|' + result.client.role.id +
@@ -2504,8 +2519,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                                             } else {
                                                 key = dataResult.id;
                                             }
-
-
+                                            */
                                             result.key = key;       //we need this for the delete...
 
 
@@ -2549,7 +2563,7 @@ angular.module("sampleApp").service('ecosystemSvc',
 
         },
 
-        addTag : function(tag,ep){
+        addTagDEP : function(tag,ep){
             //add a tag to an endpoint
             ep.tags = ep.tags || []
             ep.tags.push(tag);
@@ -2563,7 +2577,7 @@ angular.module("sampleApp").service('ecosystemSvc',
 
 
         },
-        getEndPoints : function() {
+        getEndPointsDEP : function() {
             //return a list of internalEnspoint objects (derives from EndPoint resources)
 
             var lstTags = [];
@@ -2597,326 +2611,6 @@ angular.module("sampleApp").service('ecosystemSvc',
             return deferred.promise
         },
 
-        getAllRolesDEP : function(){
-
-            //return a codesystem resource with the role definitions
-            var deferred = $q.defer();
-            var url = 'artifacts/ecoRoles.json';
-            $http.get(url).then(
-                function(data) {
-                    deferred.resolve(data.data)
-                }
-            );
-            return deferred.promise
-           /*
-
-            var roles = {}
-            //return all the unique roles in the list
-            lstEP.forEach(function(ep){
-                roles[ep.role] = 'x'
-            })
-            var lst = [];
-            angular.forEach(roles,function(v,k){
-                lst.push(k)
-            })
-
-            return lst;
-
-*/
-        },
-
-        uploadEP : function(lst) {
-            var tran = {resourceType:'Bundle',type:'batch',entry:[]}
-            lst.forEach(function (ep,index) {
-                //todo - change to use "makeResourceFromEP()"
-                var res = {resourceType:'Endpoint',id:'cf-eco-'+index,status:'active'};
-
-                res.name = ep.name;
-                res.payloadType = {Coding:[{system:'http://clinfhir.com/NamingSystem/cf-eco-payloadtype/fhir',code:'resource'}]}
-                res.address = ep.url;
-                //res.contact = []
-                //res.contact.push({value:})
-
-                addExtension(res,'http://clinfhir.com/fhir/StructureDefinition/cfAuthor',
-                    {valueBoolean:true});
-                addExtension(res,extDescriptionUrl,
-                    {valueString:ep.description});
-                addExtension(res,extRoleUrl,
-                    {valueCode:ep.role});
-                if (ep.notes) {
-                    ep.notes.forEach(function (note) {
-                        var ext = {url:extNoteUrl,extension:[]}
-                        ext.extension.push({url:'text',valueString:note.text});
-                        res.extension.push(ext);    //we know res.extension[] exists at this point...
-                    })
-                }
-
-                var url = serverIP + 'Endpoint/'+res.id;
-                tran.entry.push({resource:res,request:{method:'PUT',url:url}})
-
-            });
-
-            $http.post(serverIP,tran).then(
-                function(data){
-
-                },
-                function(err) {
-                    console.log(err)
-                }
-            )
-
-
-        },
-        makeGraphDEP : function(bundle,centralResource,hideMe,showText) {
-            //+++++++ this is a copy from builderSvc to avoid pulling in dups. Should really be in a separate library
-            //builds the model that has all the models referenced by the indicated SD, recursively...
-            //if hideMe is true, then hide the central node and all references to it
-
-            var that = this;
-            var allReferences = [];
-           // var gAllReferences = [];
-
-
-            var allResources = {};  //all resources hash by id
-            var centralResourceNodeId;
-
-            var arNodes = [], arEdges = [];
-            var objNodes = {};
-
-            //for each entry in the bundle, find the resource that it references
-            bundle.entry.forEach(function(entry){
-                //should always be a resource.id  todo? should I check
-                var resource = entry.resource;
-                var addToGraph = true;
-
-                var url = getLinkingUrlFromId(resource);
-
-                /*
-                                    var url = resource.resourceType+'/'+resource.id;
-                                    //if this is a uuid (starts with 'urn:uuid:' then don't add the resourceType as a prefix.
-                                    //added to support importing bundles with uuids...
-                                    if (resource.id.lastIndexOf('urn:uuid:', 0) === 0) {
-                                        url = resource.id;
-                                    }
-                                    */
-
-                //add an entry to the node list for this resource...
-                var node = {id: arNodes.length +1, label: resource.resourceType, shape: 'box',url:url,cf : {resource:resource}};
-                if (resource.text) {
-                    node.title = resource.text.div;
-                    if (showText) {
-
-                        var labelText = $filter('manualText')(resource);
-                        if (labelText) {
-                            node.label += "\n"+labelText.substr(0,20);
-                        }
-
-                    }
-                }
-
-
-                //the id of the centralResource (if any)
-                if (centralResource) {
-                    if (resource.resourceType == centralResource.resourceType && resource.id == centralResource.id) {
-                        centralResourceNodeId = node.id
-
-                        if (hideMe) {
-                            //hide the node
-                            node.hidden = true;
-                            node.physics=false;
-                        }
-
-                    }
-                }
-
-
-
-
-                if (objColours[resource.resourceType]) {
-                    node.color = objColours[resource.resourceType];
-                }
-
-                //if there are implicit rules, then assume a logical model //todo - might want a url for this...
-                if (resource.implicitRules) {
-                    node.shape='ellipse';
-                    node.color = objColours['LogicalModel'];
-                    node.font = {color:'white'}
-                }
-
-                arNodes.push(node);
-                objNodes[node.url] = node;
-
-                var refs = [];
-                findReferences(refs,resource,resource.resourceType)
-
-                refs.forEach(function(ref){
-                    allReferences.push({src:node,path:ref.path,targ:ref.reference,index:ref.index})
-                   // gAllReferences.push({src:url,path:ref.path,targ:ref.reference,index:ref.index});    //all relationsin the collection
-                })
-
-            });
-
-
-            //so now we have the references, build the graph model...
-            allReferences.forEach(function(ref){
-                var targetNode = objNodes[ref.targ];
-                if (targetNode) {
-                    var label = $filter('dropFirstInPath')(ref.path);
-                    arEdges.push({id: 'e' + arEdges.length +1,from: ref.src.id, to: targetNode.id, label: label,arrows : {to:true}})
-                } else {
-                    console.log('>>>>>>> error Node Id '+ref.targ + ' is not present')
-                }
-
-            });
-
-
-            //if hideMe is set, then don't show references to the centralResource (which will have been hidden)
-            if (hideMe) {
-                arEdges.forEach(function (edge) {
-                    if (edge.from == centralResourceNodeId || edge.to == centralResourceNodeId) {
-                        edge.hidden = true;
-                        edge.physics=false;
-                    }
-
-                })
-            }
-
-            //if there's a centralResource - and not hideMe - , then only include resources with a reference to or from it...
-            if (centralResource && ! hideMe) {
-
-
-                // var centralUrl = centralResource.resourceType + "/" + centralResource.id;
-                var centralUrl = getLinkingUrlFromId(centralResource);
-
-                var allRefs = that.getSrcTargReferences(centralUrl)
-
-                var hashNodes = {};
-
-                //move through the nodes an find the references to & from the central node
-                arNodes.forEach(function (node) {
-                    var include = false;
-                    var id = node.cf.resource.id;
-                    //var url = node.cf.resource.resourceType + "/"+node.cf.resource.id;
-                    var url = getLinkingUrlFromId(node.cf.resource);
-                    if (id == centralResource.id) {
-                        include = true
-                    } else {
-                        //does the node have a reference to the central one?
-                        //iterate though the references where this is the target
-                        allRefs.targ.forEach(function(targ){
-                            if (targ.src == url) {
-                                //yes, this resource has a reference to the central one...
-                                include = true;
-                            }
-                        });
-
-                        allRefs.src.forEach(function(src){
-                            if (src.targ == url) {
-                                //yes, this resource has a reference to the central one...
-                                include = true;
-                            }
-                        })
-
-                    }
-
-                    if (! include) {
-                        //hide the node
-                        node.hidden = true;
-                        node.physics=false;
-                    } else {
-                        hashNodes[url] = true;
-                    }
-
-
-                })
-
-                //only show edges where either the source or the target in the central node
-                arEdges.forEach(function (edge) {
-                    if (edge.from == centralResourceNodeId || edge.to == centralResourceNodeId) {
-
-                    } else {
-                        edge.hidden = true;
-                        edge.physics=false;
-                    }
-
-                })
-
-            }
-
-
-
-
-
-            var nodes = new vis.DataSet(arNodes);
-            var edges = new vis.DataSet(arEdges);
-
-            // provide the data in the vis format
-            var data = {
-                nodes: nodes,
-                edges: edges
-            };
-
-            return {graphData : data, allReferences:allReferences, nodes: arNodes};
-
-            //find elements of type refernce at this level
-            function findReferences(refs,node,nodePath,index) {
-                angular.forEach(node,function(value,key){
-
-                    //if it's an object, does it have a child called 'reference'?
-
-                    if (angular.isArray(value)) {
-                        value.forEach(function(obj,inx) {
-                            //examine each element in the array
-                            if (obj) {  //somehow null's are getting into the array...
-                                var lpath = nodePath + '.' + key;
-                                if (obj.reference) {
-                                    //this is a reference!
-
-                                    refs.push({path: lpath, reference: obj.reference})
-                                } else {
-                                    //if it's not a reference, then does it have any children?
-                                    findReferences(refs,obj,lpath,inx)
-                                }
-                            }
-
-                        })
-                    } else
-
-                    if (angular.isObject(value)) {
-                        var   lpath = nodePath + '.' + key;
-                        if (value.reference) {
-                            //this is a reference!
-                            //if (showLog) {console.log('>>>>>>>>'+value.reference)}
-                            refs.push({path:lpath,reference : value.reference,index:index})
-                        } else {
-                            //if it's not a reference, then does it have any children?
-                            findReferences(refs,value,lpath)
-                        }
-                    }
-
-
-                })
-            }
-
-
-            function getLinkingUrlFromId(resource) {
-                //return the url used for referencing. If a Uuid then just return it - otherwise make a relatibe
-
-                if (resource && resource.id) {
-                    if (resource.id.lastIndexOf('urn:uuid:', 0) === 0) {
-                        return resource.id;
-                    } else {
-                        return resource.resourceType + "/" + resource.id;
-                    }
-                } else {
-                    //in theory, shouldn't happen...
-                    alert("There is a resource with no id! " + angular.toJson(resource))
-                }
-
-
-            }
-
-        },
     }
 
 });

@@ -3,24 +3,60 @@
 
 
     <div class="row">
-        <!--
-        <div class="col-sm-2 col-md-2">
-            <div class="center-text"><strong >Technical tracks</strong></div>
-            <div class="trackScroll">
-                <ul class="list-group">
-                    <li ng-class="{'list-group-item':1,'listItemSelected':selectedTrack.id == track.id}" style="cursor: pointer"
-                        ng-repeat="track in tracks  | orderBy: 'name' "
-                        ng-click="selectTrack(track)"
-                        ng-show="track.trackType == 'technical'">
-                        {{track.name}}
-                        <div><em>({{track.trackType}})</em></div>
-                    </li>
-                </ul>
-            </div>
-        </div>
 
-        -->
         <div class="col-sm-12 col-md-12">
+
+            <br/>
+
+            <div class="row">
+
+                <div class="col-md-3 col-sm-3">
+                    <ul class="list-group">
+                        <li ng-class="{'list-group-item':1,
+                                                    'listItemSelected':selectedScenarioDirect.id == scenario.id}"
+                            style="cursor: pointer"
+                            ng-repeat="scenario in selectedTrack.scenarios"
+                            ng-click="selectScenarioDirect(scenario)">
+                            {{scenario.name}}
+
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <div ng-show="selectedScenarioDirect">
+
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Asserter</th><th>Server</th><th>Result</th>
+                                <th>Note</th><th>IG</th>
+                            </tr>
+                            <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(null,selectedScenarioDirect)">
+
+                                <td>{{result.asserter.name}}</td>
+                                <td>{{result.server.name}}</td>
+                                <td>{{result.text}}</td>
+
+                                <td>{{result.note}}</td>
+                                <td>{{result.IG.name}}</td>
+                                <td>
+                                    <a href="#" ng-click="editTestResult(result)">edit</a>
+                                </td>
+
+                            </tr>
+                        </table>
+
+
+
+
+                        <a href="#" ng-click="addTestResult(selectedTrack,selectedScenarioDirect,null,null)">Add new result</a>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!--
             <uib-tabset>
                 <uib-tab heading="Comment against Scenario (Direct)">
                     <br/>
@@ -80,7 +116,6 @@
                 </uib-tab>
 
 
-
                 <uib-tab heading="Identified Client/Server">
                     <br/>
                     <p class="banner">This is used when a scenario only uses 2 participants - a client and a server</p>
@@ -107,20 +142,7 @@
                                             </span>
 
                         </div>
-                        <!--
-                                                        {{scenario.clients.length}} {{scenario.servers.length}}
-                                                        <div ng-show="! scenario.clients && !scenario.servers">
-                                                            <em>You need to add at least one server and one client to record test results</em>
-                                                        </div>
 
-                                                        <div ng-show="scenario.clients.length == 0 && scenario.servers.length > 0">
-                                                            <em>You need to add at least one client as well to record test results</em>
-                                                        </div>
-
-                                                        <div ng-show="scenario.servers.length ==0 && scenario.clients.length == 0">
-                                                            <em>You need to add at least one server as well to record test results</em>
-                                                        </div>
-                        -->
                         <div class="row">
                             <div class="col-sm-12 col-md-12">
 
@@ -128,9 +150,6 @@
                                 <table class="table table-bordered">
                                     <tr>
                                         <td width="150px"  >
-                                            <!--
-                                            <button class="btn btn-link" ng-click="addClientToScenario(scenario)">Add Client</button>
-                                            -->
                                         </td>
                                         <th ng-repeat="server in scenario.servers">
                                             {{server.server.name}}
@@ -178,50 +197,9 @@
                 </uib-tab>
 
 
-                <!--
-                                                <uib-tab heading="Pull from Touchstone">
-                                                    <br/>
-                                                    <div ng-controller="touchStoneCtrl">
-
-
-                                                        <p class="banner">Pull test results from touchstone
-
-                                                        </p>
-                                                        <div class="pull-right">
-                                                            <button
-                                                                    ng-click="authenticate(ecosystemSvc.getCurrentUser())"
-                                                                    class="btn btn-warning">Login</button>
-                                                            <button
-                                                                ng-click="getTestResults()"
-                                                                class="btn btn-primary">Retrieve</button>
-                                                        </div>
-
-
-                                                        <div class="row">
-
-                                                            <div class="col-md-3 col-sm-3">
-                                                                <ul class="list-group">
-                                                                    <li ng-class="{'list-group-item':1,
-                                                                    'listItemSelected':selectedScenarioDirect.id == scenario.id}"
-                                                                        style="cursor: pointer"
-                                                                        ng-repeat="scenario in selectedTrack.scenarios"
-                                                                        ng-click="selectScenarioDirect(scenario)">
-                                                                        {{scenario.name}}
-
-                                                                    </li>
-                                                                </ul>
-
-                                                            </div>
-                                                            <div class="col-md-3 col-sm-3">
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </uib-tab>
-
-                                                -->
             </uib-tabset>
+
+            -->
         </div>
 
     </div>

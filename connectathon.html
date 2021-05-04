@@ -541,7 +541,7 @@
 
 
                                             <p ng-bind-html="selectedTrack.description | markDown"></p>
-                                            <!--{{selectedTrack.description}}-->
+
                                         </div>
                                         <div class="col-md-4">
                                             <div class="col-sm-6 col-md-6">
@@ -630,25 +630,6 @@
 
 
 
-<!--
-                                    <div class="row">
-                                        <hr class="trackBorder"/>
-                                        <div class="col-sm-2 col-md-2">
-                                            <strong>Track Leads</strong>
-                                        </div>
-                                        <div class="col-sm-10 col-md-10">
-                                            <ul class="list-unstyled">
-                                                <li ng-repeat="lead in selectedTrack.leads">
-                                                    {{lead.name}}
-                                                    <div ng-show="contact.value" style="margin-left: 20px" ng-repeat="contact in lead.contact">
-                                                        {{contact.type}}: {{contact.value}}
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <br/>
-                                    -->
                                     <div  ng-show="selectedTrack.url">
                                         <div class="row">
                                             <hr class="trackBorder"/>
@@ -659,9 +640,7 @@
                                                 <div ng-hide="selectedTrack.url">No Wiki page for this track.</div>
                                                 <a target="_blank" ng-show="selectedTrack.url"
                                                    ng-href="{{selectedTrack.url}}">{{selectedTrack.url}}</a> (Opens in a new tab)
-
                                             </div>
-
                                         </div>
                                         <br/>
                                     </div>
@@ -705,12 +684,11 @@
                                                         </td>
                                                         </td>
                                                         <td>{{link.description}}</td>
-                                                        <!--<td>
-                                                            {{link.url}}
-                                                            </td>-->
+
                                                     </tr>
 
                                                 </table>
+
                                                 <em>Links of general interest to this track. Open in a separate tab</em>
                                                 <!--
 
@@ -930,7 +908,7 @@
                                     </div>
 
 
-                                    <div class="row">
+                                    <div class="row" ng-show="false">
                                         <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
                                             <strong>Registered Participants</strong>
@@ -1095,13 +1073,7 @@
 
 
                                 </uib-tab>
-                                <!--
-                                <uib-tab heading="Details page" ng-show="iframeUrl !== 'about:blank'">
-                                    <br/>
-                                    <iframe ng-src="{{iframeUrl | trustAsResourceUrl}}" height="800px" width="100%"></iframe>
 
-                                </uib-tab>
-                                -->
                                 <uib-tab>
                                     <uib-tab-heading>
                                         Servers <span class="badge">{{getServersForTrack(selectedTrack.id).length}}</span>
@@ -1171,7 +1143,69 @@
 
                                 </uib-tab>
 
-                                <uib-tab heading="Report" ng-show="true">
+                                <uib-tab heading="Report">
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-md-3 col-sm-3">
+                                            <strong>Primary Participant</strong>
+
+                                            <ul>
+                                                <li ng-repeat = "person in selectedTrack.persons">
+                                                    {{person.name}}
+                                                </li>
+                                            </ul>
+                                            <strong>Track of Interest</strong>
+
+                                            <ul>
+                                                <li ng-repeat = "person in selectedTrack.toi">
+                                                    {{person.name}}
+                                                </li>
+                                            </ul>
+
+
+
+                                        </div>
+
+                                        <div class="col-md-9 col-sm-9">
+
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <th>Asserter</th><th>Scenario</th><th>Server</th><th>Result</th>
+                                                    <th>Note</th><th>IG</th>
+                                                </tr>
+                                                <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(null,selectedScenarioDirect)">
+
+                                                    <td>{{result.asserter.name}}</td>
+                                                    <td>{{result.scenario.name}}</td>
+                                                    <td>{{result.server.name}}</td>
+                                                    <td>{{result.text}}</td>
+
+                                                    <td>{{result.note}}</td>
+                                                    <td>
+                                                        {{result.IG.name}}
+                                                        <!--
+                                                        <div ng-repeat="tracker in result.trackers">
+                                                            {{tracker.url}}
+                                                        </div>
+                                                        -->
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" ng-click="editTestResult(result)">edit</a>
+                                                    </td>
+
+                                                </tr>
+                                            </table>
+
+
+
+                                        </div>
+                                    </div>
+                                </uib-tab>
+
+
+
+
+                                <uib-tab heading="Report" ng-show="false">
                                     <br/>
                                     <div class="row">
                                         <div class="col-md-6 col-sm-6">
@@ -1187,6 +1221,8 @@
                                                     {{serverRole.server.name}} ({{serverRole.server.contact[0].name}})
                                                 </li>
                                             </ul>
+
+                                            <!-- Not supporting clients ATM
                                             <div>There are {{selectedTrackReport.uniqueClients.length}} unique Clients associated
                                                 with scenarios in this track.
                                                 <span ng-show="selectedTrackReport.uniqueClients.length"> These are: </span></div>
@@ -1196,6 +1232,7 @@
                                                     {{clientRole.client.name}} ({{clientRole.client.contact[0].name}})
                                                 </li>
                                             </ul>
+                                            -->
 
 
                                             <br/>
@@ -1280,7 +1317,7 @@
 
                                 <uib-tab>
                                     <uib-tab-heading>
-                                        Testing <span ng-show="selectedTrack.scenarios.length > 0" class="badge"
+                                        Testing & notes <span ng-show="selectedTrack.scenarios.length > 0" class="badge"
                                               uib-popover=" Pass /  Fail /  Partial /  Note"
                                               popover-placement="top"
                                               popover-append-to-body = true
@@ -1736,6 +1773,7 @@
 
                 </uib-tab>
 
+                <!-- THis was copied under the track and can probably be deleted...-->
                 <uib-tab ng-show = "false" heading="Record test result">
                     <br/>
 
@@ -1893,19 +1931,28 @@
 
                                                 <table class="table table-bordered">
                                                     <tr>
-                                                        <th>Type</th><th>Asserter</th><th>Result</th>
-                                                        <th>Note</th><th>Trackers</th>
+                                                        <th>Asserter</th><th>Result</th>
+                                                        <th>Note</th><th>Server</th><th>IG</th>
                                                     </tr>
                                                     <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(null,selectedScenarioDirect)">
-                                                        <td>{{result.type}}</td>
+
                                                         <td>{{result.asserter.name}}</td>
                                                         <td>{{result.text}}</td>
 
                                                         <td>{{result.note}}</td>
                                                         <td>
+
+                                                            {{result.server.name}}
+
+                                                            <!--
                                                             <div ng-repeat="tracker in result.trackers">
                                                                 {{tracker.url}}
                                                             </div>
+
+                                                            -->
+                                                        </td>
+                                                        <td>
+                                                            {{IG.name}}
                                                         </td>
                                                         <td>
                                                             <a href="#" ng-click="editTestResult(result)">edit</a>
@@ -1975,23 +2022,8 @@
                 </uib-tab>
 
 
-<!--
-                <uib-tab ng-show="selectedTrack.trackType == 'lmreview'">
-                    <uib-tab-heading>
-                        Summary of LM Review
 
-                    </uib-tab-heading>
-                    <br/>
-
-                    <div ng-controller="lmSummaryCtrl">
-                        <ng-include src="'includes/lmSummary.html'"></ng-include>
-                    </div>
-
-                </uib-tab>
-
-                -->
-
-                <uib-tab select="IGTestReport()"">
+                <uib-tab select="IGTestReport()">
                     <uib-tab-heading>
                         Test Results
                         <span class="badge" ng-show="ecosystemSvc.allResultsCount() > 0">{{ecosystemSvc.allResultsCount()}}</span>
@@ -2002,44 +2034,41 @@
 
                         <uib-tab heading="All tests">
 
-
-
-
                             <br/>
-
 
                             <button class="btn btn-link pull-right" ng-click="download('results')">Download results</button>
 
                             <table class="table table-bordered">
                                 <tr>
-                                    <th>Track</th><th>Scenario</th><th>Participants</th><th>Asserter</th><th>Result</th>
-                                    <th>Note</th><th>Trackers</th>
+                                    <th>Track</th><th>Scenario</th><th>Server</th><th>Asserter</th><th>Result</th>
+                                    <th>Note</th><th>IG</th>
                                 </tr>
                                 <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults()">
 
                                     <td>{{result.track.name}}</td>
                                     <td>{{result.scenario.name}}</td>
-                                    <td>
+                                    <td> {{result.server.name}}
+                                        <!--
                                         <div ng-show="result.client">Client: {{result.client.client.name}}
                                             ({{result.client.role.name}})
                                         </div>
                                         <div ng-show="result.server">Server: {{result.server.server.name}}
                                             ({{result.server.role.name}})
                                         </div>
-                                        <!--
-                                        <div ng-repeat="part in result.participants">
-                                            {{part.systemRole}}:  {{part.participant.name}} ({{part.role.name}})
-                                        </div>
                                         -->
+
                                     </td>
                                     <td>{{result.asserter.name}}</td>
                                     <td>{{result.text}}</td>
 
                                     <td>{{result.note}}</td>
                                     <td>
+                                        {{result.IG.name}}
+                                        <!--
                                         <div ng-repeat="tracker in result.trackers">
                                             {{tracker.url}}
                                         </div>
+                                        -->
                                     </td>
 
 
@@ -2159,35 +2188,36 @@
 
                                             <table class="table table-bordered">
                                                 <tr>
-                                                    <th>Type</th><th>Scenario</th><th>Participants</th><th>Asserter</th><th>Result</th>
-                                                    <th>Note</th><th>Trackers</th><th></th>
+                                                    <th>Type</th><th>Scenario</th><th>Server</th><th>Asserter</th><th>Result</th>
+                                                    <th>Note</th><th>IG</th><th></th>
                                                 </tr>
                                                 <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(selectedTrackSummary)">
 
                                                     <td>{{result.type}}</td>
                                                     <td>{{result.scenario.name}}</td>
-                                                    <td>
+                                                    <td>{{result.server.name}}
+                                                        <!--
                                                         <div ng-show="result.client">Client: {{result.client.client.name}}
                                                             ({{result.client.role.name}})
                                                         </div>
                                                         <div ng-show="result.server">Server: {{result.server.server.name}}
                                                             ({{result.server.role.name}})
                                                         </div>
-                                                        <!--
-                                                        <div ng-repeat="part in result.participants">
-                                                            {{part.systemRole}}:  {{part.participant.name}} ({{part.role.name}})
-                                                        </div>
-                                                        -->
+-->
                                                     </td>
                                                     <td>{{result.asserter.name}}</td>
                                                     <td>{{result.text}}</td>
 
                                                     <td>{{result.note}}</td>
                                                     <td>
+                                                        {{result.IG.name}}
+                                                        <!--
                                                         <div ng-repeat="tracker in result.trackers">
                                                             {{tracker.url}}
                                                         </div>
+                                                        -->
                                                     </td>
+                                                    <!--
                                                     <td>
                                                         <i class="glyphicon glyphicon-remove-sign"
 
@@ -2195,6 +2225,7 @@
                                                            title="Delete" ng-click="deleteResult(result)">
                                                         </i>
                                                     </td>
+                                                    -->
                                                     <!--<td>{{key}}</td>-->
 
                                                 </tr>
@@ -2235,20 +2266,16 @@
                                     </div>
 
                                     <table class="table table-bordered" ng-show="input.selectedIGTests.results.length > 0">
-                                        <tr><th>Outcome</th><th>Client</th><th>Server</th><th>Asserter</th><th>Note</th><th>Track</th><th>Scenario</th></tr>
+                                        <tr><th>Outcome</th><th>Server</th><th>Asserter</th><th>Note</th><th>Track</th><th>Scenario</th></tr>
                                         <tr ng-repeat="test in input.selectedIGTests.results">
                                             <td>{{test.result}}</td>
-                                            <td>
-                                                <div ng-show="test.client.name">
-                                                    {{test.client.name}} ({{test.client.role}})
-                                                </div>
 
-
-                                            </td>
-                                            <td>
+                                            <td>{{test.server.name}}
+                                                <!--
                                                 <div ng-show="test.server.name">
                                                     {{test.server.name}} ({{test.server.role}})
                                                 </div>
+                                                -->
                                             </td>
                                             <td>{{test.asserter.name}}</td>
                                             <td>{{test.note}}</td>
@@ -2460,14 +2487,15 @@
 
                 <uib-tab heading="Documentation" ng-show="false">
                     <br/>
-
-
-                    <iframe width="100%" height="900px"
-                            src="https://docs.google.com/document/d/e/2PACX-1vShxGk1j0-DgQ5jP3CNIqpmbN_QGG1ZJd9haEkgcT2yY77KF5tPwCtBckV5Mo9ZN-PXghhCeXD7zaxg/pub?embedded=true"></iframe>
                     <!--
-                    <iframe width="100%" height="900px"
-                            src="https://docs.google.com/document/d/1-NPnegdLRfGoECOjKOV_5ubDbX7grgeJQFeBwjBXSIw/pub?embedded=true"></iframe>
--->
+
+                                      <iframe width="100%" height="900px"
+                                              src="https://docs.google.com/document/d/e/2PACX-1vShxGk1j0-DgQ5jP3CNIqpmbN_QGG1ZJd9haEkgcT2yY77KF5tPwCtBckV5Mo9ZN-PXghhCeXD7zaxg/pub?embedded=true"></iframe>
+
+
+                                      <iframe width="100%" height="900px"
+                                              src="https://docs.google.com/document/d/1-NPnegdLRfGoECOjKOV_5ubDbX7grgeJQFeBwjBXSIw/pub?embedded=true"></iframe>
+                  -->
 
                 </uib-tab>
 

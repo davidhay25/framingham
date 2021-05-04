@@ -520,7 +520,7 @@ angular.module("sampleApp")
                 }
             };
 
-            $scope.deleteResult = function(rslt) {
+            $scope.deleteResultDEP = function(rslt) {
                 //var text = rslt.text;
                 var modalOptions = {
                     closeButtonText: "No, I changed my mind",
@@ -868,7 +868,8 @@ console.log(vo);
                     }
                 );
             };
-            $scope.removeClientFromScenario = function (scenario,client) {
+
+            $scope.removeClientFromScenarioDEP = function (scenario,client) {
                 var modalOptions = {
                     closeButtonText: "No, I changed my mind",
                     headerText: "Remove client",
@@ -879,7 +880,7 @@ console.log(vo);
                 modalService.showModal({}, modalOptions).then(
                     function() {
                         ecosystemSvc.removeClientFromScenario(scenario,client);
-                        //alert('delete')
+
                     }
                 );
             }
@@ -890,9 +891,6 @@ console.log(vo);
                 $scope.personSummary = summary;
                 $scope.input.currentUser = person;
 
-
-
-
             };
 
             $scope.selectTrackResults = function(track) {
@@ -901,9 +899,6 @@ console.log(vo);
                     $scope.selectedTrackSummary = track;
                     $scope.resultsSummary = ecosystemSvc.getTrackResults(track); //get a summary object for the results for a track
 
-
-
-                    //set the scenario list
 
                     //set the options for the stacked bar chart
                     $scope.barSeries = ['Pass', 'Fail','Partial','Note'];
@@ -1021,7 +1016,6 @@ console.log(vo);
                     templateUrl: 'modalTemplates/result.html',
                     controller: 'resultCtrl',
                     resolve : {
-
                         scenario: function () {          //the default config
                             return scenario;
                         },
@@ -1044,14 +1038,13 @@ console.log(vo);
 
                         }
                     }
-                }).result.then(function(vo){
+                }).result.then(function(result){
+                    //
 
-                    ecosystemSvc.addScenarioResult(track,scenario,client,server,vo);
+                    ecosystemSvc.addScenarioResult(track,scenario,result);
                     //update the results summary
 
                     $scope.resultsSummary = ecosystemSvc.getTrackResults(track); //get a summary object for the results for a track
-
-                    //todo - no longer used - was a tab under trac details - ?remove
                     $scope.selectedTrackReport =  ecosystemSvc.getTrackResults(track);      //summary of this track...
 
 
@@ -1059,10 +1052,12 @@ console.log(vo);
 
             };
 
+            //invoked when adding a new test result
             $scope.editTestResult = function(result) {
 
+                //NOTE: only supporting direct now - can likely remove the cs stuff...
                 if (result.type == 'direct') {
-                    //this result is directly against a scenario...
+                    //this result is directly against a scenario... -
                     $scope.addTestResult(result.track,result.scenario,null,null,result)
                 } else {
                     //this is from client/server

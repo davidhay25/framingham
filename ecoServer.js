@@ -629,7 +629,7 @@ app.delete('/result/:id',function(req,res){
 //notes: result could have 'partial'
 // could add a 'comment' field
 //why is TestScript required?
-
+/*
 app.get('/fhir/TestReport',function(req,res){
     req.selectedDbCon.collection("result").find({}).toArray(function(err,result){
         if (err) {
@@ -706,6 +706,7 @@ app.get('/fhir/TestReport',function(req,res){
     })
 });
 
+*/
 //add a single result. This is always a put as the result can be updated
 app.put('/result',function(req,res){
     var result = req.body;
