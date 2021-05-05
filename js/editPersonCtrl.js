@@ -113,7 +113,7 @@ angular.module("sampleApp")
 
                 inputPerson.name = $scope.input.name;
                 inputPerson.organization = $scope.input.organization;
-                inputPerson.touchStoneUser = $scope.input.touchStoneUser;
+                //inputPerson.touchStoneUser = $scope.input.touchStoneUser;
 
                 inputPerson.contact.length = 0;
                 inputPerson.contact.push({type:'email',value: $scope.input.email});

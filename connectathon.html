@@ -473,7 +473,20 @@
                     <div class="row">
                         <div class="col-sm-3 col-md-3">
 
-
+                            <div class="row">
+                                <div class="col-sm-11 col-md-11">
+                                    <input class="form-control" ng-model="input.trackFilter"
+                                           placeholder="Enter string to filter Track"/>
+                                </div>
+                                <div class="col-sm-1 col-md-1">
+                                    <i class="clickable glyphicon glyphicon-remove-sign "
+                                       ng-show="input.trackFilter"
+                                       style="padding-top: 8px"
+                                        ng-click="input.trackFilter = ''">
+                                    </i>
+                                </div>
+                            </div>
+                            <br/>
                             <div ng-hide="tracks">
                                 <br/>
                                 Loading the event data from the server, please wait...
@@ -483,7 +496,7 @@
                                 <ul class="list-group">
                                     <li ng-class="{'list-group-item':1,'listItemSelected':selectedTrack.id == track.id}"
                                         style="cursor: pointer"
-                                        ng-show="showTrack(track)"
+                                        ng-show="showTrack(track,input.trackFilter)"
                                         ng-repeat="track in tracks"
                                         ng-click="selectTrack(track)">
 
@@ -1161,6 +1174,8 @@
                                                 </li>
                                             </ul>
 
+                                            <button class="btn btn-link"
+                                                    ng-click="download('results')">Download report</button>
 
 
                                         </div>
@@ -1204,7 +1219,7 @@
 
                                 <uib-tab>
                                     <uib-tab-heading>
-                                        Testing & notes <span ng-show="selectedTrack.scenarios.length > 0" class="badge"
+                                        Testing & feedback <span ng-show="selectedTrack.scenarios.length > 0" class="badge"
                                               uib-popover=" Pass /  Fail /  Partial /  Note"
                                               popover-placement="top"
                                               popover-append-to-body = true
@@ -1218,7 +1233,16 @@
 
                                     <div ng-show="selectedTrack.scenarios.length == 0">
                                         <em>Testing can only be performed if the track defines scenarios against which tests
-                                            can be done..</em>
+                                            can be done. Click <span class="clickable" ng-click="addScenario()">here </span> to add one.</em>
+<!--
+                                        <div>
+                                            <div class="pull-right">
+                                                <button class="btn btn-link" ng-click="addScenario()">
+                                                    Add a new Scenario
+                                                </button>
+                                            </div>
+                                        </div>
+-->
                                     </div>
 
                                     <div ng-show="selectedTrack.scenarios.length > 0">
@@ -1316,9 +1340,16 @@
                                     </div>
                                 </div>
                                 <table class="table table-bordered">
-                                    <tr><th>Name</th><th>Organization</th><th>Primary track</th><th>
-                                        <button class="btn btn-link pull-right" ng-click="editPerson()">New Person</button></th></tr>
-                                    <tr ng-repeat="person in allPersons" ng-show="canShowPerson(person,input.personNameFilter)">
+                                    <tr><th>Name</th><th>Organization</th><th>Primary track</th><th></th>
+                                        <!--
+                                        <th>
+                                        <button class="btn btn-link pull-right" ng-click="editPerson()">New Person</button>
+                                        </th>
+                                        -->
+
+                                    </tr>
+                                    <tr ng-repeat="person in allPersons"
+                                        ng-show="canShowPerson(person,input.personNameFilter)">
                                         <td><button class="btn btn-link" ng-click="selectPerson(person)">{{person.name}}</button> </td>
                                         <td>{{person.organization}}</td>
                                         <td>
@@ -1337,25 +1368,38 @@
 
                             <div class="banner">{{personSummary.person.name}}</div>
 
-                            <h4>Contacts</h4>
-                            <div ng-repeat="contact in personSummary.person.contact">
-                                {{contact.type}}: {{contact.value}}
+                            <div ng-show = "personSummary.person.contact.length > 0" >
+                                <h4>Contacts</h4>
+                                <div ng-repeat="contact in personSummary.person.contact">
+                                    {{contact.type}}: {{contact.value}}
+                                </div>
                             </div>
 
-                            <h4>Primary Track</h4>
-                            <div ng-hide="personSummary.primaryTrack">No primary track selected.</div>
-                            <div ng-show="personSummary.primaryTrack">{{personSummary.primaryTrack.name}}</div>
 
-                            <h4>Tracks of interest</h4>
-                            <div ng-hide="personSummary.toi.length > 0">No Tracks of Interest selected.</div>
-                            <div ng-show="personSummary.toi.length > 0">
-                                <ul>
-                                    <li ng-repeat="track in personSummary.toi">
-                                        {{track.name}}
-                                    </li>
-                                </ul>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>Primary Track</h4>
+                                    <div ng-hide="personSummary.primaryTrack">No primary track selected.</div>
+                                    <div ng-show="personSummary.primaryTrack">{{personSummary.primaryTrack.name}}</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4>Tracks of interest</h4>
+                                    <div ng-hide="personSummary.toi.length > 0">No Tracks of Interest selected.</div>
+                                    <div ng-show="personSummary.toi.length > 0">
+                                        <ul class="list-unstyled">
+                                            <li ng-repeat="track in personSummary.toi">
+                                                {{track.name}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
 
+
+
+
+
+                            <!--
                             <h4>Clients</h4>
                             <div ng-show="personSummary.clients.length == 0">No clients for this user.</div>
                             <table class="table table-bordered" ng-show="personSummary.clients.length > 0">
@@ -1366,18 +1410,22 @@
                                     <td><button class="btn btn-link" ng-click="editClient(client)">Edit</button> </td>
                                 </tr>
                             </table>
+                            -->
 
-                            <h4>Servers</h4>
-                            <div ng-show="personSummary.servers.length == 0">No servers for this user.</div>
-                            <table class="table table-bordered" ng-show="personSummary.servers.length > 0">
-                                <tr><th>Name</th><th>Description</th><th></th></tr>
-                                <tr ng-repeat = "server in personSummary.servers">
-                                    <td>{{server.name}}</td>
-                                    <td>{{server.description}}</td>
-                                    <td><button class="btn btn-link" ng-click="editServer(server)">Edit</button> </td>
-                                </tr>
-                            </table>
+                            <div ng-show="personSummary.servers.length > 0">
+                                <h4>Servers</h4>
 
+                                <table class="table table-bordered" ng-show="personSummary.servers.length > 0">
+                                    <tr><th>Name</th><th>Description</th><th></th></tr>
+                                    <tr ng-repeat = "server in personSummary.servers">
+                                        <td>{{server.name}}</td>
+                                        <td>{{server.description}}</td>
+                                        <td><button class="btn btn-link" ng-click="editServer(server)">Edit</button> </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!--
                             <h4>Scenarios registered for (as Client or Server)</h4>
                             <div ng-show="personSummary.scenarios.length == 0">None yet.</div>
                             <table class="table table-bordered" ng-show="personSummary.scenarios.length > 0">
@@ -1394,23 +1442,25 @@
 
                                 </tr>
                             </table>
+            -->
 
+                            <div ng-show="personSummary.results.length > 0">
+                            <h4>Asserted Results and feedback</h4>
 
+                                <table class="table table-bordered" ng-show="personSummary.results.length > 0">
+                                    <tr><th>Track</th><th>Scenario</th><th>Server</th><th>Result</th><th>Note</th><th>IG</th></tr>
+                                    <tr ng-repeat = "result in personSummary.results">
 
-                            <h4>Asserted results</h4>
-                            <div ng-show="personSummary.results.length == 0">None yet.</div>
-                            <table class="table table-bordered" ng-show="personSummary.results.length > 0">
-                                <tr><th>Type<th>Track</th></th><th>Scenario</th><th>Client</th><th>Server</th><th>Result</th><th>Note</th></tr>
-                                <tr ng-repeat = "result in personSummary.results">
-                                    <td>{{result.type}}</td>
-                                    <td>{{result.track.name}}</td>
-                                    <td>{{result.scenario.name}}</td>
-                                    <td><div ng-show="result.client">{{result.client.client.name}} ({{result.client.role.name}})</div></td>
-                                    <td><div ng-show="result.server">{{result.server.server.name}} ({{result.server.role.name}})</div></td>
-                                    <td>{{result.text}}</td>
-                                    <td>{{result.note}}</td>
-                                </tr>
-                            </table>
+                                        <td>{{result.track.name}}</td>
+                                        <td>{{result.scenario.name}}</td>
+
+                                        <td>{{result.server.name}} </td>
+                                        <td>{{result.text}}</td>
+                                        <td>{{result.note}}</td>
+                                        <td>{{result.IG.name}}</td>
+                                    </tr>
+                                </table>
+                            </div>
 
                         </div>
                     </div>
@@ -1922,9 +1972,9 @@
                         <uib-tab heading="All tests">
 
                             <br/>
-
+<!--
                             <button class="btn btn-link pull-right" ng-click="download('results')">Download results</button>
-
+-->
                             <table class="table table-bordered">
                                 <tr>
                                     <th>Track</th><th>Scenario</th><th>Server</th><th>Asserter</th><th>Result</th>

@@ -1742,45 +1742,67 @@ angular.module("sampleApp").service('ecosystemSvc',
 
         makeResultsDownloadObject : function (track) {
             //if track specified, then only include results for that track...
-            var obj = {name:'connectathon 17',results:[]};
-            angular.forEach(allResults,function(value,key) {
-                var lne = {};
-                lne.track = value.track.name;
-                lne.scenario = value.scenario.name;
-                lne.type = value.type;
-                lne.participants = [];
+            let report = []
+            var download = "Scenario,Server,Asserter,Result,Note,IG\n";
 
-                if (value.server) {
-                    var p = {name:value.server.server.name,role:value.server.role.name,systemRole:'server'};
-                    lne.participants.push(p)
-                }
-                if (value.client) {
-                    var p = {name: value.client.client.name, role: value.client.role.name, systemRole: 'client'};
-                    lne.participants.push(p)
-                }
-                /* - leave for when we want to support multiple partipants...
-                value.participants.forEach(function (part) {
-                    var p = {name:part.participant.name,role:part.role.name,systemRole:part.systemRole};
-                    lne.participants.push(p)
-                });
 
-                */
-                lne.result = value.text;
-                lne.note = value.note;
+            //(key,result) in ecosystemSvc.getAllResults(selectedTrack)
 
-                if (track) {
-                    if (value.track.id == track.id) {
-                        obj.results.push(lne)
-                    }
+            angular.forEach(this.getAllResults(track),function(result,key) {
+
+                let lne = ""
+
+                if (result.scenario) {
+                    lne += makeSafe(result.scenario.name) + ",";
                 } else {
-                    obj.results.push(lne)
+                    lne += ","
+                }
+
+
+
+                if (result.server) {
+                    lne += makeSafe(result.server.name) + ",";
+                } else {
+                    lne += ","
+                }
+
+                if (result.asserter) {
+                    lne += makeSafe(result.asserter.name) + ",";
+                } else {
+                    lne += ","
                 }
 
 
 
 
-            });
-            return obj;
+                lne += makeSafe(result.text) + ",";
+                lne += makeSafe(result.note) + ",";
+
+
+                if (result.IG) {
+                    lne += makeSafe(result.IG.name)
+                } else {
+                    //it's the last col...  lne += ","
+                }
+
+
+                download += lne + "\n";
+
+            })
+
+            return download;
+
+
+            function makeSafe(s) {
+                if (s) {
+                    s = s.replace(/"/g, "'");
+                    s = s.replace(/,/g, "-");
+                    //return s;
+                    return '"' + s + '"';
+                } else {
+                    return "";
+                }
+            }
         },
 
         makeResultsDownload : function () {

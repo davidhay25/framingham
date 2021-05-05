@@ -26,9 +26,19 @@ angular.module("sampleApp")
                 $scope.IGtests = ecosystemSvc.getIGResults()
             }
 
-            $scope.showTrack = function(track) {
+            $scope.showTrack = function(track,filter) {
+                if (filter) {
+                    let trackName = track.name.toLowerCase();
 
-                return true;
+                    if (trackName.indexOf(filter.toLowerCase()) > -1) {
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+
+
+
 
             };
 
@@ -1146,8 +1156,7 @@ console.log(vo);
                 var object;
                 switch (downloadThingType) {
                     case 'results' :
-                        object = ecosystemSvc.makeResultsDownloadObject(track);  //a simplified object
-                        //object = ecosystemSvc.makeResultsDownload();  //csv option not working...
+                        object = ecosystemSvc.makeResultsDownloadObject(track);  //a csv file
                         break;
                 }
 
@@ -1159,17 +1168,13 @@ console.log(vo);
                 }
                 $uibModal.open({
                     templateUrl: 'modalTemplates/download.html',
-                    //size: 'lg',
                     controller: 'downloadCtrl',
                     resolve : {
                         object: function () {          //the default config
                             return object;
                         }
                     }
-                }).result.then(function(vo){
-
-
-                });
+                })
 
             };
 

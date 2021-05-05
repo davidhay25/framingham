@@ -18,12 +18,11 @@
 
     <div class="modal-body">
 
-        <p>Down the results as a JSON object. The dialog will automatically close after the download.</p>
-        <p>Note that there is also the option to retrieve the results as TestReport instances. The API is
-            <strong><em>[serverRoot]/fhir/TestReport</em></strong></p>
+        <p>Down the results as a CSV file. The dialog will automatically close after the download.</p>
 
-        <a class="btn btn-primary pull-right" download="{{downloadLinkJsonName}}.json"
-           href="{{downloadLinkJsonContent}}" title="{{downloadLinkJsonName}}" ng-click="$close()">
+
+        <a class="btn btn-primary pull-right" download="{{downloadLinkCsvName}}.csv"
+           href="{{downloadLinkCsvContent}}" title="{{downloadLinkCsvName}}" ng-click="$close()">
             Download
         </a>
 
