@@ -1288,7 +1288,12 @@
                             </td>
 
                             <td width="25%">{{ig.description}}</td>
-                            <td>{{ig.package}}#{{ig.version}}</td>
+                            <td>
+                                <div ng-show="ig.package && ig.version">
+
+                                </div>
+                                {{ig.package}}#{{ig.version}}
+                            </td>
 
                             <td>
                                 <div ng-repeat="track in tracks">
