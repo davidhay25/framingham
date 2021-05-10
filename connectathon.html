@@ -443,7 +443,7 @@
                                 Select the track in the <span class="tabName">Tracks</span> tab, then the 'Testing' sub-tab to the right.
                                 (There's also an option to add a scenario directly from the testing sub-tab if there are none). There
                                 is <a href="https://youtu.be/GRcFGlnHKo0" target="_blank">a short video</a> available.
-                                
+
                                 <ol>
                                     <li>Select the Track, then the Testing and feedback sub-tab</li>
                                     <li>Select the scenario you wish to add the feedback to. (Or add the scenario if there are none).
@@ -1278,7 +1278,7 @@
 
                     <table class="table table-condensed">
                         <tr><th>Name</th><th>Description</th><th>Package</th><th>Version</th><th>Tracks</th>
-                            <th>External link</th><th>View in Registry</th><th>Edit</th></tr>
+                            <th>External link</th><th>Viewer</th><th>Edit</th></tr>
                         <tr ng-repeat="ig in allIGs">
                             <td>{{ig.name}}</td>
 
@@ -1305,7 +1305,14 @@
                             </td>
                             <td>
                                 <div ng-show="ig.package && ig.version">
-                                    <a ng-href="https://registry.fhir.org/package/{{ig.package}}%7c{{ig.version}}" target="_blank">View</a>
+                                    <div>
+                                        <a ng-href="https://registry.fhir.org/package/{{ig.package}}%7c{{ig.version}}" target="_blank">FHIR Registry</a>
+                                    </div>
+                                    <div>
+                                        <!--//************ todo need to set url to deployed app-->
+                                        <a ng-href="http://clinfhir.com/packageViewer.html#{{ig.package}}%7c{{ig.version}}" target="_blank">clinFHIR</a>
+                                    </div>
+
                                 </div>
 
                             </td>
