@@ -1278,9 +1278,14 @@
 
                     <table class="table table-condensed">
                         <tr><th>Name</th><th>Description</th><th>Package#version</th><th>Tracks</th>
-                            <th>External link</th><th>Viewer</th><th>Edit</th></tr>
+                            <th>External link</th><th>Viewer</th></tr>
                         <tr ng-repeat="ig in allIGs">
-                            <td width="15%">{{ig.name}}</td>
+                            <td width="15%">
+                                <div ng-click="editIG(ig)">
+                                    {{ig.name}}
+                                </div>
+
+                            </td>
 
                             <td width="25%">{{ig.description}}</td>
                             <td>{{ig.package}}#{{ig.version}}</td>
@@ -1316,10 +1321,11 @@
 
                             </td>
 
-
+<!--
                             <td>
                                 <div class="clickable" ng-click="editIG(ig)">Edit</div>
                             </td>
+                            -->
                         </tr>
                     </table>
 
