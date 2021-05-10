@@ -1281,7 +1281,7 @@
                             <th>External link</th><th>Viewer</th></tr>
                         <tr ng-repeat="ig in allIGs">
                             <td width="15%">
-                                <div ng-click="editIG(ig)">
+                                <div class="clickable" ng-click="editIG(ig)">
                                     {{ig.name}}
                                 </div>
 
@@ -1304,7 +1304,7 @@
 
                                 </div>
                             </td>
-                            <td>
+                            <td width="15%">
 
                                 <a ng-show="ig.link" ng-href="{{ig.link}}" target="_blank">View</a>
                             </td>
