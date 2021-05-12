@@ -505,6 +505,8 @@ angular.module("sampleApp")
 
             $scope.getSvrDescription = function(svr) {
                 var desc = svr.description;
+                return desc;
+                /* don't limit length for now...
                 if (desc) {
                     if (desc.length > 50) {
                         desc = desc.substr(0,47)+ '...'
@@ -513,10 +515,13 @@ angular.module("sampleApp")
                 } else {
                     return ""
                 }
+                */
             };
 
             $scope.getSvrNotes = function(svr) {
                 var notes = svr.notes;
+                return notes;
+                /*
                 if (notes) {
                     if (notes.length > 50) {
                         notes = notes.substr(0,47)+ '...'
@@ -525,6 +530,7 @@ angular.module("sampleApp")
                 } else {
                     return ""
                 }
+                */
             };
 
             $scope.deleteResultDEP = function(rslt) {
