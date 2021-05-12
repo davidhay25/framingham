@@ -1282,6 +1282,7 @@
                         <tr ng-repeat="ig in allIGs">
                             <td width="15%">
                                 <div class="clickable" ng-click="editIG(ig)">
+
                                     {{ig.name}}
                                 </div>
 
@@ -1553,9 +1554,14 @@
                             <table class="table table-bordered">
                                 <tr><th>Name</th><th>Url</th><th>FHIR Version</th><th>Description & Notes</th><th>Notes</th>
                                     <th>Tracks</th>
-                                    <th></th></tr>
+                                    </tr>
                                 <tr ng-repeat="svr in allServers">
-                                    <td>{{svr.name}}</td>
+                                    <td>
+                                        <div class="clickable" ng-click="editServer(svr)">
+                                            {{svr.name}}
+                                        </div>
+
+                                    </td>
                                     <td>
                                         <div ng-show="svr.address">
                                             <a target="_blank" ng-href = "http://clinfhir.com/query.html#{{svr.address}}">
@@ -1573,14 +1579,7 @@
 
                                         </div>
                                     </td>
-                                    <!--
-                                    <td><div  uib-popover="{{svr.address}}"
-                                              popover-placement="right"
 
-                                              popover-trigger="'mouseenter'">
-                                        {{svr.address | showUrlMaxLength : 50}}
-                                    </div></td>
-                                    -->
                                     <td>{{svr.fhirVersion}}</td>
                                     <td>
                                         <div uib-popover="{{svr.description}}"
@@ -1602,16 +1601,7 @@
 
                                         </div>
                                     </td>
-                                    <!--
-                                    <td>
-                                        <div ng-repeat = "person in svr.contact">
-                                            {{person.name}}
-                                            <span ng-repeat="contact in person.contact">
-                                                {{contact.type}}: {{contact.value}}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    -->
+
                                     <td>
                                         <div ng-repeat="trackId in svr.tracks">
 
@@ -1619,25 +1609,13 @@
 
                                         </div>
 
-                                        <!--
-                                        <div ng-repeat="scenarioName in getScenariosForServer(svr) track by $index">
-                                            {{scenarioName }}
-                                        </div>
-                                        -->
+
 
                                     </td>
-                                    <!--
-                                    <td>
-                                        <span class="badge" ng-show="svr.allHooks.services.length > 0"
-                                              uib-popover-html=showHooksSummary(svr)
-                                              popover-placement="left"
-                                              popover-trigger="'mouseenter'"
-                                        >CDS</span>
-                                        <span class="badge" ng-show="svr.SMART.authorize">SMART</span>
-                                    </td>
-                                    -->
 
+<!--
                                     <td><button class="btn btn-link" ng-click="editServer(svr)">View</button> </td>
+                                    -->
                                 </tr>
                             </table>
 

@@ -55,7 +55,8 @@ angular.module("sampleApp")
                                 $scope.input.description += '\n' + cs.description;
                             }
                         }
-                        $scope.input.description = ""
+
+                        //$scope.input.description = ""
 
 
 
