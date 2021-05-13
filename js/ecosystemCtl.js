@@ -8,6 +8,17 @@ angular.module("sampleApp")
             $scope.ecosystemSvc = ecosystemSvc;
             $scope.input = {};
 
+            //indexes for the main tabs to allow tabs to be selected from code
+            $scope.ui = {}
+            $scope.ui.tabHome = 0;
+            $scope.ui.tabTrack = 1;
+            $scope.ui.tabIG = 2;
+            $scope.ui.tabPeople = 3;
+            $scope.ui.tabClients = 4;
+            $scope.ui.tabServers = 5;
+            $scope.ui.tabResults= 6;
+            $scope.ui.tabParticipation = 7;
+
             $http.post('/stats/login',{module:'comMan'}).then(
                 function(data){
 
@@ -1253,7 +1264,7 @@ console.log(vo);
 
             }
 
-            $scope.selectTrack = function(track,showMessage) {
+            $scope.selectTrack = function(track,showTab) {
                 delete $scope.selectedScenario;
                 delete $scope.selectedRole;
                 delete $scope.input.selectedTrackTOIPerson;
@@ -1293,8 +1304,9 @@ console.log(vo);
 
                 });
 
-                if (showMessage) {
-                    alert(showMessage)
+                if (showTab) {
+                    $scope.input.mainTabActive = $scope.ui.tabTrack;
+                    //alert(showMessage)
                 }
 
             };
