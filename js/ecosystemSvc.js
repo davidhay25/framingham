@@ -215,7 +215,16 @@ angular.module("sampleApp").service('ecosystemSvc',
 
         getIGs : function() {
             return allIGs
+        },
 
+        getIGsHash : function() {
+            let hash = {}
+            if (allIGs && allIGs.length > 0) {
+                allIGs.forEach(function (IG) {
+                    hash[IG.id] = IG
+                })
+            }
+            return hash
         },
 
         addIG : function(ig){
@@ -2311,8 +2320,6 @@ angular.module("sampleApp").service('ecosystemSvc',
                                 } else {
                                     console.log("client "+ client.id + " has a contact with the id " + personid + " that can't be found.")
                                 }
-
-
                             })
 
                         }

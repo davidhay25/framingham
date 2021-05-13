@@ -23,7 +23,6 @@ angular.module("sampleApp")
                 })
             }
 
-
             $scope.addIG = function(ig) {
                 $scope.track.IGs = $scope.track.IGs || []
                 $scope.track.IGs.push(ig)

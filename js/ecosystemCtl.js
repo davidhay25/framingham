@@ -1236,7 +1236,6 @@ console.log(vo);
                     });
                 }
 
-
                 return scenarios;
             };
 
@@ -1264,6 +1263,7 @@ console.log(vo);
 
             }
 
+            //a track is slected from the list...
             $scope.selectTrack = function(track,showTab) {
                 delete $scope.selectedScenario;
                 delete $scope.selectedRole;
@@ -1283,6 +1283,18 @@ console.log(vo);
 
 
                 $scope.selectedTrackReport =  ecosystemSvc.getTrackResults(track);      //summary of this track...
+
+                //update the associated IG's (when adding a track the full IG object is added to the track - but it can change...)
+                //this isn't the smartest thing to do, bit for now this should correct it...
+                if ($scope.selectedTrack.IGs && ($scope.selectedTrack.IGs.length > 0)) {
+                    let hash = ecosystemSvc.getIGsHash();
+                    let arIG = [];    //will be the new array of IG objects
+                    $scope.selectedTrack.IGs.forEach(function(IG){
+                        arIG.push(hash[IG.id])
+                    })
+                    $scope.selectedTrack.IGs = arIG;
+                }
+
 
                 //add the interested people to this track...
                 $scope.selectedTrack.persons = []
