@@ -84,7 +84,11 @@ angular.module("sampleApp")
                         console.log(data)
 
                         //now that we have the db, we can record access...
-                        $http.post("/startup",{});  //record access
+                        $http.post("/startup",{}).then(
+                            function(data) {
+                                console.log(data.data)
+                            }
+                        );  //record access
 
                         //now get the event configuration from the event database (admin).
                         $http.get("config/admin/").then(
