@@ -228,8 +228,8 @@ function recordAccess(req,data,cb) {
                 try {
                     loc = JSON.parse(body);
                     //audit.loc = loc;
-                    audit.countryCode = loc['country_name'];
-                    audit.country = loc['country_code2'];   //to make querying simpler
+                    audit.country = loc['country_name'];
+                    audit.countryCode = loc['country_code2'];   //to make querying simpler
                     //audit.region = loc.region_name;     //to make querying simpler
 
                     req.selectedDbCon.collection("accessAudit").insert(audit, function (err, result) {
