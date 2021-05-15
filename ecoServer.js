@@ -203,7 +203,11 @@ function recordAccess(req,data,cb) {
         req.connection.socket.remoteAddress ||
         req.headers['x-forwarded-for'];
 
-    console.log(clientIp)
+    if (clientIp) {
+        clientIp = clientIp.replace('::ffff:',"")
+    }
+
+
 
     if (req.selectedDbCon) {
         var audit = {ip:clientIp,date:new Date()};      //note date is UTC
@@ -245,7 +249,7 @@ function recordAccess(req,data,cb) {
         })
 
     } else {
-        console.log('no database connection')
+        cb('no database connection')
     }
 }
 
