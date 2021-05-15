@@ -197,10 +197,11 @@ app.use(urlencodedParser);
 
 
 function recordAccess(req,data,cb) {
-    var clientIp = req.headers['x-forwarded-for'] ||
+    var clientIp =
         req.connection.remoteAddress ||
         req.socket.remoteAddress ||
-        req.connection.socket.remoteAddress;
+        req.connection.socket.remoteAddress ||
+        req.headers['x-forwarded-for'];
 
     console.log(clientIp)
 
