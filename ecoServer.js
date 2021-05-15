@@ -204,14 +204,12 @@ function recordAccess(req,data,cb) {
         req.headers['x-forwarded-for'];
 
     if (clientIp) {
-        clientIp = clientIp.replace('::ffff:',"")
+        clientIp = clientIp.replace('::ffff:',"");      //the prefix relates to v6...
     }
-
-
 
     if (req.selectedDbCon) {
         var audit = {ip:clientIp,date:new Date()};      //note date is UTC
-        audit.data = data;
+        //audit.data = data;
 
         var options = {
             method:'GET',
@@ -223,11 +221,12 @@ function recordAccess(req,data,cb) {
 
             if (body) {
                 var loc;
-                console.log(body)
+                //console.log(body)
                 try {
                     loc = JSON.parse(body);
-                    audit.loc = loc;
-                    audit.country = loc['country_name'];   //to make querying simpler
+                    //audit.loc = loc;
+                    audit.countryCode = loc['country_name'];
+                    audit.country = loc['country_code2'];   //to make querying simpler
                     //audit.region = loc.region_name;     //to make querying simpler
 
                     req.selectedDbCon.collection("accessAudit").insert(audit, function (err, result) {
@@ -235,21 +234,21 @@ function recordAccess(req,data,cb) {
                             console.log('Error logging access ',audit);
                             cb(err);
                         } else {
-                            cb(clientIp);
+                            cb(audit);
                         }
 
                     });
                 } catch (ex) {
                     console.log(ex)
-                    cb(clientIp)
+                    cb(audit)
                 }
             } else {
-                cb(clientIp);
+                cb(audit);
             }
         })
 
     } else {
-        cb('no database connection')
+        cb({err:'no database connection'})
     }
 }
 
@@ -346,7 +345,7 @@ app.get('/accessAudit',function(req,res){
 app.post('/startup',function(req,res){
     var data = req.body;    //may be empty
     recordAccess(req,data,function(data){
-        res.json({ip:data})
+        res.json(data)
     });
 });
 
