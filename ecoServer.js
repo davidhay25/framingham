@@ -202,6 +202,8 @@ function recordAccess(req,data,cb) {
         req.socket.remoteAddress ||
         req.connection.socket.remoteAddress;
 
+    console.log(clientIp)
+
     if (req.selectedDbCon) {
         var audit = {ip:clientIp,date:new Date()};      //note date is UTC
         audit.data = data;
@@ -228,16 +230,16 @@ function recordAccess(req,data,cb) {
                             console.log('Error logging access ',audit);
                             cb(err);
                         } else {
-                            cb();
+                            cb(clientIp);
                         }
 
                     });
                 } catch (ex) {
                     console.log(ex)
-                    cb()
+                    cb(clientIp)
                 }
             } else {
-                cb();
+                cb(clientIp);
             }
         })
 
@@ -338,8 +340,8 @@ app.get('/accessAudit',function(req,res){
 //record the access - but don't wait, or bother about an error...
 app.post('/startup',function(req,res){
     var data = req.body;    //may be empty
-    recordAccess(req,data,function(){
-        res.json({})
+    recordAccess(req,data,function(data){
+        res.json({ip:data})
     });
 });
 
