@@ -4,7 +4,7 @@ angular.module("sampleApp")
     .controller('ecosystemCtrl',
         function ($rootScope,$scope,$http,modalService,ecosystemSvc,$window,$localStorage,$uibModal,ecoUtilitiesSvc,$filter) {
 
-            $http.post("/startup",{});  //record access
+           // $http.post("/startup",{});  //record access
             $scope.ecosystemSvc = ecosystemSvc;
             $scope.input = {};
 
@@ -18,7 +18,7 @@ angular.module("sampleApp")
             $scope.ui.tabServers = 5;
             $scope.ui.tabResults= 6;
             $scope.ui.tabParticipation = 7;
-
+/*
             $http.post('/stats/login',{module:'comMan'}).then(
                 function(data){
 
@@ -27,7 +27,7 @@ angular.module("sampleApp")
                     console.log('error accessing clinfhir to register access',err)
                 }
             );
-
+*/
             //which track type to display
             $scope.input.trackListDisplay = 'all';     //can be changed by event.type...
 
@@ -47,8 +47,6 @@ angular.module("sampleApp")
                 } else {
                     return true;
                 }
-
-
 
 
             };
@@ -84,6 +82,10 @@ angular.module("sampleApp")
                 $http.post('/public/setEvent',{key:eventCode}).then(
                     function (data) {
                         console.log(data)
+
+                        //now that we have the db, we can record access...
+                        $http.post("/startup",{});  //record access
+
                         //now get the event configuration from the event database (admin).
                         $http.get("config/admin/").then(
                             function(data) {

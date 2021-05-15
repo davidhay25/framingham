@@ -197,7 +197,6 @@ app.use(urlencodedParser);
 
 
 function recordAccess(req,data,cb) {
-
     var clientIp = req.headers['x-forwarded-for'] ||
         req.connection.remoteAddress ||
         req.socket.remoteAddress ||
@@ -205,23 +204,24 @@ function recordAccess(req,data,cb) {
 
     if (req.selectedDbCon) {
         var audit = {ip:clientIp,date:new Date()};      //note date is UTC
-
         audit.data = data;
 
         var options = {
             method:'GET',
-            uri : "http://freegeoip.net/json/"+clientIp
+            uri: 'https://api.iplocation.net/?ip=' + clientIp
+            //uri : "http://freegeoip.net/json/"+clientIp
         };
 
         request(options,function(error,response,body) {
 
             if (body) {
                 var loc;
+                console.log(body)
                 try {
                     loc = JSON.parse(body);
                     audit.loc = loc;
-                    audit.country = loc.country_name;   //to make querying simpler
-                    audit.region = loc.region_name;     //to make querying simpler
+                    audit.country = loc['country_name'];   //to make querying simpler
+                    //audit.region = loc.region_name;     //to make querying simpler
 
                     req.selectedDbCon.collection("accessAudit").insert(audit, function (err, result) {
                         if (err) {
@@ -233,6 +233,7 @@ function recordAccess(req,data,cb) {
 
                     });
                 } catch (ex) {
+                    console.log(ex)
                     cb()
                 }
             } else {
@@ -240,6 +241,8 @@ function recordAccess(req,data,cb) {
             }
         })
 
+    } else {
+        console.log('no database connection')
     }
 }
 

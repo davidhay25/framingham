@@ -10,9 +10,6 @@ angular.module("sampleApp")
 
             $scope.allIGs = []; ecosystemSvc.getIGs()
 
-
-
-
             function setAvailableIgs() {
                 $scope.allIGs.length = 0;
                 ecosystemSvc.getIGs().forEach(function (ig) {
