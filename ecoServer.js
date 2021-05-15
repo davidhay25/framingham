@@ -44,6 +44,9 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";     //allow self signed certific
 useSSL = false;
 
 
+//let modStats = require("./ecoModuleStats.js")
+
+
 //  *************** temp for COF !!!
 var dbName = 'cof';    //default database name...
 
@@ -340,6 +343,31 @@ app.get('/accessAudit',function(req,res){
         }
     })
 });
+
+
+//modStats
+app.get('/getStats',function(req,res){
+
+if (!req.selectedDbCon) {
+        res.status(500).json()
+    } else {
+
+         getStats(res,req.selectedDbCon);
+
+
+        async function getStats (res,db ) {
+            let pipeline = [
+                { $group: { _id: "$country", count: { $sum: 1 } }},
+                { $sort: { total: -1 } }
+            ]
+
+            let ar = await db.collection('accessAudit').aggregate(pipeline).toArray()
+            res.json(ar)
+        }
+
+
+    }
+})
 
 //record the access - but don't wait, or bother about an error...
 app.post('/startup',function(req,res){

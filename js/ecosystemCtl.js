@@ -90,6 +90,16 @@ angular.module("sampleApp")
                             }
                         );  //record access
 
+                        //get the current stats
+                        $http.get("/getStats").then(
+                            function(data) {
+                                console.log(data.data)
+                            },
+                            function(err) {
+                                console.log(err)
+                            }
+                        )
+
                         //now get the event configuration from the event database (admin).
                         $http.get("config/admin/").then(
                             function(data) {
