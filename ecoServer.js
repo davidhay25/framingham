@@ -80,6 +80,8 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
     } else {
         console.log("Connected successfully to local server, dataBase="+dbName);
 
+
+
         //get the list of events from the event database
         var eventDb =  client.db('eventDb');
 
@@ -107,7 +109,17 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
                     dbKeys = result;
                     dbKeys.forEach(function(item){
                         hashDataBases[item.key] = client.db(item.key);
+                        console.log(item.key)
                     });
+
+                    //write the initial snapshot and set the timer for the write
+                    recordDbCount('con27')
+
+                    //repeat snapshot at an interval (ms)
+                    let repeatInterval = 15 * 60 * 1000     //every 15 minutes
+                    setInterval(function (){
+                        recordDbCount('con27')
+                    }, repeatInterval)
 
                 }
             }
@@ -199,6 +211,30 @@ app.use(urlencodedParser);
 //touchStone.setup(app);      //initialize the routes in touchstone
 
 
+//added for the con27 event to count the number of results over time. Will need further thought if I continue with it
+//in particular, how to avoid hard coding the db name
+function recordDbCount(dbName) {
+
+    //let db = client.db(dbName)
+    let db = hashDataBases[dbName];
+    if (db) {
+        db.collection('result').count({}, function(error, numOfDocs) {
+
+            let doc = {type:'colCount',date:new Date(),resultCount:numOfDocs}
+
+            db.collection("snapshot").insertOne(doc,function(err,result){
+                if (err) {
+                    console.log('Failed to insert to snapshot')
+                } else {
+                    console.log('wrote snapshot')
+                }
+            })
+
+        });
+    } else {
+        console.log('Database '+ dbName + ' not found in hash')
+    }
+}
 
 function recordAccess(req,data,cb) {
     var clientIp =
@@ -357,7 +393,6 @@ app.get('/getStats',function(req,res){
                 { $group: { _id: "$country",  count: { $sum: 1 } }},
                 { $sort: { total: -1 } }
             ]
-
             let ar = await db.collection('accessAudit').aggregate(pipeline).toArray()
 
             let pipeline1 = [
@@ -367,12 +402,16 @@ app.get('/getStats',function(req,res){
 
             let ar1 = await db.collection('accessAudit').aggregate(pipeline1).toArray()
 
+            let ar2 = await db.collection('snapshot').find({}).toArray();
+//console.log(ar2)
+            /*
             let pipeline2 = [
                 { "$group": {"_id": { "$toLower": "$timeSlot" },"count": { "$sum": 1 }}}
             ]
 
             let ar2 = await db.collection('result').aggregate(pipeline2).toArray()
-            res.json({uniqueCountries: ar, uniqueUsers : ar1, results : ar2})
+            */
+            res.json({uniqueCountries: ar, uniqueUsers : ar1, snapshots : ar2})
         }
 
 

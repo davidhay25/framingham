@@ -2,7 +2,8 @@
 
 angular.module("sampleApp")
     .controller('ecosystemCtrl',
-        function ($rootScope,$scope,$http,modalService,ecosystemSvc,$window,$localStorage,$uibModal,ecoUtilitiesSvc,$filter) {
+        function ($rootScope,$scope,$http,modalService,ecosystemSvc,$window,$timeout,
+                  $localStorage,$uibModal,ecoUtilitiesSvc,$filter) {
 
            // $http.post("/startup",{});  //record access
             $scope.ecosystemSvc = ecosystemSvc;
@@ -160,8 +161,6 @@ angular.module("sampleApp")
             //retrieve the statistics from the server
             const getStatistics = function() {
 
-
-
                 $http.get("/getStats").then(
                     function(data) {
                         console.log(data.data)
@@ -173,12 +172,14 @@ angular.module("sampleApp")
                             $scope['statsUsersData'] = []
                             $scope['statsUsersLabels'] = []
 
+                            //loading the app
                             $scope.eventStats.uniqueCountries.forEach(function (item){
                                 $scope['statsCountryData'].push(item.count)
                                 $scope['statsCountryLabels'].push( item['_id'])
                                 console.log(item)
                             })
 
+                            //unique visitors
                             let hash = {}
                             $scope.eventStats.uniqueUsers.forEach(function (item){  //one entry per ip (user)
                                 hash[item.country] = hash[item.country] || 0
@@ -189,6 +190,42 @@ angular.module("sampleApp")
                                 $scope['statsUsersLabels'].push(k)
                             })
 
+                            // -----------  count of results
+                            $scope.timeData = []
+                            $scope.timeLabels = []
+                            $scope.timeOptions = {
+                                type: 'line',
+
+                                data: {
+                                    datasets: [{
+                                        fill: false
+                                    }]
+                                },
+                                options: {
+                                    elements: {
+                                        line: {
+                                            fill: false
+                                        }
+                                    },
+                                    scales: {
+                                        x: {
+                                            type: 'time',
+                                            time: {
+                                                displayFormats: {
+                                                    hour: 'DD'
+                                                },
+                                                unit: 'hour'
+                                            }
+                                        }
+                                    }
+                                }
+                            };
+
+                            $scope.eventStats.snapshots.forEach(function (item){
+                                $scope['timeData'].push(item.resultCount)
+                                $scope['timeLabels'].push( item.date)
+                                console.log(item)
+                            })
 
 
                         }
