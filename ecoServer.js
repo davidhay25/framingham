@@ -352,18 +352,20 @@ if (!req.selectedDbCon) {
         res.status(500).json()
     } else {
 
-         getStats(res,req.selectedDbCon);
+    getStats(res,req.selectedDbCon);
 
 
-        async function getStats (res,db ) {
-            let pipeline = [
-                { $group: { _id: "$country", count: { $sum: 1 } }},
-                { $sort: { total: -1 } }
-            ]
+    //function
+    async function getStats (res,db ) {
+        let pipeline = [
+            { $group: { _id: "$country", count: { $sum: 1 } }},
+            { $sort: { total: -1 } }
+        ]
 
-            let ar = await db.collection('accessAudit').aggregate(pipeline).toArray()
-            res.json(ar)
-        }
+        let ar = await db.collection('accessAudit').aggregate(pipeline).toArray()
+
+        res.json({uniqueCountries: ar})
+    }
 
 
     }

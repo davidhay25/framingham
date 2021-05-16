@@ -1,0 +1,22 @@
+<div>
+
+    <uib-tabset>
+        <uib-tab heading = "Visits by country">
+
+            <canvas id="stats-country" class="chart-horizontal-bar" chart-options="countryBarOptions"
+                    chart-data="statsCountryData" chart-labels="statsCountryLabels" >
+            </canvas>
+
+
+            <em>Incremented for each country when app is loaded</em>
+        </uib-tab>
+    </uib-tabset>
+
+
+
+
+
+    <pre>{{eventStats | json}}</pre>
+
+
+</div>

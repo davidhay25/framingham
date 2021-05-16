@@ -91,6 +91,8 @@ angular.module("sampleApp")
                         );  //record access
 
                         //get the current stats
+                        getStatistics()
+                        /*
                         $http.get("/getStats").then(
                             function(data) {
                                 console.log(data.data)
@@ -99,7 +101,7 @@ angular.module("sampleApp")
                                 console.log(err)
                             }
                         )
-
+*/
                         //now get the event configuration from the event database (admin).
                         $http.get("config/admin/").then(
                             function(data) {
@@ -153,6 +155,51 @@ angular.module("sampleApp")
             } else {
                 $scope.noEventCode = true;
                 //no event specified in the query. This will show the error div...
+            }
+
+            //retrieve the statistics from the server
+            const getStatistics = function() {
+                $http.get("/getStats").then(
+                    function(data) {
+                        console.log(data.data)
+                        $scope.eventStats = data.data
+
+                        if ($scope.eventStats) {
+                            $scope['statsCountryData'] = []
+                            $scope['statsCountryLabels'] = []
+                            $scope.eventStats.uniqueCountries.forEach(function (item){
+                                $scope['statsCountryData'].push(item.count)
+                                $scope['statsCountryLabels'].push( item['_id'])
+                                console.log(item)
+                            })
+
+                        }
+
+                        $scope.countryBarOptions = {scales: {
+                                yAxes: [{
+                                    stacked: true,
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }],xAxes: [{
+                                    stacked: true
+
+                                }]
+                            }};
+
+                        $scope['stats-country-labels'] = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+                        $scope.series = ['Series A'];
+
+                        $scope['stats-country-data'] = [
+                            [65, 59, 80, 81, 56, 55, 40]
+                        ];
+
+
+                    },
+                    function(err) {
+                        console.log(err)
+                    }
+                )
             }
 
             $scope.loginFromNavbar = function() {
@@ -765,9 +812,6 @@ console.log(vo);
                 });
 
 
-
-
-              //  $scope.partChartLabels.sort();
 
             };
 

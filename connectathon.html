@@ -189,6 +189,7 @@
     <script src="js/importTrack.js"></script>
     <!---->
     <script src="js/igCtrl.js"></script>
+    <script src="js/eventActivityCtrl.js"></script>
 
 
     <!-- for the 3d graph
@@ -1811,7 +1812,6 @@
                                         <uib-tab heading="All scenarios summary">
                                             <br/>
 
-
                                             <canvas id="bar" class="chart chart-horizontal-bar" chart-options="barOptions"
                                                     chart-data="barData" chart-labels="barLabels" chart-series="barSeries">
                                             </canvas>
@@ -2132,7 +2132,14 @@
 
                 </uib-tab>
 
+                <uib-tab heading="Event Activity">
 
+
+                    <div ng-controller = "eventActivityCtrl">
+                        <ng-include src="'includes/eventActivity.html'"></ng-include>
+                    </div>
+
+                </uib-tab>
 
 
             </uib-tabset>
