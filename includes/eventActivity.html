@@ -1,9 +1,13 @@
 <div>
-    <br/>
+
+    <div class="pull-right">
+        <button class="btn btn-link" ng-click="getStatistics()">Refresh</button>
+    </div>
     <uib-tabset>
 
         <uib-tab heading = "Users by country">
             <br/>
+
             <em>Which countries individual users are from, based on IP address. Count is number of users from each country. </em>
 
             <canvas id="pie" class="chart chart-horizontal-bar"

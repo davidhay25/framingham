@@ -92,7 +92,7 @@ angular.module("sampleApp")
                         );  //record access
 
                         //get the current stats
-                        getStatistics()
+                        $scope.getStatistics()
                         /*
                         $http.get("/getStats").then(
                             function(data) {
@@ -159,7 +159,7 @@ angular.module("sampleApp")
             }
 
             //retrieve the statistics from the server
-            const getStatistics = function() {
+            $scope.getStatistics = function() {
 
                 $http.get("/getStats").then(
                     function(data) {
