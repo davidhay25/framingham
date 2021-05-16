@@ -3,22 +3,24 @@
     <uib-tabset>
 
         <uib-tab heading = "Users by country">
+            <br/>
+            <em>Which countries individual users are from, based on IP address. Count is number of users from each country. </em>
 
-            <canvas id="pie" class="chart chart-bar"
+            <canvas id="pie" class="chart chart-horizontal-bar"
                     chart-data="statsUsersData" chart-labels="statsUsersLabels" chart-options="userPieOptions">
             </canvas>
 
-            <em>Unique visitors</em>
+
         </uib-tab>
 
         <uib-tab heading = "Visits by country">
-
+            <em>Incremented for each users country (based on IP address) when app is loaded</em>
             <canvas id="stats-country" class="chart-horizontal-bar" chart-options="countryBarOptions"
                     chart-data="statsCountryData" chart-labels="statsCountryLabels" >
             </canvas>
 
 
-            <em>Incremented for each country when app is loaded</em>
+
         </uib-tab>
         <uib-tab heading = "Summary Json">
             <pre>{{eventStats | json}}</pre>

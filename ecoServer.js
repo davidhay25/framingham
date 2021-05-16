@@ -25,6 +25,7 @@ var bodyParser = require('body-parser');
 //var touchStone = require('myModules/touchstoneModule');
 
 var fs = require('fs');
+//let moment = require('moment')
 
 //var manageMod = require('./ecoModule');
 
@@ -287,9 +288,6 @@ app.get('/public/getUsers/:key',function(req,res){
     }
 });
 
-
-
-
 // === event management
 app.get('/event/list',function(req,res){
     res.json(dbKeys)
@@ -348,34 +346,37 @@ app.get('/accessAudit',function(req,res){
 //modStats
 app.get('/getStats',function(req,res){
 
-if (!req.selectedDbCon) {
-        res.status(500).json()
-    } else {
+    if (!req.selectedDbCon) {
+            res.status(500).json()
+        } else {
 
-    getStats(res,req.selectedDbCon);
-
-
-    //function
-    async function getStats (res,db ) {
-        let pipeline = [
-            { $group: { _id: "$country",  count: { $sum: 1 } }},
-            { $sort: { total: -1 } }
-        ]
-
-        let ar = await db.collection('accessAudit').aggregate(pipeline).toArray()
-
-        let pipeline1 = [
-            { $group: { _id: "$ip", 'country' : { "$last": "$country"}, count: { $sum: 1 } }},
-            { $sort: { total: -1 } }
-        ]
-
-        let ar1 = await db.collection('accessAudit').aggregate(pipeline1).toArray()
-
-        res.json({uniqueCountries: ar, uniqueUsers : ar1})
+        getStats(res,req.selectedDbCon);
     }
+        async function getStats (res,db ) {
+            let pipeline = [
+                { $group: { _id: "$country",  count: { $sum: 1 } }},
+                { $sort: { total: -1 } }
+            ]
+
+            let ar = await db.collection('accessAudit').aggregate(pipeline).toArray()
+
+            let pipeline1 = [
+                { $group: { _id: "$ip", 'country' : { "$last": "$country"}, count: { $sum: 1 } }},
+                { $sort: { total: -1 } }
+            ]
+
+            let ar1 = await db.collection('accessAudit').aggregate(pipeline1).toArray()
+
+            let pipeline2 = [
+                { "$group": {"_id": { "$toLower": "$timeSlot" },"count": { "$sum": 1 }}}
+            ]
+
+            let ar2 = await db.collection('result').aggregate(pipeline2).toArray()
+            res.json({uniqueCountries: ar, uniqueUsers : ar1, results : ar2})
+        }
 
 
-    }
+
 })
 
 //record the access - but don't wait, or bother about an error...
@@ -754,9 +755,18 @@ app.get('/fhir/TestReport',function(req,res){
 
 */
 //add a single result. This is always a put as the result can be updated
+
 app.put('/result',function(req,res){
     var result = req.body;
     result.issued = new Date();
+    let refDate = new Date("2021-05-16")
+    //difference to 10 minute blocks
+    let diff = parseInt((new Date().getTime() - refDate.getTime()) / (10 * 60 * 1000))
+    result.timeSlot = diff;
+
+console.log(diff)
+
+
     req.selectedDbCon.collection("result").update({id:result.id},result,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)

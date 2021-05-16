@@ -189,7 +189,7 @@ angular.module("sampleApp")
                                 $scope['statsUsersLabels'].push(k)
                             })
 
-                            console.log(item)
+
 
                         }
 
