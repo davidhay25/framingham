@@ -159,6 +159,9 @@ angular.module("sampleApp")
 
             //retrieve the statistics from the server
             const getStatistics = function() {
+
+
+
                 $http.get("/getStats").then(
                     function(data) {
                         console.log(data.data)
@@ -167,13 +170,30 @@ angular.module("sampleApp")
                         if ($scope.eventStats) {
                             $scope['statsCountryData'] = []
                             $scope['statsCountryLabels'] = []
+                            $scope['statsUsersData'] = []
+                            $scope['statsUsersLabels'] = []
+
                             $scope.eventStats.uniqueCountries.forEach(function (item){
                                 $scope['statsCountryData'].push(item.count)
                                 $scope['statsCountryLabels'].push( item['_id'])
                                 console.log(item)
                             })
 
+                            let hash = {}
+                            $scope.eventStats.uniqueUsers.forEach(function (item){  //one entry per ip (user)
+                                hash[item.country] = hash[item.country] || 0
+                                hash[item.country] ++
+                            })
+                            Object.keys(hash).forEach(function (k){
+                                $scope['statsUsersData'].push(hash[k])
+                                $scope['statsUsersLabels'].push(k)
+                            })
+
+                            console.log(item)
+
                         }
+
+                        $scope.userPieOptions =  {plugins: {legend: {display : true}}}
 
                         $scope.countryBarOptions = {scales: {
                                 yAxes: [{
@@ -187,13 +207,14 @@ angular.module("sampleApp")
                                 }]
                             }};
 
+/*
                         $scope['stats-country-labels'] = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
                         $scope.series = ['Series A'];
 
                         $scope['stats-country-data'] = [
                             [65, 59, 80, 81, 56, 55, 40]
                         ];
-
+*/
 
                     },
                     function(err) {

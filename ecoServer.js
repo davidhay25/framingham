@@ -358,13 +358,20 @@ if (!req.selectedDbCon) {
     //function
     async function getStats (res,db ) {
         let pipeline = [
-            { $group: { _id: "$country", count: { $sum: 1 } }},
+            { $group: { _id: "$country",  count: { $sum: 1 } }},
             { $sort: { total: -1 } }
         ]
 
         let ar = await db.collection('accessAudit').aggregate(pipeline).toArray()
 
-        res.json({uniqueCountries: ar})
+        let pipeline1 = [
+            { $group: { _id: "$ip", 'country' : { "$last": "$country"}, count: { $sum: 1 } }},
+            { $sort: { total: -1 } }
+        ]
+
+        let ar1 = await db.collection('accessAudit').aggregate(pipeline1).toArray()
+
+        res.json({uniqueCountries: ar, uniqueUsers : ar1})
     }
 
 
