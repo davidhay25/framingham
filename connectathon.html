@@ -487,11 +487,11 @@
                         <div class="col-sm-3 col-md-3">
 
                             <div class="row">
-                                <div class="col-sm-11 col-md-11">
+                                <div class="col-sm-9 col-md-9">
                                     <input class="form-control" ng-model="input.trackFilter"
                                            placeholder="Enter string to filter Track"/>
                                 </div>
-                                <div class="col-sm-1 col-md-1">
+                                <div class="col-sm-3 col-md-3">
                                     <i class="clickable glyphicon glyphicon-remove-sign "
                                        ng-show="input.trackFilter"
                                        style="padding-top: 8px"
@@ -1552,6 +1552,12 @@
                         <span class="badge" ng-show="allServers.length > 0">{{allServers.length}}</span>
                     </uib-tab-heading>
                     <br/>
+
+                    <div>
+                        <button class="btn btn-link pull-right"
+                                ng-click="download('servers')">Download report as csv</button>
+                    </div>
+
 
                     <uib-tabset>
                         <uib-tab heading = "List">

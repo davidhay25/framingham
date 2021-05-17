@@ -123,6 +123,17 @@ angular.module("sampleApp").service('ecosystemSvc',
 
     };
 
+    var makeSafeString = function(s) {
+        if (s) {
+            s = s.replace(/"/g, "'");
+            s = s.replace(/,/g, "-");
+            //return s;
+            return '"' + s + '"';
+        } else {
+            return "";
+        }
+    }
+
     var makeKey = function(scenario,clientRole,serverRole){
         var key = scenario.id + "|" + clientRole.client.id + '|' + clientRole.role.id + "|"+
             serverRole.server.id + '|' + serverRole.role.id;
@@ -1745,6 +1756,25 @@ angular.module("sampleApp").service('ecosystemSvc',
 
 
             return summary;
+
+
+        },
+
+        makeServersDownloadObject : function () {
+
+            var download = "Name,Url,Description,Notes\n";
+
+            allServers.forEach(function (svr){
+                let lne = ""
+                lne += makeSafeString(svr.name) + ','
+                lne += makeSafeString(svr.address) + ','
+                lne += makeSafeString(svr.description) + ','
+                lne += makeSafeString(svr.nodes)
+
+                download += lne + "\n";
+            })
+
+          return download
 
 
         },

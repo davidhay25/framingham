@@ -1289,10 +1289,17 @@ console.log(vo);
 
             $scope.download = function(downloadThingType,track) {
                 var object;
+                let fileName = "Connectathon"
                 switch (downloadThingType) {
                     case 'results' :
+                        fileName = "ConnectathonResults"
                         object = ecosystemSvc.makeResultsDownloadObject(track);  //a csv file
                         break;
+                    case 'servers' :
+                        fileName = "ConnectathonServers"
+                        object = ecosystemSvc.makeServersDownloadObject();  //a csv file
+                        break;
+
                 }
 
 
@@ -1307,6 +1314,9 @@ console.log(vo);
                     resolve : {
                         object: function () {          //the default config
                             return object;
+                        },
+                        name : function() {
+                            return fileName;
                         }
                     }
                 })
