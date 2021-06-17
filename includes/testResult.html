@@ -28,13 +28,14 @@
 
                         <table class="table table-bordered">
                             <tr>
-                                <th>Asserter</th><th>Server</th><th>Result</th>
+                                <th>Asserter</th><th>Server</th><th>Client</th><th>Result</th>
                                 <th>Note</th><th>IG</th>
                             </tr>
                             <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(null,selectedScenarioDirect)">
 
                                 <td>{{result.asserter.name}}</td>
                                 <td>{{result.server.name}}</td>
+                                <td>{{result.client.name}}</td>
                                 <td>{{result.text}}</td>
 
                                 <td>{{result.note}}</td>

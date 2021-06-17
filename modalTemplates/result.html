@@ -39,25 +39,25 @@
                 <select ng-model="input.selectedServer" class="form-control"
                         ng-options = "server.name for server in allServers"></select>
 
-                <!--
-                <input type="text" ng-model="input.serverSelectUI"
-                       typeahead-on-select = "serverSelected($item, $model, $label, $event)"
-                       uib-typeahead="server.name for server in allServers | filter:{name:$viewValue} | limitTo:8" class="form-control">
-                -->
-
-            </div>
-<!--
-            <div class="col-md-5 col-sm-5">
-                <select ng-model="input.selectedRole" class="form-control"
-                        ng-options = "role.name for role in allRoles"></select>
             </div>
 
--->
 
         </div>
         <br/>
 
+        <div class="row">
+            <div class="col-md-2 col-sm-2">
+                Client
+            </div>
+            <div class="col-md-5 col-sm-5">
+                <select ng-model="input.selectedClient" class="form-control"
+                        ng-options = "client.name for client in allClients"></select>
 
+            </div>
+
+
+        </div>
+        <br/>
 
         <div ng-show="IGs.length > 0">
             <div class="row" >

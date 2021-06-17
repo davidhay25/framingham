@@ -1675,14 +1675,10 @@ angular.module("sampleApp").service('ecosystemSvc',
                     if (value.server) {
                         detail.server = {name:value.server.name}
                     }
-                    /*
-                    try {
-                        detail.client = {name:value.client.client.name,role:value.client.role.name,systemRole: value.client.role.role}
-                        detail.server = {name:value.server.server.name,role:value.server.role.name,systemRole: value.server.role.role}
-                    } catch (ex) {
-
+                    if (value.client) {
+                        detail.client = {name:value.client.name}
                     }
-*/
+                    
                     result[igId].results.push(detail)
                 }
             })
@@ -2053,20 +2049,15 @@ angular.module("sampleApp").service('ecosystemSvc',
             if (result.server) {
                 //result.server is the server object
                 let serverStore = {serverid : result.server.id, name : result.server.name}; //don't want the full server object
-
-                //if (result.serverRole)
-
                 resultToSave.server = serverStore; //serverid:result.server.server.id,roleid:result.server.role.id,name:result.server.server.name};
             }
 
-            /*
-            if (serverRole) {
-                resultToSave.server = {serverid:serverRole.server.id,roleid:serverRole.role.id,name:serverRole.server.name};
+            if (result.client) {
+                let clientStore = {clientid: result.client.id, name:result.client.name}
+                resultToSave.client = clientStore;
             }
-            if (clientRole) {
-                resultToSave.client = {clientid:clientRole.client.id,roleid:clientRole.role.id,name:clientRole.client.name};
-            }
-*/
+
+
             resultToSave.scenarioid = scenario.id;
             resultToSave.trackid = track.id;
             resultToSave.trackers = result.trackers;
@@ -2074,6 +2065,7 @@ angular.module("sampleApp").service('ecosystemSvc',
             if (result.asserter){
                 resultToSave.asserterid = result.asserter.id    //todo - should this be the whole object (like author)???
             }
+
 
 
             $http.put("/result",resultToSave).then(
@@ -2359,6 +2351,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                         allClients.push(client);        //scoped to the service...
                     });
                     ciSort(allClients,'name');
+
                     //create scenario hash
                     var hashScenario = {};
                     vo.scenarios.forEach(function (scenario) {
@@ -2500,7 +2493,7 @@ angular.module("sampleApp").service('ecosystemSvc',
 
                             //and the scores (this could be concurrent with the links)
                             allResults = {};    //scoped to the service...
-                            //$http.get("/result?_dummy="+new Date()).then(
+
                             $http.get("/result").then(
                                 function(data) {
                                     var results = data.data;    //the results as saved in the database
@@ -2513,6 +2506,10 @@ angular.module("sampleApp").service('ecosystemSvc',
                                         result.IG = dataResult.IG;
                                         if (dataResult.server) {
                                             result.server = hashServer[dataResult.server.serverid];
+                                        }
+
+                                        if (dataResult.client) {
+                                            result.client = hashClient[dataResult.client.clientid];
                                         }
 
                                         result.track = hashTrack[dataResult.trackid];
@@ -2529,22 +2526,9 @@ angular.module("sampleApp").service('ecosystemSvc',
                                         if (result.track && result.scenario) {
 
                                             result.issued = dataResult.issued;
-                                            if (dataResult.server) {
 
-                                               // result.server = {server: hashServer[dataResult.server.serverid],
-                                                    //role: hashRole[dataResult.server.roleid]};
 
-                                                //not sure about the role...
-                                             //   result.server = {server: hashServer[dataResult.server.serverid],
-                                                  //  role:{}};
-
-/*
-                                                if (!result.server.server || ! result.server.role) {
-                                                    alert("Error processing server in result# " + dataResult.id);
-                                                    delete result.server;
-                                                }
-*/
-                                            }
+                                            /*
                                             if (dataResult.client) {
                                                 result.client = {client: hashClient[dataResult.client.clientid],
                                                     role: hashRole[dataResult.client.roleid]}
@@ -2554,7 +2538,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                                                     delete result.client;
                                                 }
                                             }
-
+*/
                                             if (dataResult.asserterid) {
                                                 result.asserter = hashAllPersons[dataResult.asserterid];
                                             }
@@ -2563,22 +2547,11 @@ angular.module("sampleApp").service('ecosystemSvc',
                                             if (dataResult.author) {
                                                 result.author = hashAllPersons[dataResult.author.id];
 
-
-
                                             }
 
 
                                             //no longer supporting the 'cs' - clientserver type of test
                                             let key =  dataResult.id;
-                                            /*
-                                            var key;
-                                            if (dataResult.type == 'cs') {
-                                                key = result.scenario.id + "|" + result.client.client.id + '|' + result.client.role.id +
-                                                    "|" + result.server.server.id + '|' + result.server.role.id;
-                                            } else {
-                                                key = dataResult.id;
-                                            }
-                                            */
                                             result.key = key;       //we need this for the delete...
 
 

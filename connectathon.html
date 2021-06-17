@@ -1229,9 +1229,6 @@
                                     </div>
                                 </uib-tab>
 
-
-
-
                                 <uib-tab>
                                     <uib-tab-heading>
                                         Testing & feedback <span ng-show="selectedTrack.scenarios.length > 0" class="badge"
@@ -1745,7 +1742,7 @@
 -->
                             <table class="table table-bordered">
                                 <tr>
-                                    <th>Track</th><th>Scenario</th><th>Server</th><th>Asserter</th><th>Result</th>
+                                    <th>Track</th><th>Scenario</th><th>Server</th><th>Client</th><th>Asserter</th><th>Result</th>
                                     <th>Note</th><th>IG</th>
                                 </tr>
                                 <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults()">
@@ -1753,6 +1750,7 @@
                                     <td>{{result.track.name}}</td>
                                     <td>{{result.scenario.name}}</td>
                                     <td> {{result.server.name}}
+                                    <td> {{result.client.name}}
                                         <!--
                                         <div ng-show="result.client">Client: {{result.client.client.name}}
                                             ({{result.client.role.name}})
@@ -1970,11 +1968,12 @@
 
 
                                     <table class="table table-bordered" ng-show="input.selectedIGTests.results.length > 0">
-                                        <tr><th>Track</th><th>Scenario</th><th>Server</th><th>Asserter</th><th>Result</th><th>Note</th></tr>
+                                        <tr><th>Track</th><th>Scenario</th><th>Server</th><th>Client</th><th>Asserter</th><th>Result</th><th>Note</th></tr>
                                         <tr ng-repeat="test in input.selectedIGTests.results">
                                             <td>{{test.track.name}}</td>
                                             <td>{{test.scenario.name}}</td>
                                             <td>{{test.server.name}}</td>
+                                            <td>{{test.client.name}}</td>
                                             <td>{{test.asserter.name}}</td>
                                             <td>{{test.result}}</td>
 

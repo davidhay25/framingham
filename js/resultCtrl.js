@@ -15,19 +15,10 @@ angular.module("sampleApp")
 
             $scope.allPersons = ecosystemSvc.getAllPersons();//[]
             $scope.allServers = ecosystemSvc.getAllServers();//[]
-/*
-            //get the roles, then create a list of allRoles for this track
-            $scope.allRoles = []
-            let ar = ecosystemSvc.getAllRoles();
-            if (ar && ar.length > 0) {
-                ar.forEach(function (role) {
-                    if ((role.trackId == track.id) && (role.role == 'server')) {
-                        $scope.allRoles.push(role)
-                    }
-                })
-            }
+            $scope.allClients = ecosystemSvc.getAllClients()
 
-*/
+
+
 
 
             $scope.IGs = track.IGs;
@@ -40,21 +31,25 @@ angular.module("sampleApp")
             $scope.input.radioModel = '';
 
             if (previousResult) {
-/*
-                if (previousResult.trackers) {
-                    $scope.trackers = previousResult.trackers;
-                }
-*/
+
 
                 $scope.input.note = previousResult.note;
                 $scope.input.radioModel = previousResult.text;
 
                 if (previousResult.server && $scope.allServers.length > 0) {
-                    let ar = $scope.allServers.filter(item => item.id = previousResult.server.id)
+                    let ar = $scope.allServers.filter(item => item.id == previousResult.server.id)
                     if (ar.length > 0) {
                         $scope.input.selectedServer = ar[0]
                     }
                 }
+
+                if (previousResult.client && $scope.allClients.length > 0) {
+                    let ar = $scope.allClients.filter(item => item.id == previousResult.client.id)
+                    if (ar.length > 0) {
+                        $scope.input.selectedClient = ar[0]
+                    }
+                }
+
 
                 if (previousResult.IG && track.IGs) {
                     let ar = track.IGs.filter(item => item.id == previousResult.IG.id)
@@ -72,7 +67,7 @@ angular.module("sampleApp")
                 $scope.input.asserter = ecosystemSvc.getCurrentUser();
             }
 
-            //console.log(previousResult)
+
 
 
 
@@ -113,6 +108,7 @@ angular.module("sampleApp")
 
                 result.server = $scope.input.selectedServer;
 
+                result.client = $scope.input.selectedClient;
 
                 if ($scope.input.selectedIG) {
                     result.IG = {name:$scope.input.selectedIG.name,id : $scope.input.selectedIG.id}

@@ -50,9 +50,6 @@ angular.module("sampleApp")
                 }
             );
 
-
-
-
             $scope.selectServer = function(key){
 
                 $uibModal.open({
