@@ -291,10 +291,10 @@
 
                 <uib-tab heading="Home Page">
 
-                    <div ng-show="eventConfig.key == 'public' || eventConfig.key == 'con27'">
+                    <div>
 
 
-                    <h3 class="center-text">Welcome to Connectathon Manager for the May 2021 FHIR Connectathon</h3>
+                    <h3 class="center-text">Welcome to Connectathon Manager</h3>
 
                     <div class="center-text">
                         <p><em  >The purpose of this application is to help support Connectathon attendees by making it
@@ -475,6 +475,8 @@
 
 
                     </div>
+
+
                     <div ng-hide="eventConfig.key == 'public' || eventConfig.key == 'con27'">
                         Welcome to conman for the event with the key: {{eventConfig.key}}
                     </div>

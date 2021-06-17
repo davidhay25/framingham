@@ -83,6 +83,14 @@ angular.module("sampleApp")
             $scope.canSave = true;
             $scope.canDelete = false;       //can only delete if there is a track lead, and the track lead is the vcurrent user
 
+
+            //temp for cms cleanup
+            if (event.key == 'cms') {
+                $scope.canDelete = true;
+            }
+
+
+
             if (track) {        //should always be true as the 'addTrack' sets a base track {id: name: roles: scenarioIds: };
                 $scope.track = track;
                 $scope.track.IGs = $scope.track.IGs || []
