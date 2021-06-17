@@ -697,14 +697,12 @@ app.get('/result',function(req,res){
 
 
 app.delete('/result/:id',function(req,res){
-
     var id = req.params.id;       //the id of the result to delete
 
     req.selectedDbCon.collection("result").update({id:id},{$set: {status:'deleted'}},function(err,result){
         if (err) {
             res.send(err,500)
         } else {
-
             res.send(result.result)
         }
     })

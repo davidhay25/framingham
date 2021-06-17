@@ -1678,7 +1678,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                     if (value.client) {
                         detail.client = {name:value.client.name}
                     }
-                    
+
                     result[igId].results.push(detail)
                 }
             })
