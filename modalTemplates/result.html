@@ -58,13 +58,31 @@
 
         </div>
         <br/>
+        <div ng-show="dataSets.length > 0">
+            <div class="row" >
+                <div class="col-md-2 col-sm-2">
+                    DataSet
+                </div>
+
+                <div class="col-md-4 col-sm-4">
+                    <select class="form-control" ng-model="input.selectedDS"
+                            ng-options = "DS.name for DS in dataSets"></select>
+
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    {{input.selectedDS.description}}
+                </div>
+            </div>
+            <br/>
+        </div>
+
 
         <div ng-show="IGs.length > 0">
             <div class="row" >
                 <div class="col-md-2 col-sm-2">
                     IG
                 </div>
-                <div class="col-md-8 col-sm-8">
+                <div class="col-md-10 col-sm-10">
                     <div ng-show="IGs.length == 1">
                         {{IGs[0].name}}
                     </div>
@@ -73,7 +91,6 @@
                         <select class="form-control" ng-model="input.selectedIG"
                                 ng-options = "IG.name for IG in IGs"></select>
                     </div>
-
 
                 </div>
             </div>

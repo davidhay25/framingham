@@ -5,25 +5,32 @@ angular.module("sampleApp")
             $scope.input = {};
             $scope.previousResult = previousResult;
 
-            //console.log(allServers)
-
             $scope.scenario = scenario;
             $scope.server = server;
             $scope.client = client;
-
-            //$scope.trackers = [];
 
             $scope.allPersons = ecosystemSvc.getAllPersons();//[]
             $scope.allServers = ecosystemSvc.getAllServers();//[]
             $scope.allClients = ecosystemSvc.getAllClients()
 
+            if (track && track.dataSets) {
+                $scope.dataSets = track.dataSets
+
+                if (previousResult && previousResult.dataSet) {
+                    for (var i = 0; i < $scope.dataSets.length; i++) {
+                        if ($scope.dataSets[i].name == previousResult.dataSet.name) {
+                            $scope.input.selectedDS = $scope.dataSets[i]
+                            break;
+                        }
+                    }
 
 
-
-
-            $scope.IGs = track.IGs;
+                }
+            }
 
             if (track && track.IGs) {
+                $scope.IGs = track.IGs;
+
                 //default to the first
                 $scope.input.selectedIG = track.IGs[0]
             }
@@ -67,36 +74,17 @@ angular.module("sampleApp")
                 $scope.input.asserter = ecosystemSvc.getCurrentUser();
             }
 
-
-
-
-
-
-            $scope.addNewTrackerDEP = function() {
-                $scope.trackers.push({url:$scope.input.newTracker})
-
-            };
-
             $scope.asserterSelected = function(item){
                 $scope.selectedPerson = item;
                 console.log($scope.selectedPerson);//, $model, $label, $event)
-                //typeahead-on-select($item, $model, $label, $event)
+
             };
 
 
-            $scope.serverSelectedDEP = function(item){
-                $scope.selectedServer = item;
-                console.log($scope.selectedServer);//, $model, $label, $event)
-                //typeahead-on-select($item, $model, $label, $event)
-            };
 
 
-            if (previousResult) {
-               // $scope.input.note = previousResult.note;
-               // $scope.input.radioModel = previousResult.text;
-                //$scope.input.selectedIG = previousResult.IG
 
-            }
+
 
             $scope.save = function() {
                 var result = {}
@@ -104,6 +92,7 @@ angular.module("sampleApp")
                 result.note = $scope.input.note;
                 result.asserter = $scope.selectedPerson;
                 result.type = 'direct'
+                result.dataSet = $scope.input.selectedDS
                 //result.trackers = $scope.trackers;
 
                 result.server = $scope.input.selectedServer;

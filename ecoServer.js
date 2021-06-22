@@ -19,33 +19,35 @@ require('events').EventEmitter.prototype._maxListeners = 100;
 var express = require('express');
 var request = require('request');
 var session = require('express-session');
-//var jwt = require('jsonwebtoken');
+
 var bodyParser = require('body-parser');
 
-//var touchStone = require('myModules/touchstoneModule');
-
 var fs = require('fs');
-//let moment = require('moment')
 
-//var manageMod = require('./ecoModule');
-
+let reportModule = require('./reportModule.js')
 
 var hashDataBases = {};         //hash for all connected databases
 
 //todo Note - this is needed to avoid an error about maxListeners - but there could be a code issue to review - see https://stackoverflow.com/questions/8313628/node-js-request-how-to-emitter-setmaxlisteners
 require('events').EventEmitter.defaultMaxListeners = 15;
 
-//var qaModule = require('qaModule');
-
 //the known databases (or events)
 var dbKeys = require('./artifacts/events.json')
-
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";     //allow self signed certificates
 useSSL = false;
 
+//right now, we're using the con27 database for the IGs. May move to a separate 'common' database...
+let connIG = {};        //the connection object to the IG db
+let igDb = "con27"     //the database where the IGs are located. collection is 'IG'. May be other resources over time...
 
-//let modStats = require("./ecoModuleStats.js")
+//to allow local testing
+if (process.env.ig) {
+    igDb = process.env.ig;
+    console.log('Setting IG db to ' + igDb)
+}
+
+
 
 
 //  *************** temp for COF !!!
@@ -62,24 +64,26 @@ var hashTrack = {};         //a hash of all the tracks
 
 var app = express();
 
-
-
 //to serve up the static web pages - particularly the login page if no page is specified...
 //Order of app.use() is important as we need to increase the size limit for json parsing...
 app.use('/', express.static(__dirname,{index:'/connectathon.html'}));
-
 
 //http://mongodb.github.io/node-mongodb-native/3.0/quick-start/quick-start/
 const MongoClient = require('mongodb').MongoClient;
 
 //connect to the server and populate the list of databases (each db is a connectathon event)
 MongoClient.connect('mongodb://localhost:27017', function(err, client) {
-    if(err) {
+    if (err) {
         console.log(err);
         console.log('>>> Mongo server not running')
     } else {
         console.log("Connected successfully to local server, dataBase="+dbName);
 
+        //create the connection for the IG
+        connIG = client.db(igDb)
+        //console.log('ig',connIG)
+
+        reportModule.setup(app,client,igDb)
 
 
         //get the list of events from the event database
@@ -112,6 +116,7 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
                         console.log(item.key)
                     });
 
+                    /* - need to figure out which event databases to do this for
                     //write the initial snapshot and set the timer for the write
                     recordDbCount('con27')
 
@@ -121,19 +126,11 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
                         recordDbCount('con27')
                     }, repeatInterval)
 
+                    */
+
                 }
             }
         });
-
-
-
-        //initialize the management module
-        //manageMod.setup(app,hashDataBases);
-
-        //at server startup, read all the scenarios. We need this when creating the TestReport resource. it is neverupdated (at the moment)
-
-
-
     }
 });
 
@@ -177,7 +174,7 @@ app.use(function (req, res, next) {
         //are we in a user session?
 
         var config = req.session['config'];         //the configuration for this user
-//console.log('session check',url,config)
+
         if (config && config.key) {
             //yep - there is a session...
             //there is a config and a key - this user
@@ -205,10 +202,9 @@ var jsonParser       = bodyParser.json({limit:'50mb', type:'application/json'});
 var urlencodedParser = bodyParser.urlencoded({ extended:true,limit:'50mb',type:'application/x-www-form-urlencoding' })
 
 //https://stackoverflow.com/questions/29939852/mean-io-error-request-entity-too-large-how-to-increase-bodyparser-limit-ou
+
 app.use(jsonParser);
 app.use(urlencodedParser);
-
-//touchStone.setup(app);      //initialize the routes in touchstone
 
 
 //added for the con27 event to count the number of results over time. Will need further thought if I continue with it
@@ -229,7 +225,6 @@ function recordDbCount(dbName) {
                     console.log('wrote snapshot')
                 }
             })
-
         });
     } else {
         console.log('Database '+ dbName + ' not found in hash')
@@ -254,7 +249,7 @@ function recordAccess(req,data,cb) {
         var options = {
             method:'GET',
             uri: 'https://api.iplocation.net/?ip=' + clientIp
-            //uri : "http://freegeoip.net/json/"+clientIp
+
         };
 
         request(options,function(error,response,body) {
@@ -264,10 +259,9 @@ function recordAccess(req,data,cb) {
                 //console.log(body)
                 try {
                     loc = JSON.parse(body);
-                    //audit.loc = loc;
                     audit.country = loc['country_name'];
                     audit.countryCode = loc['country_code2'];   //to make querying simpler
-                    //audit.region = loc.region_name;     //to make querying simpler
+
 
                     req.selectedDbCon.collection("accessAudit").insert(audit, function (err, result) {
                         if (err) {
@@ -295,6 +289,26 @@ function recordAccess(req,data,cb) {
 
 //====== access
 
+
+//--- temp fix
+app.get('/fixresult',function(req,res){
+    connIG.collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            let hash = {}}
+            result.forEach(function (person){
+                hash[person.id] = person
+            })
+
+        connIG.collection("result").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
+
+        })
+
+
+        })
+})
+
 //return all the users for a given database. Used when logging in to an event
 app.get('/public/getUsers/:key',function(req,res){
     var key = req.params.key;
@@ -307,7 +321,6 @@ app.get('/public/getUsers/:key',function(req,res){
             } else {
                 req.session['config'] = {key:key};      //record the database key in the session
 
-                //console.log(result)
 
                 //remove all the passwords!
                 result.forEach(function (user) {
@@ -348,7 +361,6 @@ app.get('/event/detail/:key',function(req,res){
 });
 
 
-
 //sets the session for the specified event...
 app.post('/public/setEvent',function(req,res) {
     var event = req.body;
@@ -361,9 +373,6 @@ app.post('/public/setEvent',function(req,res) {
         res.status(400).send({msg:'Invalid event key:'+event.key})
     }
 });
-
-
-
 
 //get all access records. todo This could become an AuditEvent in the future...
 //a new record each time the app is loaded...
@@ -401,16 +410,7 @@ app.get('/getStats',function(req,res){
             ]
 
             let ar1 = await db.collection('accessAudit').aggregate(pipeline1).toArray()
-
             let ar2 = await db.collection('snapshot').find({}).toArray();
-//console.log(ar2)
-            /*
-            let pipeline2 = [
-                { "$group": {"_id": { "$toLower": "$timeSlot" },"count": { "$sum": 1 }}}
-            ]
-
-            let ar2 = await db.collection('result').aggregate(pipeline2).toArray()
-            */
             res.json({uniqueCountries: ar, uniqueUsers : ar1, snapshots : ar2})
         }
 
@@ -426,21 +426,16 @@ app.post('/startup',function(req,res){
     });
 });
 
-// ============ web interface
+// ============ web interface - added for confluence
 app.get('/web/servers/:eventCode',function(req,res){
 
     let eventCode = req.params.eventCode;
-
-    //var db = hashDataBases[config.key];     //the database connection
-
 
     var eventDb =  hashDataBases[eventCode];
 
     if (eventDb) {
         let ar = []
         ar.push("<html><title>Servers</title> <head>")
-
-        //https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
 
         ar.push("<link rel='stylesheet' type='text/css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'/>")
 
@@ -501,11 +496,9 @@ app.get('/proxyfhir/*',function(req,res) {
         }
     })
 });
-
 app.post('/proxyfhir/*',function(req,res) {
     var fhirQuery = req.originalUrl.substr(11); //strip off /orionfhir
     var payload = req.body;
-
     var options = {
         method: 'POST',
         uri: fhirQuery,
@@ -513,7 +506,6 @@ app.post('/proxyfhir/*',function(req,res) {
         headers: {'content-type':'application/json'},
         encoding : null
     };
-
 
     request(options, function (error, response, body) {
         if (error) {
@@ -537,7 +529,6 @@ app.post('/proxyfhir/*',function(req,res) {
 //================================ clients =======================
 //get all clients
 app.get('/client',function(req,res){
-    // db.collection("client").find({}).sort( { name: 1 }).toArray(function(err,result){
     req.selectedDbCon.collection("client").find({}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
@@ -551,7 +542,6 @@ app.get('/client',function(req,res){
 app.post('/client',function(req,res){
     var client = req.body
     req.selectedDbCon.collection("client").update({id:client.id},client,{upsert:true},function(err,result){
-   // db.collection("client").insert(req.body,function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -562,9 +552,22 @@ app.post('/client',function(req,res){
 
 //================= IG's ==========
 
+app.get('/IG',function(req,res){
+    connIG.collection("ig").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
+        if (err) {
+            res.send(err,500)
+        } else {
+            res.send(result)
+        }
+    })
+
+})
+
 app.post('/IG',function(req,res){
     var IG = req.body
-    req.selectedDbCon.collection("ig").update({id:IG.id},IG,{upsert:true},function(err,result){
+
+    connIG.collection("ig").update({id:IG.id},IG,{upsert:true},function(err,result){
+    //req.selectedDbCon.collection("ig").update({id:IG.id},IG,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -576,18 +579,15 @@ app.post('/IG',function(req,res){
 //================================ servers =======================
 //get all servers
 app.get('/server',function(req,res){
-
     req.selectedDbCon.collection("server").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
-
             if (result) {
                 result.forEach(function (svr){
                     delete svr.capStmt;         //remove the capability statement to reduce size
                 })
             }
-
             res.send(result)
         }
     })
@@ -598,8 +598,6 @@ app.post('/server',function(req,res){
 
     var server = req.body;
     req.selectedDbCon.collection("server").update({id:server.id},server,{upsert:true},function(err,result){
-
-   // db.collection("server").insert(req.body,function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -611,7 +609,6 @@ app.post('/server',function(req,res){
 
 //find all servers that claim to support a type or operation
 app.get('/server/query/:search',function (req,res){
-
     let searchString = req.params.search.toLowerCase();       //todo might be an operation name in the future
     console.log(searchString)
     req.selectedDbCon.collection("server").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
@@ -623,14 +620,11 @@ app.get('/server/query/:search',function (req,res){
                 result.forEach(function (svr){
 
                   if (svr.capStmt) {
-                      //console.log(svr.capStmt.rest.length)
-
 
                       if (svr.capStmt.rest && svr.capStmt.rest.length > 0) {
 
                           //search for Resource types
                           let ar = svr.capStmt.rest[0].resource.filter(item => item.type.toLowerCase() == searchString)
-                          //console.log(ar.length)
                           if (ar.length > 0) {
                               let item = {id:svr.id,name:svr.name,description:svr.description,notes:svr.notes}
                               item.definition = ar[0];
@@ -698,7 +692,6 @@ app.get('/result',function(req,res){
 
 app.delete('/result/:id',function(req,res){
     var id = req.params.id;       //the id of the result to delete
-
     req.selectedDbCon.collection("result").update({id:id},{$set: {status:'deleted'}},function(err,result){
         if (err) {
             res.send(err,500)
@@ -709,89 +702,6 @@ app.delete('/result/:id',function(req,res){
 
 });
 
-//return the results in TestReport format
-//notes: result could have 'partial'
-// could add a 'comment' field
-//why is TestScript required?
-/*
-app.get('/fhir/TestReport',function(req,res){
-    req.selectedDbCon.collection("result").find({}).toArray(function(err,result){
-        if (err) {
-            res.send(err,500)
-        } else {
-            var resultBundle = {resourceType:'Bundle',type:'searchset',entry:[]}
-            result.forEach(function (rslt) {
-
-                var tr = {resourceType:'TestResult',id:rslt.id,contained:[],extension:[]};
-
-                tr.status = 'completed';
-                tr.participant = [];
-
-
-                //var tr = {resourceType:'TestResult',status:'completed',participant:[],test:[]};
-                if (rslt.text == 'partial') {
-                    tr.result = 'pass';
-                    tr['_result'] = [{extension : {url:'http.clinfhir.com/fhir/StructureDefinition/testResult',valueCode:'partial'}}]
-                } else {
-                    tr.result = rslt.text;
-                }
-
-                tr.issued = rslt.issued;
-                if (rslt.author) {
-                    tr.tester = rslt.author.name;
-                }
-
-                if (rslt.server) {
-                    var serverUrl = 'server/'+rslt.server.serverid;
-                    tr.participant.push({type:'server',uri:serverUrl, display:rslt.server.name})
-                }
-                if (rslt.client) {
-                    var clientUrl = 'client/'+rslt.client.clientid;
-                    tr.participant.push({type:'client',uri:clientUrl, display:rslt.client.name})
-                }
-
-                tr.name = "";
-                var track = hashTrack[rslt.trackid];
-                if (track) {
-                    tr.name += track.name
-                }
-
-
-                var scenario = hashScenario[rslt.scenarioid];
-                if (scenario) {
-                    tr.name += ' / ' + scenario.name
-                }
-
-                //now the comment
-                if (rslt.note) {
-                    tr.extension.push({url:'http.clinfhir.com/fhir/StructureDefinition/testResultComment',valueString:rslt.note})
-                }
-
-                //and any trackers
-                if (rslt.trackers) {
-                    rslt.trackers.forEach(function (tracker) {
-                        tr.extension.push({url:'http.clinfhir.com/fhir/StructureDefinition/testResultTracker',
-                            valueUrl:tracker.url})
-                    })
-                }
-
-                //now the contained testScript resource. Set it to the scenario...
-                var testScript = {id:rslt.id+'-script',resourceType:'TestScript',status:'active'};
-                testScript.url = 'scenario/'+rslt.scenarioid;
-                testScript.name = tr.name
-                tr.contained.push(testScript);
-                resultBundle.entry.push({resource:tr})
-
-
-            });
-
-            res.send(resultBundle)
-        }
-    })
-});
-
-*/
-//add a single result. This is always a put as the result can be updated
 
 app.put('/result',function(req,res){
     var result = req.body;
@@ -800,10 +710,6 @@ app.put('/result',function(req,res){
     //difference to 10 minute blocks
     let diff = parseInt((new Date().getTime() - refDate.getTime()) / (10 * 60 * 1000))
     result.timeSlot = diff;
-
-console.log(diff)
-
-
     req.selectedDbCon.collection("result").update({id:result.id},result,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)
@@ -830,7 +736,6 @@ app.post('/link',function(req,res){
     var link = req.body;
     delete link._id;
     req.selectedDbCon.collection("link").update({id:link.id},link,{upsert:true},function(err,result){
-    //db.collection("link").insert(req.body,function(err,result){
         if (err) {
             res.status(500).send(err)
         } else {
@@ -869,7 +774,6 @@ app.post('/person',function(req,res){
 //add/update a scenarioGraph (Logical Model) result
 app.put('/scenarioGraph',function(req,res){
     var data = req.body;
-   // var result = req.body;
     data.issued = new Date();
     var collection = req.selectedDbCon.collection('scenarioGraph')
 

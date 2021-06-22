@@ -139,10 +139,6 @@
         }
     </style>
 
-    <script src="directive/vsViewer/vsViewer.js"></script>
-    <script src="directive/tblResource/tblResourceDir.js"></script>
-
-
 
     <script src="js/libs/showdown.min.js"></script>
     <script src="js/libs/angular-lightweight-markdown-editor.min.js"></script>
@@ -162,43 +158,45 @@
     <script src="js/filters.js"></script>
     <script src="js/editScenarioCtrl.js"></script>
     <script src="js/loginCtrl.js"></script>
+
+    <!--
+        <script src="directive/vsViewer/vsViewer.js"></script>
+    <script src="directive/tblResource/tblResourceDir.js"></script>
+
+
     <script src="js/cofCtrl.js"></script>
     <script src="js/cofSvc.js"></script>
     <script src="js/cofSummaryCtrl.js"></script>
+     <script src="js/importTrack.js"></script>
+       <script src="js/importGraphCtl.js"></script>
+        <script src="js/touchStone.js"></script>
     <script src="js/lmCheckCtrl.js"></script>
-    <script src="js/libs/angular-bootstrap-checkbox.js"></script>
-    <script src="js/libs/vis.min.js"></script>
-    <script src="js/modellerFilters.js"></script>
 
-    <script src="js/libs/elastic.js"></script>
-    <script src="js/editRoleCtrl.js"></script>
-    <script src="js/lmSummaryCtrl.js"></script>
+        <script src="js/lmSummaryCtrl.js"></script>
     <script src="js/getDatatypeValueCtrl.js"></script>
     <script src="js/getDatatypeValueSvc.js"></script>
     <script src="js/allNotes.js"></script>
-    <script src="js/importGraphCtl.js"></script>
-    <script src="js/addElementCtrl.js"></script>
-    <script src="js/addProfileToScenario.js"></script>
-    <script src="js/touchStone.js"></script>
+
+  <script src="js/modellerFilters.js"></script>
+
+ <script src="js/addElementCtrl.js"></script>
+  <script src="js/addProfileToScenario.js"></script>
+   <script src="js/selectPatientResourceCtrl.js"></script>
+    -->
+
+    <script src="js/libs/elastic.js"></script>
+    <script src="js/libs/angular-bootstrap-checkbox.js"></script>
+    <script src="js/libs/vis.min.js"></script>
+
+    <script src="js/editRoleCtrl.js"></script>
 
     <script src="js/libs/jstree.min.js"></script>
 
-    <script src="js/selectPatientResourceCtrl.js"></script>
-
     <script src="js/querySvc.js"></script>
-    <script src="js/importTrack.js"></script>
-    <!---->
+
     <script src="js/igCtrl.js"></script>
 
 
-
-    <!-- for the 3d graph
-    <script src="//unpkg.com/3d-force-graph@1"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/qwest/4.4.5/qwest.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js"></script>
-    <script src="//unpkg.com/three"></script>
-    <script src="//unpkg.com/three-spritetext"></script>
-     -->
 
 </head>
 <body style="padding: 8px;padding-top: 80px" >
@@ -538,11 +536,14 @@
                                         </button>
 
                                         <!-- for now, limit import. Security needs an overall review...-->
+                                        <!--
                                         <div ng-show="ecosystemSvc.getCurrentUser().name.toLowerCase() == 'david hay'">
                                             <div ng-controller="importTrackCtrl">
                                                 <button class="btn btn-link" ng-click="import()">Import a track</button>
                                             </div>
                                         </div>
+
+                                        -->
 
                                     </div>
                                 </div>
@@ -935,6 +936,36 @@
                                     </div>
 
 
+
+                                    <div ng-show="selectedTrack.dataSets">
+
+                                        <div class="row">
+
+                                            <div class="col-sm-2 col-md-2">
+                                                <strong>Data Sets</strong>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6">
+                                                <table class="table table-bordered">
+                                                    <tr><th>Name</th><th>Description</th></tr>
+                                                    <tr ng-repeat="ds in selectedTrack.dataSets">
+                                                        <td>{{ds.name}}</td>
+                                                        <td>{{ds.description}}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="col-sm-4 col-md-4">
+                                                <em>DataSets are an extra 'dimension' to scenarios.
+                                                When testing a scenario some tracks have specific sets of data
+                                                within the scenario that is being tested. By defining these as datasets,
+                                                it is possible to indicate on a result which data set was used in the test.</em>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+
                                     <div class="row" ng-show="false">
                                         <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
@@ -1246,15 +1277,7 @@
                                     <div ng-show="selectedTrack.scenarios.length == 0">
                                         <em>Testing can only be performed if the track defines scenarios against which tests
                                             can be done. Click <span class="clickable" ng-click="addScenario()">here </span> to add one.</em>
-<!--
-                                        <div>
-                                            <div class="pull-right">
-                                                <button class="btn btn-link" ng-click="addScenario()">
-                                                    Add a new Scenario
-                                                </button>
-                                            </div>
-                                        </div>
--->
+
                                     </div>
 
                                     <div ng-show="selectedTrack.scenarios.length > 0">
@@ -1737,30 +1760,20 @@
                         <uib-tab heading="All tests">
 
                             <br/>
-<!--
-                            <button class="btn btn-link pull-right" ng-click="download('results')">Download results</button>
--->
+
                             <table class="table table-bordered">
                                 <tr>
-                                    <th>Track</th><th>Scenario</th><th>Server</th><th>Client</th><th>Asserter</th><th>Result</th>
+                                    <th>Track</th><th>Scenario</th><th>Server</th><th>Client</th><th>DataSet</th><th>Asserter</th><th>Result</th>
                                     <th>Note</th><th>IG</th>
                                 </tr>
                                 <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults()">
 
                                     <td>{{result.track.name}}</td>
                                     <td>{{result.scenario.name}}</td>
-                                    <td> {{result.server.name}}
-                                    <td> {{result.client.name}}
-                                        <!--
-                                        <div ng-show="result.client">Client: {{result.client.client.name}}
-                                            ({{result.client.role.name}})
-                                        </div>
-                                        <div ng-show="result.server">Server: {{result.server.server.name}}
-                                            ({{result.server.role.name}})
-                                        </div>
-                                        -->
+                                    <td> {{result.server.name}} </td>
+                                    <td> {{result.client.name}} </td>
+                                    <td>{{result.dataSet.name}}</td>
 
-                                    </td>
                                     <td>{{result.asserter.name}}</td>
                                     <td>{{result.text}}</td>
 
@@ -1853,11 +1866,8 @@
                                                             </span>
 
 
-
                                                         </li>
                                                     </ul>
-
-
 
                                                 </div>
                                                 <div class="col-md-8 col-sm-8">
@@ -1865,15 +1875,7 @@
                                                             chart-data="chartData" chart-labels="chartLabels" chart-options="chartOptions" chart-colors="chartColors">
                                                     </canvas>
 
-
-
-
                                                 </div>
-
-
-
-
-
                                             </div>
                                         </uib-tab>
                                         <uib-tab heading="Details all scenarios this track">
@@ -1886,14 +1888,19 @@
 
                                             <table class="table table-bordered">
                                                 <tr>
-                                                    <th>Scenario</th><th>Server</th><th>Asserter</th><th>Result</th>
-                                                    <th>Note</th><th>IG</th><th></th>
+                                                    <th>Scenario</th>
+                                                    <th ng-show="selectedTrackSummary.dataSets.length > 0">DataSet</th>
+                                                    <th>Server</th><th>Client</th><th>Asserter</th><th>Result</th>
+                                                    <th>Note</th><th>IG</th>
                                                 </tr>
                                                 <tr ng-repeat="(key,result) in ecosystemSvc.getAllResults(selectedTrackSummary)">
 
 
                                                     <td>{{result.scenario.name}}</td>
+                                                    <td  ng-show="selectedTrackSummary.dataSets.length > 0">{{result.dataSet.name}}</td>
                                                     <td>{{result.server.name}}
+                                                    <td>{{result.client.name}}
+
                                                         <!--
                                                         <div ng-show="result.client">Client: {{result.client.client.name}}
                                                             ({{result.client.role.name}})
@@ -2145,19 +2152,12 @@
 
                 <uib-tab heading="Event Activity">
 
-
-
                         <ng-include src="'includes/eventActivity.html'"></ng-include>
 
 
                 </uib-tab>
-
-
             </uib-tabset>
-
         </div>
-
-
     </div>
 
 

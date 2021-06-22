@@ -10,86 +10,8 @@ angular.module("sampleApp")
 
             $scope.allIGs = []; ecosystemSvc.getIGs()
 
-            function setAvailableIgs() {
-                $scope.allIGs.length = 0;
-                ecosystemSvc.getIGs().forEach(function (ig) {
-                    let ar = $scope.track.IGs.filter(item => item.id == ig.id);
-                    if (ar.length == 0) {
-                        $scope.allIGs.push(ig)
-                    }
-                })
-            }
-
-            $scope.addIG = function(ig) {
-                $scope.track.IGs = $scope.track.IGs || []
-                $scope.track.IGs.push(ig)
-                setAvailableIgs()
-            }
-
-            $scope.removeIG = function(ig) {
-                let ar = []
-                $scope.track.IGs.forEach(function (tig) {
-                    if (tig.id !== ig.id) {
-                        ar.push(tig)
-                    }
-                })
-                $scope.track.IGs.length = 0;
-                $scope.track.IGs = ar;
-                setAvailableIgs()
-            }
-
-            //default servers...
-            $scope.input.termServer = "https://ontoserver.csiro.au/stu3-latest/";
-            $scope.input.confServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
-            $scope.input.dataServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
-
-            $http.get('./artifacts/servers.json').then(
-                function(data) {
-                    //console.log(data.data)
-                    $scope.servers = data.data
-                }
-            );
-
-            $scope.selectServer = function(key){
-
-                $uibModal.open({
-                    templateUrl: 'modalTemplates/namedServerList.html',
-                    //size: 'lg',
-                    controller: function($scope,servers){
-                        $scope.servers = servers;
-                        $scope.select = function(svr) {
-
-                            $scope.$close(svr);
-                        }
-                    },
-                    resolve : {
-                        servers: function () {          //the default config
-
-                            return $scope.servers
-                        }
-                    }
-                }).result.then(
-                    function(data) {
-                        //console.log(data)
-                        $scope.input[key] = data.url;
-                    }
-                )
-
-            }
-
-            $scope.canSave = true;
-            $scope.canDelete = false;       //can only delete if there is a track lead, and the track lead is the vcurrent user
-
-
-            //temp for cms cleanup
-            if (event.key == 'cms') {
-                $scope.canDelete = true;
-            }
-
-
-
             if (track) {        //should always be true as the 'addTrack' sets a base track {id: name: roles: scenarioIds: };
-                $scope.track = track;
+                $scope.track = angular.copy(track); //NOTE - just added June22 so 'cancel' works
                 $scope.track.IGs = $scope.track.IGs || []
                 setAvailableIgs();      //IG's not already associated with this track...
                 $scope.exportTrack = angular.copy(track);   //a copy of the track to use as an export. Delete the non-design stuff
@@ -151,6 +73,90 @@ angular.module("sampleApp")
             } else {
                 $scope.track = {trackSubType : "igreview"}
             }
+
+
+
+            function setAvailableIgs() {
+                $scope.allIGs.length = 0;
+                ecosystemSvc.getIGs().forEach(function (ig) {
+                    let ar = $scope.track.IGs.filter(item => item.id == ig.id);
+                    if (ar.length == 0) {
+                        $scope.allIGs.push(ig)
+                    }
+                })
+            }
+
+            $scope.addIG = function(ig) {
+                $scope.track.IGs = $scope.track.IGs || []
+                $scope.track.IGs.push(ig)
+                setAvailableIgs()
+            }
+
+            $scope.removeIG = function(ig) {
+                let ar = []
+                $scope.track.IGs.forEach(function (tig) {
+                    if (tig.id !== ig.id) {
+                        ar.push(tig)
+                    }
+                })
+                $scope.track.IGs.length = 0;
+                $scope.track.IGs = ar;
+                setAvailableIgs()
+            }
+
+            //default servers...
+            $scope.input.termServer = "https://ontoserver.csiro.au/stu3-latest/";
+            $scope.input.confServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
+            $scope.input.dataServer = "http://snapp.clinfhir.com:8081/baseDstu3/";
+
+            /*
+            $http.get('./artifacts/servers.json').then(
+                function(data) {
+                    //console.log(data.data)
+                    $scope.servers = data.data
+                }
+            );
+*/
+            $scope.addDS = function(name,description) {
+                let ds = {name:name,description:description}
+                $scope.track.dataSets = $scope.track.dataSets || []
+                $scope.track.dataSets.push(ds)
+                delete $scope.input.dsName;
+                delete $scope.input.dsDescription;
+            }
+            $scope.removeDS = function(inx) {
+                $scope.track.dataSets.splice(inx,1)
+            }
+
+            $scope.selectServer = function(key){
+
+                $uibModal.open({
+                    templateUrl: 'modalTemplates/namedServerList.html',
+                    //size: 'lg',
+                    controller: function($scope,servers){
+                        $scope.servers = servers;
+                        $scope.select = function(svr) {
+
+                            $scope.$close(svr);
+                        }
+                    },
+                    resolve : {
+                        servers: function () {          //the default config
+
+                            return $scope.servers
+                        }
+                    }
+                }).result.then(
+                    function(data) {
+                        //console.log(data)
+                        $scope.input[key] = data.url;
+                    }
+                )
+            }
+
+            $scope.canSave = true;
+            $scope.canDelete = false;       //can only delete if there is a track lead, and the track lead is the vcurrent user
+
 
 
             $scope.addLink = function() {
@@ -242,19 +248,9 @@ angular.module("sampleApp")
 
 
 
-                //track.url = $scope.clone.url;
-/*
-                $scope.track.termServer = $scope.input.termServer;
-                $scope.track.confServer = $scope.input.confServer ;
-                $scope.track.dataServer = $scope.input.dataServer;
-
-                $scope.track.LM = $scope.input.LM ;
-*/
                 if ($scope.input.IG) {
                     $scope.track.IG = $scope.input.IG
 
-                   // $scope.track.IG = {id:$scope.input.IG.id,name:$scope.input.IG.name}
-                   // $scope.track.IG.url = $scope.track.confServer + "ImplementationGuide/"+$scope.input.IG.id;
 
 
                 } else {

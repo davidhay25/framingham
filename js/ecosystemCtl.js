@@ -158,6 +158,15 @@ angular.module("sampleApp")
                 //no event specified in the query. This will show the error div...
             }
 
+
+            $scope.getCompleteIGSummary = function() {
+                $http.get('/public/report/igresult').then(
+                    function(data) {
+                        $scope.completeIGSummary = data.data;
+                    }
+                )
+            }
+
             //retrieve the statistics from the server
             $scope.getStatistics = function() {
 
@@ -707,34 +716,20 @@ angular.module("sampleApp")
 
                         $scope.allIGs = ecosystemSvc.getIGs()
 
-
-console.log(vo);
+                        /*
                         ecosystemSvc.makeAllScenarioSummary(vo.scenarioGraph,vo.tracks).then(
                             function(data) {
                                 $scope.hashAllScenarioNotes = data;
 
-                                //save these for the refresh
-                                //$scope.allScenarioGraphIndex = vo.scenarioGraph;
-
-
                             }
                         );
-
+*/
 
 
                         console.log(ecoUtilitiesSvc.getObjectSize(vo));
 
                         $scope.tracks = vo.tracks;
-/*
-                        $scope.tracks.sort(function(a,b){
-                            if (a.name > b.name) {
-                                return 1
-                            } else {
-                                return -1
-                            }
 
-                        })
-                        */
                         //used to display track by name in server tracks listing
                         $scope.hashTracks = {}
                         $scope.tracks.forEach(function(track){
@@ -759,7 +754,7 @@ console.log(vo);
 
 
             //refresh the 'all notes function.
-            $scope.refreshAllNotesSummary = function(){
+            $scope.refreshAllNotesSummaryDEP = function(){
                 var url = '/scenarioGraph'
                 $http.get(url).then(
                     function(data) {
@@ -768,14 +763,12 @@ console.log(vo);
                             function(data) {
                                 $scope.hashAllScenarioNotes = data;
 
-                                //save these for the refresh
-                                //$scope.allScenarioGraphIndex = vo.scenarioGraph;
-
-
                             }
                         );
 
                     } )} ;
+
+
 
             $scope.canShowPerson = function(person,filter) {
                 var name = person.name;
@@ -972,7 +965,23 @@ console.log(vo);
                     //var url = "/config/track";
                     var url = "/track";     //this will only update selected fields to avoid clobbering the scenario list
 
+
                     var clone = angular.copy(vo.track);
+
+
+                    $scope.selectedTrack = vo.track;   //this updates the current page. The whole clone thing may be redundant...
+                    //need to update the $scope.tracks array as well
+                    for (var i=0; i < $scope.tracks.length; i++) {
+                        if ($scope.tracks[i].id == vo.track.id) {
+                            console.log('updating local track')
+                            $scope.tracks[i] = vo.track;
+                            break;
+                        }
+                    }
+
+
+
+
                     delete clone._id;
                     delete clone.scenarios;
                     delete clone.leads;
@@ -1208,7 +1217,7 @@ console.log(vo);
                 }
             };
 
-            $scope.addServerToScenario = function(scenario) {
+            $scope.addServerToScenarioDEP = function(scenario) {
                 //todo expand to a full server object...
 
                 $uibModal.open({
@@ -1397,6 +1406,7 @@ console.log(vo);
                 delete $scope.selectedRole;
                 delete $scope.input.selectedTrackTOIPerson;
                 delete $scope.input.selectedTrackPerson;
+                delete $scope.selectedScenarioDirect;
 
                 $scope.selectedTrack = track;
 

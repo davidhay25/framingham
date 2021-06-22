@@ -1043,18 +1043,15 @@ angular.module("sampleApp").service('ecosystemSvc',
 
                             break;
                     }
-
                 }
-
             }
 
         },
 
-        makeAllScenarioSummary : function(allScenarioGraphs,tracks) {
+        makeAllScenarioSummaryDEP : function(allScenarioGraphs,tracks) {
             //allScenarioGraphs are and index of all the graphs in the database collection 'scenarioGraph'. Only has id, name, userdid & scenarioid
             var deferred = $q.defer();
             var that = this;
-
 
             //construct a hash of scenarioId from the tracks...
             var hashScenarioId = {};
@@ -1214,6 +1211,7 @@ angular.module("sampleApp").service('ecosystemSvc',
         getScenarioWithId : function(id) {
             console.log(this.eventConfig);
         },
+
         getAllPathsForType: function (typeName,explode,track) {
 
             var that = this;
@@ -1740,7 +1738,6 @@ angular.module("sampleApp").service('ecosystemSvc',
                 }
             });
 
-
             angular.forEach(hashServer,function(v,k){
                 summary.uniqueServers.push(v)
             });
@@ -1748,8 +1745,6 @@ angular.module("sampleApp").service('ecosystemSvc',
             angular.forEach(hashClient,function(v,k){
                 summary.uniqueClients.push(v)
             })
-
-
 
             return summary;
 
@@ -1778,7 +1773,7 @@ angular.module("sampleApp").service('ecosystemSvc',
         makeResultsDownloadObject : function (track) {
             //if track specified, then only include results for that track...
             let report = []
-            var download = "Scenario,Server,Asserter,Result,Note,IG\n";
+            var download = "Scenario,DataSet,Server,Client,Asserter,Result,Note,IG\n";
 
 
             //(key,result) in ecosystemSvc.getAllResults(selectedTrack)
@@ -1793,10 +1788,20 @@ angular.module("sampleApp").service('ecosystemSvc',
                     lne += ","
                 }
 
-
+                if (result.dataSet) {
+                    lne += makeSafe(result.dataSet.name) + ",";
+                } else {
+                    lne += ","
+                }
 
                 if (result.server) {
                     lne += makeSafe(result.server.name) + ",";
+                } else {
+                    lne += ","
+                }
+
+                if (result.client) {
+                    lne += makeSafe(result.client.name) + ",";
                 } else {
                     lne += ","
                 }
@@ -1806,8 +1811,6 @@ angular.module("sampleApp").service('ecosystemSvc',
                 } else {
                     lne += ","
                 }
-
-
 
 
                 lne += makeSafe(result.text) + ",";
@@ -1906,24 +1909,7 @@ angular.module("sampleApp").service('ecosystemSvc',
         },
         getAllClients : function() {
             return  allClients;
-/*
-            var deferred = $q.defer();
-            if (allClients) {
-                deferred.resolve(allClients)
-            } else {
 
-                //var url = "artifacts/clients.json";
-                var url = "/client";
-
-                $http.get(url).then(
-                    function(data) {
-                        allClients = data.data;//.clients;
-                        deferred.resolve(allClients)
-                    }
-                );
-            }
-            return deferred.promise;
-            */
         },
         getAllResults : function(track,scenario) {
             var allResultsCopy = allResults;
@@ -1953,7 +1939,6 @@ angular.module("sampleApp").service('ecosystemSvc',
             } else {
                 return allResults
             }
-
         },
 
         getAllServers : function() {
@@ -2010,26 +1995,7 @@ angular.module("sampleApp").service('ecosystemSvc',
         addScenarioResult : function(track,scenario,result) {
             //addScenarioResult : function(track,scenario,clientRole,serverRole,result) {
             result.id = result.id || 'id'+ new Date().getTime();
-
-            /* I'm not sure if the 'key' is needed
-            var key;
-            if (clientRole && serverRole) {
-                //this has come from the client/server tab...
-                key = makeKey(scenario,clientRole,serverRole)
-                result.type = 'cs';     //client/server type...
-                result.server = {role: serverRole.role,server:serverRole.server};  //used for download
-                result.client = {role: clientRole.role,client:clientRole.client};  //used for download
-
-
-            } else {
-                //this has come from the direct tab..
-                key = result.id;
-                result.type = 'direct';     //direct against the scenario
-            }
-
-            result.key = key;       //in case we delete it...
-*/
-
+            let allPersons = this.getAllPersons();
 
             result.scenario = scenario;
             result.track = track;
@@ -2046,6 +2012,7 @@ angular.module("sampleApp").service('ecosystemSvc',
             resultToSave.text = result.text;
             resultToSave.note = result.note;
             resultToSave.IG = result.IG;
+            resultToSave.dataSet = result.dataSet;
             if (result.server) {
                 //result.server is the server object
                 let serverStore = {serverid : result.server.id, name : result.server.name}; //don't want the full server object
@@ -2061,9 +2028,14 @@ angular.module("sampleApp").service('ecosystemSvc',
             resultToSave.scenarioid = scenario.id;
             resultToSave.trackid = track.id;
             resultToSave.trackers = result.trackers;
-           // resultToSave.type =
             if (result.asserter){
                 resultToSave.asserterid = result.asserter.id    //todo - should this be the whole object (like author)???
+                let person = hashAllPersons[resultToSave.asserterid]
+                if (person) {
+                    resultToSave.asserter = {id:resultToSave.asserterid,name:person.name,contact:person.contact}
+                }
+
+
             }
 
 
@@ -2078,7 +2050,7 @@ angular.module("sampleApp").service('ecosystemSvc',
 
         },
 
-        addServerToScenario : function(arScenario,server,role) {
+        addServerToScenarioDEP : function(arScenario,server,role) {
             //add the server and role to an array of scenarios...
             var deferred = $q.defer();
 
@@ -2142,7 +2114,7 @@ angular.module("sampleApp").service('ecosystemSvc',
             return deferred.promise;
 
         },
-        removeServerFromScenario : function(scenario,serverRole) {
+        removeServerFromScenarioDEP : function(scenario,serverRole) {
             var deferred = $q.defer();
             //make sure there are no results against this serverRole
             var canDelete = true
@@ -2191,7 +2163,7 @@ angular.module("sampleApp").service('ecosystemSvc',
             return deferred.promise;
         },
 
-        addClientToScenario : function(scenario,client,role) {
+        addClientToScenarioDEP : function(scenario,client,role) {
             var deferred = $q.defer();
 
             //create a link object to save on the server
@@ -2264,26 +2236,21 @@ angular.module("sampleApp").service('ecosystemSvc',
             //get scenarios
             var deferred = $q.defer();
 
-
-
             var urls = []
-            //urls.push({url:'artifacts/scenarios.json?_dummy='+new Date(),"name":"scenarios"});
-            //urls.push({url:'artifacts/roles.json',"name":"roles"});
-            //urls.push({url:'artifacts/tracks.json',"name":"tracks"});
             urls.push({url:'artifacts/persons.json',"name":"persons"});
 
             urls.push({url:'/config/track?ts='+ new Date().getTime(),"name":"tracks"});
             urls.push({url:'/config/scenario',"name":"scenarios"});
             urls.push({url:'/config/role',"name":"roles"});
 
-            urls.push({url:'/config/ig',"name":"igs"});
+            urls.push({url:'/IG',"name":"igs"});
 
             urls.push({url:'/client',"name":"clients"});
             urls.push({url:'/server',"name":"servers"});
             urls.push({url:'/result',"name":"results"});
             urls.push({url:'/person',"name":"persons"});
 
-            urls.push({url:'/scenarioGraph',"name":"scenarioGraph"});
+           // urls.push({url:'/scenarioGraph',"name":"scenarioGraph"});
 
             var vo = {}
 
@@ -2504,6 +2471,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                                         result.note = dataResult.note;
                                         result.trackers = dataResult.trackers;
                                         result.IG = dataResult.IG;
+                                        result.dataSet = dataResult.dataSet;
                                         if (dataResult.server) {
                                             result.server = hashServer[dataResult.server.serverid];
                                         }
