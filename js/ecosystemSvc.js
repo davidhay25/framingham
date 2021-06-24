@@ -235,7 +235,7 @@ angular.module("sampleApp").service('ecosystemSvc',
             allServers.forEach(function (svr) {
                 hashServers[svr.id] = {server:svr,used:false};
             })
-            
+
             //find all the servers where there is a result in this track
             Object.keys(hashAllResults).forEach(function(rkey) {
                 let result = hashAllResults[rkey]

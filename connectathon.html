@@ -1916,22 +1916,8 @@
                                                     <td>{{result.note}}</td>
                                                     <td>
                                                         {{result.IG.name}}
-                                                        <!--
-                                                        <div ng-repeat="tracker in result.trackers">
-                                                            {{tracker.url}}
-                                                        </div>
-                                                        -->
                                                     </td>
-                                                    <!--
-                                                    <td>
-                                                        <i class="glyphicon glyphicon-remove-sign"
 
-                                                           style="padding-top: 8px"
-                                                           title="Delete" ng-click="deleteResult(result)">
-                                                        </i>
-                                                    </td>
-                                                    -->
-                                                    <!--<td>{{key}}</td>-->
 
                                                 </tr>
                                             </table>
@@ -1959,9 +1945,11 @@
 
 
                                                         <div ng-repeat="item in v1">
+                                                            <div ng-class={"btn-success":item.text=='pass','btn-danger':item.text=='fail',"btn-warning":item.text=='partial','btn-primary':item.text=='note'}>
+                                                                {{item.client.name}}
+                                                                ({{item.text}})
+                                                            </div>
 
-                                                            {{item.client.name}}
-                                                             ({{item.text}})
                                                         </div>
                                                     </td>
                                                 </tr>
