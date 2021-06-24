@@ -1048,7 +1048,14 @@ angular.module("sampleApp")
                 //in the results tab, select a track...
                 if (track) {
 
-                    $scope.DSReportSummary = ecosystemSvc.createDSReportSummary(track)   //temp for dev
+                    delete $scope.DSReportSummary;
+                    delete $scope.DSReportServers;
+                    let vo = ecosystemSvc.createDSReportSummary(track)
+                    if (vo.hash) {
+                        $scope.DSReportSummary = vo.hash   //temp for dev
+                        $scope.DSReportServers = vo.servers;
+                    }
+
 
 
                     $scope.selectedTrackSummary = track;

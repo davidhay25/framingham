@@ -226,24 +226,49 @@ angular.module("sampleApp").service('ecosystemSvc',
                 return hash;
             }
 
-            //first, create an array of all servers
+            //create the list of all servers that have a result
+            //iterate through all the results to get the set of servers used...
+            let hashAllResults = this.getAllResults(track)
+
+            //create a hash from the allServers list
+            let hashServers = {}
+            allServers.forEach(function (svr) {
+                hashServers[svr.id] = {server:svr,used:false};
+            })
+            
+            //find all the servers where there is a result in this track
+            Object.keys(hashAllResults).forEach(function(rkey) {
+                let result = hashAllResults[rkey]
+                hashServers[result.server.id].used = true
+            })
+
+            //create a new list that only has the new servers..
+            let reportServers = [];
+            Object.keys(hashServers).forEach(function (key) {
+                if (hashServers[key].used) {
+                    reportServers.push(hashServers[key].server)
+                }
+
+            })
+
+
 
             let arScenarioId = []       //an array of all the scenarioId's in this track
 
-            //first create the hash keyed on scenarioid + dataset name -
+            //next create the hash keyed on scenarioid + dataset name -
             track.scenarios.forEach(function (scenario) {
                 arScenarioId.push(scenario.id)
                 track.dataSets.forEach(function (ds) {
                     let key = scenario.id + ds.name
                     let content = {}
-                    allServers.forEach(function (server) {
+                    reportServers.forEach(function (server) {
                         content[server.id] = []    //this will be an array of results for this server
                     })
                     hash[key] = {results:content,scenario:{name:scenario.name},dataSet:{name:ds.name}}
                 })
             })
 
-            let hashAllResults = this.getAllResults(track)
+
 
 
             //now, for each result for each scenario, place an entry in the servers array
@@ -256,7 +281,6 @@ angular.module("sampleApp").service('ecosystemSvc',
                         //yes it does! now we figure out the server and place the result in the right hash element & array
                         let key = result.scenario.id + result.dataSet.name;
                         let line = hash[key]
-                        //line.results[result.server.id] = line.results[result.server.id] || []
                         line.results[result.server.id].push(result)
                     }
                 }
@@ -265,7 +289,7 @@ angular.module("sampleApp").service('ecosystemSvc',
 
             console.log(hash)
 
-            return hash;
+            return {hash: hash,servers: reportServers};
 
         },
 

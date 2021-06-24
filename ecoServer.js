@@ -304,8 +304,6 @@ app.get('/fixresult',function(req,res){
         connIG.collection("result").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
 
         })
-
-
         })
 })
 

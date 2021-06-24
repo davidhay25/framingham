@@ -1944,10 +1944,10 @@
                                             <table class="table table-bordered table-condensed table-striped">
                                                 <tr>
                                                     <th colspan="2"></th>
-                                                    <th colspan="{{allServers.length}}"><div class="center-block">Servers</div></th>
+                                                    <th colspan="{{DSReportServers.length}}"><div class="center-block">Servers</div></th>
                                                 </tr>
                                                 <tr><th>Scenario</th><th>DataSet</th>
-                                                    <td ng-repeat="svr in allServers">
+                                                    <td ng-repeat="svr in DSReportServers">
                                                         <em>{{svr.name}}</em>
                                                     </td>
                                                 </tr>
@@ -1961,7 +1961,7 @@
                                                         <div ng-repeat="item in v1">
 
                                                             {{item.client.name}}
-                                                             {{item.text}}
+                                                             ({{item.text}})
                                                         </div>
                                                     </td>
                                                 </tr>
