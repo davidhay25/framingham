@@ -1939,6 +1939,35 @@
 
 
                                         </uib-tab>
+
+                                        <uib-tab heading = "Dataset summary">
+                                            <table class="table table-bordered table-condensed table-striped">
+                                                <tr>
+                                                    <th colspan="2"></th>
+                                                    <th>Servers</th>
+                                                </tr>
+                                                <tr><th>Scenario</th><th>DataSet</th>
+                                                    <td ng-repeat="svr in allServers">
+                                                        <em>{{svr.name}}</em>
+                                                    </td>
+                                                </tr>
+                                                <tr ng-repeat="(k,v) in DSReportSummary">
+
+                                                    <td>{{v.scenario.name}}</td>
+                                                    <td>{{v.dataSet.name}}</td>
+                                                    <td ng-repeat="(k1,v1) in v.results">
+
+
+                                                        <div ng-repeat="item in v1">
+
+                                                            {{item.client.name}}
+                                                             {{item.text}}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </uib-tab>
                                     </uib-tabset>
                                 </div>
 

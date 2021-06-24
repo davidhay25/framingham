@@ -82,12 +82,12 @@ angular.module("sampleApp")
 
                 $http.post('/public/setEvent',{key:eventCode}).then(
                     function (data) {
-                        console.log(data)
+
 
                         //now that we have the db, we can record access...
                         $http.post("/startup",{}).then(
                             function(data) {
-                                console.log(data.data)
+
                             }
                         );  //record access
 
@@ -172,7 +172,7 @@ angular.module("sampleApp")
 
                 $http.get("/getStats").then(
                     function(data) {
-                        console.log(data.data)
+
                         $scope.eventStats = data.data
 
                         if ($scope.eventStats) {
@@ -185,7 +185,7 @@ angular.module("sampleApp")
                             $scope.eventStats.uniqueCountries.forEach(function (item){
                                 $scope['statsCountryData'].push(item.count)
                                 $scope['statsCountryLabels'].push( item['_id'])
-                                console.log(item)
+
                             })
 
                             //unique visitors
@@ -1047,6 +1047,10 @@ angular.module("sampleApp")
             $scope.selectTrackResults = function(track) {
                 //in the results tab, select a track...
                 if (track) {
+
+                    $scope.DSReportSummary = ecosystemSvc.createDSReportSummary(track)   //temp for dev
+
+
                     $scope.selectedTrackSummary = track;
                     $scope.resultsSummary = ecosystemSvc.getTrackResults(track); //get a summary object for the results for a track
 
@@ -1409,6 +1413,8 @@ angular.module("sampleApp")
                 delete $scope.selectedScenarioDirect;
 
                 $scope.selectedTrack = track;
+
+              //  $scope.DSReportSummary = ecosystemSvc.createDSReportSummary(track)   //temp for dev
 
                 //so we can show the track summary in the testing sub-tab
                 $scope.resultsSummary = ecosystemSvc.getTrackResults(track);

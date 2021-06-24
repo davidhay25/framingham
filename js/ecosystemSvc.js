@@ -218,6 +218,57 @@ angular.module("sampleApp").service('ecosystemSvc',
 
     return {
 
+        //create a report on results where a track has datasets defined
+        createDSReportSummary : function (track) {
+            let hash = {}
+            if (! track.dataSets || ! track.scenarios) {
+                //has to have both datasets and scenarios
+                return hash;
+            }
+
+            //first, create an array of all servers
+
+            let arScenarioId = []       //an array of all the scenarioId's in this track
+
+            //first create the hash keyed on scenarioid + dataset name -
+            track.scenarios.forEach(function (scenario) {
+                arScenarioId.push(scenario.id)
+                track.dataSets.forEach(function (ds) {
+                    let key = scenario.id + ds.name
+                    let content = {}
+                    allServers.forEach(function (server) {
+                        content[server.id] = []    //this will be an array of results for this server
+                    })
+                    hash[key] = {results:content,scenario:{name:scenario.name},dataSet:{name:ds.name}}
+                })
+            })
+
+            let hashAllResults = this.getAllResults(track)
+
+
+            //now, for each result for each scenario, place an entry in the servers array
+            Object.keys(hashAllResults).forEach(function(rkey) {
+                let result = hashAllResults[rkey]
+
+                if (result.scenario && result.server && arScenarioId.indexOf(result.scenario.id) > -1) {
+                    //this result is for a scenario of interest (ie in this track). Does it reference a dataset?
+                    if (result.dataSet) {
+                        //yes it does! now we figure out the server and place the result in the right hash element & array
+                        let key = result.scenario.id + result.dataSet.name;
+                        let line = hash[key]
+                        //line.results[result.server.id] = line.results[result.server.id] || []
+                        line.results[result.server.id].push(result)
+                    }
+                }
+                
+            })
+
+            console.log(hash)
+
+            return hash;
+
+        },
+
 
 
         setProfilesCache : function(cache) {
