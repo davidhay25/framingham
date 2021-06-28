@@ -41,6 +41,12 @@
 
             </div>
 
+            <div class="col-md-5 col-sm-5">
+                <select ng-model="input.selectedServerRole" class="form-control"
+                        ng-options = "role.name for role in serverRoles"></select>
+            </div>
+
+
 
         </div>
         <br/>
@@ -53,6 +59,11 @@
                 <select ng-model="input.selectedClient" class="form-control"
                         ng-options = "client.name for client in allClients"></select>
 
+            </div>
+
+            <div class="col-md-5 col-sm-5">
+                <select ng-model="input.selectedClientRole" class="form-control"
+                        ng-options = "role.name for role in clientRoles"></select>
             </div>
 
 

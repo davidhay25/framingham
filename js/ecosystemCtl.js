@@ -1418,7 +1418,7 @@ angular.module("sampleApp")
                 delete $scope.input.selectedTrackTOIPerson;
                 delete $scope.input.selectedTrackPerson;
                 delete $scope.selectedScenarioDirect;
-
+//console.log(track)
                 $scope.selectedTrack = track;
 
               //  $scope.DSReportSummary = ecosystemSvc.createDSReportSummary(track)   //temp for dev

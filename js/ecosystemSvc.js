@@ -2088,6 +2088,9 @@ angular.module("sampleApp").service('ecosystemSvc',
             resultToSave.note = result.note;
             resultToSave.IG = result.IG;
             resultToSave.dataSet = result.dataSet;
+            resultToSave.serverRole = result.serverRole.name
+            resultToSave.clientRole = result.clientRole.name
+
             if (result.server) {
                 //result.server is the server object
                 let serverStore = {serverid : result.server.id, name : result.server.name}; //don't want the full server object
@@ -2546,7 +2549,10 @@ angular.module("sampleApp").service('ecosystemSvc',
                                         result.note = dataResult.note;
                                         result.trackers = dataResult.trackers;
                                         result.IG = dataResult.IG;
+                                        result.serverRole = dataResult.serverRole;
+                                        result.clientRole = dataResult.clientRole;
                                         result.dataSet = dataResult.dataSet;
+
                                         if (dataResult.server) {
                                             result.server = hashServer[dataResult.server.serverid];
                                         }
@@ -2560,6 +2566,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                                         if (!result.track) {
                                             alert("error processing track in result# " + dataResult.id);
                                         }
+
                                         result.scenario = hashScenario[dataResult.scenarioid];
                                         if (!result.scenario) {
                                             alert("error processing scenario in result# " + dataResult.id);

@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!--
+    <base href="/" />
+    -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MNB4BSXQRY"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4JQJ72LB4N');
+    </script>
+
     <meta charset="UTF-8">
     <title>Connectathon</title>
 
@@ -818,7 +829,7 @@
                                                                 </div>
                                                             </div>
 
-
+<!--
                                                             <div class="row"ng-show="selectedScenario.scenarioTypes.length > 0">
                                                                 <div class="col-sm-3 col-md-3">
                                                                     <strong>Resource Types</strong>
@@ -833,8 +844,9 @@
                                                                     </ul>
                                                                 </div>
                                                             </div>
+                                                            -->
 
-
+<!--
                                                             <div class="row"ng-show="selectedScenario.lms.length > 0">
                                                                 <div class="col-sm-3 col-md-3">
                                                                     <strong>Logical Models</strong>
@@ -855,6 +867,7 @@
                                                                     </ul>
                                                                 </div>
                                                             </div>
+                                                            -->
 
 
                                                             <div class="row"ng-show="selectedScenario.steps.length > 0">
@@ -916,6 +929,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+
                                                         <div ng-show="selectedScenario.roles.length > 0" class="col-sm-3 col-md-3">
                                                             <h4>Roles</h4>
                                                             <ul class="list-group">
@@ -1045,15 +1059,51 @@
                                                 </div>
                                             </div>
 
-
-
-
                                         </div>
                                     </div>
 
                                     
                                     <br/>
 
+                                    <div class="row" ng-show="selectedTrack.serverRoles.length > 0 || selectedTrack.clientRoles.length > 0">
+                                        <hr class="trackBorder"/>
+                                        <div class="col-sm-2 col-md-2">
+                                            <strong>All roles in track</strong>
+                                        </div>
+                                        <div class="col-sm-10 col-md-10">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h4>Client roles</h4>
+                                                    <table class="table table-bordered">
+                                                        <tr><th>Role name</th><th>Description</th></tr>
+                                                        <tr ng-repeat="role in selectedTrack.clientRoles">
+                                                            <td>{{role.name}}</td>
+                                                            <td>{{role.description}}</td>
+
+
+                                                        </tr>
+                                                    </table>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <h4>Server roles</h4>
+                                                    <table class="table table-bordered">
+                                                        <tr><th>Role name</th><th>Description</th></tr>
+                                                        <tr ng-repeat="role in selectedTrack.serverRoles">
+                                                            <td>{{role.name}}</td>
+                                                            <td>{{role.description}}</td>
+
+
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Only keep for historical reasons - roles have been refactored-->
                                     <div class="row" ng-show="selectedTrack.roles.length > 0">
                                         <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
@@ -1599,16 +1649,16 @@
                                     </td>
                                     <td>
                                         <div ng-show="svr.address">
-                                            <a target="_blank" ng-href = "http://clinfhir.com/query.html#{{svr.address}}">
-                                                Server root: {{svr.address}}
+                                            Server root: <a target="_blank" ng-href = "http://clinfhir.com/query.html#{{svr.address}}">
+                                                {{svr.address}}
                                             </a>
 
 
 
                                         </div>
                                         <div ng-show="svr.UIaddress">
-                                            <a target="_blank" ng-href = "{{svr.UIaddress}}">
-                                                UI: {{svr.UIaddress}}
+                                            UI: <a target="_blank" ng-href = "{{svr.UIaddress}}">
+                                                {{svr.UIaddress}}
                                             </a>
 
 

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connectathon Setup</title>
+    <script src="js/libs/angular.min1-5.js"></script>
+    <script src="js/libs/ui-bootstrap-tpls-2.0.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+    <script>
+        angular.module("sampleApp",['ui.bootstrap']).config(function($locationProvider) {
+
+            // enable html5Mode for pushstate ('#'-less URLs)
+            $locationProvider.html5Mode(true);
+            $locationProvider.hashPrefix('!');
+        });
+
+
+    </script>
+    <script src="js/ctMgrCtl.js"></script>
+
+
+</head>
+<body style="padding: 8px; padding-top: 80px" >
+
+<div ng-app="sampleApp" ng-controller="ctMgrCtrl" class="container-fluid">
+
+    <nav class="navbar navbar-default navbar-fixed-top" ng-style="navBarStyle" role="navigation">
+
+        <div class="container-fluid row">
+            <div class="col-md-5 col-sm-5">
+                <div>
+                    <a class="navbar-brand" style="padding-top: 24px" href="#">
+                        Connectathon setup: {{code}}
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="col-md-2">
+
+                <div class="navbar-text">
+                    <select class="form-control" ng-model = "input.code" ng-options = "event for event in events"
+                            ng-change="selectEvent(input.code)"></select>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <!-- Have to decide if I want others to create codes - and all the security stuff
+
+-->
+                <div class="navbar-text">
+                    <button class="btn btn-danger" ng-click="newEvent()">New event</button>
+                </div>
+            </div>
+            <div class="col-md-1 col-sm-1">
+                <div class="navbar-text">
+                    <img ng-show="waiting" src="css/ajax_loader_blue_32.gif"/>
+                </div>
+            </div>
+
+            <div class="col-md-1 col-sm-1">
+
+                <div class="navbar-text">
+
+                    <div>
+                        <button class="btn btn-primary" ng-click="save()">Save</button>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </nav>
+
+    <uib-tabset>
+        <uib-tab heading="Track details">
+            <div class="row">
+                <div class="col-sm-3 col-md-3">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <strong>Tracks</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <i class="clickable glyphicon glyphicon-plus-sign"
+                               ng-click="addTrack()">
+                            </i>
+                        </div>
+                    </div>
+
+                    <div class="list-group">
+                        <div  ng-class="{'list-group-item':1,'listItemSelected':selectedTrack.id == track.id}" style="cursor:pointer;"
+                              ng-repeat = "track in config.tracks" ng-click="selectTrack(track)">
+                    <span>
+                        <i class="clickable glyphicon glyphicon-minus-sign pull-right"
+                           ng-click="removeTrack($index)">
+
+                        </i>
+                    </span>
+                            {{track.name}}
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-sm-9 col-md-9">
+
+                    <textarea class="form-control" placeholder="Event description" ng-model="config.eventDescription"></textarea>
+                    <hr/>
+                    <uib-tabset ng-show="selectedTrack">
+                        <uib-tab heading="Details">
+                            <br/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="btn-group">
+                                        <label class="btn btn-primary" ng-model="selectedTrack.trackSubType" uib-btn-radio="'igreview'">IG Review</label>
+                                        <label class="btn btn-primary" ng-model="selectedTrack.trackSubType" uib-btn-radio="'training'">Training</label>
+                                        <label class="btn btn-primary" ng-model="selectedTrack.trackSubType" uib-btn-radio="'resourcetest'">Resource test</label>
+                                        <label class="btn btn-primary" ng-model="selectedTrack.trackSubType" uib-btn-radio="'assocspec'">Associated spec</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    Id: {{selectedTrack.id}}
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Name</label>
+                                    <input type="text" class="form-control" ng-model="selectedTrack.name"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Description</label>
+                                    <textarea class="form-control" rows = "5" ng-model="selectedTrack.description"></textarea>
+                                </div>
+                            </div>
+                            <br/>
+
+
+
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Confluence url</label>
+                                    <input type="text" class="form-control" ng-model="selectedTrack.url"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Chat url</label>
+                                    <input class="form-control" ng-model="selectedTrack.chat"/>
+                                </div>
+                            </div>
+
+                        </uib-tab>
+
+                        <uib-tab>
+                            <uib-tab-heading>
+                                Scenarios <span class="badge">{{selectedTrack.scenarios.length}}</span>
+                            </uib-tab-heading>
+                            <br/>
+
+                            <table class="table table-bordered">
+                                <tr><th>Name</th><th>Description</th><th>Remove</th></tr>
+                                <tr ng-repeat="scen in selectedTrack.scenarios">
+                                    <td>{{scen.name}}</td>
+                                    <td>{{scen.description}}</td>
+                                    <td>
+                                        <i class="clickable glyphicon glyphicon-minus-sign"
+                                           ng-click="removeScenario($index)">
+                                        </i></td>
+                                </tr>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" ng-model="input.Scenarioname"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" ng-model="input.Scenariodescription"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <i class="clickable glyphicon glyphicon-plus-sign"
+                                       ng-click="addScenario()">
+                                    </i>
+                                </div>
+                            </div>
+                        </uib-tab>
+
+                        <uib-tab>
+                            <uib-tab-heading>
+                                Roles <span class="badge">{{selectedTrack.clientRoles.length}}/{{selectedTrack.serverRoles.length}}</span>
+                            </uib-tab-heading>
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>Client roles</h4>
+                                    <table class="table table-bordered">
+                                        <tr><th>Role name</th><th>Description</th><th>Remove</th></tr>
+                                        <tr ng-repeat="role in selectedTrack.clientRoles">
+                                            <td>{{role.name}}</td>
+                                            <td>{{role.description}}</td>
+
+                                            <td>
+                                                <i class="clickable glyphicon glyphicon-minus-sign"
+                                                   ng-click="removeRole('client',$index)">
+                                                </i></td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <h4>Server roles</h4>
+                                    <table class="table table-bordered">
+                                        <tr><th>Role name</th><th>Description</th><th>Remove</th></tr>
+                                        <tr ng-repeat="role in selectedTrack.serverRoles">
+                                            <td>{{role.name}}</td>
+                                            <td>{{role.description}}</td>
+
+                                            <td>
+                                                <i class="clickable glyphicon glyphicon-minus-sign"
+                                                   ng-click="removeRole('server',$index)">
+                                                </i></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <hr/>
+
+                            <h4>New role</h4>
+                            <div class="row">
+                                <div class="col-md-3">
+
+                                    <input type="text" placeholder = "Name" class="form-control" ng-model="input.Rolename"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" placeholder = "Description" class="form-control" ng-model="input.Roledescription"/>
+                                </div>
+                                <div class="col-md-6">
+
+                                    <div ng-show="input.Rolename">
+                                        <button class="btn btn-link" ng-click="addRole('client')">Add as client role</button>
+
+                                        <button class="btn btn-link" ng-click="addRole('server')">Add as server role</button>
+
+                                    </div>
+
+                                    <!--
+                                    <div class="btn-group">
+                                        <label class="btn btn-primary" ng-model="input.Roletype" uib-btn-radio="'client'">Client</label>
+                                        <label class="btn btn-primary" ng-model="input.Roletype" uib-btn-radio="'server'">Server</label>
+                                    </div>
+        -->
+                                </div>
+
+                            </div>
+                        </uib-tab>
+
+
+
+
+                        <uib-tab>
+                            <uib-tab-heading>
+                                Datasets <span class="badge">{{selectedTrack.dataSets.length}}</span>
+                            </uib-tab-heading>
+                            <br/>
+
+                            <table class="table table-bordered">
+                                <tr><th>Name</th><th>Description</th><th>Remove</th></tr>
+                                <tr ng-repeat="ds in selectedTrack.dataSets">
+                                    <td>{{ds.name}}</td>
+                                    <td>{{ds.description}}</td>
+                                    <td> <i class="clickable glyphicon glyphicon-minus-sign"
+                                            ng-click="removeDS($index)">
+                                    </i></td>
+                                </tr>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" ng-model="input.DSname"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" ng-model="input.DSdescription"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <i class="clickable glyphicon glyphicon-plus-sign"
+                                       ng-click="addDS()">
+                                    </i>
+                                </div>
+                            </div>
+                        </uib-tab>
+
+                        <uib-tab ng-show='selectedTrack.trackSubType == "igreview"'>
+                            <uib-tab-heading>
+                                Implementation Guides <span class="badge">{{selectedTrack.IGs.length}}</span>
+                            </uib-tab-heading>
+                            <br/>
+                            <table class="table table-condensed table-bordered">
+                                <tr><th>Name</th><th>Description</th><th>Link</th></tr>
+                                <tr ng-repeat = "ig in selectedTrack.IGs track by $index">
+                                    <td>{{ig.name}}</td>
+                                    <td>{{ig.description}}</td>
+                                    <td>{{ig.link}}</td>
+                                    <td><i class="glyphicon glyphicon-remove-circle clickable" ng-click="removeIG($index)"/> </td>
+                                </tr>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-md-10 col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <input placeholder = "IG Name" class="form-control" ng-model="input.IGname"/>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <textarea class="form-control" ng-model = "input.IGdescription" rows="5"></textarea>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input placeholder = "IG link" class="form-control" ng-model="input.IGlink"/>
+                                        </div>
+
+                                        <div class="col-md-1">
+                                            <button  class="btn btn-link" ng-click="addIG()">Add</button>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+
+                            </div>
+                        </uib-tab>
+
+
+
+                        <uib-tab ng-show='false && selectedTrack.trackSubType == "igreview"'>
+                            <uib-tab-heading>
+                                Implementation Guides <span class="badge">{{selectedTrack.igs.length}}</span>
+                            </uib-tab-heading>
+
+                            <table class="table table-condensed table-bordered">
+                                <tr ng-repeat = "ig in selectedTrack.igs track by $index">
+                                    <td>{{ig.name}}</td>
+                                    <td>{{ig.description}}</td>
+                                    <td><i class="glyphicon glyphicon-remove-circle clickable" ng-click="removeIG(ig)"/> </td>
+                                </tr>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-md-10 col-sm-10">
+                                    <select class="form-control" ng-model="input.newIG"
+                                            ng-options="ig.name + ' (' + ig.description + ')' for ig in availableIGs">
+
+                                    </select>
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    <button ng-show="input.newIG" class="btn btn-success" ng-click="addIG(input.newIG)">Add</button>
+                                </div>
+                            </div>
+                        </uib-tab>
+
+
+                        <uib-tab heading="Json">
+                            <pre>{{selectedTrack | json}}</pre>
+                        </uib-tab>
+                    </uib-tabset>
+                </div>
+
+            </div>
+        </uib-tab>
+        <uib-tab heading="Event details">
+            <uib-tabset>
+                <uib-tab heading="All IGs">
+                    <br/>
+                    <table class="table table-bordered">
+                        <tr><th>Name</th><th>Description</th><th>Link</th></tr>
+                        <tr ng-repeat = "(k,v) in hashAllIGs">
+                            <td>{{v.name}}</td>
+                            <td>{{v.description}}</td>
+                            <td>{{v.link}}</td>
+                        </tr>
+                    </table>
+                </uib-tab>
+            </uib-tabset>
+
+        </uib-tab>
+    </uib-tabset>
+
+
+
+
+
+
+
+<!--
+    <pre>{{config | json}}</pre>
+-->
+
+
+</div>
+
+</body>
+</html>

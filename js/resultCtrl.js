@@ -4,6 +4,19 @@ angular.module("sampleApp")
 
             $scope.input = {};
             $scope.previousResult = previousResult;
+            if (track) {
+                $scope.serverRoles = track.serverRoles
+                $scope.clientRoles = track.clientRoles
+
+                if ($scope.serverRoles && $scope.serverRoles.length == 1) {
+                    $scope.input.selectedServerRole = $scope.serverRoles[0]
+                }
+
+                if ($scope.clientRoles && $scope.clientRoles.length == 1) {
+                    $scope.input.selectedClientRole = $scope.clientRoles[0]
+                }
+            }
+
 
             $scope.scenario = scenario;
             $scope.server = server;
@@ -69,6 +82,22 @@ angular.module("sampleApp")
                     $scope.selectedPerson = previousResult.asserter;
                     $scope.input.asserter = previousResult.asserter;
                 }
+
+                if ( previousResult.serverRole) {
+                    let ar = $scope.serverRoles.filter(item => item.name == previousResult.serverRole)
+                    if (ar.length > 0) {
+                        $scope.input.selectedServerRole = ar[0]
+                    }
+                }
+
+                if ( previousResult.clientRole) {
+                    let ar = $scope.clientRoles.filter(item => item.name == previousResult.serverRole)
+                    if (ar.length > 0) {
+                        $scope.input.selectedClientRole = ar[0]
+                    }
+                }
+
+
             } else {
                 $scope.selectedPerson = ecosystemSvc.getCurrentUser();
                 $scope.input.asserter = ecosystemSvc.getCurrentUser();
@@ -77,14 +106,7 @@ angular.module("sampleApp")
             $scope.asserterSelected = function(item){
                 $scope.selectedPerson = item;
                 console.log($scope.selectedPerson);//, $model, $label, $event)
-
             };
-
-
-
-
-
-
 
             $scope.save = function() {
                 var result = {}
@@ -93,6 +115,8 @@ angular.module("sampleApp")
                 result.asserter = $scope.selectedPerson;
                 result.type = 'direct'
                 result.dataSet = $scope.input.selectedDS
+                result.clientRole = $scope.input.selectedClientRole
+                result.serverRole = $scope.input.selectedServerRole
                 //result.trackers = $scope.trackers;
 
                 result.server = $scope.input.selectedServer;

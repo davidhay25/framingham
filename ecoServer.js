@@ -26,6 +26,11 @@ var fs = require('fs');
 
 let reportModule = require('./reportModule.js')
 
+//this supports the administration function - eg setup the tracks for a new event
+
+let adminModule = require('./adminModule.js')
+
+
 var hashDataBases = {};         //hash for all connected databases
 
 //todo Note - this is needed to avoid an error about maxListeners - but there could be a code issue to review - see https://stackoverflow.com/questions/8313628/node-js-request-how-to-emitter-setmaxlisteners
@@ -47,9 +52,6 @@ if (process.env.ig) {
     console.log('Setting IG db to ' + igDb)
 }
 
-
-
-
 //  *************** temp for COF !!!
 var dbName = 'cof';    //default database name...
 
@@ -63,6 +65,8 @@ var hashScenario = {};      //a hash of all the scenarios...
 var hashTrack = {};         //a hash of all the tracks
 
 var app = express();
+
+
 
 //to serve up the static web pages - particularly the login page if no page is specified...
 //Order of app.use() is important as we need to increase the size limit for json parsing...
@@ -81,8 +85,6 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
 
         //create the connection for the IG
         connIG = client.db(igDb)
-        //console.log('ig',connIG)
-
         reportModule.setup(app,client,igDb)
 
 
@@ -205,6 +207,8 @@ var urlencodedParser = bodyParser.urlencoded({ extended:true,limit:'50mb',type:'
 
 app.use(jsonParser);
 app.use(urlencodedParser);
+adminModule.setup(app,connIG);
+
 
 
 //added for the con27 event to count the number of results over time. Will need further thought if I continue with it
@@ -244,19 +248,18 @@ function recordAccess(req,data,cb) {
 
     if (req.selectedDbCon) {
         var audit = {ip:clientIp,date:new Date()};      //note date is UTC
-        //audit.data = data;
+
 
         var options = {
             method:'GET',
             uri: 'https://api.iplocation.net/?ip=' + clientIp
-
         };
 
         request(options,function(error,response,body) {
 
             if (body) {
                 var loc;
-                //console.log(body)
+
                 try {
                     loc = JSON.parse(body);
                     audit.country = loc['country_name'];
@@ -289,7 +292,7 @@ function recordAccess(req,data,cb) {
 
 //====== access
 
-
+/*
 //--- temp fix
 app.get('/fixresult',function(req,res){
     connIG.collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
@@ -306,6 +309,8 @@ app.get('/fixresult',function(req,res){
         })
         })
 })
+
+*/
 
 //return all the users for a given database. Used when logging in to an event
 app.get('/public/getUsers/:key',function(req,res){
@@ -551,7 +556,9 @@ app.post('/client',function(req,res){
 //================= IG's ==========
 
 app.get('/IG',function(req,res){
-    connIG.collection("ig").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
+
+    req.selectedDbCon.collection("ig").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
+        //connIG.collection("ig").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
         if (err) {
             res.send(err,500)
         } else {
@@ -564,8 +571,10 @@ app.get('/IG',function(req,res){
 app.post('/IG',function(req,res){
     var IG = req.body
 
-    connIG.collection("ig").update({id:IG.id},IG,{upsert:true},function(err,result){
-    //req.selectedDbCon.collection("ig").update({id:IG.id},IG,{upsert:true},function(err,result){
+    //let Conn = req.selectedDbCon;
+
+    //connIG.collection("ig").update({id:IG.id},IG,{upsert:true},function(err,result){
+    req.selectedDbCon.collection("ig").update({id:IG.id},IG,{upsert:true},function(err,result){
         if (err) {
             res.send(err,500)
         } else {

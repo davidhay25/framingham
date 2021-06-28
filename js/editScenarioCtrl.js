@@ -12,7 +12,7 @@ angular.module("sampleApp")
 
             $scope.scenario = scenario;
             $scope.library = library;
-            $scope.input = {roles:{}};
+            $scope.input = {} //{roles:{}};
             $scope.track = track;
 
 
@@ -31,7 +31,7 @@ angular.module("sampleApp")
             if (readOnly) {
                 $scope.saveText = 'View';
             }
-
+/*
             $scope.input.roleType = 'client';       //when adding a new role
 
             if (scenario && scenario.roleIds) {
@@ -56,8 +56,9 @@ angular.module("sampleApp")
 
             });
 
+            */
 
-            $scope.addNewRole = function(name,description,type) {
+            $scope.addNewRoleDEP = function(name,description,type) {
                 if (name) {
                     ecosystemSvc.addNewRole(name,description,type,$scope.track).then(
                         function(role){
@@ -240,7 +241,7 @@ angular.module("sampleApp")
             };
 
 
-            $scope.updateScenarioRoles = function(){
+            $scope.updateScenarioRolesDEP = function(){
                 $scope.scenario.roleIds = [];
                 $scope.scenario.roles = [];                //the role objects are only linked to the scenario in the app - not the db
                 $scope.allRoles.forEach(function (role) {
@@ -256,7 +257,7 @@ angular.module("sampleApp")
                     alert("The scenario name is required.")
                     return;
                 }
-
+/*
                 scenario.roleIds = [];
                 scenario.roles = [];                //the role objects are only linked to the scenario in the app - not the db
                 $scope.allRoles.forEach(function (role) {
@@ -266,6 +267,7 @@ angular.module("sampleApp")
                     }
                 });
 
+                */
                 /* todo for now, allowing a scenario to have no roles
 
                 if (scenario.roleIds.length == 0 && track.trackType == 'technical') {
