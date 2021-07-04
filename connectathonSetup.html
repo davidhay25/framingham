@@ -106,8 +106,10 @@
 
                 </div>
                 <div class="col-sm-9 col-md-9">
-
+                    <div>
                     <textarea class="form-control" placeholder="Event description" ng-model="config.eventDescription"></textarea>
+                    </div>
+                    <textarea class="form-control" placeholder="Alert to display on front tab" ng-model="config.alert"></textarea>
                     <hr/>
                     <uib-tabset ng-show="selectedTrack">
                         <uib-tab heading="Details">
@@ -259,7 +261,37 @@
                         </uib-tab>
 
 
+                        <uib-tab>
+                            <uib-tab-heading>
+                                Links <span class="badge">{{selectedTrack.links.length}}</span>
+                            </uib-tab-heading>
+                            <br/>
 
+                            <table class="table table-bordered">
+                                <tr><th>Description</th><th>Url</th><th>Remove</th></tr>
+                                <tr ng-repeat="link in selectedTrack.links">
+                                    <td>{{link.description}}</td>
+                                    <td>{{link.url}}</td>
+                                    <td> <i class="clickable glyphicon glyphicon-minus-sign"
+                                            ng-click="removeLink($index)">
+                                    </i></td>
+                                </tr>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input placeholder="description" type="text" class="form-control" ng-model="input.linkDescription"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <input placeholder="Url" type="text" class="form-control" ng-model="input.linkUrl"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <i class="clickable glyphicon glyphicon-plus-sign"
+                                       ng-click="addLink()">
+                                    </i>
+                                </div>
+                            </div>
+                        </uib-tab>
 
                         <uib-tab>
                             <uib-tab-heading>
@@ -385,6 +417,9 @@
                 </uib-tab>
             </uib-tabset>
 
+        </uib-tab>
+        <uib-tab heading="Json">
+            <pre>{{config | json}}</pre>
         </uib-tab>
     </uib-tabset>
 

@@ -4,6 +4,7 @@ angular.module("sampleApp")
         function ($scope,$http) {
 
             $scope.events = ['cms','test1','test']
+            //$scope.events = ['test1','test']
 
             $scope.input = {}
             $scope.input.code = $scope.events[0];
@@ -124,6 +125,18 @@ angular.module("sampleApp")
 
                 $scope.selectedTrack[typeName].splice(inx,1)
             }
+
+            //========= add / remove links
+            $scope.addLink = function() {
+                $scope.selectedTrack.links = $scope.selectedTrack.links || []
+                $scope.selectedTrack.links.push({url:$scope.input.linkUrl,description:$scope.input.linkDescription})
+                delete $scope.input.linkUrl;
+                delete $scope.input.linkDescription
+            }
+            $scope.removeLink = function(inx) {
+                $scope.selectedTrack.links.splice(inx,1)
+            }
+
 
 
             //========= add / remove datasets

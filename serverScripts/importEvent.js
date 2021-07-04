@@ -189,14 +189,15 @@ function checkOtherDb(key,config,db,dbClient) {
 
         let eventItem = {key:key,display:config.eventDescription,active:true, public:true}
         let mainEventDb = dbClient.db('eventDb')        //the connection to eventDb database - only 1 on the server
+
         mainEventDb.collection("event").update({key:key},eventItem,{upsert:true},function(err,result){
             if (err) {
                 reject("scenario: error during updating eventDb database")
             } else {
-               //upsert admin collection in this database
-                let adminItem = {key:key,name:config.eventDescription}
+               //upsert admin collection in the event database
+                let adminItem = {key:key,name:config.eventDescription,alert:config.alert}
 
-                db.collection("admin").update({key:key},eventItem,{upsert:true},function(err,result){
+                db.collection("admin").update({key:key},adminItem,{upsert:true},function(err,result){
                     if (err) {
                         reject("scenario: error during update local admin collection")
                     } else {

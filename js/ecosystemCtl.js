@@ -118,7 +118,6 @@ angular.module("sampleApp")
                                         if ($scope.eventConfig.navBarStyle) {
                                             $scope.navBarStyle = $scope.eventConfig.navBarStyle;
 
-
                                         }
                                         //save the config in the service (if the page is re-loaded
                                         ecosystemSvc.setEventConfig(data.data[0]);
