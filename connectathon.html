@@ -706,38 +706,40 @@
                                         <div class="row">
                                             <hr class="trackBorder"/>
                                             <div class="col-sm-2 col-md-2">
-                                                <strong>General links</strong>
+                                                <strong class="popoverHint"
+                                                        uib-popover="Links can be to any web page of interest. Clicking on the link name
+                                                        will open the link in a new window. If the link is to a bundle then if can be displayed
+                                                        in the Bundle Viewer."
+                                                        popover-placement="top"
+                                                        popover-append-to-body = true
+                                                        popover-trigger="'mouseenter'">General links</strong>
                                             </div>
 
-                                            <div class="col-sm-9 col-md-9">
+                                            <div class="col-sm-10 col-md-10">
 
-                                                <table class="table">
+                                                <table class="table table-bordered">
+                                                    <tr><th>Name</th><th>Description</th><th>View</th></tr>
                                                     <tr ng-repeat="link in selectedTrack.links">
                                                         <td>
-                                                            <a target="_blank"
-                                                               ng-href="{{link.url}}">{{link.name}}</a>
-
-                                                            <a ng-hide="link.name" target="_blank"
-                                                               ng-href="{{link.url}}">{{link.description}}</a>
-
+                                                            {{link.name}}
                                                         </td>
-                                                        </td>
+
                                                         <td>{{link.description}}</td>
+                                                        <td style="width:15%">
+                                                            <a target="_blank" ng-href="{{link.url}}">Raw</a>
+
+                                                            <div ng-show="link.isBundle">
+                                                                <a target="_blank" ng-href="http://clinfhir.com/bundleVisualizer.html?{{link.url}}">Bundle Viewer
+                                                                </a>
+                                                            </div>
+                                                        </td>
 
                                                     </tr>
 
                                                 </table>
 
                                                 <em>Links of general interest to this track. Open in a separate tab</em>
-                                                <!--
 
-                                                                                           <ul class="list-unstyled">
-                                                                                               <li ng-repeat = "link in selectedTrack.links">
-                                                                                                   <a target="_blank"
-                                                                                                      ng-href="{{link.url}}">{{link.description}} ({{link.url}})</a>
-                                                                                               </li>
-                                                                                           </ul>
-                                                                                            -->
 
 
                                             </div>
@@ -956,22 +958,30 @@
                                         <div class="row">
 
                                             <div class="col-sm-2 col-md-2">
-                                                <strong>Data Sets</strong>
+                                                <strong class="popoverHint"
+                                                        uib-popover="DataSets are an extra 'dimension' to scenarios.
+                                                When testing a scenario some tracks have specific sets of data
+                                                within the scenario that is being tested. By defining these as datasets,
+                                                it is possible to indicate on a result which data set was used in the test."
+                                                        popover-placement="top"
+                                                        popover-append-to-body = true
+                                                        popover-trigger="'mouseenter'"
+
+                                                >Data Sets</strong>
                                             </div>
-                                            <div class="col-sm-6 col-md-6">
+
+                                            <div class="col-sm-10 col-md-10">
                                                 <table class="table table-bordered">
-                                                    <tr><th>Name</th><th>Description</th></tr>
+                                                    <tr><th>Name</th><th>Description</th><th>View in Bundle Viewer</th></tr>
                                                     <tr ng-repeat="ds in selectedTrack.dataSets">
                                                         <td>{{ds.name}}</td>
                                                         <td>{{ds.description}}</td>
+                                                        <td>
+                                                            <a target="_blank" ng-href="http://clinfhir.com/bundleVisualizer.html?{{ds.link}}">View
+                                                            </a>
+                                                        </td>
                                                     </tr>
                                                 </table>
-                                            </div>
-                                            <div class="col-sm-4 col-md-4">
-                                                <em>DataSets are an extra 'dimension' to scenarios.
-                                                When testing a scenario some tracks have specific sets of data
-                                                within the scenario that is being tested. By defining these as datasets,
-                                                it is possible to indicate on a result which data set was used in the test.</em>
                                             </div>
 
                                         </div>

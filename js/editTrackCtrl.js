@@ -117,12 +117,13 @@ angular.module("sampleApp")
                 }
             );
 */
-            $scope.addDS = function(name,description) {
-                let ds = {name:name,description:description}
+            $scope.addDS = function(name,description,link) {
+                let ds = {name:name,description:description,link:link}
                 $scope.track.dataSets = $scope.track.dataSets || []
                 $scope.track.dataSets.push(ds)
                 delete $scope.input.dsName;
                 delete $scope.input.dsDescription;
+                delete $scope.input.dsLink;
             }
             $scope.removeDS = function(inx) {
                 $scope.track.dataSets.splice(inx,1)
@@ -161,12 +162,13 @@ angular.module("sampleApp")
 
             $scope.addLink = function() {
                 $uibModal.open({
-                    templateUrl: 'modalTemplates/addLinkToScenario.html',
+                    templateUrl: 'modalTemplates/addLink.html',
                     //size: 'lg',
                     controller: function($scope,links){
                         $scope.input = {};
                         $scope.addLink = function() {
-                            links.push({url:$scope.input.linkUrl,name:$scope.input.linkName,description:$scope.input.linkDescription});
+                            links.push({url:$scope.input.linkUrl,name:$scope.input.linkName,
+                                description:$scope.input.linkDescription,isBundle:$scope.input.isBundle});
                             $scope.$close();
                         }
                     },

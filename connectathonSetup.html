@@ -268,10 +268,12 @@
                             <br/>
 
                             <table class="table table-bordered">
-                                <tr><th>Description</th><th>Url</th><th>Remove</th></tr>
+                                <tr><th>Name</th><th>Description</th><th>Url</th><th>Is Bundle</th><th>Remove</th></tr>
                                 <tr ng-repeat="link in selectedTrack.links">
+                                    <td>{{link.name}}</td>
                                     <td>{{link.description}}</td>
                                     <td>{{link.url}}</td>
+                                    <td>{{link.isBundle}}</td>
                                     <td> <i class="clickable glyphicon glyphicon-minus-sign"
                                             ng-click="removeLink($index)">
                                     </i></td>
@@ -279,12 +281,22 @@
                             </table>
 
                             <div class="row">
+                                <div class="col-md-2">
+                                    <input placeholder="name" type="text" class="form-control" ng-model="input.linkName"/>
+                                </div>
+
                                 <div class="col-md-3">
                                     <input placeholder="description" type="text" class="form-control" ng-model="input.linkDescription"/>
                                 </div>
-                                <div class="col-md-8">
+
+                                <div class="col-md-5">
                                     <input placeholder="Url" type="text" class="form-control" ng-model="input.linkUrl"/>
                                 </div>
+
+                                <div class="col-md-1">
+                                    <input class="form-control" type="checkbox" ng-model="input.linkIsBundle">
+                                </div>
+
                                 <div class="col-md-1">
                                     <i class="clickable glyphicon glyphicon-plus-sign"
                                        ng-click="addLink()">
@@ -300,10 +312,11 @@
                             <br/>
 
                             <table class="table table-bordered">
-                                <tr><th>Name</th><th>Description</th><th>Remove</th></tr>
+                                <tr><th>Name</th><th>Description</th><th>Link</th><th>Remove</th></tr>
                                 <tr ng-repeat="ds in selectedTrack.dataSets">
                                     <td>{{ds.name}}</td>
                                     <td>{{ds.description}}</td>
+                                    <td>{{ds.link}}</td>
                                     <td> <i class="clickable glyphicon glyphicon-minus-sign"
                                             ng-click="removeDS($index)">
                                     </i></td>
@@ -312,11 +325,16 @@
 
                             <div class="row">
                                 <div class="col-md-3">
-                                    <input type="text" class="form-control" ng-model="input.DSname"/>
+                                    <input type="text" placeholder="DS Name" class="form-control" ng-model="input.DSname"/>
                                 </div>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" ng-model="input.DSdescription"/>
+                                <div class="col-md-3">
+                                    <input type="text" placeholder="DS Description" class="form-control" ng-model="input.DSdescription"/>
                                 </div>
+
+                                <div class="col-md-5">
+                                    <input type="text" placeholder="DS Link" class="form-control" ng-model="input.DSlink"/>
+                                </div>
+
                                 <div class="col-md-1">
                                     <i class="clickable glyphicon glyphicon-plus-sign"
                                        ng-click="addDS()">

@@ -129,9 +129,11 @@ angular.module("sampleApp")
             //========= add / remove links
             $scope.addLink = function() {
                 $scope.selectedTrack.links = $scope.selectedTrack.links || []
-                $scope.selectedTrack.links.push({url:$scope.input.linkUrl,description:$scope.input.linkDescription})
+                $scope.selectedTrack.links.push({url:$scope.input.linkUrl,description:$scope.input.linkDescription,
+                    isBundle:$scope.input.linkIsBundle,name:$scope.input.linkName})
                 delete $scope.input.linkUrl;
                 delete $scope.input.linkDescription
+                delete $scope.input.linkName
             }
             $scope.removeLink = function(inx) {
                 $scope.selectedTrack.links.splice(inx,1)
@@ -142,9 +144,10 @@ angular.module("sampleApp")
             //========= add / remove datasets
             $scope.addDS = function() {
                 $scope.selectedTrack.dataSets = $scope.selectedTrack.dataSets || []
-                $scope.selectedTrack.dataSets.push({name:$scope.input.DSname,description:$scope.input.DSdescription})
+                $scope.selectedTrack.dataSets.push({name:$scope.input.DSname,description:$scope.input.DSdescription,link:$scope.input.DSlink})
                 delete $scope.input.DSname;
                 delete $scope.input.DSdescription
+                delete $scope.input.DSlink
             }
             $scope.removeDS = function(inx) {
                 $scope.selectedTrack.dataSets.splice(inx,1)
