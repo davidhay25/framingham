@@ -710,22 +710,17 @@ angular.module("sampleApp")
 
             //load all the configuration & results for the current event...
             var loadData = function(cb){
+                let now = new Date().getTime()
                 ecosystemSvc.getConnectathonResources().then(
                     function(vo) {
 
+
                         $scope.allIGs = ecosystemSvc.getIGs()
 
-                        /*
-                        ecosystemSvc.makeAllScenarioSummary(vo.scenarioGraph,vo.tracks).then(
-                            function(data) {
-                                $scope.hashAllScenarioNotes = data;
-
-                            }
-                        );
-*/
 
 
-                        console.log(ecoUtilitiesSvc.getObjectSize(vo));
+
+                        console.log("object size: " + ecoUtilitiesSvc.getObjectSize(vo));
 
                         $scope.tracks = vo.tracks;
 
@@ -742,6 +737,8 @@ angular.module("sampleApp")
                         $scope.filteredAllPersons = angular.copy($scope.allPersons)
                         $scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
 
+                        let ms = new Date().getTime() - now;
+                        console.log("Load time: "+ ms + "ms")
 
                         if (cb) {
                             cb()
@@ -874,9 +871,35 @@ angular.module("sampleApp")
                 $scope.selectedServer = server;
             };
 
+            //selects a track in the list of scenarios part of the list of test results
             $scope.selectScenarioDirect = function (scenario) {
                 $scope.selectedScenarioDirect = scenario;
             };
+
+            //create a count of number of tests per scenario. used when displaying the list of scenarios in the track list of results
+            $scope.makeScenarioTestCount = function() {
+                $scope.hashScenarioTestCount = {}
+                //let hash = {}
+                let hashResultsThisTrack = ecosystemSvc.getAllResults($scope.selectedTrack,null)
+                if (hashResultsThisTrack) {
+                    angular.forEach(hashResultsThisTrack,function(result,key){
+                        console.log(result)
+                        if (result.scenario) {
+                            let scenarioId = result.scenario.id
+                            $scope.hashScenarioTestCount[scenarioId] = $scope.hashScenarioTestCount[scenarioId] || 0
+                            $scope.hashScenarioTestCount[scenarioId] ++
+                        }
+
+
+                    })
+               /*     arResultsThisTrack.forEach(function (result){
+                        hash[result.scenaroid] = hash[result.scenaroid] || 0
+                        hash[result.scenaroid] ++
+                    })
+                    */
+                }
+                //return hash
+            }
 
             $scope.editPerson = function(person) {
                 $uibModal.open({

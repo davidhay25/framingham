@@ -328,8 +328,8 @@
 
                             <ul>
 
-                                <li>The
-                                    <a href="https://confluence.hl7.org/display/FHIR/2021+-+05+Connectathon+27" target="_blank">
+                                <li ng-show="eventConfig.confluenceUrl">The
+                                    <a href="{{eventConfig.confluenceUrl}}" target="_blank">
                                         Connectathon home page in confluence
                                     </a>
                                 </li>
@@ -1320,7 +1320,7 @@
                                     </div>
                                 </uib-tab>
 
-                                <uib-tab>
+                                <uib-tab  select="makeScenarioTestCount()">
                                     <uib-tab-heading>
                                         Testing & feedback <span ng-show="selectedTrack.scenarios.length > 0" class="badge"
                                               uib-popover=" Pass /  Fail /  Partial /  Note"
