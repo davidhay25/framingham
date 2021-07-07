@@ -1,9 +1,6 @@
 #!/usr/bin/env node
 
-//create a conman 'event' from the json file created by the connectathonSetup.html page...
-//assume that the json file is the master
-//want to be able to fun multiple times, updating the event.
-//each collection artifact (track, scenario) has id
+//Create test data for an event for load testing. Run after the event has been created...
 
 //get the Event code
 let eventCode = process.argv[2];
@@ -12,7 +9,7 @@ if (!eventCode) {
     process.exit()
 }
 
-console.log("Importing " + eventCode)
+console.log("Setting test data for " + eventCode)
 //const eventCode = "tst"
 const request = require('request');
 const fhirServer = "http://home.clinfhir.com:8054/baseR4/";    //for saving the config in a binary resource
@@ -21,13 +18,109 @@ const MongoClient = require('mongodb').MongoClient;
 //get the requested config
 let config = null;      //the config retrieved from the server
 let thisEventDb = null;       //the database that holds this event details
-let url = fhirServer + "/Binary/ct-" + eventCode
 
+let url = fhirServer + "/Binary/ct-" + eventCode
 let options = {
     method: 'GET',
     uri: url,
     'content-type': 'application/fhir+json'
 };
+
+
+request(options, function (error, response, body) {
+    //console.log(response.statusCode, body)
+
+    if (response.statusCode == 404 || response.statusCode == 410) {
+        //not found or deleted
+        console.log("Config for " + eventCode + " not found or deleted")
+        process.exit()
+    } else {
+        try {
+            let resource = JSON.parse(body);
+            config = JSON.parse(Buffer.from(resource.data, 'base64').toString('ascii'))
+
+            addTestData(config)
+        } catch (ex) {
+            console.log(err)
+            process.exit()
+        }
+
+    }
+})
+
+function addTestData(config) {
+    MongoClient.connect('mongodb://localhost:27017', function(err, dbClient) {
+        if (err) {
+            console.log(err);
+            console.log('>>> Mongo server not running')
+            process.exit()
+        } else {
+            thisEventDb = dbClient.db(eventCode);
+            console.log("Connected to db...")
+
+            //create an array of test users
+            let arUsers = []
+            let cnt = 1000
+            let idBase = "id" + new Date().getTime()
+            for (var i=0; i< cnt; i++) {
+                let id = idBase + i
+                let user = {id:id,name:'user'+i}
+                console.log(user)
+                arUsers.push(user)
+            }
+
+            //create an array of test results
+            let arResults = []
+            let cntResults = 1000
+            let idResultsBase = "idr" + new Date().getTime()
+            for (var i=0; i< cntResults; i++) {
+                let id = idResultsBase + i
+                let result = {type:'direct',text:'pass',note:'This is a note to make sure that the result object is a representative size'}
+                result.trackid = config.tracks[0].id
+                result.scenarioid = config.tracks[0].scenarios[0].id
+                result.id = id;
+                arResults.push(result)
+            }
+
+
+            //save the users in the db
+            insertCollection(thisEventDb,'person', arUsers).then(
+                function (data){
+                    console.log('updated users')
+
+
+                    insertCollection(thisEventDb,'result', arResults).then(
+                        function (data){
+                            console.log('updated results')
+
+
+                            console.log('done.')
+                            process.exit();
+                        }, function (err) {
+                            console.log(err)
+                        }
+                    )
+
+
+                    //console.log('done.')
+                    //process.exit();
+                }, function (err) {
+                    console.log(err)
+                }
+            )
+
+        }})
+
+
+}
+
+
+
+
+
+
+return;
+
 
 request(options, function (error, response, body) {
     //console.log(response.statusCode, body)
@@ -195,7 +288,7 @@ function checkOtherDb(key,config,db,dbClient) {
                 reject("scenario: error during updating eventDb database")
             } else {
                //upsert admin collection in the event database
-                let adminItem = {key:key,name:config.eventDescription,alert:config.alert,confluenceUrl:config.confluenceUrl}
+                let adminItem = {key:key,name:config.eventDescription,alert:config.alert}
 
                 db.collection("admin").update({key:key},adminItem,{upsert:true},function(err,result){
                     if (err) {
@@ -251,13 +344,11 @@ function insertTracks(config,db) {
             let scenarios = track.scenarios
             if (scenarios) {
                 scenarios.forEach(function (scen,inx){
-                    //dunno why I was doing this...
-                    //let id = new Date().getTime() + '-' + inx
-                    //scen.id = id
+                    let id = new Date().getTime() + '-' + inx
+                    scen.id = id
                     allScenarios.push(scen)
                     track.scenarioIds = track.scenarioIds || []
-                    //track.scenarioIds.push(id)
-                    track.scenarioIds.push(scen.id)
+                    track.scenarioIds.push(id)
                     delete track.scenarios
 
                 })
