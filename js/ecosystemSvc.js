@@ -1739,7 +1739,12 @@ angular.module("sampleApp").service('ecosystemSvc',
                 if (value.IG) {
                     let igId = value.IG.id //the id of the IG
                     let detail = {}
-                    detail.asserter = {name: value.asserter.name, id : value.asserter.id};
+                    if (value.asserter) {
+                        detail.asserter = {name: value.asserter.name, id : value.asserter.id};
+                    } else {
+                        detail.asserter = {name:'Unknown'}
+                    }
+
                     detail.result = value.text;
                     detail.note = value.note;
                     detail.id = value.id;       //the Id of the test

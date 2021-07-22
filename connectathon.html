@@ -800,18 +800,6 @@
                                                                 </div>
                                                             </div>
 
-                                                            <!--
-                                                            <h4>Description</h4>
-                                                            <p ng-bind-html="selectedScenario.description | markDown"></p>
-
-                                                            -->
-                                                            <!--
-                                                            <div ng-show="selectedScenario.reviewPurpose">
-                                                                <h4>Purpose</h4>
-                                                                <p ng-bind-html="selectedScenario.reviewPurpose | markDown"></p>
-                                                            </div>
--->
-
                                                             <div class="row" ng-show="selectedScenario.action">
                                                                 <div class="col-sm-3 col-md-3">
                                                                     <strong>Action</strong>
@@ -831,45 +819,7 @@
                                                                 </div>
                                                             </div>
 
-<!--
-                                                            <div class="row"ng-show="selectedScenario.scenarioTypes.length > 0">
-                                                                <div class="col-sm-3 col-md-3">
-                                                                    <strong>Resource Types</strong>
-                                                                </div>
-                                                                <div class="col-sm-9 col-md-9">
-                                                                    <ul>
-                                                                        <li ng-repeat="type in selectedScenario.scenarioTypes">
 
-                                                                            {{type}}
-
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            -->
-
-<!--
-                                                            <div class="row"ng-show="selectedScenario.lms.length > 0">
-                                                                <div class="col-sm-3 col-md-3">
-                                                                    <strong>Logical Models</strong>
-                                                                </div>
-                                                                <div class="col-sm-9 col-md-9">
-                                                                    <ul>
-                                                                        <li ng-repeat="lm in selectedScenario.lms">
-
-                                                                            <span uib-popover={{lm.url}}
-                                                                                  popover-placement="top"
-                                                                                  popover-trigger="'mouseenter'">
-                                                                                    {{lm.description}}
-                                                                                </span>
-
-
-
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            -->
 
 
                                                             <div class="row"ng-show="selectedScenario.steps.length > 0">
@@ -933,6 +883,7 @@
                                                         </div>
 
                                                         <div ng-show="selectedScenario.roles.length > 0" class="col-sm-3 col-md-3">
+                                                           <!-- roles no longer associated with scenario
                                                             <h4>Roles</h4>
                                                             <ul class="list-group">
                                                                 <li class="list-group-item"
@@ -943,6 +894,7 @@
 
                                                                 </li>
                                                             </ul>
+                                                            -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1114,7 +1066,7 @@
 
 
                                     <!-- Only keep for historical reasons - roles have been refactored-->
-                                    <div class="row" ng-show="selectedTrack.roles.length > 0">
+                                   <!-- <div class="row" ng-show="selectedTrack.roles.length > 0">
                                         <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">
                                             <strong>All roles in track</strong>
@@ -1154,6 +1106,8 @@
 
                                         </div>
                                     </div>
+
+                                    -->
                                     <div class="row" ng-show="selectedTrack.endPoints.length > 0">
                                         <hr class="trackBorder"/>
                                         <div class="col-sm-2 col-md-2">

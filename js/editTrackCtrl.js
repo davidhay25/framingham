@@ -8,12 +8,17 @@ angular.module("sampleApp")
             $scope.trackTypes = trackTypes;
             $scope.isNew = isNew;
 
-            $scope.allIGs = []; ecosystemSvc.getIGs()
+            $scope.allIGs = [];
+            ecosystemSvc.getIGs()
+            $scope.allRoles = []    //combined server and client roles...
+            $scope.input.newRoleType = "server" //default for a new role
 
             if (track) {        //should always be true as the 'addTrack' sets a base track {id: name: roles: scenarioIds: };
                 $scope.track = angular.copy(track); //NOTE - just added June22 so 'cancel' works
                 $scope.track.IGs = $scope.track.IGs || []
                 setAvailableIgs();      //IG's not already associated with this track...
+
+                /*
                 $scope.exportTrack = angular.copy(track);   //a copy of the track to use as an export. Delete the non-design stuff
                 $scope.exportTrack.exportedTrack = true;    //so the imported knows it is legit
                 delete $scope.exportTrack.persons;
@@ -29,7 +34,19 @@ angular.module("sampleApp")
                         delete scenario.servers;
                     })
                 }
+*/
 
+                if (track.serverRoles) {
+                    track.serverRoles.forEach(function(role){
+                        $scope.allRoles.push({name:role.name,description:role.description,type:'server'})
+                    })
+                }
+
+                if (track.clientRoles) {
+                    track.clientRoles.forEach(function(role){
+                        $scope.allRoles.push({name:role.name,description:role.description,type:'client'})
+                    })
+                }
 
                 if (track.IG) {
                     $scope.allIGs.forEach(function (ig) {
@@ -40,14 +57,7 @@ angular.module("sampleApp")
                 }
 
 
-                /*
-                //if the event type has been set to clincial, then all tracks should be scenario - will probably drop 'lmreview'
-                if (event && event.type) {
-                    if (event.type == 'clincial') {
-                        track.trackType = 'scenario';
-                    }
-                }
-*/
+
                 track.trackType = 'technical' ;//track.trackType || 'technical' ;      //default to technical
 
                 if (track.leadIds && track.leadIds.length > 0 && $scope.currentUser) {
@@ -74,7 +84,18 @@ angular.module("sampleApp")
                 $scope.track = {trackSubType : "igreview"}
             }
 
+            // ----------- roles stuff
 
+            $scope.addNewRole = function(name,description,type) {
+                $scope.allRoles.push({name:name,description:description,type:type})
+                delete $scope.input.newRoleName;
+                delete $scope.input.newRoleDescription;
+                delete $scope.input.newRoleType;
+            }
+
+            $scope.removeRole = function (inx) {
+                $scope.allRoles.splice(inx,1)
+            }
 
             function setAvailableIgs() {
                 $scope.allIGs.length = 0;
@@ -248,6 +269,21 @@ angular.module("sampleApp")
                     })
                 }
 
+                //build the individual server & client roles
+                $scope.track.serverRoles = []
+                $scope.track.clientRoles = []
+                if ($scope.allRoles) {
+                    $scope.allRoles.forEach(function (role){
+                        switch (role.type) {
+                            case 'server' :
+                                $scope.track.serverRoles.push({name:role.name,description:role.description})
+                                break
+                            case 'client' :
+                                $scope.track.clientRoles.push({name:role.name,description:role.description})
+                                break
+                        }
+                    })
+                }
 
 
                 if ($scope.input.IG) {
@@ -343,7 +379,7 @@ angular.module("sampleApp")
             };
 
 
-            $scope.copyToClipboard = function() {
+            $scope.copyToClipboardDEP = function() {
                 //copy to the clipboard
 
                 //https://stackoverflow.com/questions/29267589/angularjs-copy-to-clipboard

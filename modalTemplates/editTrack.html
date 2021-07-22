@@ -206,11 +206,11 @@
             <uib-tab heading="Scenarios">
                 <br/>
                 <table class="table">
-                    <tr><td>Name</td><td>Description</td><td>Move</td></tr>
+                    <tr><td>Name</td><td>Description</td></tr>
                     <tr ng-repeat="scenario in track.scenarios">
                         <td>{{scenario.name}}</td>
                         <td>{{scenario.description}}</td>
-
+<!-- not sure if move makes sense...
                         <td>
                             <i
                                class="glyphicon glyphicon-arrow-up clickable"
@@ -221,9 +221,57 @@
                                ng-hide = "$index == (track.scenarios.length -1)"
                                ng-click="moveScenarioDn($index)"></i>
                         </td>
+                        -->
                     </tr>
                 </table>
             </uib-tab>
+
+
+            <uib-tab heading="Roles">
+                <uib-tab-heading>
+                    Roles <span class="badge">{{allRoles.length}}</span>
+                </uib-tab-heading>
+
+
+
+
+                <br/>
+                <table class="table">
+                    <tr><td>Name</td><td>Description</td><th>Type</th><th></th></tr>
+                    <tr ng-repeat="role in allRoles">
+                        <td>{{role.name}}</td>
+                        <td>{{role.description}}</td>
+                        <td>{{role.type}}</td>
+                        <td>
+                        <td> <i class="clickable glyphicon glyphicon-remove-sign pull-right"
+                                ng-click="removeRole($index)">
+                        </i></td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><input placeholder="New role name" type="text" class="form-control" ng-model="input.newRoleName"/> </td>
+                        <td><input placeholder="description" type="text" class="form-control" ng-model="input.newRoleDescription"/> </td>
+                        <td>
+                            <div class="btn-group">
+                                <label class="btn btn-primary" ng-model="input.newRoleType" uib-btn-radio="'server'">Server</label>
+                                <label class="btn btn-primary" ng-model="input.newRoleType" uib-btn-radio="'client'">Client</label>
+
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-link"
+                                    ng-click = "addNewRole(input.newRoleName,input.newRoleDescription,input.newRoleType)">Add</button>
+                        </td>
+                    </tr>
+                </table>
+
+
+
+
+
+            </uib-tab>
+
 
             <uib-tab>
                 <uib-tab-heading>
