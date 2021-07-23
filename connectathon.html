@@ -1601,8 +1601,8 @@
                                 <button class="btn btn-link pull-right" ng-click="editServer()">New Server</button>
                             </div>
                             <table class="table table-bordered">
-                                <tr><th>Name</th><th>Url</th><th>FHIR Version</th><th>Description</th><th>Notes</th>
-                                    <th>Tracks</th>
+                                <tr><th>Name</th><th>Url</th><th>FHIR Version</th><th>Description</th><th>Tracks</th><th>Notes</th>
+
                                     </tr>
                                 <tr ng-repeat="svr in allServers">
                                     <td>
@@ -1640,6 +1640,18 @@
 
                                         </div>
                                     </td>
+
+                                    <td width="12%">
+                                        <div ng-repeat="trackId in svr.tracks">
+                                            <div class="clickable" ng-click="selectTrack(hashTracks[trackId],true)">
+                                                {{hashTracks[trackId].name}}
+                                            </div>
+
+
+                                        </div>
+
+                                    </td>
+
                                     <td>
                                         <div uib-popover="{{svr.notes}}"
                                              popover-placement="right"
@@ -1651,18 +1663,7 @@
                                         </div>
                                     </td>
 
-                                    <td width="12%">
-                                        <div ng-repeat="trackId in svr.tracks">
-                                            <div class="clickable" ng-click="selectTrack(hashTracks[trackId],true)">
-                                                {{hashTracks[trackId].name}}
-                                            </div>
 
-
-                                        </div>
-
-
-
-                                    </td>
 
 <!--
                                     <td><button class="btn btn-link" ng-click="editServer(svr)">View</button> </td>
