@@ -55,9 +55,7 @@ angular.module("sampleApp")
                         }
                     })
                 }
-
-
-
+                
                 track.trackType = 'technical' ;//track.trackType || 'technical' ;      //default to technical
 
                 if (track.leadIds && track.leadIds.length > 0 && $scope.currentUser) {

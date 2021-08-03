@@ -232,7 +232,7 @@ angular.module("sampleApp")
                             $scope.eventStats.snapshots.forEach(function (item){
                                 $scope['timeData'].push(item.resultCount)
                                 $scope['timeLabels'].push( item.date)
-                                console.log(item)
+                               // console.log(item)
                             })
 
 
@@ -1458,13 +1458,21 @@ angular.module("sampleApp")
 
                 $scope.selectedTrackReport =  ecosystemSvc.getTrackResults(track);      //summary of this track...
 
-                //update the associated IG's (when adding a track the full IG object is added to the track - but it can change...)
-                //this isn't the smartest thing to do, bit for now this should correct it...
+                //update the associated IG's (when adding a track the full IG object is added to the track - but it can change later...)
+                //this isn't the smartest thing to do, but for now this should allow the IG details to be shown from the track..
+
+
                 if ($scope.selectedTrack.IGs && ($scope.selectedTrack.IGs.length > 0)) {
                     let hash = ecosystemSvc.getIGsHash();
                     let arIG = [];    //will be the new array of IG objects
                     $scope.selectedTrack.IGs.forEach(function(IG){
-                        arIG.push(hash[IG.id])
+                        if (hash[IG.id]) {
+                            arIG.push(hash[IG.id])
+                        } else {
+                            console.log("The track " + $scope.selectedTrack.id + " has a reference to a deleted IG: " + IG.id)
+                        }
+
+
                     })
                     $scope.selectedTrack.IGs = arIG;
                 }

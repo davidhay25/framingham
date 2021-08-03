@@ -3,10 +3,27 @@ var request = require('request');
 let fhirServer = "http://home.clinfhir.com:8054/baseR4/";    //for saving the config in a binary resource
 
 let connCommon;         //the database where common collections are stored - server & IG currently. con27 for now...
-exports.setup = function(app,InconnCommon) {
-    connCommon = InconnCommon;
-    //?? save files in mongo???
-console.log('x',connCommon)
+exports.setup = function(app,client) {
+
+
+    //mark a track as deleted
+    app.put('/admin/deleteTrack/:id',function (req,res){
+        if (req.selectedDbCon) {
+            let id = req.params.id;
+            req.selectedDbCon.collection("track").update({id:id},{$set:{status:'deleted'}},function(err,result){
+                if (err) {
+                    res.status(500).send({msg:'Error deleting track'})
+                } else {
+                    res.send({})
+                }
+            })
+            //res.json();
+        } else {
+            res.status(500).send({msg:'Database not found'})
+        }
+
+
+    })
 
     //download the entire config as a JSON file.
     app.get('/admin/getConfig/:code', function (req, res) {
@@ -55,6 +72,7 @@ console.log('x',connCommon)
                 }
                 */
     })
+
 
     app.put('/admin/putConfig/:code', function (req, res) {
         let code = req.params.code;

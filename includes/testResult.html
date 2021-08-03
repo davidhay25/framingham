@@ -59,7 +59,9 @@
 
 
 
-                        <button class="btn btn-link" ng-click="addTestResult(selectedTrack,selectedScenarioDirect,null,null)">Add new result</button>
+                        <button class="btn btn-link"
+                                ng-show = "ecosystemSvc.getCurrentUser().id"
+                                ng-click="addTestResult(selectedTrack,selectedScenarioDirect,null,null)">Add new result</button>
                     </div>
                 </div>
 

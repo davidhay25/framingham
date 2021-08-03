@@ -169,6 +169,7 @@
     <script src="js/filters.js"></script>
     <script src="js/editScenarioCtrl.js"></script>
     <script src="js/loginCtrl.js"></script>
+    <script src="js/adminCtrl.js"></script>
 
     <!--
         <script src="directive/vsViewer/vsViewer.js"></script>
@@ -492,7 +493,11 @@
 
                 </uib-tab>
 
-                <uib-tab heading="Track details & testing">
+                <uib-tab>
+                    <uib-tab-heading>
+                        Track details & testing <span class="badge">{{tracks.length}}</span>
+                    </uib-tab-heading>
+
                     <br/>
                     <div class="row">
                         <div class="col-sm-3 col-md-3">
@@ -1381,7 +1386,11 @@
                         </tr>
                     </table>
 
-                    <button class="btn btn-link" ng-click="editIG()">Add new IG</button>
+                    <button class="btn btn-link"
+
+                            ng-click="editIG()">Add new IG</button>
+
+
 
 <!--
                     <pre>{{allIGs | json}}</pre>
@@ -1546,9 +1555,7 @@
                         <button class="btn btn-link pull-right" ng-click="editClient()">New Client</button>
                     </div>
                     <table class="table table-bordered">
-                        <tr><th>Name</th><th>Description</th><th>Contacts</th><th>Track / Scenario / Role (from Testing)
-
-                        </th><th></th><th></th></tr>
+                        <tr><th>Name</th><th>Description</th><th>Contacts</th><th></th><th></th></tr>
                         <tr ng-repeat="clnt in allClients">
                             <td>{{clnt.name}}</td>
                             <td>{{clnt.description}}</td>
@@ -1560,11 +1567,13 @@
                                     </span>
                                 </div>
                             </td>
+                            <!--
                             <td>
                                 <div ng-repeat="scenarioName in getScenariosForClient(clnt) track by $index">
                                     {{scenarioName}}
                                 </div>
                             </td>
+                            -->
                             <td>
                                 <div ng-show="clnt.url">
                                     <a class="btn btn-link" ng-href="{{clnt.url}}" target="blank">Invoke</a>
@@ -2188,6 +2197,17 @@
 
 
                 </uib-tab>
+
+                <uib-tab heading="Admin" ng-show="ecosystemSvc.getCurrentUser().isAdmin">
+                    <div ng-controller="adminCtrl">
+                        <ng-include src="'includes/admin.html'"></ng-include>
+                    </div>
+
+
+
+                </uib-tab>
+
+
             </uib-tabset>
         </div>
     </div>

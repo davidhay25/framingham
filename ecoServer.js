@@ -26,6 +26,7 @@ var fs = require('fs');
 
 let reportModule = require('./reportModule.js')
 
+
 //this supports the administration function - eg setup the tracks for a new event
 
 let adminModule = require('./adminModule.js')
@@ -86,6 +87,8 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
         //create the connection for the IG
         connIG = client.db(igDb)
         reportModule.setup(app,client,igDb)
+
+        adminModule.setup(app)
 
 
         //get the list of events from the event database
@@ -207,7 +210,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended:true,limit:'50mb',type:'
 
 app.use(jsonParser);
 app.use(urlencodedParser);
-adminModule.setup(app,connIG);
+
 
 
 

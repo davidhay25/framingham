@@ -1,0 +1,21 @@
+<div>
+    <h3>Admin</h3>
+
+    <uib-tabset>
+        <uib-tab heading="Track basics">
+
+            <table class="table-bordered table">
+                <tr  ng-repeat="track in tracks">
+                    <td>{{track.name}}</td>
+                    <td>{{track.id}}</td>
+                    <td><input type="text" class="form-control" ng-model="track.url"/> </td>
+                    <td><button class="btn btn-danger" ng-click="admin_deleteTrack(track)">Delete</button> </td>
+
+                </tr>
+            </table>
+
+
+        </uib-tab>
+    </uib-tabset>
+
+</div>
