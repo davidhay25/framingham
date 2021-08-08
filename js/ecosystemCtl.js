@@ -9,6 +9,8 @@ angular.module("sampleApp")
             $scope.ecosystemSvc = ecosystemSvc;
             $scope.input = {};
 
+            $scope.moment = moment;
+
             //indexes for the main tabs to allow tabs to be selected from code
             $scope.ui = {}
             $scope.ui.tabHome = 0;
@@ -735,7 +737,7 @@ angular.module("sampleApp")
                         $scope.allServers = ecosystemSvc.getAllServers();
                         $scope.allPersons = ecosystemSvc.getAllPersons();
                         $scope.filteredAllPersons = angular.copy($scope.allPersons)
-                        $scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
+                        //$scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
 
                         let ms = new Date().getTime() - now;
                         console.log("Load time: "+ ms + "ms")
@@ -1308,6 +1310,20 @@ angular.module("sampleApp")
                 })
             };
 
+            //update the 'date last checked' elapsed entry on the list
+            $scope.updateServersLastChecked = function(){
+
+                if ($scope.allServers) {
+                    $scope.allServers.forEach(function (svr){
+                        console.log(svr)
+                        if (svr.status) {
+                            svr.status.elapsed = $filter('getAgeSeconds')(svr.status.date)
+                        }
+                    })
+                }
+
+            }
+
             $scope.editServer = function(svr) {
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addServer.html',
@@ -1319,12 +1335,15 @@ angular.module("sampleApp")
                         },
                         tracks: function () {          //the default config
                             return $scope.tracks;
+                        },
+                        user : function(){
+                            return $scope.currentUser;
                         }
                     }
 
                 }).result.then(
                     function(vo) {
-                        $scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
+                        //$scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
                     }
                 )
             };

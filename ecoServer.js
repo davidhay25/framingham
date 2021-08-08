@@ -67,8 +67,6 @@ var hashTrack = {};         //a hash of all the tracks
 
 var app = express();
 
-
-
 //to serve up the static web pages - particularly the login page if no page is specified...
 //Order of app.use() is important as we need to increase the size limit for json parsing...
 app.use('/', express.static(__dirname,{index:'/connectathon.html'}));
@@ -87,7 +85,6 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client) {
         //create the connection for the IG
         connIG = client.db(igDb)
         reportModule.setup(app,client,igDb)
-
         adminModule.setup(app)
 
 
@@ -293,27 +290,8 @@ function recordAccess(req,data,cb) {
 }
 
 
-//====== access
+//update ta server with connection info...
 
-/*
-//--- temp fix
-app.get('/fixresult',function(req,res){
-    connIG.collection("person").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
-        if (err) {
-            res.send(err,500)
-        } else {
-            let hash = {}}
-            result.forEach(function (person){
-                hash[person.id] = person
-            })
-
-        connIG.collection("result").find({status : {$ne : 'deleted' }}).toArray(function(err,result){
-
-        })
-        })
-})
-
-*/
 
 //return all the users for a given database. Used when logging in to an event
 app.get('/public/getUsers/:key',function(req,res){

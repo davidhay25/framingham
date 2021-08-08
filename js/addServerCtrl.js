@@ -1,7 +1,8 @@
 angular.module("sampleApp")
     .controller('addServerCtrl',
-        function ($scope,ecosystemSvc,modalService,$http,existingServer,tracks) {
+        function ($scope,ecosystemSvc,modalService,$http,existingServer,tracks,user) {
 
+            $scope.user = user;
             $scope.tracks = tracks;
             $scope.input = {};
             $scope.input.serverRole = {}
@@ -197,6 +198,10 @@ angular.module("sampleApp")
                     return true;
                 }
 
+                //tabbed out of empty field
+                if (! $scope.input.name) {
+                    return true;
+                }
 
                 var canAdd = true;
                 var allServers = ecosystemSvc.getAllServers();
@@ -285,6 +290,21 @@ angular.module("sampleApp")
                 }
 
 
+
+            }
+
+
+            $scope.disableServer = function() {
+
+                if (confirm("Are you sure you wish to remove this server?")) {
+                    existingServer.status = 'deleted'
+                    ecosystemSvc.updateServer(existingServer,false).then(
+                        function () {
+                            $scope.$close()
+                        }, function (err) {
+                            alert(angular.toJson(err))
+                        })
+                }
 
             }
 

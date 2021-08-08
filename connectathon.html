@@ -58,6 +58,10 @@
             alert("An unexpected error occurred: " + message + " on line " + linenumber + " for " + url);
         }
 
+        window.addEventListener('error', function(event) {
+            alert("error: " + angular.toJson(event))
+        })
+
     </script>
 
     <style>
@@ -170,6 +174,7 @@
     <script src="js/editScenarioCtrl.js"></script>
     <script src="js/loginCtrl.js"></script>
     <script src="js/adminCtrl.js"></script>
+    <script src="js/serverDisplayCtrl.js"></script>
 
     <!--
         <script src="directive/vsViewer/vsViewer.js"></script>
@@ -1591,7 +1596,7 @@
 
                 </uib-tab>
 
-                <uib-tab>
+                <uib-tab select="updateServersLastChecked()">
                     <uib-tab-heading>
                         Servers
                         <span class="badge" ng-show="allServers.length > 0">{{allServers.length}}</span>
@@ -1603,81 +1608,117 @@
                                 ng-click="download('servers')">Download report as csv</button>
                     </div>
 
-
+                    <div ng-controller="serverDisplayCtrl">
                     <uib-tabset>
                         <uib-tab heading = "List">
+
                             <div>
                                 <button class="btn btn-link pull-right" ng-click="editServer()">New Server</button>
                             </div>
                             <table class="table table-bordered">
-                                <tr><th>Name</th><th>Url</th><th>FHIR Version</th><th>Description</th><th>Tracks</th><th>Notes</th>
+                            <tr><th>Name</th><th>Url</th><th>FHIR Version</th>
+                             <!--   <th>Last Status</th>-->
 
-                                    </tr>
-                                <tr ng-repeat="svr in allServers">
-                                    <td>
-                                        <div class="clickable" ng-click="editServer(svr)">
-                                            {{svr.name}}
+                                <th>Description</th><th>Tracks</th><th>Notes</th>
+
+                                </tr>
+                            <tr ng-repeat="svr in allServers">
+                                <td>
+                                    <div class="clickable" ng-click="editServer(svr)">
+                                        {{svr.name}}
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div ng-show="svr.address">
+                                        <strong>Server root:</strong> <a target="_blank" ng-href = "http://clinfhir.com/query.html#{{svr.address}}">
+                                            {{svr.address}}
+                                        </a>
+                                        <div>
+
+                                            <span ng-show="svr.status">
+
+                                                <span ng-show="svr.status.status == 200">
+                                                    <span class="badge pass">200</span>
+                                                </span>
+                                                <span ng-hide="svr.status.status == 200">
+                                                    <span class="badge fail">{{svr.status.status}}</span>
+                                                </span>
+                                                <span>{{svr.status.elapsed}} ago.</span>
+                                            </span>
+                                            <button class="btn btn-link" ng-click="getCapabilityStatement(svr)">Check availability</button>
                                         </div>
 
-                                    </td>
-                                    <td>
-                                        <div ng-show="svr.address">
-                                            Server root: <a target="_blank" ng-href = "http://clinfhir.com/query.html#{{svr.address}}">
-                                                {{svr.address}}
-                                            </a>
+
+                                    </div>
+                                    <div ng-show="svr.UIaddress">
+                                        <hr/>
+                                        <strong>UI: </strong><a target="_blank" ng-href = "{{svr.UIaddress}}">
+                                            {{svr.UIaddress}}
+                                        </a>
 
 
+                                    </div>
+                                </td>
 
+                                <td>{{svr.fhirVersion}}</td>
+<!--
+                                <td>
+                                    <div ng-show="svr.status">
+                                        <div ng-show="svr.status.status == 200">
+                                            <span class="badge pass">200</span>
                                         </div>
-                                        <div ng-show="svr.UIaddress">
-                                            UI: <a target="_blank" ng-href = "{{svr.UIaddress}}">
-                                                {{svr.UIaddress}}
-                                            </a>
-
-
+                                        <div ng-hide="svr.status.status == 200">
+                                            <span class="badge fail">{{svr.status.status}}</span>
                                         </div>
-                                    </td>
+                                        <div>{{svr.status.elapsed}}</div>
+                                    </div>
 
-                                    <td>{{svr.fhirVersion}}</td>
-                                    <td>
-                                        <div uib-popover="{{svr.description}}"
-                                             popover-placement="right"
-                                             popover-append-to-body = true
-                                             popover-trigger="'mouseenter'">
 
-                                            {{getSvrDescription(svr)}}
+                                    <button class="btn btn-link" ng-click="getCapabilityStatement(svr)">Check</button>
+                                </td>
 
+                                -->
+
+                                <td>
+                                    <div uib-popover="{{svr.description}}"
+                                         popover-placement="right"
+                                         popover-append-to-body = true
+                                         popover-trigger="'mouseenter'">
+
+                                        {{getSvrDescription(svr)}}
+
+                                    </div>
+                                </td>
+
+                                <td width="12%">
+                                    <div ng-repeat="trackId in svr.tracks">
+                                        <div class="clickable" ng-click="selectTrack(hashTracks[trackId],true)">
+                                            {{hashTracks[trackId].name}}
                                         </div>
-                                    </td>
-
-                                    <td width="12%">
-                                        <div ng-repeat="trackId in svr.tracks">
-                                            <div class="clickable" ng-click="selectTrack(hashTracks[trackId],true)">
-                                                {{hashTracks[trackId].name}}
-                                            </div>
 
 
-                                        </div>
+                                    </div>
 
-                                    </td>
+                                </td>
 
-                                    <td>
-                                        <div uib-popover="{{svr.notes}}"
-                                             popover-placement="right"
-                                             popover-append-to-body = true
-                                             popover-trigger="'mouseenter'">
+                                <td>
+                                    <div uib-popover="{{svr.notes}}"
+                                         popover-placement="right"
+                                         popover-append-to-body = true
+                                         popover-trigger="'mouseenter'">
 
-                                            {{getSvrNotes(svr)}}
+                                        {{getSvrNotes(svr)}}
 
-                                        </div>
-                                    </td>
+                                    </div>
+                                </td>
 
 
 
 <!--
-                                    <td><button class="btn btn-link" ng-click="editServer(svr)">View</button> </td>
-                                    -->
-                                </tr>
+                                <td><button class="btn btn-link" ng-click="editServer(svr)">View</button> </td>
+                                -->
+                            </tr>
                             </table>
 
 
@@ -1764,6 +1805,7 @@
 
                         </uib-tab>
                     </uib-tabset>
+                    </div>
 
 
 
@@ -1950,7 +1992,7 @@
 
                                         </uib-tab>
 
-                                        <uib-tab heading = "Dataset summary">
+                                        <uib-tab heading = "Dataset summary"  ng-show="selectedTrackSummary.dataSets">
                                             <table class="table table-bordered table-condensed table-striped">
                                                 <tr>
                                                     <th colspan="2"></th>

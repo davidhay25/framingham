@@ -213,7 +213,6 @@ angular.module("sampleApp").service('ecosystemSvc',
     );
 
     var pathsCache = {};    //cache for paths by type - ?save in browser cache
-    //var reportedTrackWithNoConfserver  = {};      //a
     var IGCacheByServer = {};   //Implementation Guides by server
 
     return {
@@ -239,13 +238,16 @@ angular.module("sampleApp").service('ecosystemSvc',
             //find all the servers where there is a result in this track
             Object.keys(hashAllResults).forEach(function(rkey) {
                 let result = hashAllResults[rkey]
-                hashServers[result.server.id].used = true
+                if (result.server) {
+                    hashServers[result.server.id].used = true
+                }
+
             })
 
             //create a new list that only has the new servers..
             let reportServers = [];
             Object.keys(hashServers).forEach(function (key) {
-                if (hashServers[key].used) {
+                if (hashServers[key] && hashServers[key].used) {
                     reportServers.push(hashServers[key].server)
                 }
 
@@ -287,7 +289,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                 
             })
 
-            console.log(hash)
+            //console.log(hash)
 
             return {hash: hash,servers: reportServers};
 
@@ -1283,6 +1285,7 @@ angular.module("sampleApp").service('ecosystemSvc',
         getPersonWithId : function(id) {
             return hashAllPersons[id]
         },
+
         getScenarioWithId : function(id) {
             console.log(this.eventConfig);
         },
@@ -1411,7 +1414,7 @@ angular.module("sampleApp").service('ecosystemSvc',
             )
             return deferred.promise;
         },
-        makeServerRoleSummary : function(){
+        makeServerRoleSummaryDEP : function(){
             serverRoleSummary = {};
             if (eventConfig && eventConfig.serverRoles) {
                 eventConfig.serverRoles.forEach(function (r) {
@@ -2027,6 +2030,7 @@ angular.module("sampleApp").service('ecosystemSvc',
         },
         updateServer : function(server,isNewServer) {
             var deferred = $q.defer();
+            delete server._id
 
             if (server.contact) {
                 var arContact = angular.copy(server.contact);
@@ -2093,8 +2097,14 @@ angular.module("sampleApp").service('ecosystemSvc',
             resultToSave.note = result.note;
             resultToSave.IG = result.IG;
             resultToSave.dataSet = result.dataSet;
-            resultToSave.serverRole = result.serverRole.name
-            resultToSave.clientRole = result.clientRole.name
+
+            if (result.serverRole) {
+                resultToSave.serverRole = result.serverRole.name
+            }
+            if (result.clientRole) {
+                resultToSave.clientRole = result.clientRole.name
+            }
+
 
             if (result.server) {
                 //result.server is the server object
@@ -2495,6 +2505,89 @@ angular.module("sampleApp").service('ecosystemSvc',
                         }
                     });
 
+
+                    //and the scores (this could be concurrent with the links)
+                    allResults = {};    //scoped to the service...
+
+                    $http.get("/result").then(
+                        function(data) {
+                            var results = data.data;    //the results as saved in the database
+                            results.forEach(function(dataResult){
+                                var result = {id:dataResult.id};
+                                result.text = dataResult.text;
+                                result.type = dataResult.type;
+                                result.note = dataResult.note;
+                                result.trackers = dataResult.trackers;
+                                result.IG = dataResult.IG;
+                                result.serverRole = dataResult.serverRole;
+                                result.clientRole = dataResult.clientRole;
+                                result.dataSet = dataResult.dataSet;
+
+                                if (dataResult.server) {
+                                    result.server = hashServer[dataResult.server.serverid];
+                                }
+
+                                if (dataResult.client) {
+                                    result.client = hashClient[dataResult.client.clientid];
+                                }
+
+                                result.track = hashTrack[dataResult.trackid];
+
+                                if (!result.track) {
+                                    alert("error processing track in result# " + dataResult.id);
+                                }
+
+                                result.scenario = hashScenario[dataResult.scenarioid];
+                                if (!result.scenario) {
+                                    alert("error processing scenario in result# " + dataResult.id);
+                                }
+
+                                //this is just an error check - should become redundant...
+                                if (result.track && result.scenario) {
+
+                                    result.issued = dataResult.issued;
+
+
+                                    if (dataResult.asserterid) {
+                                        result.asserter = hashAllPersons[dataResult.asserterid];
+                                    }
+
+                                    //note that the full author is saved. ?should this be the same for the asserter?
+                                    if (dataResult.author) {
+                                        result.author = hashAllPersons[dataResult.author.id];
+
+                                    }
+
+
+                                    //no longer supporting the 'cs' - clientserver type of test
+                                    let key =  dataResult.id;
+                                    result.key = key;       //we need this for the delete...
+
+
+                                    allResults[key] = result;
+
+
+                                    //now update the track totals
+                                    if (result.track && result.track.resultTotals) {
+                                        result.track.resultTotals[result.text]++
+                                    } else {
+                                        console.log('error processing result: ',dataResult)
+                                    }
+                                } else {
+                                    //todo - need to alert the user...
+                                }
+
+                            });
+
+
+                            deferred.resolve(vo);
+                        },
+                        function(err){
+                            alert('error loading results: '+ angular.toJson(err))
+                        }
+                    );
+
+                    /* no longer using link...
                     //now get the links - servers/clients to scenarios...
                     $http.get("/link").then(
                         function(data) {
@@ -2510,7 +2603,6 @@ angular.module("sampleApp").service('ecosystemSvc',
                                 if (! role) {
                                     alert('unknown role id getting link'+ link.roleid)
                                 }
-
 
                                 if (scenario && role) {
                                     if (link.type == 'server') {
@@ -2583,17 +2675,6 @@ angular.module("sampleApp").service('ecosystemSvc',
                                             result.issued = dataResult.issued;
 
 
-                                            /*
-                                            if (dataResult.client) {
-                                                result.client = {client: hashClient[dataResult.client.clientid],
-                                                    role: hashRole[dataResult.client.roleid]}
-
-                                                if (!result.client.client || ! result.client.role) {
-                                                    alert("Error processing client in result# " + dataResult.id);
-                                                    delete result.client;
-                                                }
-                                            }
-*/
                                             if (dataResult.asserterid) {
                                                 result.asserter = hashAllPersons[dataResult.asserterid];
                                             }
@@ -2639,7 +2720,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                         }
                     );
 
-
+                    */
 
 
 

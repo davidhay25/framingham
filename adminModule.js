@@ -5,6 +5,43 @@ let fhirServer = "http://home.clinfhir.com:8054/baseR4/";    //for saving the co
 let connCommon;         //the database where common collections are stored - server & IG currently. con27 for now...
 exports.setup = function(app,client) {
 
+    //add the person objects to a 'trackLead' collection
+
+    app.post('/admin/makeTrackLeadCollection',function (req,res){
+        if (req.selectedDbCon) {
+            let trackLeads = req.body;      //array of track leads
+            req.selectedDbCon.collection("trackLeads").drop({}, function (err) {
+                let doInsert = true;
+
+                /*
+                if (err) {
+                    if (err.code !== 26) {
+                        reject("track:error during drop")
+                    }
+                }
+    */
+
+                req.selectedDbCon.collection("trackLeads").insertMany(trackLeads, {}, function (err, result) {
+
+                    if (err) {
+                        res.status(500).json(err)
+                        reject("trackLeads:error during insertMany")
+                    } else {
+                        console.log(result.insertedCount + ' persons inserted')
+                        res.json({msg: `${result.insertedCount} persons inserted`})
+                    }
+                })
+
+            })
+        } else {
+            res.status(500).send({msg:"No collection found"})
+        }
+    })
+
+
+
+
+
 
     //mark a track as deleted
     app.put('/admin/deleteTrack/:id',function (req,res){
@@ -120,6 +157,7 @@ exports.setup = function(app,client) {
 
 
     //get all the servers from the 'reference' db. Currently this is con27 (where the IG's are also)
+    //+++++++++++ old ++++++++++++
     app.get('/admin/servers', function (req, res) {
         connCommon.collection("server").find({}).toArray(function (err, result) {
             if (err) {

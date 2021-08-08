@@ -16,6 +16,30 @@
 
 
         </uib-tab>
+        <uib-tab heading="Track leads">
+            <button style="margin: 8px"  class="btn btn-danger pull-right"
+                    ng-click="saveTrackLeads()">Make collection</button>
+
+            <button style="margin: 8px" class="btn btn-primary pull-right"
+                    ng-click="adminTrackLeads()">Create list</button>
+
+
+            <br/>
+            <table class="table table-bordered">
+                <tr><th>Name</th><th>Email</th><th>Contacts</th></tr>
+                <tr ng-repeat="person in admin_trackLeads">
+                    <td>{{person.name}}</td>
+                    <td>{{person.email}}</td>
+                    <td>
+                        <div ng-repeat="contact in person.contact">
+                            {{contact.type}}:{{contact.value}}
+                        </div>
+
+                    </td>
+                </tr>
+            </table>
+
+        </uib-tab>
     </uib-tabset>
 
 </div>

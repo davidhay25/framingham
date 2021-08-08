@@ -269,11 +269,13 @@
                     <a target="_blank" ng-href = "http://clinfhir.com/query.html#{{input.address}}">
                         Load clinFHIR Server Query for this server
                     </a>
-
                 </div>
 
             </div>
             <div class="col-md-6 col-sm-6">
+                <button ng-show="user.isAdmin && editingServer" style="margin-left: 8px"
+                        class="btn btn-danger pull-right" ng-click="disableServer()">Disable server</button>
+
                 <button ng-show="input.name"
                         class="btn btn-primary pull-right" ng-click="addServer()">{{saveText}}</button>
             </div>
