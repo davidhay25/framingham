@@ -1044,7 +1044,6 @@ app.post('/config/:type',function(req,res){
             res.send(result)
         }
     })
-
 });
 
 app.post('/addScenarioToTrack/:track',function(req,res){
@@ -1130,7 +1129,10 @@ app.post('/track',function(req,res){
 });
 
 
+//update specific elements in a collection item
+app.post('/elementUpdate',function (req,res){
 
+})
 
 
 

@@ -24,6 +24,7 @@ angular.module("sampleApp")
 
             $scope.getCapabilityStatement = function (svr) {
                 //let deferred = $q.defer();
+                svr.waiting = true;
 
 
                 let url = '/proxyfhir/' + svr.address + 'metadata';
@@ -36,7 +37,9 @@ angular.module("sampleApp")
                     function(err) {
                         setServerStatus(svr,err.status)
                     }
-                )
+                ). finally(function (){
+                    svr.waiting = false;
+                })
 
 
                 function setServerStatus(svr,status) {

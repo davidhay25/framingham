@@ -2031,7 +2031,9 @@ angular.module("sampleApp").service('ecosystemSvc',
         updateServer : function(server,isNewServer) {
             var deferred = $q.defer();
             delete server._id
+            delete server.waiting;      //used when pinging a server
 
+            //just save the contact id - the actual contact details can change...
             if (server.contact) {
                 var arContact = angular.copy(server.contact);
                 server.contactid = [];//.length = 0;

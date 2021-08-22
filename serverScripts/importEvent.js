@@ -37,13 +37,15 @@ request(options, function (error, response, body) {
         console.log("Config for " + eventCode + " not found or deleted")
         process.exit()
     } else {
+        //console.log(body)
         try {
             let resource = JSON.parse(body);
+            //console.log(resource)
             config = JSON.parse(Buffer.from(resource.data, 'base64').toString('ascii'))
 
             performImport()
         } catch (ex) {
-            console.log(err)
+            console.log(ex)
             process.exit()
         }
 

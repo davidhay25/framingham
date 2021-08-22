@@ -4,12 +4,29 @@
     <uib-tabset>
         <uib-tab heading="Track basics">
 
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-primary pull-right" ng-click="admin_newTrack">New Track</button>
+                </div>
+            </div>
+
             <table class="table-bordered table">
                 <tr  ng-repeat="track in tracks">
                     <td>{{track.name}}</td>
-                    <td>{{track.id}}</td>
-                    <td><input type="text" class="form-control" ng-model="track.url"/> </td>
-                    <td><button class="btn btn-danger" ng-click="admin_deleteTrack(track)">Delete</button> </td>
+
+                    <td>
+                        <textarea ng-model="track.description"
+                                  rows="3" class="form-control"
+                                  ng-change="dirtyTrack[track.id] = true"></textarea>
+                    </td>
+                    <td width="40%"><input type="text" class="form-control"
+                               ng-change="dirtyTrack[track.id] = true"
+                               ng-model="track.url"/> </td>
+                    <td width="12%">
+                        <button class="btn btn-danger" ng-click="admin_deleteTrack(track)">Delete</button>
+                        <button ng-show="dirtyTrack[track.id]" class="btn btn-primary" ng-click="admin_updateTrack(track)">Update</button>
+                    </td>
+
 
                 </tr>
             </table>

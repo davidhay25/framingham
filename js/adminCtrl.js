@@ -2,6 +2,8 @@ angular.module("sampleApp")
     .controller('adminCtrl',
         function ($scope,$http,ecosystemSvc) {
 
+            $scope.dirtyTrack = {}
+
 
             $scope.saveTrackLeads = function() {
                 let url = "/admin/makeTrackLeadCollection"
@@ -31,6 +33,13 @@ angular.module("sampleApp")
                     }
                 })
 
+                //add admin as well
+                ecosystemSvc.getAllPersons().forEach(function (person){
+                    if (person.isAdmin) {
+                        hashLeads[person.id] = person
+                    }
+                })
+
                 $scope.admin_trackLeads = [];
                 Object.keys(hashLeads).forEach(function (key){
                     $scope.admin_trackLeads.push(hashLeads[key])
@@ -38,6 +47,23 @@ angular.module("sampleApp")
 
 
 
+            }
+
+            $scope.admin_updateTrack = function (track) {
+                //ecosystemSvc.update
+
+                let updateDocument = {collection:"track",element:"url",value:track.url}
+
+                return
+                $http.post('elementUpdate',updateObject).then(
+                    function (data) {
+
+                    },
+                    function (err) {
+
+                    }
+                )
+                //
             }
 
             //todo - should only be done if there are no results for this track ? check first

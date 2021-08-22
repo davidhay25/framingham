@@ -1635,7 +1635,7 @@
                                             {{svr.address}}
                                         </a>
                                         <div>
-
+                                            <img ng-show="svr.waiting" src="css/ajax-loader.gif"/>
                                             <span ng-show="svr.status">
 
                                                 <span ng-show="svr.status.status == 200">
@@ -1646,7 +1646,9 @@
                                                 </span>
                                                 <span>{{svr.status.elapsed}} ago.</span>
                                             </span>
-                                            <button class="btn btn-link" ng-click="getCapabilityStatement(svr)">Check availability</button>
+
+                                            <button ng-hide="svr.waiting" class="btn btn-link" ng-click="getCapabilityStatement(svr)">Check availability</button>
+
                                         </div>
 
 
