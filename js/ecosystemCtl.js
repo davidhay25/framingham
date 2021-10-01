@@ -361,6 +361,7 @@ angular.module("sampleApp")
                         $scope.currentUser = ecosystemSvc.getCurrentUser();
 
                     } else if (vo.newUser) {
+
                         ecosystemSvc.updatePerson(vo.newUser).then(
                             function(data) {
                                 ecosystemSvc.setCurrentUser(vo.newUser);

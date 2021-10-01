@@ -1,0 +1,235 @@
+
+<div>
+<div>
+
+
+    <h3 class="center-text">Welcome to Connectathon Manager</h3>
+
+    <div class="center-text">
+        <p><em  >The purpose of this application is to help support Connectathon attendees by making it
+            easier to locate tracks of interest, and to participate in those tracks, including recording feedback
+            and testing outcomes.</em></p>
+    </div>
+
+    <div class="center-text">
+        <em> For assistance with using this application use the <a href="https://chat.fhir.org/#narrow/stream/179176-clinFHIR" target="_blank">clinFHIR Zulip chat</a> </em>
+    </div>
+
+    <hr/>
+
+    <div ng-show="eventConfig.alert" class="alert alert-warning text-center">{{eventConfig.alert}}</div>
+
+    <uib-tabset>
+        <uib-tab heading="General information">
+            <div class="row">
+                <div class="col-md-6">
+
+                    <h4>Other Connectathon supporting resources</h4>
+
+                    <p>This application should be used in conjunction with the other connectathon supporting applications, namely:</p>
+
+                    <ul>
+
+                        <li ng-show="eventConfig.confluenceUrl">The
+                            <a href="{{eventConfig.confluenceUrl}}" target="_blank">
+                                Connectathon home page in confluence
+                            </a>
+                        </li>
+                        <li>The whova Virtual Event page</li>
+                        <li> <a href="https://chat.fhir.org/#recent_topics" target="_blank">
+                            Zulip chat streams (specific track links links are found with each track)</a>
+                        </li>
+
+                    </ul>
+
+
+                    <h4>Getting started</h4>
+                    <p>If this is your first time at the connectathon, then we suggest the following first steps.</p>
+
+                    <ul>
+                        <li>Scan the list of Tracks and Implementation Guides for tracks of interest. You probably already know your main track,
+                            but there are likely others of interest to you. You can see the tracks in the
+                            <span class="tabName" ng-click="input.mainTabActive = ui.tabTrack">Track details and testing</span> tab and
+                            also a list of Implementation Guides being tested in the <span class="tabName" ng-click="input.mainTabActive = ui.tabIG">Implementation Guides</span> tab.
+
+
+                        </li>
+                        <li>Update your profile in the <span class="tabName" ng-click="input.mainTabActive = ui.tabPeople">People</span> tab. Your entry will be the only one with an
+                            'edit' link alongside it - use that link to enter your email address (if you want to) and
+                            record your primary track and tracks of interest.  Ideally, you'll have a single 'primary' track and any number
+                            'tracks of interest' (Recording them here means your name
+                            will appear in the track description and <span class="tabName" ng-click="input.mainTabActive = ui.tabParticipation">Participation Report</span> so others can find you).</li>
+                        <li>If you have a server that you want to test, or make it available for use in a track then
+                            enter the details on the <span class="tabName" ng-click="input.mainTabActive = ui.tabServers">Servers</span> tab.
+                            There's
+                            <a href="https://youtu.be/cZMTnXOdU8o" target="_blank">a short video</a>
+
+
+                            that describes
+                            this in more detail.
+                        </li>
+
+                        <li>If you have a client application that you want to test, or make it available for use in a track then
+                            enter the details on the <span class="tabName" ng-click="input.mainTabActive = ui.tabClients">Clients</span> tab.</li>
+                    </ul>
+
+                    <h4>External links of interest</h4>
+
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li><a href="https://confluence.hl7.org/display/FHIR" target="_blank">HL7 FHIR Confluence</a> </li>
+                                <li><a href="http://hl7.org/fhir/" target="_blank">FHIR R4 spec</a> </li>
+                                <li><a href="http://hl7.org/fhir/2021Mar/" target="_blank">FHIR R4b ballot spec</a> </li>
+                                <li><a href="http://hl7.org/fhir/2021May/" target="_blank">FHIR R5 draft spec</a> </li>
+                                <li><a href="https://registry.fhir.org/" target="_blank">FHIR Package Registry</a> </li>
+                                <li><a href="http://fhir.org/guides/registry/" target="_blank">FHIR Implementation Guide Registry</a> </li>
+
+                                <li> <a href="https://chat.fhir.org/#recent_topics" target="_blank">
+                                    Zulip chat streams</a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li><a href="https://www.devdays.com/" target="_blank">Next DevDays (June 2021) </a> </li>
+                                <li><a href="https://www.devdays.com/events/" target="_blank">Videos of previous DevDays presentations </a> </li>
+                                <li><a href="https://www.youtube.com/results?search_query=fhir" target="_blank">Youtube FHIR videos </a> </li>
+                                <li><a href="http://clinfhir.com/" target="_blank">clinFHIR </a> </li>
+                                <li><a href="https://confluence.hl7.org/display/FHIR/Blogs" target="_blank">FHIR Blogs</a> </li>
+                                <li><a href="https://www.youtube.com/playlist?list=PL6yKJa-XDmyOtjwoTb4IQC9_9Q57twR-Z" target="_blank">conMan videos</a> </li>
+                                <li><a href="https://chat.fhir.org/#narrow/stream/179207-connectathon-mgmt/topic/conman-27" target="_blank">conMan help (Zulip) </a> </li>
+
+
+
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+
+                    <h4>Common tasks</h4>
+                    <div style="margin-left: 20px">
+                        <p>These are things that you will likely want to do over the course of the event</p>
+                    </div>
+                    <h5><em>Record your interest in a track</em></h5>
+                    <div style="margin-left: 20px">
+                        Go to the <span class="tabName" ng-click="input.mainTabActive = ui.tabPeople">People</span> tab, find your name in the list and edit
+                        your profile. You can record primary and tracks of interest there.
+                    </div>
+
+                    <h5><em>Register a server for others to use in one or more tracks </em></h5>
+
+                    <div style="margin-left: 20px">
+
+                        This is done from the <span class="tabName" ng-click="input.mainTabActive = ui.tabServers">Servers</span> tab.
+                        There's <a href="https://youtu.be/cZMTnXOdU8o" target="_blank">a short video</a> that describes
+                        this in more detail.
+                    </div>
+
+                    <h5><em>Find who is testing a specific Implementation Guide</em></h5>
+                    <div style="margin-left: 20px">
+                        To find out the track/s that are testing an IG, look in the
+                        <span class="tabName" ng-click="input.mainTabActive = ui.tabIG">Implementation Guide</span> tab. You'll see a list of tracks
+                        alongside each IG.
+
+                        To find individuals working in those tracks, go to the <span class="tabName" ng-click="input.mainTabActive = ui.tabTrack">Tracks</span> tab
+                        and select the 'Description' tab to the right. All track participants (recorded when an
+                        individual registers their interest while setting up their profile) are displayed towards
+                        the bottom. Contact details will be in that users profile (and can also be displayed by
+                        clicking on the name in the list).
+
+
+                    </div>
+
+                    <h5><em>Find a server to test against</em></h5>
+                    <div style="margin-left: 20px">
+                        You can look at the full server list in the
+                        <span class="tabName" ng-click="input.mainTabActive = ui.tabServers">Servers</span> tab. If the server has been registered for use with a track, then
+                        it will also appear in the track description. To view the list, select the track in the <span class="tabName" ng-click="input.mainTabActive = ui.tabTrack">Tracks</span> tab, then the 'Servers' sub-tab
+                        to the right. The servers currently associated with the track are shown at the top, other
+                        servers are listed below that. Use the 'View' link to the right to view the server details
+                        including associating servers with tracks.
+                    </div>
+
+                    <h5><em>Record the outcome of a test, or just add a comment/feedback</em></h5>
+                    <div style="margin-left: 20px">
+
+                        Only tracks that have been set up for testing by adding scenarios can have outcomes applied.
+                        Select the track in the <span class="tabName" ng-click="input.mainTabActive = ui.tabTrack">Tracks</span> tab, then the 'Testing' sub-tab to the right.
+                        (There's also an option to add a scenario directly from the testing sub-tab if there are none). There
+                        is <a href="https://youtu.be/GRcFGlnHKo0" target="_blank">a short video</a> available.
+
+                        <ol>
+                            <li>Select the Track, then the Testing and feedback sub-tab</li>
+                            <li>Select the scenario you wish to add the feedback to. (Or add the scenario if there are none).
+                                Existing results are shown in a table</li>
+                            <li>Click the 'Add new result' link. This will display the modal dialog where the feedback
+                                can be entered</li>
+                        </ol>
+
+                    </div>
+
+                    <h5><em>Review test results / comments for a track</em></h5>
+                    <div style="margin-left: 20px">
+                        These are viewed from the Tracks Testing sub-tab (where new ones can also be entered). They are
+                        also visible in the Report sub-tab, which has a download option. There's
+                        also a <span class="tabName" ng-click="input.mainTabActive = ui.tabResults">Test results</span> tab where outcomes for all tracks can be found.
+                    </div>
+                </div>
+            </div>
+        </uib-tab>
+        <uib-tab heading="Summary of this event">
+            <br/>
+            <table class="table table-condensed table-bordered">
+                <tr><th>Track</th><th>Description</th><th>Scenarios</th></tr>
+                <tr ng-repeat = "track in tracks">
+                    <td>
+                        <div class="clickable" ng-click="selectTrack(track,true)">
+                            {{track.name}}
+                        </div>
+                    </td>
+                    <td width="30%">{{track.description}}</td>
+                    <td>
+                        <table class="table table-condensed">
+
+                                <tr ng-repeat="scen in track.scenarios">
+                                    <td>{{scen.name}}</td>
+                                    <td>{{scen.description}}</td>
+                                </tr>
+
+                        </table>
+
+                    </td>
+                    <!--
+                    <td>
+                        <div ng-repeat = "link in track.links">
+                            {{link.name}} {{link.description}}
+                        </div>
+                    </td>
+                    -->
+                    <!--
+                    <td><pre>{{track | json}}</pre></td>
+                    -->
+                </tr>
+            </table>
+
+        </uib-tab>
+    </uib-tabset>
+
+
+
+
+</div>
+
+
+<div ng-hide="eventConfig.key == 'public' || eventConfig.key == 'con27'">
+    Welcome to conman for the event with the key: {{eventConfig.key}}
+</div>
+
+</div>
