@@ -20,6 +20,70 @@
     <div ng-show="eventConfig.alert" class="alert alert-warning text-center">{{eventConfig.alert}}</div>
 
     <uib-tabset>
+        <uib-tab heading="Summary of this event">
+            <br/>
+            <table class="table table-condensed table-bordered">
+                <tr><th>Track</th><th>Description</th><th></th></tr>
+                <tr ng-repeat = "track in tracks">
+                    <td>
+                        <div class="clickable" ng-click="selectTrack(track,true)">
+                            {{track.name}}
+                        </div>
+                    </td>
+                    <td width="30%">
+                     <!--   {{track.description}} -->
+                        <p ng-bind-html="track.description | markDown"></p>
+                    </td>
+
+                    <td>
+                        <strong>Scenarios</strong>
+                        <table class="table table-condensed table-bordered">
+
+                            <tr ng-repeat="scen in track.scenarios">
+                                <td width="20%">{{scen.name}}</td>
+                                <td>
+                                    <p ng-bind-html="scen.description | markDown"></p>
+                                   <!-- {{scen.description}}-->
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <strong>Roles</strong>
+                        <table class="table table-condensed table-bordered">
+
+                            <tr ng-repeat="role in track.clientRoles">
+                                <td width="20%">{{role.name}}</td>
+                                <td>{{role.description}}</td>
+                                <td width="10%">Client</td>
+
+                            </tr>
+                            <tr ng-repeat="role in track.serverRoles">
+                                <td width="20%">{{role.name}}</td>
+                                <td>{{role.description}}</td>
+                                <td width="10%">Server</td>
+
+                            </tr>
+                        </table>
+
+
+                    </td>
+
+
+                    <!--
+                    <td>
+                        <div ng-repeat = "link in track.links">
+                            {{link.name}} {{link.description}}
+                        </div>
+                    </td>
+                    -->
+                    <!--
+                    <td><pre>{{track | json}}</pre></td>
+                    -->
+                </tr>
+            </table>
+
+        </uib-tab>
         <uib-tab heading="General information">
             <div class="row">
                 <div class="col-md-6">
@@ -184,42 +248,8 @@
                 </div>
             </div>
         </uib-tab>
-        <uib-tab heading="Summary of this event">
-            <br/>
-            <table class="table table-condensed table-bordered">
-                <tr><th>Track</th><th>Description</th><th>Scenarios</th></tr>
-                <tr ng-repeat = "track in tracks">
-                    <td>
-                        <div class="clickable" ng-click="selectTrack(track,true)">
-                            {{track.name}}
-                        </div>
-                    </td>
-                    <td width="30%">{{track.description}}</td>
-                    <td>
-                        <table class="table table-condensed">
 
-                                <tr ng-repeat="scen in track.scenarios">
-                                    <td>{{scen.name}}</td>
-                                    <td>{{scen.description}}</td>
-                                </tr>
 
-                        </table>
-
-                    </td>
-                    <!--
-                    <td>
-                        <div ng-repeat = "link in track.links">
-                            {{link.name}} {{link.description}}
-                        </div>
-                    </td>
-                    -->
-                    <!--
-                    <td><pre>{{track | json}}</pre></td>
-                    -->
-                </tr>
-            </table>
-
-        </uib-tab>
     </uib-tabset>
 
 
