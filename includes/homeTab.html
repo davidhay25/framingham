@@ -36,18 +36,35 @@
                     </td>
 
                     <td>
-                        <strong>Scenarios</strong>
-                        <table class="table table-condensed table-bordered">
 
-                            <tr ng-repeat="scen in track.scenarios">
-                                <td width="20%">{{scen.name}}</td>
-                                <td>
-                                    <p ng-bind-html="scen.description | markDown"></p>
-                                   <!-- {{scen.description}}-->
-                                </td>
-                            </tr>
 
-                        </table>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Roles</strong>
+                                <ul>
+                                    <li ng-repeat="role in track.serverRoles">
+                                        {{role.name}}
+                                    </li>
+                                    <li ng-repeat="role in track.clientRoles">
+                                        {{role.name}}
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="col-md-8">
+                                <strong>Scenarios</strong>
+                                <ul>
+                                    <li ng-repeat="scen in track.scenarios">
+                                        {{scen.name}}
+                                    </li>
+                                </ul>
+                            </div>
+
+                            </div>
+                        </div>
+
+
+                        <!--
 
                         <strong>Roles</strong>
                         <table class="table table-condensed table-bordered">
@@ -65,6 +82,22 @@
 
                             </tr>
                         </table>
+
+                        <strong>Scenarios</strong>
+                        <table class="table table-condensed table-bordered">
+
+                            <tr ng-repeat="scen in track.scenarios">
+                                <td width="20%">{{scen.name}}</td>
+                                <td>
+                                    <p ng-bind-html="scen.description | markDown"></p>
+                                   <!-- {{scen.description}}-->
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+-->
 
 
                     </td>
