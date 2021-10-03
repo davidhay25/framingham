@@ -1,6 +1,6 @@
 
 <div>
-<div>
+<tr>
 
 
     <h3 class="center-text">Welcome to Connectathon Manager</h3>
@@ -25,12 +25,12 @@
             <table class="table table-condensed table-bordered">
                 <tr><th>Track</th><th>Description</th><th></th></tr>
                 <tr ng-repeat = "track in tracks">
-                    <td>
+                    <td width="25%">
                         <div class="clickable" ng-click="selectTrack(track,true)">
                             {{track.name}}
                         </div>
                     </td>
-                    <td width="30%">
+                    <td width="40%">
                      <!--   {{track.description}} -->
                         <p ng-bind-html="track.description | markDown"></p>
                     </td>
@@ -43,10 +43,20 @@
                                 <strong>Roles</strong>
                                 <ul>
                                     <li ng-repeat="role in track.serverRoles">
-                                        {{role.name}}
+                                          <span class="popoverHint"
+                                                uib-popover-html="role.description"
+                                                popover-placement="top"
+                                                popover-append-to-body = true
+                                                popover-trigger="'mouseenter'">{{role.name}}</span>
                                     </li>
                                     <li ng-repeat="role in track.clientRoles">
-                                        {{role.name}}
+
+                                        <span class="popoverHint"
+                                              uib-popover-html="role.description"
+                                              popover-placement="top"
+                                              popover-append-to-body = true
+                                              popover-trigger="'mouseenter'">{{role.name}}</span>
+
                                     </li>
 
                                 </ul>
@@ -55,13 +65,18 @@
                                 <strong>Scenarios</strong>
                                 <ul>
                                     <li ng-repeat="scen in track.scenarios">
-                                        {{scen.name}}
+                                        <span class="popoverHint"
+                                                uib-popover-html="scen.description"
+                                                popover-placement="top"
+                                                popover-append-to-body = true
+                                                popover-trigger="'mouseenter'">{{scen.name}}</span>
+
                                     </li>
                                 </ul>
                             </div>
 
                             </div>
-                        </div>
+                        </tr>
 
 
                         <!--
@@ -90,7 +105,7 @@
                                 <td width="20%">{{scen.name}}</td>
                                 <td>
                                     <p ng-bind-html="scen.description | markDown"></p>
-                                   <!-- {{scen.description}}-->
+
                                 </td>
                             </tr>
 
@@ -132,7 +147,7 @@
                                 Connectathon home page in confluence
                             </a>
                         </li>
-                        <li>The whova Virtual Event page</li>
+                        <li>The whova Virtual Event page (if this is an HL7 Connectathon)</li>
                         <li> <a href="https://chat.fhir.org/#recent_topics" target="_blank">
                             Zulip chat streams (specific track links links are found with each track)</a>
                         </li>
@@ -291,8 +306,11 @@
 </div>
 
 
+<!--
 <div ng-hide="eventConfig.key == 'public' || eventConfig.key == 'con27'">
     Welcome to conman for the event with the key: {{eventConfig.key}}
 </div>
+
+-->
 
 </div>
