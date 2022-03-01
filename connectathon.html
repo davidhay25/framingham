@@ -1613,11 +1613,20 @@
 
                     <div ng-controller="serverDisplayCtrl">
                     <uib-tabset>
-                        <uib-tab heading = "List">
+                        <uib-tab heading = "List all Servers">
 
                             <div>
+
                                 <button class="btn btn-link pull-right" ng-click="editServer()">New Server</button>
+
+                                <div class="pull-right" style="padding-top: 8px;margin-right: 30px">
+                                    <checkbox  ng-model="input.filterByTerm"></checkbox> <span >Only show Terminology</span>
+                                </div>
+
                             </div>
+
+
+
                             <table class="table table-bordered">
                             <tr><th>Name</th><th>Url</th><th>FHIR Version</th>
                              <!--   <th>Last Status</th>-->
@@ -1625,7 +1634,7 @@
                                 <th>Description</th><th>Tracks</th><th>Notes</th>
 
                                 </tr>
-                            <tr ng-repeat="svr in allServers">
+                            <tr ng-repeat="svr in allServers" ng-show="! input.filterByTerm || (input.filterByTerm && svr.isTerminology)">
                                 <td>
                                     <div class="clickable" ng-click="editServer(svr)">
                                         {{svr.name}}
@@ -1729,7 +1738,9 @@
 
                         </uib-tab>
 
-                        <uib-tab heading = "Search">
+
+
+                        <uib-tab heading = "Search for supported resource">
                                 <br/>
                             <div class="row">
                                 <div class = "col-md-3">
@@ -1809,6 +1820,45 @@
 
 
                         </uib-tab>
+
+                        <uib-tab heading = "Queries across Terminology servers">
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="btn-group">
+                                        <label class="btn btn-success" ng-model="input.termFilterType" uib-btn-radio="'CodeSystem'">CodeSystem</label>
+                                        <label class="btn btn-success" ng-model="input.termFilterType" uib-btn-radio="'ValueSet'">ValueSet</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control"
+                                           placeholder="Url to find"
+                                           ng-model="input.urlFilter"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-primary"
+                                            ng-show="input.termFilterType && input.urlFilter"
+                                            ng-click="searchTermServerForResource(input.termFilterType,input.urlFilter)">Search</button>
+
+                                </div>
+                            </div>
+                            <br/>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Server name</th><th>Address</th><th>Found</th><th>Message</th>
+                                </tr>
+                                <tr ng-repeat="row in termSearchResults">
+                                    <td>{{row.server.name}}</td>
+                                    <td>{{row.server.address}}</td>
+                                    <td>{{row.found ? "Yes" : "No"}}</td>
+                                    <td>{{row.msg}}</td>
+                                    <td><button class="btn btn-link" ng-click="editServer(row.server)">View server</button> </td>
+                                </tr>
+                            </table>
+
+                        </uib-tab>
+
                     </uib-tabset>
                     </div>
 

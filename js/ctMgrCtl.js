@@ -14,8 +14,6 @@ angular.module("sampleApp")
             $scope.input.Roletype = 'client'    //default type
 
 
-
-
             function buildFullIGList() {
                 //construct the list of all IG's for this event from the IGs in the tracks
                 $scope.hashAllIGs = {}      //This will become

@@ -103,6 +103,19 @@
                 <br/>
 
                 <div class="row">
+                    <div class="col-md-2 col-sm-2">
+                        Is terminology
+                    </div>
+                    <div class="col-md-5 col-sm-5">
+                        <checkbox ng-model="input.isTerminology"></checkbox>
+                    </div>
+                    <div class="col-md-5 col-sm-5">
+                        <em>Set true if server supports terminology</em>
+                    </div>
+                </div>
+                <br/>
+
+                <div class="row">
                     <div class="col-md-12 col-sm-12">
                         <textarea class="form-control" rows="3" placeholder="An optional description of the server"
                                   ng-model = "input.description"></textarea>
@@ -247,7 +260,6 @@
                     <checkbox ng-model="input.tracks[track.id]"></checkbox> {{track.name}}
                 </div>
 
-
             </uib-tab>
 
             <uib-tab>
@@ -258,6 +270,40 @@
                 <br/>
 
                 <pre>{{SMART | json}}</pre>
+            </uib-tab>
+
+            <uib-tab heading="Terminology" ng-show="input.isTerminology">
+
+                <uib-tabset>
+                    <uib-tab heading = "Operations">
+                        <table class="table table-condensed table-bordered">
+                            <tr ng-repeat="row in termOps">
+                                <td>{{row.type}}</td>
+                                <td>{{row.name}}</td>
+                                <td>{{row.definition}}</td>
+                                <td>{{row.documentation}}</td>
+                            </tr>
+                        </table>
+                    </uib-tab>
+                    <uib-tab ng-show = "false" heading = "CodeSystems">
+                        <div class="row">
+                            <div class="col-sm-3 col-md-3">
+                                <input type="text" ng-model="input.csFilter"/>
+                            </div>
+                            <div class="col-sm-3 col-md-3">
+                                <button class="btn btn-link" ng-click="searchCodeSystem()">Search</button>
+                            </div>
+                        </div>
+
+
+                        {{allCS | json}}
+
+
+                    </uib-tab>
+
+                </uib-tabset>
+
+
             </uib-tab>
 
         </uib-tabset>

@@ -291,6 +291,37 @@ angular.module("sampleApp")
                 )
             }
 
+            $scope.searchTermServerForResource = function(type,url) {
+                $scope.termSearchResults = []
+                //url = "http://snomed.info/sct"
+                $scope.allServers.forEach(function (svr){
+                    if (svr.isTerminology) {
+                        let qry = svr.address + type + "?url=" + url
+                        let item = {server:svr,msg:'Searching...'}
+                        $scope.termSearchResults.push(item)
+
+                        $http.get(qry).then(
+                            function(data) {
+                                //let item = {server:svr,message:'Searching...'}
+                               // $scope.termSearchResults.push(item)
+                                delete item.msg
+                                if (data.data.entry && data.data.entry.length > 0) {
+                                    item.found = true
+                                } else {
+                                    item.found = false
+                                }
+                                //$scope.termSearchResults.push(item)
+                            }, function(err) {
+                                item.msg = "Error accessing server (Status:" + err.status +")"
+                                //let item = {server:svr,msg:"Error accessing server"}
+                            }
+                        )
+                    }
+
+                })
+            }
+
+
             $scope.editServerFromSearch = function(serverId) {
                 let ar = $scope.allServers.filter(item => item.id == serverId)
                 if (ar.length == 1) {

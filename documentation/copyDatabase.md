@@ -5,7 +5,7 @@ Create a new event database from an existing one
 > use cms
 switched to db cms
 > db.copyDatabase("cms","cmsClone")
-
+(this one works on the server - the dump/restore didn't)
 
 
 

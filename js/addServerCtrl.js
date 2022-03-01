@@ -45,6 +45,7 @@ angular.module("sampleApp")
                         $scope.fhirVersion = cs.fhirVersion;
                         $scope.CS = cs;
 
+
                         //update the description from the CS
 
                         if ($scope.input.description == "") {
@@ -63,6 +64,9 @@ angular.module("sampleApp")
 
 
                         getSMARTEndpoints($scope.SMART,cs);
+
+                        $scope.termOps = getTerminologyOps(cs)
+
 
 
                         //extract key data from the CapabilityStatement
@@ -124,6 +128,8 @@ angular.module("sampleApp")
                 $scope.fhirVersion = existingServer.fhirVersion;
                 $scope.SMART = existingServer.SMART;
 
+                $scope.input.isTerminology = existingServer.isTerminology
+
                 $scope.input.tracks = {}
                 $scope.input.trackCount = 0
                 if (existingServer.tracks) {
@@ -161,6 +167,57 @@ angular.module("sampleApp")
                 $scope.selectedPerson = ecosystemSvc.getCurrentUser();
             }
 
+
+            //retrieve all the terminololoy operations supported by this server
+            getTerminologyOps = function(cs) {
+                let ar = []
+                cs.rest.forEach(function(rest){
+                    if (rest.mode == 'server') {
+                        //check for system level operations
+                        if (rest.operation) {
+                            rest.operation.forEach(function(op){
+                                let item = {type:"system",name:op.name,definition:op.definition,documentation:op.documentation}
+                                ar.push(item)
+                            })
+
+                            // ar = ar.concat(resource.operation)
+                        }
+
+                        //check for type level operations
+                        rest.resource.forEach(function (resource){
+                            if (['ValueSet','CodeSystem','ConceptMap'].indexOf(resource.type) !== -1) {
+                                if (resource.operation) {
+                                    resource.operation.forEach(function(op){
+                                        let item = {type:resource.type,name:op.name,definition:op.definition,documentation:op.documentation}
+                                        ar.push(item)
+                                    })
+
+                                   // ar = ar.concat(resource.operation)
+                                }
+
+                            }
+                        })
+                    }
+                })
+                console.log(ar)
+
+                return ar
+            }
+
+
+            $scope.searchCodeSystemDEP = function(filter) {
+                let qry = "proxyfhir/"+$scope.input.address+"CodeSystem"
+
+                $http.get(qry).then(
+                    function(data){
+                        $scope.allCS = data.data;
+                    },
+                    function(err) {
+                        modalService.showModal({},{bodyText:'There was no valid response to the call '+url})
+                    }
+                )
+
+            }
 
 
             $scope.contactSelected = function(item){
@@ -249,6 +306,7 @@ angular.module("sampleApp")
                     server.UIaddress = $scope.input.UIaddress;
                     server.contact = [$scope.selectedPerson];
                     server.fhirVersion = $scope.fhirVersion;
+                    server.isTerminology = $scope.input.isTerminology;
 
                     //now the ecosystem roles
                     server.serverRoles = []
