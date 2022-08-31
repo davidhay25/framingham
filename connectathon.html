@@ -289,7 +289,7 @@
             <div class="col-md-3 col-sm-3">
                 <div class="navbar-text pull-right">
                     <a href="https://www.lyniate.com/" target="_blank">
-                        <img  src="/icons/supported_by_lyniate.png"/>
+                        <img  src="/icons/sb-intersystems.png"/>
                     </a>
 
                 </div>
@@ -1628,12 +1628,9 @@
 
 
                             <table class="table table-bordered">
-                            <tr><th>Name</th><th>Url</th><th>FHIR Version</th>
-                             <!--   <th>Last Status</th>-->
-
-                                <th>Description</th><th>Tracks</th><th>Notes</th>
-
-                                </tr>
+                            <tr>
+                                <th>Name</th><th>Url</th><th>FHIR Version</th><th>Description</th><th>Tracks</th><th>Notes</th>
+                            </tr>
                             <tr ng-repeat="svr in allServers" ng-show="! input.filterByTerm || (input.filterByTerm && svr.isTerminology)">
                                 <td>
                                     <div class="clickable" ng-click="editServer(svr)">
@@ -1666,11 +1663,14 @@
 
                                     </div>
                                     <div ng-show="svr.UIaddress">
-                                        <hr/>
+                                       
                                         <strong>UI: </strong><a target="_blank" ng-href = "{{svr.UIaddress}}">
                                             {{svr.UIaddress}}
                                         </a>
-
+                                    </div>
+                                    <div ng-show="svr.proxy">
+                                        <strong>Proxy</strong>
+                                        {{svr.proxy}}
 
                                     </div>
                                 </td>

@@ -57,7 +57,10 @@
                 <br/>
 
                 <div class="row">
-                    <div class="col-md-8 col-sm-8">
+                    <div class="col-md-1 col-sm-1">
+                        Base
+                    </div>
+                    <div class="col-md-7 col-sm-7">
                         <input type="text" class="form-control" ng-model="input.address"
                                placeholder="Enter the Url to the server FHIR root. Must expose a capabilityStatement"/>
                     </div>
@@ -70,10 +73,31 @@
                         </div>
                     </div>
                 </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-1 col-sm-1">
+                        Proxy
+                    </div>
+                    <div class="col-md-7 col-sm-7">
+                        <input type="text" class="form-control" ng-model="input.proxy"
+                               placeholder="Proxy server - eg Touchstone. Must expose a capabilityStatement"/>
+                    </div>
+
+                    <div class="col-md-4 col-sm-4">
+                        <button class="btn btn-link" ng-show="input.proxy"
+                                ng-click="checkServerExists(true,input.proxy)">Check CapabilityStatement</button>
+                        <div class="pull-right" ng-show="waiting">
+                            <img src="css/ajax_loader_blue_32.gif"/>
+                        </div>
+                    </div>
+                </div>
 
                 <br/>
                 <div class="row">
-                    <div class="col-md-8 col-sm-8">
+                    <div class="col-md-1 col-sm-1">
+                        UI
+                    </div>
+                    <div class="col-md-7 col-sm-7">
                         <input type="text" class="form-control" ng-model="input.UIaddress"
                                placeholder="The Url of any User Interface the server exposes"/>
                     </div>

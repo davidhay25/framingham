@@ -16,17 +16,23 @@ angular.module("sampleApp")
 
             $scope.eventConfig = ecosystemSvc.getEventConfig();
 
-            $scope.checkServerExists = function(hideAlert) {
+            $scope.checkServerExists = function(hideAlert,serverBase) {
 
-                if ($scope.input.address.substr(-1) !== '/') {
-                    $scope.input.address += '/';
+                //this is a duplication, but does set the
+            //    if ($scope.input.address.substr(-1) !== '/') {
+                //    $scope.input.address += '/';
+              //  }
+
+                serverBase = serverBase || $scope.input.address
+
+                if (serverBase.substr(-1) !== '/') {
+                    serverBase += '/';
                 }
 
-                //proxyfhir
 
                 //proxy the query through the server to avoid CORS being needed...
-                url = '/proxyfhir/' + $scope.input.address + 'metadata';
-
+                let url = '/proxyfhir/' + serverBase + 'metadata';
+                //url = '/proxyfhir/' + $scope.input.address + 'metadata';
                 //url = $scope.input.address + 'metadata';
                 $scope.waiting = true;
 
@@ -122,6 +128,7 @@ angular.module("sampleApp")
                 $scope.input.notes = existingServer.notes;
                 $scope.input.description = existingServer.description ;
                 $scope.input.address = existingServer.address ;
+                $scope.input.proxy = existingServer.proxy ;
                 $scope.input.UIaddress = existingServer.UIaddress ;
 
                 $scope.allHooks = existingServer.allHooks;
@@ -303,6 +310,7 @@ angular.module("sampleApp")
                     server.notes = $scope.input.notes;
                     server.description = $scope.input.description;
                     server.address = $scope.input.address;
+                    server.proxy = $scope.input.proxy;
                     server.UIaddress = $scope.input.UIaddress;
                     server.contact = [$scope.selectedPerson];
                     server.fhirVersion = $scope.fhirVersion;
