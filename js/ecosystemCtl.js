@@ -3,7 +3,7 @@
 angular.module("sampleApp")
     .controller('ecosystemCtrl',
         function ($rootScope,$scope,$http,modalService,ecosystemSvc,$window,$timeout,
-                  $localStorage,$uibModal,ecoUtilitiesSvc,$filter) {
+                  $localStorage,$uibModal,ecoUtilitiesSvc,$filter,exportSvc) {
 
            // $http.post("/startup",{});  //record access
             $scope.ecosystemSvc = ecosystemSvc;
@@ -21,16 +21,7 @@ angular.module("sampleApp")
             $scope.ui.tabServers = 5;
             $scope.ui.tabResults= 6;
             $scope.ui.tabParticipation = 7;
-/*
-            $http.post('/stats/login',{module:'comMan'}).then(
-                function(data){
 
-                },
-                function(err){
-                    console.log('error accessing clinfhir to register access',err)
-                }
-            );
-*/
             //which track type to display
             $scope.input.trackListDisplay = 'all';     //can be changed by event.type...
 
@@ -95,16 +86,7 @@ angular.module("sampleApp")
 
                         //get the current stats
                         $scope.getStatistics()
-                        /*
-                        $http.get("/getStats").then(
-                            function(data) {
-                                console.log(data.data)
-                            },
-                            function(err) {
-                                console.log(err)
-                            }
-                        )
-*/
+
                         //now get the event configuration from the event database (admin).
                         $http.get("config/admin/").then(
                             function(data) {
@@ -473,6 +455,8 @@ angular.module("sampleApp")
                     }
                 }).result.then(function(){
                     $scope.allIGs = ecosystemSvc.getIGs()
+                    $scope.hashIGs = ecosystemSvc.getIGsHash();
+
                 })
             }
 
@@ -737,6 +721,7 @@ angular.module("sampleApp")
                     //redraw charts (will handle nulls)
                     $scope.selectTrackResults($scope.selectedTrack);
                     $scope.selectScenarioResults($scope.selectedScenarioSummary);
+                   // $scope.makeServerExport()
 
                 })
             };
@@ -750,9 +735,8 @@ angular.module("sampleApp")
 
 
                         $scope.allIGs = ecosystemSvc.getIGs()
-
-
-
+                        //needed for display of supported IGs in server
+                        $scope.hashIGs = ecosystemSvc.getIGsHash();
 
                         console.log("object size: " + ecoUtilitiesSvc.getObjectSize(vo));
 
@@ -765,11 +749,20 @@ angular.module("sampleApp")
                         })
 
 
+
+
                         $scope.allClients =  ecosystemSvc.getAllClients();
                         $scope.allServers = ecosystemSvc.getAllServers();
                         $scope.allPersons = ecosystemSvc.getAllPersons();
+                        $scope.hashAllPersons = vo.hashAllPersons
                         $scope.filteredAllPersons = angular.copy($scope.allPersons)
+
+
+
                         //$scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
+
+                        $scope.makeServerExport()
+                        //$scope.allServers,$scope.hashTracks,$scope.hashIGs,$scope.allPersons
 
                         let ms = new Date().getTime() - now;
                         console.log("Load time: "+ ms + "ms")
@@ -821,24 +814,7 @@ angular.module("sampleApp")
 
                 console.log($scope.eventReport)
 
-/*
 
-                function makePartPie() {
-
-
-                    var summary = $scope.resultsSummary.scenario[scenario.name];
-                    if (summary) {
-                        if (summary.pass > 0) {
-                            $scope.chartLabels.push('pass ');// + summary.pass);
-                            $scope.chartData.push(summary.pass)
-                            $scope.chartColors.push('#00cc00')
-                        }
-                        if (summary.fail > 0) {
-
-                        }
-                    }
-
-                } */
 
                 $scope.partChartOptions = {legend:{display:true,position:'left'}};
 
@@ -926,11 +902,7 @@ angular.module("sampleApp")
 
 
                     })
-               /*     arResultsThisTrack.forEach(function (result){
-                        hash[result.scenaroid] = hash[result.scenaroid] || 0
-                        hash[result.scenaroid] ++
-                    })
-                    */
+
                 }
                 //return hash
             }
@@ -1016,6 +988,10 @@ angular.module("sampleApp")
                         event : function() {
                             return $scope.eventConfig;
                         }
+
+
+
+
                     }
                 }).result.then(function(vo){
                     //var url = "/config/track";
@@ -1098,6 +1074,9 @@ angular.module("sampleApp")
                 $scope.personSummary = summary;
                 $scope.input.currentUser = person;
 
+                //update the person object - eg for the server summary
+                $scope.hashAllPersons[person.id] = person
+                $scope.makeServerExport()
             };
 
             $scope.selectTrackResults = function(track) {
@@ -1370,7 +1349,12 @@ angular.module("sampleApp")
                         },
                         user : function(){
                             return $scope.currentUser;
+                        },
+                        allIGs : function(){
+                            return $scope.allIGs;
                         }
+
+
                     }
 
                 }).result.then(
@@ -1567,4 +1551,41 @@ angular.module("sampleApp")
 
 
 
+            $scope.makeServerExport = function () {
+
+                let serverExport = exportSvc.makeServerExport($scope.allServers,$scope.hashTracks,$scope.hashIGs,$scope.hashAllPersons)
+                console.log(serverExport)
+                let downLoadJson = angular.toJson(serverExport)
+
+                $scope.downloadLinkServer = window.URL.createObjectURL(new Blob([downLoadJson],{type:"application/json"}))
+                var now = moment().format();
+                $scope.downloadLinkServerName =  'Servers_' + now + '.json';
+            }
+
+            $scope.showServer = function(svr) {
+                let display = true
+
+                //filter by name
+                if ($scope.input.filterServer && svr.name) {
+                    let filt = $scope.input.filterServer.toLowerCase()
+                    let name = svr.name.toLowerCase()
+                    if (name.indexOf(filt) == -1) {display = false}
+
+
+                }
+
+                //terminology
+                if ($scope.input.filterByTerm) {
+                    if (! svr.isTerminology) {display = false}
+                }
+
+                //the status element is used both for http status & recording deleted - but works OK
+                if (svr.status == 'deleted') {
+                    display = false
+                }
+
+                return display
+
+
+            }
     });

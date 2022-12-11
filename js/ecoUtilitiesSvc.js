@@ -1,9 +1,20 @@
 angular.module("sampleApp").service('ecoUtilitiesSvc', function($q,$http,modalService,$localStorage) {
 
+    let termService = "https://r4.ontoserver.csiro.au/fhir/"
 
     return {
 
-        findServersSupportingResource : function (type,) {
+        expandVSbyUrl : function (url) {
+            var deferred = $q.defer();
+            let qry = `${termService}ValueSet/$expand?url=${url}`
+            $http.get(qry).then(
+                function(data) {
+                    deferred.resolve(data.data)     //will be an expanded VS
+                }, function(err) {
+                    deferred.reject(err)
+                }
+            )
+            return deferred.promise
 
         },
 

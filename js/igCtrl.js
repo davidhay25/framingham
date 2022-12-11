@@ -15,6 +15,11 @@ angular.module("sampleApp")
                 let ig = {}
                 if (IG) {
                     ig.id = IG.id
+                    if (! IG.id) {
+                        alert("There was an error updating this IG entry. Please reload the page and try again")
+                        $scope.$dismiss();
+                        return
+                    }
                 } else {
                     ig.id = "id" + new Date().getTime();
                 }

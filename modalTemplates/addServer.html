@@ -18,6 +18,9 @@
                 <div class="pull-right">
                     <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
                 </div>
+                <button ng-show="input.name"
+                        class="btn btn-primary pull-right" ng-click="addServer()">Save</button>
+
             </div>
         </div>
     </div>
@@ -115,6 +118,27 @@
 
                 <div class="row">
                     <div class="col-md-2 col-sm-2">
+                        Connection type
+                    </div>
+
+
+                    <div class="col-md-5 col-sm-5">
+                        <select class="form-control" ng-model="input.selectedConnectionType"
+                                ng-options = "concept.display for concept in connectionTypes"></select>
+
+                    </div>
+
+                    <div class="col-md-5 col-sm-5">
+                        <em>Used by the National Directory track. Can leave blank.</em>
+                    </div>
+
+                </div>
+                <br/>
+
+
+
+                <div class="row">
+                    <div class="col-md-2 col-sm-2">
                         FHIR version
                     </div>
                     <div class="col-md-5 col-sm-5">
@@ -209,69 +233,6 @@
 
             </uib-tab>
 
-            <!--
-            <uib-tab>
-                <uib-tab-heading>
-                    Ecosystem roles
-                    <span class="badge" ng-show="input.serverRoleCount > 0">{{input.serverRoleCount}}</span>
-                </uib-tab-heading>
-                <br/>
-
-                <div class="row">
-                    <div class="col-md-6 col-sm-6">
-                        <div ng-repeat="serverRole in eventConfig.serverRoles">
-                            <span  uib-popover={{serverRole.definition}}
-                                   popover-placement="top"
-                                   popover-trigger="'mouseenter'">
-                                <input type="checkbox" model="input.serverRole[serverRole.code]"
-                                       ng-checked = "input.serverRole[serverRole.code]"
-                                       ng-click = "input.serverRole[serverRole.code] = ! input.serverRole[serverRole.code]"
-
-                                /> {{serverRole.display}}
-                            </span>
-
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6">
-                        <em>
-                            <p>Allows you to specify what 'ecosystem' roles your server might play (as opposed to the more
-                                specific roles within a track scenario). Mouse-over the
-                                roles to get a short explanation.</p>
-                            <p>Optional, and can safely be ignored...</p>
-                        </em>
-
-                    </div>
-                </div>
-
-
-
-
-            </uib-tab>
-
-            -->
-
-            <!--
-
-            <uib-tab ng-show="input.address">
-                <uib-tab-heading>
-                    CDS-Hooks
-                    <span class="badge" ng-show="allHooks.services.length > 0">{{allHooks.services.length}}</span>
-                </uib-tab-heading>
-                <br/>
-
-
-                <table class="table table-bordered">
-
-                    <tr ng-repeat="hook in allHooks.services">
-                        <td>
-                            <pre>{{hook | json}}</pre>
-                        </td>
-
-                    </tr>
-                </table>
-                <button class="btn btn-link" ng-click="loadHooks()">Check for hooks</button>
-            </uib-tab>
--->
 
             <uib-tab >
                 <uib-tab-heading>
@@ -286,6 +247,19 @@
 
             </uib-tab>
 
+            <uib-tab >
+                <uib-tab-heading>
+                    IGs
+                    <span class="badge">{{input.igCount}}</span>
+                </uib-tab-heading>
+                <em>Implementation Guides that this server supports</em>
+
+                <div ng-repeat = "ig in allIGs">
+                    <checkbox ng-model="input.igs[ig.id]"></checkbox> {{ig.name}}
+                </div>
+
+            </uib-tab>
+
             <uib-tab>
                 <uib-tab-heading>
                     Security
@@ -294,6 +268,29 @@
                 <br/>
 
                 <pre>{{SMART | json}}</pre>
+            </uib-tab>
+
+            <uib-tab heading="Extra Track info">
+                <em>Additional information for servers participating in specific tracks.</em>
+
+                <br/>
+
+                <h4>National Directory</h4>
+
+                <div class="row">
+                    <div class="col-md-3 col-sm-3">
+                        Dynamic Registration
+                    </div>
+                    <div class="col-md-5 col-sm-5">
+                        <checkbox ng-model="input.dynamicRegistration"></checkbox>
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        <em>Set true if server supports dynamic registration</em>
+                    </div>
+                </div>
+                <br/>
+
+
             </uib-tab>
 
             <uib-tab heading="Terminology" ng-show="input.isTerminology">
@@ -333,28 +330,43 @@
         </uib-tabset>
 
 
+        <br/>
         <div class="row">
             <div class="col-md-6 col-sm-6">
+                <!--
                 <div ng-show="input.address">
                     <a target="_blank" ng-href = "http://clinfhir.com/query.html#{{input.address}}">
                         Load clinFHIR Server Query for this server
                     </a>
                 </div>
+                -->
 
             </div>
+
             <div class="col-md-6 col-sm-6">
-                <button ng-show="user.isAdmin && editingServer" style="margin-left: 8px"
+
+
+                <button ng-show="canDelete" style="margin-left: 8px"
+
                         class="btn btn-danger pull-right" ng-click="disableServer()">Disable server</button>
 
-                <button ng-show="input.name"
-                        class="btn btn-primary pull-right" ng-click="addServer()">{{saveText}}</button>
+                <!--<button ng-show="user.isAdmin && editingServer" style="margin-left: 8px"-->
             </div>
         </div>
     </div>
 
     <div class="modal-header">
         <div class="row">
-            <div class="col-md-12 col-sm-12">
+
+            <div class="col-md-6 col-sm-6">
+                <div ng-show="input.address">
+                    <a target="_blank" ng-href = "http://clinfhir.com/query.html#{{input.address}}">
+                        Load clinFHIR Server Query for this server
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-6">
                 <em ng-show="input.address">
                     <div ng-hide="CS">
                         Click the 'Check CapabilityStetement link to read the Servers CapabilityStatement. After this,

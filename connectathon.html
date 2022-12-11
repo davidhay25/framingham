@@ -176,30 +176,6 @@
     <script src="js/adminCtrl.js"></script>
     <script src="js/serverDisplayCtrl.js"></script>
 
-    <!--
-        <script src="directive/vsViewer/vsViewer.js"></script>
-    <script src="directive/tblResource/tblResourceDir.js"></script>
-
-
-    <script src="js/cofCtrl.js"></script>
-    <script src="js/cofSvc.js"></script>
-    <script src="js/cofSummaryCtrl.js"></script>
-     <script src="js/importTrack.js"></script>
-       <script src="js/importGraphCtl.js"></script>
-        <script src="js/touchStone.js"></script>
-    <script src="js/lmCheckCtrl.js"></script>
-
-        <script src="js/lmSummaryCtrl.js"></script>
-    <script src="js/getDatatypeValueCtrl.js"></script>
-    <script src="js/getDatatypeValueSvc.js"></script>
-    <script src="js/allNotes.js"></script>
-
-  <script src="js/modellerFilters.js"></script>
-
- <script src="js/addElementCtrl.js"></script>
-  <script src="js/addProfileToScenario.js"></script>
-   <script src="js/selectPatientResourceCtrl.js"></script>
-    -->
 
     <script src="js/libs/elastic.js"></script>
     <script src="js/libs/angular-bootstrap-checkbox.js"></script>
@@ -213,7 +189,7 @@
 
     <script src="js/igCtrl.js"></script>
 
-
+    <script src="js/exportSvc.js"></script>
 
 </head>
 <body style="padding: 8px;padding-top: 80px" >
@@ -242,9 +218,6 @@
                 <div class="pull-left"><a href="eventConfig.details">Details</a> </div>
                 -->
             </div>
-
-
-
 
             <div class="col-md-3 col-sm-3">
 
@@ -1606,34 +1579,57 @@
                     </uib-tab-heading>
                     <br/>
 
+
                     <div>
+
+                        <a ng-show="downloadLinkServerName" class="btn btn-link pull-right" download="{{downloadLinkServerName}}"
+                           href="{{downloadLinkServer}}" title="{{downloadLinkServerName}}" >
+                            Download Servers Json
+                        </a>
+                        <!--
                         <button class="btn btn-link pull-right"
                                 ng-click="download('servers')">Download report as csv</button>
+                        -->
                     </div>
 
                     <div ng-controller="serverDisplayCtrl">
-                    <uib-tabset>
+                        <uib-tabset>
                         <uib-tab heading = "List all Servers">
 
-                            <div>
+                            <div class="row" style="padding-top: 8px; padding-bottom: 8px">
 
-                                <button class="btn btn-link pull-right" ng-click="editServer()">New Server</button>
-
-                                <div class="pull-right" style="padding-top: 8px;margin-right: 30px">
-                                    <checkbox  ng-model="input.filterByTerm"></checkbox> <span >Only show Terminology</span>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" ng-model="input.filterServer" placeholder="Server name filter"/>
                                 </div>
+                                <div class="col-md-1">
+                                    <i class="clickable glyphicon glyphicon-remove-sign "
+                                       ng-show="input.filterServer"
+                                       style="padding-top: 8px"
+                                       ng-click="input.filterServer = ''">
+                                    </i>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="pull-right" style="padding-top: 8px;margin-right: 30px">
+                                        <checkbox  ng-model="input.filterByTerm"></checkbox> <span >Only show Terminology</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <button class="btn btn-primary pull-right" ng-click="editServer()">New Server</button>
+                                </div>
+
+
 
                             </div>
 
 
-
-
-
                             <table class="table table-bordered">
                             <tr>
-                                <th>Name</th><th>Url</th><th>FHIR Version</th><th>Description</th><th>Tracks</th><th>Notes</th>
+                                <th>Name</th><th>Url</th><th>FHIR Version</th><th>Description</th><th>Tracks / IGs</th><th>Notes</th>
                             </tr>
-                            <tr ng-repeat="svr in allServers" ng-show="! input.filterByTerm || (input.filterByTerm && svr.isTerminology)">
+                            <tr ng-repeat="svr in allServers"
+                                ng-show="showServer(svr)">
                                 <td>
                                     <div class="clickable" ng-click="editServer(svr)">
                                         {{svr.name}}
@@ -1675,6 +1671,10 @@
                                         {{svr.proxy}}
 
                                     </div>
+                                    <div ng-show="svr.connectionType && svr.connectionType.length > 0">
+                                        <strong>Connection type:</strong>
+                                        {{svr.connectionType[0].display}}
+                                    </div>
                                 </td>
 
                                 <td>{{svr.fhirVersion}}</td>
@@ -1712,9 +1712,19 @@
                                         <div class="clickable" ng-click="selectTrack(hashTracks[trackId],true)">
                                             {{hashTracks[trackId].name}}
                                         </div>
+                                    </div>
+
+                                    <br/>
+
+                                    <div ng-repeat="igId in svr.igs">
+                                        <div class="clickable" ng-click="editIG(hashIGs[igId])">
+                                            {{hashIGs[igId].name}}
+                                        </div>
 
 
                                     </div>
+
+
 
                                 </td>
 
@@ -1863,10 +1873,6 @@
 
                     </uib-tabset>
                     </div>
-
-
-
-
 
                 </uib-tab>
 
@@ -2143,8 +2149,6 @@
 
 -->
                 </uib-tab>
-
-
 
                 <uib-tab heading="Participation report" select="makeEventReport()">
                     <br/>

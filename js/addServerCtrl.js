@@ -1,9 +1,10 @@
 angular.module("sampleApp")
     .controller('addServerCtrl',
-        function ($scope,ecosystemSvc,modalService,$http,existingServer,tracks,user) {
+        function ($scope,ecosystemSvc,modalService,$http,existingServer,tracks,user,allIGs,ecoUtilitiesSvc) {
 
             $scope.user = user;
             $scope.tracks = tracks;
+            $scope.allIGs = allIGs
             $scope.input = {};
             $scope.input.serverRole = {}
             $scope.saveText = "Add new Server";
@@ -14,14 +15,39 @@ angular.module("sampleApp")
 
             var serverExists = false;
 
+
+            //load the connection type. Added to support national directory and assuming the artifacts are
+            //loaded onto the Ontoserver repo
+            //IG - https://build.fhir.org/ig/HL7/fhir-directory-query/ValueSet-EndpointConnectionTypeVS.html
+            let vsConnectionTypeUrl = "http://clinfhir.com/fhir/ValueSet/connection-type"
+            ecoUtilitiesSvc.expandVSbyUrl(vsConnectionTypeUrl).then(
+            //$http.get("https://r4.ontoserver.csiro.au/fhir/ValueSet/conman-connection-type/$expand").then(
+            //$http.get("https://r4.ontoserver.csiro.au/fhir/ValueSet/EndpointConnectionTypeVS/$expand").then(
+                function(vs) {
+                    //console.log(data.data)
+                    if (vs.expansion && vs.expansion.contains) {
+                        $scope.connectionTypes = []
+                        let key
+                        if (existingServer && existingServer.connectionType &&  existingServer.connectionType.length > 0) {
+                             key = existingServer.connectionType[0].system + "|" +  existingServer.connectionType[0].code
+                        }
+                        vs.expansion.contains.forEach(function (concept) {
+                            $scope.connectionTypes.push(concept)
+                            if (key === concept.system + "|" + concept.code) {
+                                $scope.input.selectedConnectionType = concept
+                            }
+
+                        })
+                    }
+
+                }, function(err) {
+                    alert("Error expanding vsConnectionTypeUrl: " + angular.toJson(err.data))
+                }
+            )
+
             $scope.eventConfig = ecosystemSvc.getEventConfig();
 
             $scope.checkServerExists = function(hideAlert,serverBase) {
-
-                //this is a duplication, but does set the
-            //    if ($scope.input.address.substr(-1) !== '/') {
-                //    $scope.input.address += '/';
-              //  }
 
                 serverBase = serverBase || $scope.input.address
 
@@ -35,7 +61,6 @@ angular.module("sampleApp")
                 //url = '/proxyfhir/' + $scope.input.address + 'metadata';
                 //url = $scope.input.address + 'metadata';
                 $scope.waiting = true;
-
 
                 $http.get(url).then(
                     function(data) {
@@ -123,7 +148,7 @@ angular.module("sampleApp")
                 $scope.serverId = existingServer.id;
                 $scope.editingServer = true;
                 serverExists = true;
-                $scope.saveText = "Update server";//+ existingServer.name;
+                $scope.saveText = "Update server: " + existingServer.name ;//+ existingServer.name;
                 $scope.input.name = existingServer.name;
                 $scope.input.notes = existingServer.notes;
                 $scope.input.description = existingServer.description ;
@@ -134,9 +159,11 @@ angular.module("sampleApp")
                 $scope.allHooks = existingServer.allHooks;
                 $scope.fhirVersion = existingServer.fhirVersion;
                 $scope.SMART = existingServer.SMART;
+                $scope.input.dynamicRegistration = existingServer.dynamicRegistration
 
                 $scope.input.isTerminology = existingServer.isTerminology
 
+                //supported tracks
                 $scope.input.tracks = {}
                 $scope.input.trackCount = 0
                 if (existingServer.tracks) {
@@ -145,6 +172,17 @@ angular.module("sampleApp")
                         $scope.input.trackCount++
                     })
                 };
+
+                //supported IGs
+                $scope.input.igs = {}
+                $scope.input.igCount = 0
+                if (existingServer.igs) {
+                    existingServer.igs.forEach(function (igId){
+                        $scope.input.igs[igId] = true;
+                        $scope.input.igCount++
+                    })
+                };
+
 
                 if (existingServer.contact) {
                     $scope.input.contact = existingServer.contact[0];
@@ -163,9 +201,14 @@ angular.module("sampleApp")
                 }
 
                 //console.log($scope.input.serverRole)
-                    if ($scope.input.address) {
-                        $scope.checkServerExists(true);     //refresh the cap stmt - don't show any message
-                    }
+                if ($scope.input.address) {
+                    $scope.checkServerExists(true);     //refresh the cap stmt - don't show any message
+                }
+
+
+                if (user.id == $scope.input.contact.id || user.isAdmin) {
+                    $scope.canDelete = true
+                }
 
 
             } else {
@@ -173,6 +216,7 @@ angular.module("sampleApp")
                 $scope.input.contact = ecosystemSvc.getCurrentUser();
                 $scope.selectedPerson = ecosystemSvc.getCurrentUser();
             }
+
 
 
             //retrieve all the terminololoy operations supported by this server
@@ -206,7 +250,7 @@ angular.module("sampleApp")
                         })
                     }
                 })
-                console.log(ar)
+                //console.log(ar)
 
                 return ar
             }
@@ -299,10 +343,16 @@ angular.module("sampleApp")
                     }
 
                     server.tracks = []
-
                     Object.keys($scope.input.tracks).forEach(function(key){
                         if ($scope.input.tracks[key]) {
                             server.tracks.push(key)
+                        }
+                    });
+
+                    server.igs = []
+                    Object.keys($scope.input.igs).forEach(function(key){
+                        if ($scope.input.igs[key]) {
+                            server.igs.push(key)
                         }
                     });
 
@@ -315,6 +365,9 @@ angular.module("sampleApp")
                     server.contact = [$scope.selectedPerson];
                     server.fhirVersion = $scope.fhirVersion;
                     server.isTerminology = $scope.input.isTerminology;
+                    server.dynamicRegistration = $scope.input.dynamicRegistration
+
+                    server.connectionType = [$scope.input.selectedConnectionType];
 
                     //now the ecosystem roles
                     server.serverRoles = []
@@ -361,8 +414,8 @@ angular.module("sampleApp")
 
 
             $scope.disableServer = function() {
-
                 if (confirm("Are you sure you wish to remove this server?")) {
+                    //the status element is used both for http status & recording deleted - but works OK
                     existingServer.status = 'deleted'
                     ecosystemSvc.updateServer(existingServer,false).then(
                         function () {
@@ -371,7 +424,6 @@ angular.module("sampleApp")
                             alert(angular.toJson(err))
                         })
                 }
-
             }
 
 

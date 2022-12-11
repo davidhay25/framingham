@@ -18,23 +18,7 @@ angular.module("sampleApp")
                 $scope.track.IGs = $scope.track.IGs || []
                 setAvailableIgs();      //IG's not already associated with this track...
 
-                /*
-                $scope.exportTrack = angular.copy(track);   //a copy of the track to use as an export. Delete the non-design stuff
-                $scope.exportTrack.exportedTrack = true;    //so the imported knows it is legit
-                delete $scope.exportTrack.persons;
-                delete $scope.exportTrack.scenarioIds;
-                delete $scope.exportTrack.resultTotals;
-                delete $scope.exportTrack.toi;
-                delete $scope.exportTrack.clients;
-                delete $scope.exportTrack.servers;
 
-                if ($scope.exportTrack.scenarios) {
-                    $scope.exportTrack.scenarios.forEach(function (scenario) {
-                        delete scenario.clients;
-                        delete scenario.servers;
-                    })
-                }
-*/
 
                 if (track.serverRoles) {
                     track.serverRoles.forEach(function(role){
@@ -70,6 +54,11 @@ angular.module("sampleApp")
                             $scope.input.trackLead = person;
                         }
                     })
+                }
+
+                //admins can always delete
+                if ($scope.currentUser.isAdmin) {
+                    $scope.canDelete = true;
                 }
 
                 $scope.input.description = track.description;
@@ -175,7 +164,7 @@ angular.module("sampleApp")
             }
 
             $scope.canSave = true;
-            $scope.canDelete = false;       //can only delete if there is a track lead, and the track lead is the vcurrent user
+           // $scope.canDelete = false;       //can only delete if there is a track lead, and the track lead is the vcurrent user
 
 
 

@@ -35,7 +35,7 @@ angular.module("sampleApp").service('ecosystemSvc',
     let profilesCache={} ;
 
     //construct an Endpoint resource from an ep internal model..
-    var makeResourceFromEP = function(ep){
+    var makeResourceFromEPDEP = function(ep){
         var res = {resourceType:'Endpoint',id:ep.id,status:'active'};
         res.name = ep.name;
         res.payloadType = {Coding:[{system:'http://clinfhir.com/NamingSystem/cf-eco-payloadtype/fhir',code:'resource'}]}
@@ -2386,6 +2386,8 @@ angular.module("sampleApp").service('ecosystemSvc',
                     allPersons.forEach(function(p){
                         hashAllPersons[p.id] = p;
                     });
+
+                    vo.hashAllPersons = hashAllPersons
 
                     var hashServer = {};//vo.servers;
                     vo.servers.forEach(function (server) {
