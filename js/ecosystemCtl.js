@@ -1360,6 +1360,7 @@ angular.module("sampleApp")
                 }).result.then(
                     function(vo) {
                         //$scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
+                        $scope.makeServerExport(svr)        //update the servers for this track
                     }
                 )
             };
@@ -1490,9 +1491,9 @@ angular.module("sampleApp")
                     $scope.iframeUrl = "about:blank";
                 }
 
-
                 $scope.selectedTrackReport =  ecosystemSvc.getTrackResults(track);      //summary of this track...
 
+                $scope.makeServerExport($scope.selectedTrack)  //the download for servers associated with this track
                 //update the associated IG's (when adding a track the full IG object is added to the track - but it can change later...)
                 //this isn't the smartest thing to do, but for now this should allow the IG details to be shown from the track..
 
@@ -1506,7 +1507,6 @@ angular.module("sampleApp")
                         } else {
                             console.log("The track " + $scope.selectedTrack.id + " has a reference to a deleted IG: " + IG.id)
                         }
-
 
                     })
                     $scope.selectedTrack.IGs = arIG;
@@ -1551,15 +1551,31 @@ angular.module("sampleApp")
 
 
 
-            $scope.makeServerExport = function () {
+            //make the export file. If a track is passed in, only include those servers with a reference to the track
+            $scope.makeServerExport = function (track) {
 
-                let serverExport = exportSvc.makeServerExport($scope.allServers,$scope.hashTracks,$scope.hashIGs,$scope.hashAllPersons)
+                let serverExport = exportSvc.makeServerExport($scope.allServers,$scope.hashTracks,$scope.hashIGs,$scope.hashAllPersons,track)
                 console.log(serverExport)
                 let downLoadJson = angular.toJson(serverExport)
+                if (track) {
+                    //this is the currently selected track
+                    $scope.downloadLinkTrackServer = window.URL.createObjectURL(new Blob([downLoadJson],{type:"application/json"}))
+                    let name = track.name
+                    if (name) {
+                        name = name.replace(/ /g, "_");
+                    } else {
+                        name = "Unknown_track"
+                    }
 
-                $scope.downloadLinkServer = window.URL.createObjectURL(new Blob([downLoadJson],{type:"application/json"}))
-                var now = moment().format();
-                $scope.downloadLinkServerName =  'Servers_' + now + '.json';
+
+                    $scope.downloadLinkTrackServerName =  'conMan_trackServers_' + name + '.json';
+                } else  {
+                    //this is all servers
+                    $scope.downloadLinkServer = window.URL.createObjectURL(new Blob([downLoadJson],{type:"application/json"}))
+                    $scope.downloadLinkServerName =  'conMan_allServers.json';
+                }
+
+
             }
 
             $scope.showServer = function(svr) {

@@ -518,10 +518,7 @@
 
 
                                         {{track.name}}
-<!--
-                                        <div><em class="center-text">{{track.trackSubType}}</em></div>
 
-                                        -->
 
                                     </li>
                                 </ul>
@@ -1137,7 +1134,19 @@
                                         Servers <span class="badge">{{getServersForTrack(selectedTrack.id).length}}</span>
                                     </uib-tab-heading>
 
-                                    <h4>Servers associated with this track</h4>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h4>Servers associated with this track</h4>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <a ng-show="downloadLinkTrackServerName && getServersForTrack(selectedTrack.id).length > 0"   class="btn btn-link pull-right"
+                                               download="{{downloadLinkTrackServerName}}"
+                                               href="{{downloadLinkTrackServer}}" title="{{downloadLinkTrackServerName}}" >
+                                                Download Servers Json
+                                            </a>
+                                        </div>
+                                    </div>
+
 
                                     <table class="table table-condensed table-bordered">
                                         <tr><th>Name</th><th>Url</th><th>Description</th><th>Notes</th><th></th></tr>
@@ -1160,11 +1169,18 @@
                                         </tr>
                                     </table>
 
-                                    <em>Servers where the server contact person has indicated suitability for this track.
+                                    <div><em>Servers where the server contact person has indicated suitability for this track.
                                     Use the edit link to view details & remove from track if needed. Clicking the Url
                                     will load the clinFHIR Server Query module for this server in a separate tab.</em>
+                                    </div>
+                                    <br/>
+                                    <div>
+                                        <em>To add a server to this list, use the <span class="clickable" ng-click="input.mainTabActive = ui.tabServers">Servers</span> tab. Select the server in the
+                                        list, then add to the 'Associated Tracks' tab. You can add a nre server here if needed.</em>
+                                    </div>
 
 
+                                    <!--
                                     <h4>Other servers </h4>
                                     <table class="table table-condensed table-bordered">
                                         <tr><th>Name</th><th>Url</th><th>Description</th><th>Notes</th><th></th></tr>
@@ -1183,20 +1199,8 @@
                                     <em>Use the view link to view details of the server, and add it to this track if desired.
                                         Clicking the Url
                                         will load the clinFHIR Server Query module for this server in a separate tab.</em>
-                                    <!--
 
-                                    <div ng-repeat = "server in allServers">
-                                        <div ng-repeat = "trackId in server.tracks">
-                                            <div ng-show = "trackId == selectedTrack.id">
-                                                <checkbox ng-model="input.trackServer[$index]">
-                                                    {{server.name}}
-                                                </checkbox>
-
-                                            </div>
-                                        </div>
-                                    </div>
 -->
-
 
 
                                 </uib-tab>
@@ -1306,9 +1310,20 @@
                         Implementation Guides
                         <span class="badge">{{allIGs.length}}</span>
                     </uib-tab-heading>
-                    <br/>
 
-                    <table class="table table-condensed">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-primary pull-right"
+                                    ng-click="editIG()">Add new IG</button>
+                        </div>
+
+
+                    </div>
+
+
+
+                    <table class="table table-condensed table-bordered ">
                         <tr><th>Name</th><th>Description</th><th>Package#version</th><th>Tracks</th>
                             <th>External link</th><th>Viewer</th></tr>
                         <tr ng-repeat="ig in allIGs">
@@ -1367,15 +1382,8 @@
                         </tr>
                     </table>
 
-                    <button class="btn btn-link"
-
-                            ng-click="editIG()">Add new IG</button>
 
 
-
-<!--
-                    <pre>{{allIGs | json}}</pre>
-                    -->
                 </uib-tab>
 
 

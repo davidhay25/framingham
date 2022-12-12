@@ -156,6 +156,8 @@ angular.module("sampleApp")
                 $scope.input.proxy = existingServer.proxy ;
                 $scope.input.UIaddress = existingServer.UIaddress ;
 
+                $scope.input.accessToken = existingServer.accessToken ;
+
                 $scope.allHooks = existingServer.allHooks;
                 $scope.fhirVersion = existingServer.fhirVersion;
                 $scope.SMART = existingServer.SMART;
@@ -366,6 +368,7 @@ angular.module("sampleApp")
                     server.fhirVersion = $scope.fhirVersion;
                     server.isTerminology = $scope.input.isTerminology;
                     server.dynamicRegistration = $scope.input.dynamicRegistration
+                    server.accessToken = $scope.input.accessToken
 
                     server.connectionType = [$scope.input.selectedConnectionType];
 

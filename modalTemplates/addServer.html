@@ -39,10 +39,10 @@
 
                     <div class="col-md-8 col-sm-8">
                         <div class="row">
-                            <div class="col-md-4 col-sm-4">
+                            <div class="col-md-3 col-sm-3">
                                 <span class="pull-right">Contact Person</span>
                             </div>
-                            <div class="col-md-8 col-sm-8">
+                            <div class="col-md-9 col-sm-9">
                                 <input type="text" ng-model="input.contact"
                                        typeahead-on-select = "contactSelected($item, $model, $label, $event)"
                                        typeahead-editable = 'false'
@@ -77,6 +77,9 @@
                     </div>
                 </div>
                 <br/>
+
+
+
                 <div class="row">
                     <div class="col-md-1 col-sm-1">
                         Proxy
@@ -96,6 +99,23 @@
                 </div>
 
                 <br/>
+
+                <div class="row">
+                    <div class="col-md-1 col-sm-1">
+                        Token
+                    </div>
+                    <div class="col-md-7 col-sm-7">
+                        <input type="text" class="form-control" ng-model="input.accessToken"
+                               placeholder="Access token (Include 'Bearer' prefix if bearer token)"/>
+                    </div>
+
+                    <div class="col-md-4 col-sm-4">
+                        Access token to be included in Authorization header
+                    </div>
+                </div>
+                <br/>
+
+
                 <div class="row">
                     <div class="col-md-1 col-sm-1">
                         UI

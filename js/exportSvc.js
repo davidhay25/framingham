@@ -3,13 +3,13 @@ angular.module("sampleApp").service('exportSvc', function() {
 
 
     return {
-        makeServerExport : function(servers,hashTracks,hashIgs,hashPersons){
+        makeServerExport : function(servers,hashTracks,hashIgs,hashPersons,filterTrack){
             let output = []
             if (servers && servers.length > 0) {
                 servers.forEach(function (svr) {
                     let sumry = {}
                     sumry.name = svr.name
-
+                    sumry.accessToken = svr.accessToken
                     sumry.address = svr.address
                     sumry.description = svr.description
                     sumry.proxy = svr.proxy
@@ -17,12 +17,17 @@ angular.module("sampleApp").service('exportSvc', function() {
                     sumry.fhirVersion = svr.fhirVersion
                     sumry.isTerminology = svr.isTerminology
                     sumry.connectionType = svr.connectionType
+                    sumry.dynamicRegistration = svr.dynamicRegistration
+                    let isInTrack = false       //set true if there is a track, and this server has a reference to it
                     if (svr.tracks && svr.tracks.length > 0) {
                         sumry.tracks = []
                         svr.tracks.forEach(function (trackId) {
                             let track = hashTracks[trackId]
                             if (track) {
                                 sumry.tracks.push({name:track.name})
+                                if (filterTrack && track.id == filterTrack.id) {
+                                    isInTrack = true
+                                }
                             }
 
                         })
@@ -54,7 +59,15 @@ angular.module("sampleApp").service('exportSvc', function() {
                         })
                     }
 
-                    output.push(sumry)
+                    //If there's a filterTrack then only add to the summary if the track mentions it
+                    if (filterTrack) {
+                        if (isInTrack) {
+                            output.push(sumry)
+                        }
+                    } else {
+                        output.push(sumry)
+                    }
+
 
                 })
             }
