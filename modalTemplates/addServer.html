@@ -15,11 +15,12 @@
             </div>
 
             <div class="col-md-4 col-sm-4">
+                <button ng-show="input.name"
+                        class="btn btn-primary pull-right" ng-click="addServer()">Save</button>
                 <div class="pull-right">
                     <button class="btn btn-link pull-right" ng-click="$dismiss()">Cancel</button>
                 </div>
-                <button ng-show="input.name"
-                        class="btn btn-primary pull-right" ng-click="addServer()">Save</button>
+
 
             </div>
         </div>
@@ -134,25 +135,6 @@
                     </div>
                 </div>
 
-                <br/>
-
-                <div class="row">
-                    <div class="col-md-2 col-sm-2">
-                        Connection type
-                    </div>
-
-
-                    <div class="col-md-5 col-sm-5">
-                        <select class="form-control" ng-model="input.selectedConnectionType"
-                                ng-options = "concept.display for concept in connectionTypes"></select>
-
-                    </div>
-
-                    <div class="col-md-5 col-sm-5">
-                        <em>Used by the National Directory track. Can leave blank.</em>
-                    </div>
-
-                </div>
                 <br/>
 
 
@@ -291,30 +273,121 @@
             </uib-tab>
 
             <uib-tab heading="Extra Track info">
-                <em>Additional information for servers participating in specific tracks.</em>
 
                 <br/>
 
-                <h4>National Directory</h4>
+                <uib-tabset>
+                    <uib-tab heading="National Directory">
+                        <br/>
 
-                <div class="row">
-                    <div class="col-md-3 col-sm-3">
-                        Dynamic Registration
-                    </div>
-                    <div class="col-md-5 col-sm-5">
-                        <checkbox ng-model="input.dynamicRegistration"></checkbox>
-                    </div>
-                    <div class="col-md-4 col-sm-4">
-                        <em>Set true if server supports dynamic registration</em>
-                    </div>
-                </div>
-                <br/>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3">
+                                Dynamic Registration
+                            </div>
+                            <div class="col-md-4 col-sm-4">
+                                <checkbox ng-model="input.dynamicRegistration"></checkbox>
+                            </div>
+                            <div class="col-md-5 col-sm-5">
+                                <em>Set true if server supports dynamic registration</em>
+                            </div>
+                        </div>
+                        <br/>
+
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3">
+                                Connection type
+                            </div>
+
+
+                            <div class="col-md-4 col-sm-4">
+                                <select class="form-control" ng-model="input.selectedConnectionType"
+                                        ng-options = "concept.display for concept in connectionTypes"></select>
+
+                            </div>
+
+                            <div class="col-md-5 col-sm-5">
+                                <em>{{vsUrl.connectionType}}</em>
+
+
+
+                            </div>
+
+                        </div>
+                        <br/>
+
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3">
+                                Payload type
+                            </div>
+
+
+                            <div class="col-md-4 col-sm-4">
+                                <select class="form-control" ng-model="input.selectedPayloadType"
+                                        ng-options = "concept.display for concept in payloadTypes"></select>
+
+                            </div>
+
+                            <div class="col-md-5 col-sm-5">
+                                <em>{{vsUrl.payloadType}}</em>
+
+
+
+                            </div>
+
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3">
+                                Trust framework
+                            </div>
+
+
+                            <div class="col-md-4 col-sm-4">
+                                <select class="form-control" ng-model="input.selectedTrustFrameworkType"
+                                        ng-options = "concept.display for concept in trustFrameworkTypes"></select>
+
+                            </div>
+
+                            <div class="col-md-5 col-sm-5">
+                                <em>{{vsUrl.trustFrameworkType}}</em>
+                            </div>
+
+                        </div>
+                        <br/>
+
+                        <uib-tabset>
+                            <uib-tab heading="Public certificate">
+                                <textarea ng-model="input.dir.publicCert" class="form-control" rows="5">
+
+                                </textarea>
+                            </uib-tab>
+                            <uib-tab heading="Exchange certificate">
+                                <textarea ng-model="input.dir.exchangeCert" class="form-control" rows="5">
+
+                                </textarea>
+                            </uib-tab>
+                            <uib-tab heading="Signed artifact">
+                                <textarea ng-model="input.dir.signedArtifact" class="form-control" rows="5">
+
+                                </textarea>
+                            </uib-tab>
+                        </uib-tabset>
+
+
+                        <em>Terminology server: {{termService}}</em>
+                    </uib-tab>
+
+                </uib-tabset>
+
+
+
+
 
 
             </uib-tab>
 
             <uib-tab heading="Terminology" ng-show="input.isTerminology">
-
+                <br/>
                 <uib-tabset>
                     <uib-tab heading = "Operations">
                         <table class="table table-condensed table-bordered">

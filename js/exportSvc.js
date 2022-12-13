@@ -18,6 +18,22 @@ angular.module("sampleApp").service('exportSvc', function() {
                     sumry.isTerminology = svr.isTerminology
                     sumry.connectionType = svr.connectionType
                     sumry.dynamicRegistration = svr.dynamicRegistration
+
+
+                    sumry.payloadType = svr.payloadType
+
+                    sumry.trustFrameworkType = svr.trustFrameworkType
+
+
+                    sumry.publicCert = svr.publicCert
+                    sumry.exchangeCert = svr.exchangeCert
+                    sumry.signedArtifact = svr.signedArtifact
+
+
+
+
+
+
                     let isInTrack = false       //set true if there is a track, and this server has a reference to it
                     if (svr.tracks && svr.tracks.length > 0) {
                         sumry.tracks = []

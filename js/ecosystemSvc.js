@@ -2379,7 +2379,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                     allPersons = vo.persons;    //scoped to service
                     ciSort(allPersons,'name');
 
-                    console.log(vo.igs)
+                    //console.log(vo.igs)
                     allIGs = vo.igs;
                     ciSort(allIGs,'name')
                     hashAllPersons = {};

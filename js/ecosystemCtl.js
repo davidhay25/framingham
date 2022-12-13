@@ -359,6 +359,7 @@ angular.module("sampleApp")
                 clearSession();
                 $uibModal.open({
                     templateUrl: 'modalTemplates/login.html',
+                    backdrop: 'static',
                     controller: 'loginCtrl',
                     resolve : {
                         eventConfig: function(){
@@ -448,6 +449,7 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/editIG.html',
                     controller: 'igCtrl',
+                    backdrop: 'static',
                     resolve : {
                         IG: function(){
                             return IG;
@@ -469,6 +471,7 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/login.html',
                     controller: 'loginCtrl',
+                    backdrop: 'static',
                     resolve : {
                         keys: function(){
                             //
@@ -508,6 +511,7 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/editScenario.html',
                     size : 'lg',
+                    backdrop: 'static',
                     controller: 'editScenarioCtrl',
                     resolve : {
                         scenario: function () {          //the default config
@@ -547,6 +551,7 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/editScenario.html',
                     size : 'lg',
+                    backdrop: 'static',
                     controller: 'editScenarioCtrl',
                     resolve : {
                         scenario: function () {          //the default config
@@ -910,6 +915,7 @@ angular.module("sampleApp")
             $scope.editPerson = function(person) {
                 $uibModal.open({
                     templateUrl: 'modalTemplates/editPerson.html',
+                    backdrop: 'static',
                     controller: 'editPersonCtrl',
                     resolve : {
 
@@ -938,6 +944,7 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/editRole.html',
                     //size: 'lg',
+                    backdrop: 'static',
                     controller: 'editRoleCtrl',
                     resolve: {
                         track: function () {          //the default config
@@ -971,6 +978,7 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/editTrack.html',
                     size: 'lg',
+                    backdrop: 'static',
                     controller: 'editTrackCtrl',
                     resolve : {
                         track: function () {          //the default config
@@ -1212,6 +1220,7 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/result.html',
                     controller: 'resultCtrl',
+                    backdrop: 'static',
                     resolve : {
                         scenario: function () {          //the default config
                             return scenario;
@@ -1269,6 +1278,7 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addServerToScenario.html',
                     size: 'lg',
+                    backdrop: 'static',
                     controller: 'addServerToScenarioCtrl',
                     resolve : {
                         allServers: function () {          //the default config
@@ -1311,6 +1321,7 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addClient.html',
                     //size: 'lg',
+                    backdrop: 'static',
                     controller: 'addClientCtrl',
                     resolve : {
                         existingClient: function () {          //the default config
@@ -1326,7 +1337,7 @@ angular.module("sampleApp")
 
                 if ($scope.allServers) {
                     $scope.allServers.forEach(function (svr){
-                        console.log(svr)
+                        //console.log(svr)
                         if (svr.status) {
                             svr.status.elapsed = $filter('getAgeSeconds')(svr.status.date)
                         }
@@ -1339,6 +1350,7 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addServer.html',
                     size: 'lg',
+                    backdrop: 'static',
                     controller: 'addServerCtrl',
                     resolve : {
                         existingServer: function () {          //the default config
@@ -1389,6 +1401,7 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/download.html',
                     controller: 'downloadCtrl',
+                    backdrop: 'static',
                     resolve : {
                         object: function () {          //the default config
                             return object;
@@ -1407,6 +1420,7 @@ angular.module("sampleApp")
                 $uibModal.open({
                     templateUrl: 'modalTemplates/addClientToScenario.html',
                     size: 'lg',
+                    backdrop: 'static',
                     controller: 'addClientToScenarioCtrl',
                     resolve : {
                         allClients: function () {          //the default config
@@ -1555,7 +1569,7 @@ angular.module("sampleApp")
             $scope.makeServerExport = function (track) {
 
                 let serverExport = exportSvc.makeServerExport($scope.allServers,$scope.hashTracks,$scope.hashIGs,$scope.hashAllPersons,track)
-                console.log(serverExport)
+                //console.log(serverExport)
                 let downLoadJson = angular.toJson(serverExport)
                 if (track) {
                     //this is the currently selected track

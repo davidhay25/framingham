@@ -2,27 +2,66 @@ angular.module("sampleApp")
     .controller('addServerCtrl',
         function ($scope,ecosystemSvc,modalService,$http,existingServer,tracks,user,allIGs,ecoUtilitiesSvc) {
 
+
+            $scope.termService = "https://r4.ontoserver.csiro.au/fhir/"
+
             $scope.user = user;
             $scope.tracks = tracks;
             $scope.allIGs = allIGs
-            $scope.input = {};
+            $scope.input = {dir:{}};        //for the directory stuff
             $scope.input.serverRole = {}
             $scope.saveText = "Add new Server";
             $scope.selectedResourceDef = {};
+
             $scope.selectResourceDef = function(def) {
                 $scope.selectedResourceDef = def;
             }
 
+            $scope.vsUrl = {}
+            $scope.vsUrl.connectionType = "http://clinfhir.com/fhir/ValueSet/connection-type"
+            $scope.vsUrl.payloadType = "http://clinfhir.com/fhir/ValueSet/payload-type"
+            $scope.vsUrl.trustFrameworkType = "http://clinfhir.com/fhir/ValueSet/trustframework-type"
+
             var serverExists = false;
 
+            /*
 
-            //load the connection type. Added to support national directory and assuming the artifacts are
-            //loaded onto the Ontoserver repo
-            //IG - https://build.fhir.org/ig/HL7/fhir-directory-query/ValueSet-EndpointConnectionTypeVS.html
-            let vsConnectionTypeUrl = "http://clinfhir.com/fhir/ValueSet/connection-type"
-            ecoUtilitiesSvc.expandVSbyUrl(vsConnectionTypeUrl).then(
-            //$http.get("https://r4.ontoserver.csiro.au/fhir/ValueSet/conman-connection-type/$expand").then(
-            //$http.get("https://r4.ontoserver.csiro.au/fhir/ValueSet/EndpointConnectionTypeVS/$expand").then(
+            input.selectedTrustFramework
+            input.dir.publicCert
+            input.dir.exchangeCert
+            input.dir.signedArtifact
+
+*/
+            $scope.getVsUrlDEP = function(key) {
+                return $scope.vsUrl[key]
+            }
+
+            //payload type
+            ecoUtilitiesSvc.expandVSbyUrl($scope.vsUrl.payloadType,$scope.termService).then(
+                function (vs) {
+                    //console.log(vs)
+                    if (vs.expansion && vs.expansion.contains) {
+                        $scope.payloadTypes = []
+                        let key
+                        if (existingServer && existingServer.payloadType &&  existingServer.payloadType.length > 0) {
+                            key = existingServer.payloadType[0].system + "|" +  existingServer.payloadType[0].code
+                        }
+                        vs.expansion.contains.forEach(function (concept) {
+                            $scope.payloadTypes.push(concept)
+                            if (key === concept.system + "|" + concept.code) {
+                                $scope.input.selectedPayloadType = concept
+                            }
+
+                        })
+                    }
+
+                },function (err) {
+                    console.log(err)
+                }
+            )
+
+            ecoUtilitiesSvc.expandVSbyUrl($scope.vsUrl.connectionType,$scope.termService).then(
+
                 function(vs) {
                     //console.log(data.data)
                     if (vs.expansion && vs.expansion.contains) {
@@ -41,7 +80,33 @@ angular.module("sampleApp")
                     }
 
                 }, function(err) {
-                    alert("Error expanding vsConnectionTypeUrl: " + angular.toJson(err.data))
+                    alert(`Error expanding ${$scope.vsUrl.connectionType}: ` + angular.toJson(err.data))
+                }
+            )
+
+            ecoUtilitiesSvc.expandVSbyUrl($scope.vsUrl.trustFrameworkType,$scope.termService).then(
+
+                function(vs) {
+                    console.log(vs)
+                    if (vs.expansion && vs.expansion.contains) {
+                        $scope.trustFrameworkTypes = []
+                        let key
+                        //only a single trust framework
+                        if (existingServer && existingServer.trustFrameworkType) {
+                            key = existingServer.trustFrameworkType.system + "|" +  existingServer.trustFrameworkType.code
+                        }
+                        vs.expansion.contains.forEach(function (concept) {
+                            $scope.trustFrameworkTypes.push(concept)
+
+                            if (key === concept.system + "|" + concept.code) {
+                                $scope.input.selectedTrustFrameworkType = concept
+                            }
+
+                        })
+                    }
+
+                }, function(err) {
+                    alert(`Error expanding ${$scope.vsUrl.connectionType}: ` + angular.toJson(err.data))
                 }
             )
 
@@ -165,13 +230,29 @@ angular.module("sampleApp")
 
                 $scope.input.isTerminology = existingServer.isTerminology
 
-                //supported tracks
+                //only a single trust framework
+                //$scope.input.selectedTrustFramework = existingServer.selectedTrustFramework
+
+
+                $scope.input.dir.publicCert = existingServer.publicCert
+                $scope.input.dir.exchangeCert = existingServer.exchangeCert
+                $scope.input.dir.signedArtifact = existingServer.signedArtifact
+
+
+                //supported tracks. Need to ignore deleted tracks
+                let hashTracks = {}
+                tracks.forEach(function (track) {
+                    hashTracks[track.id] = true
+                })
                 $scope.input.tracks = {}
                 $scope.input.trackCount = 0
                 if (existingServer.tracks) {
                     existingServer.tracks.forEach(function (trackId){
-                        $scope.input.tracks[trackId] = true;
-                        $scope.input.trackCount++
+                        if (hashTracks[trackId]) {
+                            $scope.input.tracks[trackId] = true;
+                            $scope.input.trackCount++
+                        }
+
                     })
                 };
 
@@ -371,6 +452,15 @@ angular.module("sampleApp")
                     server.accessToken = $scope.input.accessToken
 
                     server.connectionType = [$scope.input.selectedConnectionType];
+                    server.payloadType = [$scope.input.selectedPayloadType]
+
+                    server.trustFrameworkType = $scope.input.selectedTrustFrameworkType
+
+
+                    server.publicCert = $scope.input.dir.publicCert
+                    server.exchangeCert = $scope.input.dir.exchangeCert
+                    server.signedArtifact = $scope.input.dir.signedArtifact
+
 
                     //now the ecosystem roles
                     server.serverRoles = []
