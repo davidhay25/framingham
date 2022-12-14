@@ -543,6 +543,7 @@ app.get('/IG',function(req,res){
         if (err) {
             res.send(err,500)
         } else {
+            //console.log('igs',result)
             res.send(result)
         }
     })

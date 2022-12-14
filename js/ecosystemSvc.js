@@ -272,7 +272,6 @@ angular.module("sampleApp").service('ecosystemSvc',
 
 
 
-
             //now, for each result for each scenario, place an entry in the servers array
             Object.keys(hashAllResults).forEach(function(rkey) {
                 let result = hashAllResults[rkey]
@@ -2338,7 +2337,7 @@ angular.module("sampleApp").service('ecosystemSvc',
             urls.push({url:'/config/scenario',"name":"scenarios"});
             urls.push({url:'/config/role',"name":"roles"});
 
-            urls.push({url:'/IG',"name":"igs"});
+            urls.push({url:'/IG?ts='+ new Date().getTime(),"name":"igs"});
 
             urls.push({url:'/client',"name":"clients"});
             urls.push({url:'/server',"name":"servers"});
@@ -2359,7 +2358,16 @@ angular.module("sampleApp").service('ecosystemSvc',
                             if (angular.isArray(data.data)) {
                                 //server calls return an array...
                                 vo[item.name] = data.data
+                                /*
+                                console.log(item.url)
+                                if (item.url.substring(0,3) == '/IG') {
+                                    let t = angular.copy(data.data)
+                                    console.log(t)
+                                }
+                                */
                             } else {
+                                //persons - not sure why - todo investigate
+                                //console.log(item.url)
                                 vo[item.name] = data.data[item.name]
                             }
 
@@ -2382,6 +2390,7 @@ angular.module("sampleApp").service('ecosystemSvc',
                     //console.log(vo.igs)
                     allIGs = vo.igs;
                     ciSort(allIGs,'name')
+
                     hashAllPersons = {};
                     allPersons.forEach(function(p){
                         hashAllPersons[p.id] = p;

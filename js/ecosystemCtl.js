@@ -767,7 +767,7 @@ angular.module("sampleApp")
                         //$scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
 
                         $scope.makeServerExport()
-                        //$scope.allServers,$scope.hashTracks,$scope.hashIGs,$scope.allPersons
+
 
                         let ms = new Date().getTime() - now;
                         console.log("Load time: "+ ms + "ms")

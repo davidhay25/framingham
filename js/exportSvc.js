@@ -54,9 +54,11 @@ angular.module("sampleApp").service('exportSvc', function() {
                         svr.igs.forEach(function (igId) {
                             let ig = hashIgs[igId]
                             if (ig) {
-                                delete ig.id
-                                delete ig._id
-                                sumry.igs.push(ig)
+                                let clone = angular.copy(ig)
+                                delete clone.id
+                                delete clone._id
+                                sumry.igs.push(clone)
+
                             }
                         })
 

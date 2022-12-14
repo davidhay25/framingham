@@ -24,14 +24,7 @@ angular.module("sampleApp")
 
             var serverExists = false;
 
-            /*
 
-            input.selectedTrustFramework
-            input.dir.publicCert
-            input.dir.exchangeCert
-            input.dir.signedArtifact
-
-*/
             $scope.getVsUrlDEP = function(key) {
                 return $scope.vsUrl[key]
             }
@@ -123,8 +116,6 @@ angular.module("sampleApp")
 
                 //proxy the query through the server to avoid CORS being needed...
                 let url = '/proxyfhir/' + serverBase + 'metadata';
-                //url = '/proxyfhir/' + $scope.input.address + 'metadata';
-                //url = $scope.input.address + 'metadata';
                 $scope.waiting = true;
 
                 $http.get(url).then(
@@ -259,10 +250,20 @@ angular.module("sampleApp")
                 //supported IGs
                 $scope.input.igs = {}
                 $scope.input.igCount = 0
+
                 if (existingServer.igs) {
+                    let hashIGs = {}
+                    $scope.allIGs.forEach(function (ig) {
+                        hashIGs[ig.id] = true
+                    })
+
                     existingServer.igs.forEach(function (igId){
                         $scope.input.igs[igId] = true;
-                        $scope.input.igCount++
+                        if (hashIGs[igId]) {
+                            $scope.input.igCount++
+                        }
+
+
                     })
                 };
 
