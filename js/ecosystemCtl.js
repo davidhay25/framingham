@@ -797,6 +797,22 @@ angular.module("sampleApp")
                     } )} ;
 
 
+            $scope.canShowIG = function(IG,filter) {
+                if (filter) {
+                    var regex = new RegExp(filter, "i");
+                    if (IG.name) {
+                        if (IG.name.search(regex) > -1) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    } else {
+                        return true
+                    }
+                } else {
+                    return true
+                }
+            }
 
             $scope.canShowPerson = function(person,filter) {
                 var name = person.name;
