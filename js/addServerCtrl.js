@@ -36,7 +36,7 @@ angular.module("sampleApp")
                     if (vs.expansion && vs.expansion.contains) {
                         $scope.payloadTypes = []
                         let key
-                        if (existingServer && existingServer.payloadType &&  existingServer.payloadType.length > 0) {
+                        if (existingServer && existingServer.payloadType &&  existingServer.payloadType.length > 0 && existingServer.payloadType[0]) {
                             key = existingServer.payloadType[0].system + "|" +  existingServer.payloadType[0].code
                         }
                         vs.expansion.contains.forEach(function (concept) {
@@ -60,7 +60,7 @@ angular.module("sampleApp")
                     if (vs.expansion && vs.expansion.contains) {
                         $scope.connectionTypes = []
                         let key
-                        if (existingServer && existingServer.connectionType &&  existingServer.connectionType.length > 0) {
+                        if (existingServer && existingServer.connectionType && existingServer.connectionType.length > 0 && existingServer.connectionType[0]) {
                              key = existingServer.connectionType[0].system + "|" +  existingServer.connectionType[0].code
                         }
                         vs.expansion.contains.forEach(function (concept) {
