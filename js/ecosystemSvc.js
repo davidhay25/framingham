@@ -1363,6 +1363,7 @@ angular.module("sampleApp").service('ecosystemSvc',
             track.roles = track.roles || []
             track.roles.length = 0;
             track.scenarios.forEach(function(scenario){
+                scenario.roles = scenario.roles || []
                 scenario.roles.forEach(function(role){
                     if (!hash[role.id]) {
                         hash[role.id] = role;
