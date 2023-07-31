@@ -26,10 +26,18 @@ angular.module("sampleApp")
                 //let deferred = $q.defer();
                 svr.waiting = true;
 
+                if (! svr.address) {
+                    alert("Must have a url address")
+                    return
+                }
+
+                if (svr.address.slice(-1) !== '/') {
+                    svr.address = svr.address + "/"
+                }
 
                 let url = '/proxyfhir/' + svr.address + 'metadata';
                 delete svr.status;
-                console.log(svr)
+                //console.log(svr)
                 $http.get(url).then(
                     function(data) {
                         setServerStatus(svr,data.status)
