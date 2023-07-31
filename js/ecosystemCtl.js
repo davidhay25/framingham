@@ -1025,8 +1025,8 @@ angular.module("sampleApp")
 
                     var clone = angular.copy(vo.track);
 
-
                     $scope.selectedTrack = vo.track;   //this updates the current page. The whole clone thing may be redundant...
+                    $scope.selectedTrack.scenarios = $scope.selectedTrack.scenarios || []
                     //need to update the $scope.tracks array as well
                     for (var i=0; i < $scope.tracks.length; i++) {
                         if ($scope.tracks[i].id == vo.track.id) {
