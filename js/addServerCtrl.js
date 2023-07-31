@@ -108,9 +108,15 @@ angular.module("sampleApp")
             $scope.checkServerExists = function(hideAlert,serverBase) {
 
                 serverBase = serverBase || $scope.input.address
-
+/*
                 if (serverBase.substr(-1) !== '/') {
                     serverBase += '/';
+                }
+                */
+
+                if (serverBase.slice(-1) !== '/') {
+                    serverBase = serverBase + "/"
+                    $scope.input.address += "/"
                 }
 
 
