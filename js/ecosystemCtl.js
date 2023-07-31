@@ -533,6 +533,7 @@ angular.module("sampleApp")
                     $http.post(url,scenario).then(
                         function(data) {
                             //now, add the new scenario to the track and update
+                            $scope.selectedTrack.scenarios = $scope.selectedTrack.scenarios || []
                             $scope.selectedTrack.scenarios.push(scenario);
 
 

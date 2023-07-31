@@ -1804,21 +1804,24 @@ angular.module("sampleApp").service('ecosystemSvc',
 
             var hashServer = {},hashClient = {};
 
-            track.scenarios.forEach(function (scenario) {
-                if (scenario.servers) {
-                   scenario.servers.forEach(function (svrRole) {
-                        hashServer[svrRole.server.id] = svrRole
-                    });
+            if (track.scenarios) {
+                track.scenarios.forEach(function (scenario) {
+                    if (scenario.servers) {
+                        scenario.servers.forEach(function (svrRole) {
+                            hashServer[svrRole.server.id] = svrRole
+                        });
 
-                }
+                    }
 
-                if (scenario.clients) {
-                    scenario.clients.forEach(function (clntRole) {
-                        hashClient[clntRole.client.id] = clntRole
-                    });
+                    if (scenario.clients) {
+                        scenario.clients.forEach(function (clntRole) {
+                            hashClient[clntRole.client.id] = clntRole
+                        });
 
-                }
-            });
+                    }
+                });
+            }
+
 
             angular.forEach(hashServer,function(v,k){
                 summary.uniqueServers.push(v)
