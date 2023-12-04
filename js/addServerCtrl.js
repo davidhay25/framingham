@@ -124,7 +124,9 @@ angular.module("sampleApp")
                 let url = '/proxyfhir/' + serverBase + 'metadata';
                 $scope.waiting = true;
 
-                $http.get(url).then(
+
+
+                $http.get(url,{headers:{'Cache-Control': 'no-cache'}}).then(
                     function(data) {
                         if (! hideAlert) {
                             modalService.showModal({},{bodyText:"The CapabilityStatement was returned, so we can update the server specific information. See the 'Server Capability' tab"});
@@ -433,18 +435,24 @@ angular.module("sampleApp")
                     }
 
                     server.tracks = []
-                    Object.keys($scope.input.tracks).forEach(function(key){
-                        if ($scope.input.tracks[key]) {
-                            server.tracks.push(key)
-                        }
-                    });
+                    if ($scope.input.tracks) {
+                        Object.keys($scope.input.tracks).forEach(function(key){
+                            if ($scope.input.tracks[key]) {
+                                server.tracks.push(key)
+                            }
+                        });
+                    }
+
 
                     server.igs = []
-                    Object.keys($scope.input.igs).forEach(function(key){
-                        if ($scope.input.igs[key]) {
-                            server.igs.push(key)
-                        }
-                    });
+                    if ($scope.input.igs) {
+                        Object.keys($scope.input.igs).forEach(function(key){
+                            if ($scope.input.igs[key]) {
+                                server.igs.push(key)
+                            }
+                        });
+                    }
+
 
                     server.name = $scope.input.name;
                     server.notes = $scope.input.notes;

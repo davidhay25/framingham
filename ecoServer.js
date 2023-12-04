@@ -3,6 +3,7 @@
 //https://medium.freecodecamp.org/supercharge-your-debugging-experience-for-node-js-3f0ddfaffbb2
 
 /* To create a new event:
+* see documentation/copyDataBase
 * add the database with the new event code
 * add an 'admin' collection in the db with a document {key: name: }
 * add a document in the 'eventDb' collection  {key: display: }
@@ -458,7 +459,9 @@ app.get('/web/servers/:eventCode',function(req,res){
 //========= proxy endpoints. Used by the connectathon UI to query a server, and by CDS-hooks function =======
 
 app.get('/proxyfhir/*',function(req,res) {
-    var fhirQuery = req.originalUrl.substr(11); //strip off /orionfhir
+    var fhirQuery = req.originalUrl.substr(11); //strip off /proxefhir
+
+    //console.log(fhirQuery)
     var options = {
         method: 'GET',
         uri: fhirQuery,
@@ -476,6 +479,7 @@ app.get('/proxyfhir/*',function(req,res) {
             //console.log(response.statusCode)
             res.send(body,response.statusCode);//,'binary')
         } else {
+            //console.log(body)
             res.send(body);//,'binary')
         }
     })
