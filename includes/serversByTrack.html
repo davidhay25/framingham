@@ -1,0 +1,35 @@
+<div>
+  Servers by track
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="list-group">
+        <div ng-class="{'list-group-item':true,listItemSelected:k == selectedTrackServers.track.id}"
+             style="cursor: pointer"
+             ng-repeat="(k,v) in hashTrackServers"
+            ng-click="selectTrackServers(v)">
+          {{v.track.name}}
+          <div class="pull-right"><span class="badge">{{v.servers.length}}</span> </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      <table class="table table-bordered table-condensed">
+        <tr><th>Name</th><th>Address</th><th>FHIR version</th><th>Description</th><th>Notes</th></tr>
+        <tr ng-repeat = "server in selectedTrackServers.servers">
+          <td><span class="clickable" ng-click="editServerFromTS(server)">{{server.name}}</span></td>
+          <td>{{server.address}}</td>
+          <td>{{server.fhirVersion}}</td>
+          <td>{{server.description}}</td>
+          <td>{{server.notes}}</td>
+        </tr>
+      </table>
+
+    </div>
+
+
+  </div>
+
+</div>

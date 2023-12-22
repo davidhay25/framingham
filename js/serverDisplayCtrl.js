@@ -1,17 +1,42 @@
 angular.module("sampleApp")
     .controller('serverDisplayCtrl',
-        function ($scope,$http,ecosystemSvc) {
+        function ($scope,$http,ecosystemSvc,$timeout) {
 
 /*
-            $scope.updateElapsed = function() {
-                console.log('xxxx')
-                if ($scope.allServers) {
-                    $scope.allServers.forEach(function (svr){
-                        console.log(svr)
+            $scope.selectTrackServers = function (ts) {
+                $scope.selectedTrackServers = ts
+            }
+*/
+            //update the hash of servers for a track
+            $scope.updateTrackServerListDEP = function () {
+                $scope.hashTrackServers = {}
+                if ($scope.allServers && $scope.hashTracks) {
+                    $scope.allServers.forEach(function (svr) {
+                        if (svr.tracks && svr.tracks.length > 0) {
+                            svr.tracks.forEach(function (trackId) {
+
+                                let track = $scope.hashTracks[trackId]
+                                if (track) {
+                                    $scope.hashTrackServers[trackId] = $scope.hashTrackServers[trackId] || {track:track,servers:[]}
+
+                                    $scope.hashTrackServers[trackId].servers.push(svr)
+                                }
+                            })
+
+                        }
+                        console.log($scope.hashTrackServers)
+
                     })
                 }
+
             }
-            */
+
+/*
+            //wait a couple of seconds for the track list to be created
+            $timeout(function () {
+                $scope.updateTrackServerList()
+            },2000)
+*/
 
             $scope.getElapsed = function(svr) {
                 let elapsed = ""

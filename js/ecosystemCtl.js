@@ -150,6 +150,46 @@ angular.module("sampleApp")
                 )
             }
 
+            //edit server from the list bt track. The svr param may not be the most current
+            $scope.editServerFromTS = function(svr){
+                let ar = $scope.allServers.filter( s => s.id == svr.id)
+                   if (ar.length == 1) {
+                       $scope.editServer(ar[0])
+                   }
+            }
+
+            $scope.selectTrackServers = function (ts) {
+                $scope.selectedTrackServers = ts
+            }
+
+            //update the hash of servers for a track
+            $scope.updateTrackServerList = function () {
+                $scope.hashTrackServers = {}
+                if ($scope.allServers && $scope.hashTracks) {
+                    $scope.allServers.forEach(function (svr) {
+                        if (svr.tracks && svr.tracks.length > 0) {
+                            svr.tracks.forEach(function (trackId) {
+
+                                let track = $scope.hashTracks[trackId]
+                                if (track) {
+                                    $scope.hashTrackServers[trackId] = $scope.hashTrackServers[trackId] || {track:track,servers:[]}
+
+                                    $scope.hashTrackServers[trackId].servers.push(svr)
+                                }
+                            })
+
+                        }
+                        console.log($scope.hashTrackServers)
+                        //alert('updated')
+
+                    })
+                }
+
+            }
+
+
+
+
             //retrieve the statistics from the server
             $scope.getStatistics = function() {
 
@@ -309,7 +349,7 @@ angular.module("sampleApp")
                 if (ar.length == 1) {
                     $scope.editServer(ar[0])
                 }
-                //$scope.editServer = function(svr) {
+
             }
 
             // - routines associated with track server list
@@ -769,6 +809,7 @@ angular.module("sampleApp")
 
                         $scope.makeServerExport()
 
+                        $scope.updateTrackServerList()
 
                         let ms = new Date().getTime() - now;
                         console.log("Load time: "+ ms + "ms")
@@ -1390,6 +1431,7 @@ angular.module("sampleApp")
                     function(vo) {
                         //$scope.serverRoleSummary = ecosystemSvc.makeServerRoleSummary();
                         $scope.makeServerExport(svr)        //update the servers for this track
+                        $scope.updateTrackServerList()
                     }
                 )
             };
